@@ -16,6 +16,7 @@ interface IRoutes {
   [index: string]: {
     devName: string;
     component: () => JSX.Element;
+    type?: 'dev' | 'production';
   };
 }
 const routes: IRoutes = {
@@ -56,18 +57,22 @@ const routes: IRoutes = {
     component: SettingsTester,
   },
   PD_GameScene: {
+    type: 'production',
     devName: '게임화면',
     component: GameScene,
   },
   PD_Main: {
+    type: 'production',
     devName: '메인화면',
     component: Main,
   },
   PD_SelectStage: {
+    type: 'production',
     devName: '스테이지 선택 화면',
     component: SelectStage,
   },
   PD_Shop: {
+    type: 'production',
     devName: '상점 화면',
     component: Shop,
   },

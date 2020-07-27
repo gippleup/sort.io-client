@@ -17,6 +17,7 @@ interface IRoutes {
     devName: string;
     component: () => JSX.Element;
     type?: 'dev' | 'production';
+    headerShown?: boolean;
   };
 }
 const routes: IRoutes = {
@@ -27,6 +28,7 @@ const routes: IRoutes = {
   BlockBoardTester: {
     devName: '블록보드 테스터',
     component: BlockBoardTester,
+    headerShown: false,
   },
   EndGameInfoTester: {
     devName: '종료 팝업 테스터',

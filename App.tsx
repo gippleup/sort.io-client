@@ -32,6 +32,7 @@ const App: () => React.ReactNode = () => {
                 key={routeName}
                 name={routeName}
                 component={options.component}
+                options={{headerShown: options.headerShown}}
               />
             );
           })}

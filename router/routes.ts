@@ -23,10 +23,6 @@ interface IRoutes {
   };
 }
 const routes: IRoutes = {
-  BlockTester: {
-    devName: '블록 테스터',
-    component: BlockTester,
-  },
   BlockBoardTester: {
     devName: '블록보드 테스터',
     component: BlockBoardTester,

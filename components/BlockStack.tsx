@@ -174,6 +174,7 @@ const BlockStack: React.FC<BlockStackProps> = (props) => {
       }
     }
   }, [animation, props.curState, props.isBase, props.prevState]);
+  console.log(props.data);
 
   return <View>{props.isBase ? renderBase() : renderBlocks()}</View>;
 };

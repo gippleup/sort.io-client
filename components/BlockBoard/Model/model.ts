@@ -92,12 +92,12 @@ const reducerMethods = (
       const targetStack: TBlockStack = newState.blockStacks[to];
 
       if (targetStack.curStack.length >= targetStack.max) {
-        return new Error('BlockStack Fully Occupied');
+        return console.log('BlockStack Fully Occupied');
       }
 
       const lastBlockInOriginStack = originStack.curStack.pop();
-      if (!lastBlockInOriginStack) {
-        return new Error('No Blocks to Move');
+      if (lastBlockInOriginStack === undefined) {
+        return console.log('No Blocks to Move');
       }
 
       targetStack.curStack.push(lastBlockInOriginStack);

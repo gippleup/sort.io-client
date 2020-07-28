@@ -1,10 +1,12 @@
-import React from 'react'
-import {View, Text, Picker, Animated, Easing} from 'react-native';
+import React from 'react';
+import {View, Animated, Easing} from 'react-native';
 import {TBlock} from './BlockBoard/Model/model';
 import PieceBase from './Block/PieceBase';
 import BottomBase from './Block/BottomBase';
 import TopBase from './Block/TopBase';
 import styled from 'styled-components';
+import Block from './Block';
+import skinMap, {skins} from './BlockStack/skinMap';
 
 const BaseContainer: typeof View = styled(View)``;
 
@@ -18,9 +20,15 @@ type BlockStackProps = {
   isBase: boolean;
   curState: 'neutral' | 'docked' | 'undocked';
   prevState: 'neutral' | 'docked' | 'undocked';
+  skin: skins;
 };
 
+let count = 0;
 const BlockStack: React.FC<BlockStackProps> = (props) => {
+  React.useEffect(() => {
+    count++;
+    console.log(count);
+  }, [props.data]);
   const dockAnim = React.useRef(new Animated.Value(0)).current;
   const scaleAnim = React.useRef(new Animated.Value(1)).current;
   const dock = React.useCallback(() => {
@@ -80,18 +88,21 @@ const BlockStack: React.FC<BlockStackProps> = (props) => {
     sit,
   };
 
-  const colors: {[index: number]: string} = {
-    0: 'red',
-    1: 'orange',
-    2: 'white',
-    3: 'dodgerblue',
-  };
+  const topBlock = props.data[props.data.length - 1];
+  const bodyBlocks = props.data.slice(0, props.data.length - 1);
+  const tailBlock = bodyBlocks[0] || topBlock;
 
-  const renderTopBlock = (blockType: number) => {
+  const renderCap = () => {
     if (!props.completed) {
       return <></>;
     }
-    return <TopBase fill={colors[blockType]} />;
+    return (
+      <Block
+        type={tailBlock.type}
+        shape={skinMap[props.skin].top}
+        base={TopBase}
+      />
+    );
   };
 
   const renderBase = () => {
@@ -102,30 +113,33 @@ const BlockStack: React.FC<BlockStackProps> = (props) => {
             props.onPress();
           }
         }}>
-        <TopBase fill="rgba(0,0,0,0.5)" />
+        <TopBase type={9} />
         {Array(props.max)
           .fill(0)
           .map((value, i) => (
-            <PieceBase key={i} fill="rgba(0,0,0,0.5)" />
+            <PieceBase key={i} type={9} />
           ))}
-        <BottomBase fill="rgba(0,0,0,0.5)" />
+        <BottomBase type={9} />
       </BaseContainer>
     );
   };
 
   const renderBlocks = () => {
-    if (!props.data.length) {
+    if (!topBlock) {
       return (
         <BlockContainer>
-          <BottomBase fill="grey" />
+          <Block
+            type={9}
+            shape={skinMap[props.skin].bottom}
+            base={BottomBase}
+          />
         </BlockContainer>
       );
     }
-    const topPiece = props.data[props.data.length - 1];
-    const restPieces = props.data.slice(0, props.data.length - 1);
+
     return (
       <BlockContainer>
-        {renderTopBlock(topPiece.type)}
+        {renderCap()}
         <Animated.View
           style={{
             transform: [
@@ -140,12 +154,28 @@ const BlockStack: React.FC<BlockStackProps> = (props) => {
               },
             ],
           }}>
-          <PieceBase fill={colors[topPiece.type]} />
+          <Block
+            type={topBlock.type}
+            shape={skinMap[props.skin].piece}
+            base={PieceBase}
+          />
         </Animated.View>
-        {restPieces.reverse().map((block, i) => (
-          <PieceBase key={i} fill={colors[block.type]} />
-        ))}
-        <BottomBase fill={colors[props.data[0].type]} />
+        {bodyBlocks
+          .slice(0)
+          .reverse()
+          .map((block, i) => (
+            <Block
+              key={i}
+              type={block.type}
+              shape={skinMap[props.skin].piece}
+              base={PieceBase}
+            />
+          ))}
+        <Block
+          type={tailBlock.type}
+          shape={skinMap[props.skin].bottom}
+          base={BottomBase}
+        />
       </BlockContainer>
     );
   };
@@ -176,6 +206,10 @@ const BlockStack: React.FC<BlockStackProps> = (props) => {
   }, [animation, props.curState, props.isBase, props.prevState]);
 
   return <View>{props.isBase ? renderBase() : renderBlocks()}</View>;
+};
+
+BlockStack.defaultProps = {
+  skin: 'basic',
 };
 
 export default BlockStack;

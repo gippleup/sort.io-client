@@ -1,37 +1,58 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import Svg, {Path} from 'react-native-svg';
+import Svg, {Path, Rect} from 'react-native-svg';
 import styled from 'styled-components';
+import colorTheme from './ColorTheme';
+import {BasicBlockProps} from '../Types';
 
 const BaseContainer = styled(View)`
   height: 24px;
-  margin-left: -21px;
+  margin-left: -6px;
 `;
 
 const SvgContainer = styled(View)`
-  margin-top: -17px;
+  margin-top: 0px;
 `;
 
-const SpikyPiece = () => {
+const SpikyPiece = (props: BasicBlockProps) => {
+  const {bodyFill, spike} = colorTheme[props.type];
   return (
     <BaseContainer>
       <SvgContainer>
-        <Svg width="108" height="51" viewBox="0 0 108 51" fill="none">
+        <Svg width="78" height="34" viewBox="0 0 78 34">
           <Path
-            d="M22 18H38V26H70V18H86V42H70V50H38V42H22V18Z"
-            fill="#C4C4C4"
+            d="M77 13L70.25 3.47372L70.25 22.5263L77 13Z"
+            fill={spike}
             stroke="black"
           />
           <Path
-            d="M1.75 29.567L0.999999 30L1.75 30.433L21.25 41.6913L22 42.1244L22 41.2583L22 18.7417L22 17.8756L21.25 18.3087L1.75 29.567Z"
-            fill="#C4C4C4"
+            d="M0.999999 13L7.75 3.47372L7.75 22.5263L0.999999 13Z"
+            fill={spike}
             stroke="black"
           />
           <Path
-            d="M106.25 29.567L107 30L106.25 30.433L86.75 41.6913L86 42.1244L86 41.2583L86 18.7417L86 17.8756L86.75 18.3087L106.25 29.567Z"
-            fill="#C4C4C4"
+            d="M7 1H23V9H55V1H71V25H55V33H23V25H7V1Z"
+            fill={bodyFill}
             stroke="black"
           />
+          <Rect
+            x="13.5"
+            y="5.5"
+            width="7"
+            height="7"
+            fill="white"
+            stroke="black"
+          />
+          <Rect
+            x="57.5"
+            y="5.5"
+            width="7"
+            height="7"
+            fill="white"
+            stroke="black"
+          />
+          <Rect x="15" y="7" width="4" height="4" fill="black" />
+          <Rect x="59" y="7" width="4" height="4" fill="black" />
         </Svg>
       </SvgContainer>
     </BaseContainer>

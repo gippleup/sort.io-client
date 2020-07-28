@@ -4,6 +4,7 @@ import model, {TBlockStack} from './BlockBoard/Model/model';
 import BlockStack from './BlockStack';
 import styled from 'styled-components';
 import Constants from '../assets/Constants';
+import {skins} from './BlockStack/skinMap';
 
 const Board: typeof View = styled(View)`
   background-color: royalblue;
@@ -51,6 +52,7 @@ const TouchAgent: typeof View = styled(View)`
 type BlockBoardProps = {
   stackMap: number[][];
   style: ViewStyle;
+  skin: skins;
 };
 
 const BlockBoard: React.FC<BlockBoardProps> = (props) => {
@@ -127,6 +129,7 @@ const BlockBoard: React.FC<BlockBoardProps> = (props) => {
               const mappedStack = stack.curStack.map((id) => state.blocks[id]);
               return (
                 <BlockStack
+                  skin={props.skin}
                   data={mappedStack}
                   max={stack.max}
                   key={type + stack.id}

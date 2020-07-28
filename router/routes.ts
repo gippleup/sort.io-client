@@ -1,6 +1,7 @@
 import BlockTester from '../screens/dev/BlockTester';
 import BlockBoardTester from '../screens/dev/BlockBoardTester';
 import EndGameInfoTester from '../screens/dev/EndGameInfoTester';
+import ScoreCheckerTester from '../screens/dev/ScoreCheckerTester';
 import GameSceneTester from '../screens/dev/GameSceneTester';
 import ItemBoxTester from '../screens/dev/ItemBoxTester';
 import ProfileTester from '../screens/dev/ProfileTester';
@@ -34,6 +35,10 @@ const routes: IRoutes = {
   TimerTester: {
     devName: '타이머 테스터',
     component: TimerTester,
+  },
+  ScoreCheckerTester: {
+    devName: '점수 기록기 테스터',
+    component: ScoreCheckerTester,
   },
   EndGameInfoTester: {
     devName: '종료 팝업 테스터',

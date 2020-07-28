@@ -1,3 +1,5 @@
+import {BlockTypes} from '../../Block/Types';
+
 export enum ActionTypes {
   MOVE_BLOCK = 'MOVE_BLOCK',
   LOAD_MAP = 'LOAD_MAP',
@@ -6,7 +8,7 @@ export enum ActionTypes {
 
 export type TBlock = {
   id: number;
-  type: number;
+  type: BlockTypes;
 };
 
 export type TBlockStack = {
@@ -52,10 +54,10 @@ const reducerMethods = (
   newState: BlockBoardReducerState,
 ) => {
   const methods = {
-    loadMap: (stackMap: number[][]) => {
-      stackMap.forEach((stackData: number[]) => {
+    loadMap: (stackMap: BlockTypes[][]) => {
+      stackMap.forEach((stackData: BlockTypes[]) => {
         const newStack = methods.createStack(stackData.length);
-        stackData.forEach((blockType: number) => {
+        stackData.forEach((blockType: BlockTypes) => {
           if (blockType === -1) {
             return;
           }
@@ -78,7 +80,7 @@ const reducerMethods = (
       newState.blockStackCount += 1;
       return newStack;
     },
-    createBlock: (type: number) => {
+    createBlock: (type: BlockTypes) => {
       const newBlock: TBlock = {
         id: newState.blockCount,
         type,
@@ -120,7 +122,8 @@ const reducerMethods = (
     },
     toggleDock: (stackId: number) => {
       const targetStack: TBlockStack = newState.blockStacks[stackId];
-      const prevStack: TBlockStack | null = state.selectedStack !== null
+      const prevStack: TBlockStack | null =
+        state.selectedStack !== null
           ? newState.blockStacks[state.selectedStack]
           : null;
       newState.isDockReady = !state.isDockReady;

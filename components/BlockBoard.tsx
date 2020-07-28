@@ -126,10 +126,11 @@ const BlockBoard: React.FC<BlockBoardProps> = (props) => {
                 );
               }
 
+              const mappedStack = stack.curStack.map((id) => state.blocks[id]);
               return (
                 <BlockStack
                   skin={props.skin}
-                  data={stack.curStack}
+                  data={mappedStack}
                   max={stack.max}
                   key={type + stack.id}
                   completed={stack.completed}

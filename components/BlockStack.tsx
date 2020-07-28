@@ -53,9 +53,8 @@ class BlockStack extends React.Component<BlockStackProps, {}> {
       nextProps.curState === props.curState
     ) {
       return false;
-    } else {
-      return true;
     }
+    return true;
   }
   componentDidUpdate() {
     const {props} = this;
@@ -217,7 +216,6 @@ class BlockStack extends React.Component<BlockStackProps, {}> {
   }
   render() {
     const {props, renderBase, renderBlocks} = this;
-    console.log(props.data);
     this.topBlock = props.data[props.data.length - 1];
     this.bodyBlocks = props.data.slice(0, props.data.length - 1);
     this.tailBlock = this.bodyBlocks[0] || this.topBlock;

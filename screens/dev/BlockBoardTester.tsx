@@ -1,6 +1,11 @@
-import React from 'react'
-import { View, Text, Dimensions } from 'react-native'
+import React from 'react';
+import {View, Text, Dimensions} from 'react-native';
 import BlockBoard from '../../components/BlockBoard';
+
+const smallMap = [
+  [1, 1, -1],
+  [2, -1],
+];
 
 const exStackMap = [
   [1, 1, 1],
@@ -21,10 +26,8 @@ const BlockBoardTester = () => {
         flex: 1,
         paddingBottom: 20,
       }}>
-      <BlockBoard
-        style={{width: Dimensions.get('screen').width - 20}}
-        stackMap={exStackMap}
-      />
+      <BlockBoard style={{width: 180, borderWidth: 1}} stackMap={smallMap} />
+      <BlockBoard style={{width: 340, borderWidth: 1}} stackMap={exStackMap} />
     </View>
   );
 };

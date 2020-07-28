@@ -54,7 +54,10 @@ type BlockBoardProps = {
 };
 
 const BlockBoard: React.FC<BlockBoardProps> = (props) => {
-  const [state, dispatch] = React.useReducer(model.reducer, model.initialState);
+  const [state, dispatch] = React.useReducer(
+    model.reducer,
+    JSON.parse(JSON.stringify(model.initialState)),
+  );
 
   const column = Math.floor(
     props.style.width / (Constants.blockWidth + Constants.blockPadding),
@@ -139,8 +142,6 @@ const BlockBoard: React.FC<BlockBoardProps> = (props) => {
       </>
     );
   };
-
-  console.log(state.hasWon);
 
   return (
     <Board style={props.style}>

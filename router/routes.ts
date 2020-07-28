@@ -11,6 +11,7 @@ import GameScene from '../components/GameScene';
 import Main from '../screens/production/Main';
 import SelectStage from '../screens/production/SelectStage';
 import Shop from '../screens/production/Shop';
+import TimerTester from '../screens/dev/TimerTester';
 
 interface IRoutes {
   [index: string]: {
@@ -29,6 +30,10 @@ const routes: IRoutes = {
     devName: '블록보드 테스터',
     component: BlockBoardTester,
     headerShown: false,
+  },
+  TimerTester: {
+    devName: '타이머 테스터',
+    component: TimerTester,
   },
   EndGameInfoTester: {
     devName: '종료 팝업 테스터',

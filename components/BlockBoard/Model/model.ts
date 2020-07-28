@@ -14,7 +14,7 @@ export type TBlock = {
 export type TBlockStack = {
   id: number;
   max: number;
-  curStack: number[];
+  curStack: TBlock[];
   completed: boolean;
   curState: 'neutral' | 'docked' | 'undocked';
   prevState: 'neutral' | 'docked' | 'undocked';
@@ -62,7 +62,7 @@ const reducerMethods = (
             return;
           }
           const newBlock = methods.createBlock(blockType);
-          newStack.curStack.push(newBlock.id);
+          newStack.curStack.push(newBlock);
         });
         newStack.completed = methods.checkIfCompleted(newStack.id);
       });
@@ -110,12 +110,8 @@ const reducerMethods = (
     checkIfCompleted: (stackId: number) => {
       const targetStack: TBlockStack = newState.blockStacks[stackId];
 
-      const mappedStack = targetStack.curStack.map(
-        (blockId) => newState.blocks[blockId],
-      );
-
       const checker: {[index: string]: boolean} = {};
-      mappedStack.forEach((block) => (checker[block.type] = true));
+      targetStack.curStack.forEach((block) => (checker[block.type] = true));
       let isAllSameType = Object.values(checker).length === 1;
       let isFull = targetStack.max === targetStack.curStack.length;
       return isAllSameType && isFull;

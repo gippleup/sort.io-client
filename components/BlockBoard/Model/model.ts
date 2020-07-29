@@ -126,6 +126,11 @@ const reducerMethods = (
         state.selectedStack !== null
           ? newState.blockStacks[state.selectedStack]
           : null;
+
+      if (!state.isDockReady && !targetStack.curStack.length) {
+        return;
+      }
+
       newState.isDockReady = !state.isDockReady;
 
       if (!state.isDockReady) {

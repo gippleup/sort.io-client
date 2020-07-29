@@ -10,20 +10,36 @@ const ShapeContainer: typeof View = styled(View)`
 
 type BlockProps = {
   base: React.FC<BasicBlockProps>;
-  shape: React.FC<BasicBlockProps>;
+  shape?: React.FC<BasicBlockProps>;
   type: BlockTypes;
+  scale?: number;
 };
-const Block = (props: BlockProps) => {
+
+const Block: React.FC<BlockProps> = (props) => {
   const Base = props.base;
-  const Shape: React.FC<BasicBlockProps> = props.shape;
+
+  const renderShape = () => {
+    if (!props.shape) {
+      return <></>;
+    }
+    const Shape: React.FC<BasicBlockProps> = props.shape;
+    return (
+      <ShapeContainer>
+        <Shape scale={props.scale} type={props.type} />
+      </ShapeContainer>
+    );
+  };
+
   return (
     <View>
-      <Base type={9} />
-      <ShapeContainer>
-        <Shape type={props.type} />
-      </ShapeContainer>
+      <Base scale={props.scale} type={9} />
+      {renderShape()}
     </View>
   );
+};
+
+Block.defaultProps = {
+  scale: 1,
 };
 
 export default Block;

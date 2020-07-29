@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Animated, Easing} from 'react-native';
+import {View, Animated, Easing, ViewProps} from 'react-native';
 import {TBlock} from './BlockBoard/Model/model';
 import PieceBase from './Block/PieceBase';
 import BottomBase from './Block/BottomBase';
@@ -7,20 +7,34 @@ import TopBase from './Block/TopBase';
 import styled from 'styled-components';
 import Block from './Block';
 import skinMap, {skins} from './BlockStack/skinMap';
+import BlockFrame from './BlockStack/BlockFrame';
 
-const BaseContainer: typeof View = styled(View)``;
+const StackContainer: typeof View = styled(View)`
+  justify-content: flex-end;
+`;
 
 const BlockContainer: typeof View = styled(View)``;
+
+const BlockStackContainer: typeof View = styled(View)`
+  width: 100%;
+  position: absolute;
+`;
+
+const TouchAgent: typeof View = styled(View)`
+  position: absolute;
+  background-color: black;
+  opacity: 0;
+`;
 
 type BlockStackProps = {
   data: TBlock[];
   max: number;
   completed: boolean;
-  onPress?: () => void;
-  isBase: boolean;
+  onTouchStart?: () => void;
   curState: 'neutral' | 'docked' | 'undocked';
   prevState: 'neutral' | 'docked' | 'undocked';
   skin: skins;
+  scale: number;
 };
 
 class BlockStack extends React.Component<BlockStackProps, {}> {
@@ -42,7 +56,6 @@ class BlockStack extends React.Component<BlockStackProps, {}> {
     this.dock = this.dock.bind(this);
     this.undock = this.undock.bind(this);
     this.sit = this.sit.bind(this);
-    this.renderBase = this.renderBase.bind(this);
     this.renderBlocks = this.renderBlocks.bind(this);
     this.renderCap = this.renderCap.bind(this);
   }
@@ -59,27 +72,25 @@ class BlockStack extends React.Component<BlockStackProps, {}> {
   componentDidUpdate() {
     const {props} = this;
 
-    if (!props.isBase) {
-      let targetAnimation:
-        | null
-        | 'undock'
-        | 'dock'
-        | 'appear'
-        | 'sit'
-        | 'disappear' = null;
-      if (props.prevState === 'neutral' && props.curState === 'undocked') {
-        targetAnimation = 'undock';
-      } else if (props.prevState === 'neutral' && props.curState === 'docked') {
-        targetAnimation = 'appear';
-        // eslint-disable-next-line prettier/prettier
-      } else if (props.prevState === 'undocked' && props.curState === 'docked') {
-        targetAnimation = 'sit';
-      } else if (props.prevState === 'docked' && props.curState === 'docked') {
-        targetAnimation = 'dock';
-      }
-      if (targetAnimation) {
-        this[targetAnimation]();
-      }
+    let targetAnimation:
+      | null
+      | 'undock'
+      | 'dock'
+      | 'appear'
+      | 'sit'
+      | 'disappear' = null;
+    if (props.prevState === 'neutral' && props.curState === 'undocked') {
+      targetAnimation = 'undock';
+    } else if (props.prevState === 'neutral' && props.curState === 'docked') {
+      targetAnimation = 'appear';
+      // eslint-disable-next-line prettier/prettier
+    } else if (props.prevState === 'undocked' && props.curState === 'docked') {
+      targetAnimation = 'sit';
+    } else if (props.prevState === 'docked' && props.curState === 'docked') {
+      targetAnimation = 'dock';
+    }
+    if (targetAnimation) {
+      this[targetAnimation]();
     }
   }
   dock() {
@@ -136,26 +147,8 @@ class BlockStack extends React.Component<BlockStackProps, {}> {
         type={this.tailBlock.type}
         shape={skinMap[props.skin].top}
         base={TopBase}
+        scale={props.scale}
       />
-    );
-  }
-  renderBase() {
-    const {props} = this;
-    return (
-      <BaseContainer
-        onTouchStart={() => {
-          if (props.onPress) {
-            props.onPress();
-          }
-        }}>
-        <TopBase type={9} />
-        {Array(props.max)
-          .fill(0)
-          .map((value, i) => (
-            <PieceBase key={i} type={9} />
-          ))}
-        <BottomBase type={9} />
-      </BaseContainer>
     );
   }
   renderBlocks() {
@@ -167,6 +160,7 @@ class BlockStack extends React.Component<BlockStackProps, {}> {
             type={9}
             shape={skinMap[props.skin].bottom}
             base={BottomBase}
+            scale={props.scale}
           />
         </BlockContainer>
       );
@@ -193,6 +187,7 @@ class BlockStack extends React.Component<BlockStackProps, {}> {
             type={this.topBlock.type}
             shape={skinMap[props.skin].piece}
             base={PieceBase}
+            scale={props.scale}
           />
         </Animated.View>
         {this.bodyBlocks
@@ -204,22 +199,32 @@ class BlockStack extends React.Component<BlockStackProps, {}> {
               type={block.type}
               shape={skinMap[props.skin].piece}
               base={PieceBase}
+              scale={props.scale}
             />
           ))}
         <Block
           type={this.tailBlock.type}
           shape={skinMap[props.skin].bottom}
           base={BottomBase}
+          scale={props.scale}
         />
       </BlockContainer>
     );
   }
   render() {
-    const {props, renderBase, renderBlocks} = this;
+    const {props, renderBlocks} = this;
     this.topBlock = props.data[props.data.length - 1];
     this.bodyBlocks = props.data.slice(0, props.data.length - 1);
     this.tailBlock = this.bodyBlocks[0] || this.topBlock;
-    return <View>{props.isBase ? renderBase() : renderBlocks()}</View>;
+    return (
+      <StackContainer>
+        <BlockFrame pieceCount={props.max} scale={props.scale} />
+        <BlockStackContainer>{renderBlocks()}</BlockStackContainer>
+        <TouchAgent onTouchStart={props.onTouchStart}>
+          <BlockFrame pieceCount={5} scale={props.scale} />
+        </TouchAgent>
+      </StackContainer>
+    );
   }
 }
 

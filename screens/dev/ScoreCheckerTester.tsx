@@ -5,7 +5,17 @@ import ScoreChecker from '../../components/ScoreChecker';
 const ScoreCheckerTester = () => {
   return (
     <View>
-      <ScoreChecker />
+      <ScoreChecker
+        curScore={3}
+        maxScore={5}
+        layout={[
+          [1, 1, 1],
+          [1, 1],
+        ]}
+        scale={0.5}
+        skin="spiky"
+        intervalHeight={3}
+      />
     </View>
   );
 };

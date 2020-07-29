@@ -44,10 +44,10 @@ const colorTheme: {[index: number]: SpikeSkinColorTheme} = {
   },
   9: {
     feet: 'grey',
-    bodyFill: 'white',
-    bottomFill: 'lightgrey',
-    cap: '',
-    spike: '',
+    bodyFill: 'darkgrey',
+    bottomFill: 'grey',
+    cap: 'grey',
+    spike: 'grey',
   },
 };
 

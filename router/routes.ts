@@ -36,13 +36,13 @@ const routes: IRoutes = {
     devName: '점수 기록기 테스터',
     component: ScoreCheckerTester,
   },
-  EndGameInfoTester: {
-    devName: '종료 팝업 테스터',
-    component: EndGameInfoTester,
-  },
   GameSceneTester: {
     devName: '게임씬 테스터',
     component: GameSceneTester,
+  },
+  EndGameInfoTester: {
+    devName: '종료 팝업 테스터',
+    component: EndGameInfoTester,
   },
   ItemBoxTester: {
     devName: '샵 아이템 박스 테스터',

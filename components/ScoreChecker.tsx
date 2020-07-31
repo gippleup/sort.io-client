@@ -50,10 +50,10 @@ const ScoreChecker: React.FC<ScoreCheckerProps> = (props) => {
             if (!iconToDrawCount) {
               return;
             } else if (bool) {
-              iconToDrawCount--;
-              scoreToCheckCount--;
               const iconType = scoreToCheckCount > 0 ? 0 : 9;
               const isEndOfCol = j === row.length - 1;
+              scoreToCheckCount--;
+              iconToDrawCount--;
               return (
                 <Fragment key={'fragment' + i + j}>
                   <ScoreIcon

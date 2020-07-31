@@ -98,7 +98,7 @@ class BlockStack extends React.Component<BlockStackProps, {}> {
     Animated.timing(this.dockAnim, {
       toValue: 0,
       useNativeDriver: true,
-      duration: 500,
+      duration: 300,
       easing: Easing.in(Easing.bounce),
     }).start();
   }
@@ -107,7 +107,7 @@ class BlockStack extends React.Component<BlockStackProps, {}> {
     Animated.timing(this.dockAnim, {
       toValue: 1,
       useNativeDriver: true,
-      duration: 500,
+      duration: 300,
       easing: Easing.in(Easing.elastic(4)),
     }).start();
   }

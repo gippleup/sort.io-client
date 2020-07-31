@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, ViewStyle} from 'react-native';
-import model, {TBlockStack} from './BlockBoard/Model/model';
+import model, {TBlockStack, BlockBoardReducerAction, BlockBoardReducerState} from './BlockBoard/Model/model';
 import BlockStack from './BlockStack';
 import styled from 'styled-components';
 import Constants from '../assets/Constants';
@@ -25,75 +25,112 @@ type BlockBoardProps = {
   stackMap: number[][];
   style: ViewStyle;
   skin: skins;
+  onChange: (curScore: number) => void;
 };
 
-const BlockBoard: React.FC<BlockBoardProps> = (props) => {
-  const [state, dispatch] = React.useReducer(
-    model.reducer,
-    JSON.parse(JSON.stringify(model.initialState)),
-  );
-
-  if (!props.stackMap) {
-    return <></>;
+class BlockBoard extends React.Component<BlockBoardProps, {}> {
+  constructor(props: BlockBoardProps) {
+    super(props);
+    this.dispatch = this.dispatch.bind(this);
+    this.putStacksToRow = this.putStacksToRow.bind(this);
   }
 
-  const column = Math.floor(
-    props.style.width / (Constants.blockWidth + Constants.blockPadding),
+  state: BlockBoardReducerState = JSON.parse(
+    JSON.stringify(model.initialState),
   );
 
-  const row = Math.ceil(state.blockStackCount / column);
+  dispatch = (action: BlockBoardReducerAction) => {
+    this.setState(model.reducer(this.state, action));
+  };
 
-  if (!state.blockStackCount) {
-    dispatch(model.actions.loadMap(props.stackMap));
+  componentDidMount() {
+    const {state, dispatch, props} = this;
+    if (!state.blockStackCount) {
+      dispatch(model.actions.loadMap(props.stackMap));
+    }
   }
 
-  const stacks = Object.values(state.blockStacks);
+  componentDidUpdate() {
+    const {state, props} = this;
+    const stacks = Object.values(state.blockStacks);
+    const curScore = stacks.reduce(
+      (acc, ele) => (ele.completed ? acc + 1 : acc),
+      0,
+    );
+    if (props.onChange) {
+      props.onChange(curScore);
+    }
+  }
 
-  const putStacksToRow = (
-    stackArr: TBlockStack[],
-    columnNum: number,
-    rowNum: number,
-  ) => {
+  putStacksToRow(stackArr: TBlockStack[], columnNum: number, rowNum: number) {
     const result = [];
     for (let i = 0; i < stackArr.length; i += columnNum) {
       const groupedStack = stackArr.slice(i, i + columnNum);
       result.push(groupedStack);
     }
     return result;
-  };
+  }
 
-  const arrangedStack: TBlockStack[][] = putStacksToRow(stacks, column, row);
+  shouldComponentUpdate(
+    nextProps: BlockBoardProps,
+    nextState: BlockBoardReducerState,
+  ) {
+    const {state} = this;
+    if (state !== nextState) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-  return (
-    <Board style={props.style}>
-      {arrangedStack.map((stackArr, i) => (
-        <Row key={'row' + i}>
-          {stackArr.map((stack) => {
-            if (!stack) {
-              return <View />;
-            }
+  render() {
+    let randomNum = Math.floor(Math.random() * 100);
+    const {props, state, putStacksToRow, dispatch} = this;
+    const column = Math.floor(
+      props.style.width / (Constants.blockWidth + Constants.blockPadding),
+    );
 
-            const mappedStack = stack.curStack.map((id) => state.blocks[id]);
-            return (
-              <BlockStack
-                scale={1}
-                skin={props.skin}
-                data={mappedStack}
-                max={stack.max}
-                key={stack.id}
-                completed={stack.completed}
-                curState={stack.curState}
-                prevState={stack.prevState}
-                onTouchStart={() =>
-                  dispatch(model.actions.toggleDock(stack.id))
-                }
-              />
-            );
-          })}
-        </Row>
-      ))}
-    </Board>
-  );
-};
+    const row = Math.ceil(state.blockStackCount / column);
+
+    const stacks = Object.values(state.blockStacks);
+
+    const arrangedStack: TBlockStack[][] = putStacksToRow(stacks, column, row);
+
+    if (!props.stackMap) {
+      return <></>;
+    }
+
+    return (
+      <Board style={props.style}>
+        {arrangedStack.map((stackArr, i) => (
+          <Row key={'row' + i}>
+            {stackArr.map((stack) => {
+              if (!stack) {
+                return <View />;
+              }
+
+              const mappedStack = stack.curStack.map((id) => state.blocks[id]);
+              return (
+                <BlockStack
+                  scale={1}
+                  skin={props.skin}
+                  data={mappedStack}
+                  max={stack.max}
+                  key={stack.id}
+                  completed={stack.completed}
+                  curState={stack.curState}
+                  prevState={stack.prevState}
+                  onTouchStart={() =>
+                    dispatch(model.actions.toggleDock(stack.id))
+                  }
+                />
+              );
+            })}
+          </Row>
+        ))}
+      </Board>
+    );
+  }
+}
 
 export default BlockBoard;

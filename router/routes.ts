@@ -39,6 +39,7 @@ const routes: IRoutes = {
   GameSceneTester: {
     devName: '게임씬 테스터',
     component: GameSceneTester,
+    headerShown: false,
   },
   EndGameInfoTester: {
     devName: '종료 팝업 테스터',

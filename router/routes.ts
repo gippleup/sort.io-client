@@ -13,6 +13,7 @@ import Main from '../screens/production/Main';
 import SelectStage from '../screens/production/SelectStage';
 import Shop from '../screens/production/Shop';
 import TimerTester from '../screens/dev/TimerTester';
+import RefBoxTester from '../screens/dev/RefBoxTester';
 
 interface IRoutes {
   [index: string]: {
@@ -23,6 +24,11 @@ interface IRoutes {
   };
 }
 const routes: IRoutes = {
+  RefBoxTester: {
+    devName: '레프 박스 테스터',
+    component: RefBoxTester,
+    headerShown: false,
+  },
   BlockBoardTester: {
     devName: '블록보드 테스터',
     component: BlockBoardTester,

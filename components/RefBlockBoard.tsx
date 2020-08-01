@@ -1,10 +1,11 @@
-import React, {Component, RefObject} from 'react';
+import React, {Component, RefObject, Fragment} from 'react';
 import {
   Text,
   View,
   ViewStyle,
   LayoutRectangle,
   LayoutChangeEvent,
+  Easing,
 } from 'react-native';
 import styled from 'styled-components';
 import Constants from '../assets/Constants';
@@ -59,6 +60,7 @@ export class RefBlockBoard extends Component<
       pieceRefs: RefObject<RefBox>[];
     };
   } = {};
+  layoutRef = React.createRef<View>();
   constructor(props: RefBlockBoardProps) {
     super(props);
     this.state = {
@@ -72,6 +74,7 @@ export class RefBlockBoard extends Component<
       layout: e.nativeEvent.layout,
     });
   }
+
   render() {
     const {props, catchLayout, state} = this;
     if (!state.layout) {
@@ -109,14 +112,16 @@ export class RefBlockBoard extends Component<
       <View style={this.props.style}>
         <LayoutContainer>
           {layout.map((row, i) => (
-            <Row style={{marginVertical}}>
+            <Row key={'frameRow' + i} style={{marginVertical}}>
               {row.map((cell, j) => {
                 const stackIndex = layout[0].length * i + j;
                 if (props.initialMap[stackIndex] === undefined) {
-                  return <Cell style={{marginHorizontal}} />;
+                  return (
+                    <Cell key={'cell' + i + j} style={{marginHorizontal}} />
+                  );
                 }
                 return (
-                  <Cell style={{marginHorizontal}}>
+                  <Cell key={'cell' + i + j} style={{marginHorizontal}}>
                     <BlockFrame
                       pieceCount={props.initialMap[stackIndex].length}
                       scale={scale}
@@ -127,13 +132,13 @@ export class RefBlockBoard extends Component<
             </Row>
           ))}
         </LayoutContainer>
-        <LayoutContainer>
+        <LayoutContainer ref={this.layoutRef}>
           {layout.map((row, i) =>
             row.map((cell, j) => {
               const stackIndex = layout[0].length * i + j;
               const curStack = props.initialMap[stackIndex];
               if (curStack === undefined) {
-                return <></>;
+                return <Fragment key={'fragment' + i + j} />;
               }
 
               const filteredStack = curStack.filter((type) =>
@@ -156,8 +161,9 @@ export class RefBlockBoard extends Component<
               };
               this.stacks[stackIndex] = stackModel;
               return (
-                <>
+                <Fragment key={'fragment' + i + j}>
                   <AbsoluteRefBox
+                    key={'cap' + i + j}
                     style={{
                       left:
                         marginHorizontal +
@@ -183,6 +189,7 @@ export class RefBlockBoard extends Component<
                   {filteredStack.map((type, k) => {
                     return (
                       <AbsoluteRefBox
+                        key={'piece' + i + j + k}
                         ref={pieceRefs[k]}
                         style={{
                           left:
@@ -206,6 +213,7 @@ export class RefBlockBoard extends Component<
                   })}
                   {/* This is Block Bottom */}
                   <AbsoluteRefBox
+                    key={'bottom' + i + j}
                     style={{
                       left:
                         marginHorizontal +
@@ -224,25 +232,59 @@ export class RefBlockBoard extends Component<
                       scale={scale}
                     />
                   </AbsoluteRefBox>
-                </>
+                </Fragment>
               );
             }),
           )}
         </LayoutContainer>
         <LayoutContainer>
           {layout.map((row, i) => (
-            <Row style={{marginVertical}}>
+            <Row key={'agentRow' + i} style={{marginVertical}}>
               {row.map((cell, j) => {
                 const stackIndex = layout[0].length * i + j;
                 if (props.initialMap[stackIndex] === undefined) {
-                  return <Cell style={{marginHorizontal}} />;
+                  return (
+                    <Cell
+                      key={'agentRowCell' + i + j}
+                      style={{marginHorizontal}}
+                    />
+                  );
                 }
                 return (
-                  <Cell style={{marginHorizontal}}>
+                  <Cell key={'agentRowCell' + i + j} style={{marginHorizontal}}>
                     <TouchAgent
                       onTouchStart={() => {
-                        this.stacks[stackIndex].pieceRefs[0].current
-                          ?.animateXY(100, 100)
+                        const stackRow = Math.floor(stackIndex / maxColumns);
+                        const stackColumn = stackIndex % maxColumns;
+                        const targetStack = this.stacks[stackIndex];
+                        const curStackLength = targetStack.pieceRefs.length;
+                        const pieceOnTop =
+                          targetStack.pieceRefs[curStackLength - 1];
+
+                        if (!pieceOnTop) {
+                          return;
+                        }
+
+                        const curPos = {
+                          x:
+                            marginHorizontal +
+                            (blockWidth + marginHorizontal * 2) * stackColumn,
+                          y:
+                            marginVertical +
+                            (blockHeight + marginVertical * 2) * stackRow +
+                            Constants.blockHeight.top * scale +
+                            Constants.blockHeight.piece * scale * 5 -
+                            Constants.blockHeight.piece *
+                              scale *
+                              curStackLength,
+                        };
+
+                        pieceOnTop.current
+                          ?.animateY(
+                            curPos.y - 20,
+                            300,
+                            Easing.in(Easing.elastic(3)),
+                          )
                           .start();
                       }}>
                       <BlockFrame pieceCount={5} scale={scale} />

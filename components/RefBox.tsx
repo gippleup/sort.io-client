@@ -22,8 +22,14 @@ export class RefBox extends Component<RefBoxProps> {
     super(props);
     this.catchLayout = this.catchLayout.bind(this);
     this.setStyle = this.setStyle.bind(this);
-    this.animX.addListener((state) => this.setStyle({left: state.value}));
-    this.animY.addListener((state) => this.setStyle({top: state.value}));
+    this.animX.addListener((state) => {
+      this.x = state.value + this.originX;
+      this.setStyle({left: state.value});
+    });
+    this.animY.addListener((state) => {
+      this.y = state.value + this.originY;
+      this.setStyle({top: state.value});
+    });
   }
 
   originX = 0;

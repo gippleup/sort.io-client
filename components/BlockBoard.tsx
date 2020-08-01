@@ -25,7 +25,7 @@ type BlockBoardProps = {
   stackMap: number[][];
   style: ViewStyle;
   skin: skins;
-  onChange: (curScore: number) => void;
+  onChange?: (curScore: number) => void;
 };
 
 class BlockBoard extends React.Component<BlockBoardProps, {}> {
@@ -84,7 +84,6 @@ class BlockBoard extends React.Component<BlockBoardProps, {}> {
   }
 
   render() {
-    let randomNum = Math.floor(Math.random() * 100);
     const {props, state, putStacksToRow, dispatch} = this;
     const column = Math.floor(
       props.style.width / (Constants.blockWidth + Constants.blockPadding),

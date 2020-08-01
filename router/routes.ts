@@ -1,4 +1,3 @@
-import BlockTester from '../screens/dev/BlockTester';
 import BlockBoardTester from '../screens/dev/BlockBoardTester';
 import EndGameInfoTester from '../screens/dev/EndGameInfoTester';
 import ScoreCheckerTester from '../screens/dev/ScoreCheckerTester';
@@ -14,6 +13,7 @@ import SelectStage from '../screens/production/SelectStage';
 import Shop from '../screens/production/Shop';
 import TimerTester from '../screens/dev/TimerTester';
 import RefBoxTester from '../screens/dev/RefBoxTester';
+import RefBlockBoardTester from '../screens/dev/RefBlockBoardTester';
 
 interface IRoutes {
   [index: string]: {
@@ -28,6 +28,10 @@ const routes: IRoutes = {
     devName: '레프 박스 테스터',
     component: RefBoxTester,
     headerShown: false,
+  },
+  RefBlockBoardTester: {
+    devName: '레프 블록보드 테스터',
+    component: RefBlockBoardTester,
   },
   BlockBoardTester: {
     devName: '블록보드 테스터',

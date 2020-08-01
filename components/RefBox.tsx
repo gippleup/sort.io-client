@@ -21,6 +21,9 @@ export class RefBox extends Component<RefBoxProps> {
   constructor(props: RefBoxProps) {
     super(props);
     this.catchLayout = this.catchLayout.bind(this);
+    this.setStyle = this.setStyle.bind(this);
+    this.animX.addListener((state) => this.setStyle({left: state.value}));
+    this.animY.addListener((state) => this.setStyle({top: state.value}));
   }
 
   originX = 0;
@@ -40,13 +43,20 @@ export class RefBox extends Component<RefBoxProps> {
 
   animAngle: Animated.Value = new Animated.Value(0);
 
+  setStyle(option: ViewStyle) {
+    this.boxRef.current?.setNativeProps({style: option});
+  }
+
   catchLayout(e: LayoutChangeEvent) {
     if (!this.catchedLayout) {
+      const {x, y, width, height} = e.nativeEvent.layout;
       this.catchedLayout = true;
-      this.originX = e.nativeEvent.layout.x;
-      this.originY = e.nativeEvent.layout.y;
-      this.originWidth = e.nativeEvent.layout.width;
-      this.originHeight = e.nativeEvent.layout.height;
+      this.originX = x;
+      this.originY = y;
+      this.originWidth = width;
+      this.originHeight = height;
+      this.animX.setValue(x);
+      this.animY.setValue(y);
     } else {
       return;
     }
@@ -154,8 +164,6 @@ export class RefBox extends Component<RefBoxProps> {
         style={[
           this.props.style,
           {
-            translateX: this.animX,
-            translateY: this.animY,
             transform: [
               {scale: this.animScale},
               {

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, ViewStyle} from 'react-native';
 import Svg from 'react-native-svg';
 import styled from 'styled-components';
 import {BlockTypes, BasicBlockProps} from './Block/Types';
@@ -13,12 +13,27 @@ type BlockProps = {
   shape?: React.FC<BasicBlockProps>;
   type: BlockTypes;
   scale?: number;
+  visible?: boolean;
+  style?: ViewStyle;
 };
 
-const Block: React.FC<BlockProps> = (props) => {
-  const Base = props.base;
+class Block extends React.Component<BlockProps> {
+  containerRef = React.createRef<View>();
+  setVisible(bool: boolean) {
+    this.containerRef.current?.setNativeProps({
+      style: {
+        display: bool ? 'flex' : 'none',
+      },
+    });
+  }
 
-  const renderShape = () => {
+  constructor(props: BlockProps) {
+    super(props);
+    this.renderShape = this.renderShape.bind(this);
+  }
+
+  renderShape() {
+    const {props} = this;
     if (!props.shape) {
       return <></>;
     }
@@ -28,18 +43,23 @@ const Block: React.FC<BlockProps> = (props) => {
         <Shape scale={props.scale} type={props.type} />
       </ShapeContainer>
     );
-  };
+  }
 
-  return (
-    <View>
-      <Base scale={props.scale} type={9} />
-      {renderShape()}
-    </View>
-  );
-};
+  render() {
+    const {props, renderShape} = this;
+    const Base = props.base;
+    const initialVisiblity =
+      props.visible === true || props.visible === undefined ? 'flex' : 'none';
 
-Block.defaultProps = {
-  scale: 1,
-};
+    return (
+      <View
+        ref={this.containerRef}
+        style={[props.style, {display: initialVisiblity}]}>
+        <Base scale={props.scale} type={9} />
+        {renderShape()}
+      </View>
+    );
+  }
+}
 
 export default Block;

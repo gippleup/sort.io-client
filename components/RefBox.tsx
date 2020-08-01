@@ -1,10 +1,11 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react';
 import {
   View,
   Animated,
   LayoutChangeEvent,
   ViewStyle,
   EasingFunction,
+  Easing,
 } from 'react-native';
 import styled from 'styled-components';
 
@@ -13,108 +14,52 @@ type RefBoxProps = {
   style?: ViewStyle;
 };
 
-const RefBoxContainer: typeof View = styled(View)`
-  position: absolute;
-`;
-
 export class RefBox extends Component<RefBoxProps> {
   boxRef = React.createRef<View>();
   catchedLayout = false;
 
-  layout = {
-    height: new Animated.Value(0),
-    width: new Animated.Value(0),
-    x: new Animated.Value(0),
-    y: new Animated.Value(0),
-    angle: new Animated.Value(0),
-    scale: new Animated.Value(0),
-  };
-
   constructor(props: RefBoxProps) {
     super(props);
     this.catchLayout = this.catchLayout.bind(this);
-    this.setX = this.setX.bind(this);
-    this.setY = this.setY.bind(this);
-    this.setXY = this.setXY.bind(this);
-    this.animateX = this.animateX.bind(this);
-    this.animateY = this.animateY.bind(this);
-    this.animateXY = this.animateXY.bind(this);
-    this.animateWidth = this.animateWidth.bind(this);
-    this.animateHeight = this.animateHeight.bind(this);
-    this.animateSize = this.animateSize.bind(this);
-    this.setAngle = this.setAngle.bind(this);
-    this.setScale = this.setScale.bind(this);
-    this.animateAngle = this.animateAngle.bind(this);
-    this.animateScale = this.animateScale.bind(this);
-    this.layout.x.addListener((state) => this.setX(state.value));
-    this.layout.y.addListener((state) => this.setY(state.value));
-    this.layout.width.addListener((state) => this.setWidth(state.value));
-    this.layout.height.addListener((state) => this.setHeight(state.value));
-    this.layout.angle.addListener((state) => this.setAngle(state.value));
-    this.layout.scale.addListener((state) => this.setScale(state.value));
   }
+
+  originX = 0;
+  originY = 0;
+  originWidth = 0;
+  originHeight = 0;
+
+  x = 0;
+  y = 0;
+  width = 0;
+  height = 0;
+
+  animX: Animated.Value = new Animated.Value(0);
+  animY: Animated.Value = new Animated.Value(0);
+
+  animScale: Animated.Value = new Animated.Value(1);
+
+  animAngle: Animated.Value = new Animated.Value(0);
 
   catchLayout(e: LayoutChangeEvent) {
     if (!this.catchedLayout) {
       this.catchedLayout = true;
-      const {layout} = e.nativeEvent;
-      this.layout.width.setValue(layout.width);
-      this.layout.height.setValue(layout.height);
-      this.layout.x.setValue(layout.x);
-      this.layout.y.setValue(layout.y);
+      this.originX = e.nativeEvent.layout.x;
+      this.originY = e.nativeEvent.layout.y;
+      this.originWidth = e.nativeEvent.layout.width;
+      this.originHeight = e.nativeEvent.layout.height;
+    } else {
+      return;
     }
   }
 
-  setStyle(option: ViewStyle) {
-    this.boxRef.current?.setNativeProps({
-      style: option,
-    });
+  setX(x: number) {
+    this.animX.setValue(x);
+    this.x = this.originX + x;
   }
 
-  setAngle(angle: number) {
-    this.setStyle({
-      transform: [{rotate: angle + 'deg'}],
-    });
-  }
-
-  animateAngle(angle: number, duration: number, easing?: EasingFunction) {
-    Animated.timing(this.layout.angle, {
-      toValue: angle,
-      duration: duration,
-      easing,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  setScale(scale: number) {
-    this.setStyle({
-      transform: [{scale: scale}],
-    });
-  }
-
-  animateScale(scale: number, duration: number, easing?: EasingFunction) {
-    Animated.timing(this.layout.scale, {
-      toValue: scale,
-      duration,
-      easing,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  setWidth(width: number) {
-    this.setStyle({width});
-  }
-
-  setHeight(height: number) {
-    this.setStyle({height});
-  }
-
-  setX(left: number) {
-    this.setStyle({left});
-  }
-
-  setY(top: number) {
-    this.setStyle({top});
+  setY(y: number) {
+    this.animY.setValue(y);
+    this.y = this.originY + y;
   }
 
   setXY(x: number, y: number) {
@@ -122,74 +67,110 @@ export class RefBox extends Component<RefBoxProps> {
     this.setY(y);
   }
 
-  animateWidth(
-    width: number,
-    duration: number,
-    easing: undefined | EasingFunction,
-  ) {
-    Animated.timing(this.layout.width, {
-      toValue: width,
-      useNativeDriver: true,
-      easing,
-      duration,
-    }).start();
+  setScale(scale: number) {
+    this.animScale.stopAnimation();
+    this.animScale.setValue(scale);
   }
 
-  animateHeight(
-    height: number,
-    duration: number,
-    easing: undefined | EasingFunction,
-  ) {
-    Animated.timing(this.layout.height, {
-      toValue: height,
-      useNativeDriver: true,
-      easing,
-      duration,
-    }).start();
+  setAngle(angle: number) {
+    this.animAngle.stopAnimation();
+    this.animAngle.setValue(angle);
   }
 
-  animateSize(
-    width: number,
-    height: number,
-    duration: number,
-    easing: undefined | EasingFunction,
+  animateX(
+    x: number,
+    duration: number = 500,
+    easing: EasingFunction = Easing.inOut(Easing.ease),
   ) {
-    this.animateWidth(width, duration, easing);
-    this.animateHeight(height, duration, easing);
-  }
-
-  animateX(x: number, duration: number, easing: undefined | EasingFunction) {
-    Animated.timing(this.layout.x, {
+    this.animX.stopAnimation();
+    return Animated.timing(this.animX, {
       toValue: x,
-      useNativeDriver: true,
+      duration: duration,
       easing,
-      duration,
-    }).start();
+      useNativeDriver: true,
+    });
   }
 
-  animateY(y: number, duration: number, easing: undefined | EasingFunction) {
-    Animated.timing(this.layout.y, {
+  animateY(
+    y: number,
+    duration: number = 500,
+    easing: EasingFunction = Easing.inOut(Easing.ease),
+  ) {
+    this.animY.stopAnimation();
+    return Animated.timing(this.animY, {
       toValue: y,
-      useNativeDriver: true,
-      easing,
       duration,
-    }).start();
+      easing,
+      useNativeDriver: true,
+    });
   }
 
-  animateXY(x: number, y: number, duration: number, easing?: EasingFunction) {
-    this.animateX(x, duration, easing);
-    this.animateY(y, duration, easing);
+  animateXY(
+    x: number,
+    y: number,
+    duration: number = 500,
+    easing: EasingFunction = Easing.inOut(Easing.ease),
+  ) {
+    this.animX.stopAnimation();
+    this.animY.stopAnimation();
+    return Animated.parallel([
+      this.animateX(x, duration, easing),
+      this.animateY(y, duration, easing),
+    ]);
+  }
+
+  animateScale(
+    scale: number,
+    duration: number = 500,
+    easing: EasingFunction = Easing.inOut(Easing.ease),
+  ) {
+    this.animScale.stopAnimation();
+    return Animated.timing(this.animScale, {
+      toValue: scale,
+      duration,
+      easing,
+      useNativeDriver: true,
+    });
+  }
+
+  animateAngle(
+    angle: number,
+    duration: number = 500,
+    easing: EasingFunction = Easing.inOut(Easing.ease),
+  ) {
+    this.animAngle.stopAnimation();
+    return Animated.timing(this.animAngle, {
+      toValue: angle,
+      duration,
+      easing,
+      useNativeDriver: true,
+    });
   }
 
   render() {
     return (
-      <RefBoxContainer
-        style={this.props.style}
+      <Animated.View
         onLayout={this.catchLayout}
+        style={[
+          this.props.style,
+          {
+            translateX: this.animX,
+            translateY: this.animY,
+            transform: [
+              {scale: this.animScale},
+              {
+                rotate: this.animAngle.interpolate({
+                  inputRange: [0, 360],
+                  outputRange: ['0deg', '360deg'],
+                }),
+              },
+            ],
+          },
+        ]}
         ref={this.boxRef}>
         {this.props.component || <></>}
         {this.props.children}
-      </RefBoxContainer>
+      </Animated.View>
     );
   }
 }

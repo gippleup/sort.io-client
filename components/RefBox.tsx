@@ -34,6 +34,9 @@ export class RefBox extends Component<RefBoxProps> {
     this.animOpacity.addListener((state) => {
       this.opacity = state.value;
     });
+    this.animScale.addListener((state) => {
+      this.scale = state.value;
+    });
     const flattenedStyle = StyleSheet.flatten(props.style);
     const propOpacity = flattenedStyle ? flattenedStyle.opacity : 1;
     this.animOpacity.setValue(propOpacity !== undefined ? propOpacity : 1);
@@ -49,6 +52,7 @@ export class RefBox extends Component<RefBoxProps> {
   width = 0;
   height = 0;
   opacity = 1;
+  scale = 1;
 
   animX: Animated.Value = new Animated.Value(0);
   animY: Animated.Value = new Animated.Value(0);
@@ -76,16 +80,20 @@ export class RefBox extends Component<RefBoxProps> {
   }
 
   setX(x: number) {
+    this.animX.stopAnimation();
     this.animX.setValue(x);
     this.x = this.originX + x;
   }
 
   setY(y: number) {
+    this.animY.stopAnimation();
     this.animY.setValue(y);
     this.y = this.originY + y;
   }
 
   setXY(x: number, y: number) {
+    this.animX.stopAnimation();
+    this.animY.stopAnimation();
     this.setX(x);
     this.setY(y);
   }
@@ -101,6 +109,7 @@ export class RefBox extends Component<RefBoxProps> {
   }
 
   setOpacity(opacity: number) {
+    this.animOpacity.stopAnimation();
     this.animOpacity.setValue(opacity);
   }
 

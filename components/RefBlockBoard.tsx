@@ -58,6 +58,7 @@ type RefBlockBoardProps = {
   scale?: number;
   skin: skins;
   onComplete?: () => void;
+  onChange?: (score: number) => void;
 };
 
 type RefBlockBoardState = {
@@ -111,13 +112,13 @@ export class RefBlockBoard extends Component<
     const marginHorizontal = (leftWidth / (maxColumns * 2)) * scale;
     const marginVertical = (leftHeight / (maxRows * 2)) * scale;
 
-    if (maxRows * maxColumns < props.initialMap.length) {
-      return (
-        <View>
-          <Text>공간이 부족합니다.</Text>
-        </View>
-      );
-    }
+    // if (maxRows * maxColumns < props.initialMap.length) {
+    //   return (
+    //     <View>
+    //       <Text>공간이 부족합니다.</Text>
+    //     </View>
+    //   );
+    // }
 
     const layout = Array(maxRows).fill(Array(maxColumns).fill(1));
 
@@ -467,10 +468,15 @@ export class RefBlockBoard extends Component<
                               return completedStack;
                             });
 
+                            const score = completeMap.filter((bool) => bool).length;
                             const completedAllStack =
                               completeMap.indexOf(false) === -1;
                             if (completedAllStack && props.onComplete) {
                               props.onComplete();
+                            }
+
+                            if (props.onChange) {
+                              props.onChange(score);
                             }
 
                             Animated.sequence(mainAnimation).start();

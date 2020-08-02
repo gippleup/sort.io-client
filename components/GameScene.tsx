@@ -5,31 +5,24 @@ import BlockBoard from './BlockBoard';
 import Timer from './Timer';
 import styled from 'styled-components';
 import ScoreChecker from './ScoreChecker';
+import RefBlockBoard from './RefBlockBoard';
+import {BlockTypes} from './Block/Types';
+import { skins } from './BlockStack/skinMap';
 
 const backgroundImage = require('../assets/BackgroundPattern.png');
-
-const exStackMap = [
-  [0, 0, 0],
-  [1, 1],
-  [-1, -1, -1, -1, -1],
-  [-1, -1, -1, -1],
-  [-1, -1, -1, -1],
-  [2, 2, 3, 3],
-  [3, 4, 4, -1, -1],
-];
 
 const GameSceneContainer = styled(View)`
   flex: 1;
 `;
 
 const GameInfoContainer = styled(View)`
-  flex: 35;
+  flex: 25;
 `;
 
 const LevelInfoContainer = styled(View)`
   align-items: center;
-  justify-content: center;
-  flex: 1;
+  justify-content: flex-end;
+  flex: 2;
 `;
 
 const LevelInfo = styled(Text)`
@@ -55,14 +48,35 @@ const BlockBoardContainer = styled(View)`
   justify-content: center;
 `;
 
+const StyledRefBoard: typeof RefBlockBoard = styled(RefBlockBoard)`
+  width: 340px;
+  height: 400px;
+  border-width: 1px;
+  border-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.3);
+`;
+
 type GameSceneProps = {
   title: string;
   timeLimit: number;
   maxScore: number;
+  map: BlockTypes[][];
+  skin: skins;
 };
 
 const GameScene: React.FC<GameSceneProps> = (props) => {
-  const [curScore, setCurScore] = React.useState(0);
+  const scoreCheckerRef = React.createRef<ScoreChecker>();
+  const filledStack = props.map.filter((stack) => stack[0] !== -1);
+  const completeMap = filledStack.map((stack) => {
+    let completedStack = true;
+    stack.forEach((block) => {
+      if (block !== stack[0]) {
+        completedStack = false;
+      }
+    });
+    return completedStack;
+  });
+  const initialScore = completeMap.filter((bool) => bool).length;
   return (
     <GameSceneContainer>
       <PatternBackground
@@ -87,8 +101,9 @@ const GameScene: React.FC<GameSceneProps> = (props) => {
         </TimerContainer>
         <ScoreCheckerContainer>
           <ScoreChecker
-            skin="basic"
-            curScore={curScore}
+            ref={scoreCheckerRef}
+            skin={props.skin}
+            initialScore={initialScore}
             maxScore={props.maxScore}
             scale={0.5}
             layout={[[1, 1, 1, 1, 1]]}
@@ -96,7 +111,7 @@ const GameScene: React.FC<GameSceneProps> = (props) => {
         </ScoreCheckerContainer>
       </GameInfoContainer>
       <BlockBoardContainer>
-        <BlockBoard
+        {/* <BlockBoard
           // eslint-disable-next-line react-native/no-inline-styles
           style={{
             width: 340,
@@ -105,8 +120,15 @@ const GameScene: React.FC<GameSceneProps> = (props) => {
             backgroundColor: 'rgba(0,0,0,0.3)',
           }}
           skin="basic"
-          stackMap={exStackMap}
-          onChange={(score) => setCurScore(score)}
+          stackMap={props.map}
+          onChange={(score) => scoreCheckerRef.current?.setScore(score)}
+        /> */}
+        <StyledRefBoard
+          initialMap={props.map}
+          skin={props.skin}
+          onChange={(score) => {
+            scoreCheckerRef.current?.setScore(score);
+          }}
         />
       </BlockBoardContainer>
     </GameSceneContainer>

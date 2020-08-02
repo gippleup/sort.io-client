@@ -6,6 +6,7 @@ import {
   ViewStyle,
   EasingFunction,
   Easing,
+  StyleSheet,
 } from 'react-native';
 import styled from 'styled-components';
 
@@ -30,6 +31,12 @@ export class RefBox extends Component<RefBoxProps> {
       this.y = state.value + this.originY;
       this.setStyle({top: state.value});
     });
+    this.animOpacity.addListener((state) => {
+      this.opacity = state.value;
+    });
+    const flattenedStyle = StyleSheet.flatten(props.style);
+    const propOpacity = flattenedStyle ? flattenedStyle.opacity : 1;
+    this.animOpacity.setValue(propOpacity !== undefined ? propOpacity : 1);
   }
 
   originX = 0;
@@ -41,13 +48,13 @@ export class RefBox extends Component<RefBoxProps> {
   y = 0;
   width = 0;
   height = 0;
+  opacity = 1;
 
   animX: Animated.Value = new Animated.Value(0);
   animY: Animated.Value = new Animated.Value(0);
-
   animScale: Animated.Value = new Animated.Value(1);
-
   animAngle: Animated.Value = new Animated.Value(0);
+  animOpacity: Animated.Value = new Animated.Value(1);
 
   setStyle(option: ViewStyle) {
     this.boxRef.current?.setNativeProps({style: option});
@@ -91,6 +98,10 @@ export class RefBox extends Component<RefBoxProps> {
   setAngle(angle: number) {
     this.animAngle.stopAnimation();
     this.animAngle.setValue(angle);
+  }
+
+  setOpacity(opacity: number) {
+    this.animOpacity.setValue(opacity);
   }
 
   animateX(
@@ -163,6 +174,20 @@ export class RefBox extends Component<RefBoxProps> {
     });
   }
 
+  animateOpacity(
+    opacity: number,
+    duration: number = 500,
+    easing: EasingFunction = Easing.inOut(Easing.ease),
+  ) {
+    this.animOpacity.stopAnimation();
+    return Animated.timing(this.animOpacity, {
+      toValue: opacity,
+      duration,
+      easing,
+      useNativeDriver: true,
+    });
+  }
+
   render() {
     return (
       <Animated.View
@@ -170,6 +195,7 @@ export class RefBox extends Component<RefBoxProps> {
         style={[
           this.props.style,
           {
+            opacity: this.animOpacity,
             transform: [
               {scale: this.animScale},
               {

@@ -75,12 +75,252 @@ export class RefBlockBoard extends Component<
       layout: null,
     };
     this.catchLayout = this.catchLayout.bind(this);
+
+    this.getTopPiecePos = this.getTopPiecePos.bind(this);
+
+    this.undock = this.undock.bind(this);
+
+    this.alertUnableToDock = this.alertUnableToDock.bind(this);
+    this.dock = this.dock.bind(this);
+    this.dockToSelf = this.dockToSelf.bind(this);
+    this.dockToOther = this.dockToOther.bind(this);
+
+    this.checkIfStackCompleted = this.checkIfStackCompleted.bind(this);
+
+    this.getCurScore = this.getCurScore.bind(this);
+    this.getCompleteMap = this.getCompleteMap.bind(this);
   }
 
   stacks: stackModel[] = Array(this.props.initialMap.length);
   layoutRef = React.createRef<View>();
   readyToDock = false;
   dockOrigin: stackModel | null = null;
+
+  scale = 1;
+  maxRows = 3;
+  maxColumns = 3;
+  blockWidth = Constants.blockWidth;
+  blockHeight = Constants.blockHeight.full;
+  marginVertical = 15;
+  marginHorizontal = 15;
+
+  checkIfStackCompleted(stackIndex: number) {
+    const targetStack = this.stacks[stackIndex];
+    let stackCompleted = targetStack.pieces.length === targetStack.max;
+    targetStack.pieces.forEach((piece) => {
+      if (piece.type !== targetStack.pieces[0].type) {
+        stackCompleted = false;
+      }
+    });
+    return stackCompleted;
+  }
+
+  getCompleteMap() {
+    const filledStacks = this.stacks.filter((stack) => stack.pieces.length);
+    const completeMap = filledStacks.map((stack, i) =>
+      this.checkIfStackCompleted(i),
+    );
+    return completeMap;
+  }
+
+  getCurScore() {
+    return this.getCompleteMap().filter((bool) => bool).length;
+  }
+
+  getTopPiecePos(stackIndex: number) {
+    const {
+      maxColumns,
+      stacks,
+      scale,
+      marginHorizontal,
+      marginVertical,
+      blockWidth,
+      blockHeight,
+    } = this;
+    const targetStack = stacks[stackIndex];
+    const stackRow = Math.floor(stackIndex / maxColumns);
+    const stackColumn = stackIndex % maxColumns;
+    const curStackLength = targetStack.pieces.length;
+
+    const curPos = {
+      x: marginHorizontal + (blockWidth + marginHorizontal * 2) * stackColumn,
+      y:
+        marginVertical +
+        (blockHeight + marginVertical * 2) * stackRow +
+        Constants.blockHeight.top * scale +
+        Constants.blockHeight.piece * scale * 5 -
+        Constants.blockHeight.piece * scale * curStackLength,
+    };
+
+    return curPos;
+  }
+
+  undock(stackIndex: number) {
+    const topPiecePos = this.getTopPiecePos(stackIndex);
+    const targetStack = this.stacks[stackIndex];
+    const pieceOnTop = targetStack.pieces.pop();
+
+    if (!pieceOnTop) {
+      return;
+    }
+
+    targetStack.pieces.push(pieceOnTop);
+
+    let originStackWasCompleted = this.checkIfStackCompleted(stackIndex);
+
+    if (originStackWasCompleted && targetStack.capRef.current) {
+      targetStack.capRef.current.setScale(0);
+    }
+
+    this.dockOrigin = targetStack;
+    this.readyToDock = true;
+    pieceOnTop.ref.current
+      ?.animateY(topPiecePos.y - 20, 300, Easing.in(Easing.elastic(3)))
+      .start();
+  }
+
+  dockToSelf(stackIndex: number) {
+    const {stacks, getTopPiecePos} = this;
+    const targetStack = stacks[stackIndex];
+    const topPiecePos = getTopPiecePos(stackIndex);
+    const pieceOnTop = targetStack.pieces.pop();
+
+    if (!pieceOnTop) {
+      return;
+    }
+    targetStack.pieces.push(pieceOnTop);
+
+    let originStackWasCompleted = this.checkIfStackCompleted(stackIndex);
+
+    if (originStackWasCompleted && targetStack.capRef.current) {
+      targetStack.capRef.current
+        ?.animateScale(1, 300, Easing.inOut(Easing.ease))
+        .start();
+    }
+    this.readyToDock = false;
+    this.dockOrigin = null;
+    pieceOnTop.ref.current
+      ?.animateY(topPiecePos.y, 300, Easing.in(Easing.bounce))
+      .start();
+  }
+
+  alertUnableToDock(stackIndex: number) {
+    const {stacks, getTopPiecePos} = this;
+    const topPiecePos = getTopPiecePos(stackIndex);
+    const targetStack = stacks[stackIndex];
+    const pieceOnTop = targetStack.pieces.pop();
+    if (!pieceOnTop) {
+      return;
+    }
+    targetStack.pieces.push(pieceOnTop);
+    pieceOnTop?.ref.current?.setY(topPiecePos.y - 20);
+    pieceOnTop?.ref.current
+      ?.animateY(topPiecePos.y, 300, Easing.in(Easing.bounce))
+      .start();
+    return;
+  }
+
+  dockToOther(stackIndex: number) {
+    let mainAnimation = [];
+    const {stacks, getTopPiecePos, dockOrigin, props} = this;
+    const targetStack = stacks[stackIndex];
+    const topPiecePos = getTopPiecePos(stackIndex);
+    const pieceOnTopOfOrigin = dockOrigin?.pieces.pop();
+
+    if (!pieceOnTopOfOrigin || !pieceOnTopOfOrigin.ref.current) {
+      return;
+    }
+
+    this.readyToDock = false;
+    targetStack.pieces.push(pieceOnTopOfOrigin);
+    let targetStackCompleted = this.checkIfStackCompleted(stackIndex);
+
+    const readyForAppearAnim = () => {
+      pieceOnTopOfOrigin?.ref.current?.setXY(
+        topPiecePos.x,
+        topPiecePos.y - Constants.blockHeight.piece - 20,
+      );
+      pieceOnTopOfOrigin.ref.current?.setScale(0);
+    };
+
+    readyForAppearAnim();
+    const appearAnim = Animated.parallel([
+      pieceOnTopOfOrigin.ref.current?.animateScale(
+        1,
+        100,
+        Easing.inOut(Easing.ease),
+      ),
+      pieceOnTopOfOrigin?.ref.current?.animateXY(
+        topPiecePos.x,
+        topPiecePos.y - Constants.blockHeight.piece,
+        300,
+        Easing.in(Easing.bounce),
+      ),
+    ]);
+
+    mainAnimation.push(appearAnim);
+
+    if (targetStackCompleted && targetStack.capRef.current) {
+      const readyForCapAnim = () => {
+        targetStack.capRef.current?.setOpacity(1);
+        targetStack.capRef.current?.setY(
+          topPiecePos.y -
+            Constants.blockHeight.piece -
+            Constants.blockHeight.top - 20,
+        );
+      };
+
+      readyForCapAnim();
+      const capDockAnim = Animated.sequence([
+        targetStack.capRef.current?.animateScale(
+          1,
+          100,
+          Easing.inOut(Easing.ease),
+        ),
+        targetStack.capRef.current?.animateY(
+          topPiecePos.y -
+            Constants.blockHeight.piece -
+            Constants.blockHeight.top,
+          300,
+          Easing.in(Easing.bounce),
+        ),
+      ]);
+
+      mainAnimation.push(capDockAnim);
+    }
+
+    const completeMap = this.getCompleteMap();
+    const score = completeMap.filter((bool) => bool).length;
+    const completedAllStack = completeMap.indexOf(false) === -1;
+
+    if (completedAllStack && props.onComplete) {
+      props.onComplete();
+    }
+
+    if (props.onChange) {
+      props.onChange(score);
+    }
+
+    Animated.parallel(mainAnimation).start();
+  }
+
+  dock(stackIndex: number) {
+    const {
+      stacks,
+      dockToSelf,
+      dockToOther,
+      alertUnableToDock,
+      dockOrigin,
+    } = this;
+    const targetStack = stacks[stackIndex];
+    if (targetStack === dockOrigin) {
+      dockToSelf(stackIndex);
+    } else if (targetStack.pieces.length === targetStack.max) {
+      alertUnableToDock(stackIndex);
+    } else {
+      dockToOther(stackIndex);
+    }
+  }
 
   catchLayout(e: LayoutChangeEvent) {
     this.setState({
@@ -111,6 +351,14 @@ export class RefBlockBoard extends Component<
 
     const marginHorizontal = (leftWidth / (maxColumns * 2)) * scale;
     const marginVertical = (leftHeight / (maxRows * 2)) * scale;
+
+    this.scale = scale;
+    this.blockWidth = blockWidth;
+    this.blockHeight = blockHeight;
+    this.maxColumns = maxColumns;
+    this.maxRows = maxRows;
+    this.marginHorizontal = marginHorizontal;
+    this.marginVertical = marginVertical;
 
     // if (maxRows * maxColumns < props.initialMap.length) {
     //   return (
@@ -275,212 +523,10 @@ export class RefBlockBoard extends Component<
                   <Cell key={'agentRowCell' + i + j} style={{marginHorizontal}}>
                     <TouchAgent
                       onTouchStart={() => {
-                        const stackRow = Math.floor(stackIndex / maxColumns);
-                        const stackColumn = stackIndex % maxColumns;
-                        const targetStack = this.stacks[stackIndex];
-                        const curStackLength = targetStack.pieces.length;
-
-                        const curPos = {
-                          x:
-                            marginHorizontal +
-                            (blockWidth + marginHorizontal * 2) * stackColumn,
-                          y:
-                            marginVertical +
-                            (blockHeight + marginVertical * 2) * stackRow +
-                            Constants.blockHeight.top * scale +
-                            Constants.blockHeight.piece * scale * 5 -
-                            Constants.blockHeight.piece *
-                              scale *
-                              curStackLength,
-                        };
-
                         if (!this.readyToDock) {
-                          const pieceOnTop = targetStack.pieces.pop();
-                          if (!pieceOnTop) {
-                            return;
-                          }
-                          targetStack.pieces.push(pieceOnTop);
-                          let originStackWasCompleted =
-                            targetStack.pieces.length === targetStack.max;
-                          targetStack.pieces.forEach((piece) => {
-                            if (piece.type !== pieceOnTop.type) {
-                              originStackWasCompleted = false;
-                            }
-                          });
-
-                          if (
-                            originStackWasCompleted &&
-                            targetStack.capRef.current
-                          ) {
-                            targetStack.capRef.current.setScale(0);
-                          }
-
-                          this.dockOrigin = targetStack;
-                          this.readyToDock = true;
-                          pieceOnTop.ref.current
-                            ?.animateY(
-                              curPos.y - 20,
-                              300,
-                              Easing.in(Easing.elastic(3)),
-                            )
-                            .start();
+                          this.undock(stackIndex);
                         } else {
-                          if (targetStack === this.dockOrigin) {
-                            const pieceOnTop = targetStack.pieces.pop();
-                            if (!pieceOnTop) {
-                              return;
-                            }
-                            targetStack.pieces.push(pieceOnTop);
-                            let originStackWasCompleted =
-                              targetStack.pieces.length === targetStack.max;
-                            targetStack.pieces.forEach((piece) => {
-                              if (piece.type !== pieceOnTop.type) {
-                                originStackWasCompleted = false;
-                              }
-                            });
-
-                            if (
-                              originStackWasCompleted &&
-                              targetStack.capRef.current
-                            ) {
-                              targetStack.capRef.current
-                                ?.animateScale(
-                                  1,
-                                  300,
-                                  Easing.inOut(Easing.ease),
-                                )
-                                .start();
-                            }
-                            this.readyToDock = false;
-                            this.dockOrigin = null;
-                            pieceOnTop.ref.current
-                              ?.animateY(
-                                curPos.y,
-                                300,
-                                Easing.in(Easing.bounce),
-                              )
-                              .start();
-                          } else if (
-                            targetStack.pieces.length === targetStack.max
-                          ) {
-                            const pieceOnTop = targetStack.pieces.pop();
-                            if (!pieceOnTop) {
-                              return;
-                            }
-                            targetStack.pieces.push(pieceOnTop);
-                            pieceOnTop?.ref.current?.setY(curPos.y - 20);
-                            pieceOnTop?.ref.current
-                              ?.animateY(
-                                curPos.y,
-                                300,
-                                Easing.in(Easing.bounce),
-                              )
-                              .start();
-                            return;
-                          } else {
-                            let mainAnimation = [];
-
-                            const {dockOrigin} = this;
-
-                            const pieceOnTopOfOrigin = dockOrigin?.pieces.pop();
-                            if (!pieceOnTopOfOrigin) {
-                              return;
-                            }
-                            if (!pieceOnTopOfOrigin.ref.current) {
-                              return;
-                            }
-
-                            mainAnimation.push(
-                              pieceOnTopOfOrigin.ref.current?.animateScale(
-                                1,
-                                100,
-                                Easing.inOut(Easing.ease),
-                              ),
-                            );
-                            mainAnimation.push(
-                              pieceOnTopOfOrigin?.ref.current?.animateXY(
-                                curPos.x,
-                                curPos.y - Constants.blockHeight.piece,
-                                300,
-                                Easing.in(Easing.bounce),
-                              ),
-                            );
-
-                            this.readyToDock = false;
-                            targetStack.pieces.push(pieceOnTopOfOrigin);
-
-                            let targetStackCompleted =
-                              targetStack?.pieces.length === targetStack?.max
-                                ? true
-                                : false;
-                            targetStack.pieces.forEach((piece) => {
-                              if (piece.type !== pieceOnTopOfOrigin.type) {
-                                targetStackCompleted = false;
-                              }
-                            });
-
-                            pieceOnTopOfOrigin?.ref.current?.setXY(
-                              curPos.x,
-                              curPos.y - Constants.blockHeight.piece - 20,
-                            );
-                            pieceOnTopOfOrigin.ref.current?.setScale(0);
-
-                            if (
-                              targetStackCompleted &&
-                              targetStack.capRef.current
-                            ) {
-                              targetStack.capRef.current?.setOpacity(1);
-                              targetStack.capRef.current?.setY(
-                                curPos.y -
-                                  Constants.blockHeight.piece -
-                                  Constants.blockHeight.top -
-                                  20,
-                              );
-                              mainAnimation.push(
-                                targetStack.capRef.current?.animateScale(
-                                  1,
-                                  100,
-                                ),
-                              );
-                              mainAnimation.push(
-                                targetStack.capRef.current?.animateY(
-                                  curPos.y -
-                                    Constants.blockHeight.piece -
-                                    Constants.blockHeight.top,
-                                  300,
-                                  Easing.in(Easing.bounce),
-                                ),
-                              );
-                            }
-
-                            const filledStacks = this.stacks.filter(
-                              (stack) => stack.pieces.length,
-                            );
-
-                            const completeMap = filledStacks.map((stack) => {
-                              let completedStack =
-                                stack.pieces.length === stack.max;
-                              stack.pieces.forEach((piece) => {
-                                if (piece.type !== stack.pieces[0].type) {
-                                  completedStack = false;
-                                }
-                              });
-                              return completedStack;
-                            });
-
-                            const score = completeMap.filter((bool) => bool).length;
-                            const completedAllStack =
-                              completeMap.indexOf(false) === -1;
-                            if (completedAllStack && props.onComplete) {
-                              props.onComplete();
-                            }
-
-                            if (props.onChange) {
-                              props.onChange(score);
-                            }
-
-                            Animated.sequence(mainAnimation).start();
-                          }
+                          this.dock(stackIndex);
                         }
                       }}>
                       <BlockFrame pieceCount={5} scale={scale} />

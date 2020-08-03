@@ -156,11 +156,12 @@ export class RefBlockBoard extends Component<
   }
 
   undock(stackIndex: number) {
+    const animation = [];
     const topPiecePos = this.getTopPiecePos(stackIndex);
     const targetStack = this.stacks[stackIndex];
     const pieceOnTop = targetStack.pieces.pop();
 
-    if (!pieceOnTop) {
+    if (!pieceOnTop || !pieceOnTop.ref.current) {
       return;
     }
 
@@ -169,23 +170,42 @@ export class RefBlockBoard extends Component<
     let originStackWasCompleted = this.checkIfStackCompleted(stackIndex);
 
     if (originStackWasCompleted && targetStack.capRef.current) {
-      targetStack.capRef.current.setScale(0);
+      // targetStack.capRef.current.setScale(0);
+      const capUndockAnim = Animated.parallel([
+        targetStack.capRef.current?.animateY(
+          topPiecePos.y - 20 - Constants.blockHeight.top * this.scale,
+          300,
+          Easing.out(Easing.back(3)),
+        ),
+        targetStack.capRef.current.animateScale(
+          0,
+          100,
+          Easing.in(Easing.cubic),
+        ),
+      ]);
+      animation.push(capUndockAnim);
     }
 
     this.dockOrigin = targetStack;
     this.readyToDock = true;
-    pieceOnTop.ref.current
-      ?.animateY(topPiecePos.y - 20, 300, Easing.in(Easing.elastic(3)))
-      .start();
+    const pieceUndockAnim = pieceOnTop.ref.current?.animateY(
+      topPiecePos.y - 20,
+      300,
+      Easing.out(Easing.back(3)),
+    );
+
+    animation.push(pieceUndockAnim);
+    Animated.parallel(animation).start();
   }
 
   dockToSelf(stackIndex: number) {
+    const animation = [];
     const {stacks, getTopPiecePos} = this;
     const targetStack = stacks[stackIndex];
     const topPiecePos = getTopPiecePos(stackIndex);
     const pieceOnTop = targetStack.pieces.pop();
 
-    if (!pieceOnTop) {
+    if (!pieceOnTop || !pieceOnTop.ref.current) {
       return;
     }
     targetStack.pieces.push(pieceOnTop);
@@ -193,15 +213,29 @@ export class RefBlockBoard extends Component<
     let originStackWasCompleted = this.checkIfStackCompleted(stackIndex);
 
     if (originStackWasCompleted && targetStack.capRef.current) {
-      targetStack.capRef.current
-        ?.animateScale(1, 300, Easing.inOut(Easing.ease))
-        .start();
+      const capDockAnim = Animated.parallel([
+        targetStack.capRef.current.animateY(
+          topPiecePos.y - Constants.blockHeight.top,
+          300,
+          Easing.in(Easing.bounce),
+        ),
+        targetStack.capRef.current?.animateScale(
+          1,
+          300,
+          Easing.inOut(Easing.ease),
+        ),
+      ]);
+      animation.push(capDockAnim);
     }
     this.readyToDock = false;
     this.dockOrigin = null;
-    pieceOnTop.ref.current
-      ?.animateY(topPiecePos.y, 300, Easing.in(Easing.bounce))
-      .start();
+    const pieceDockAnim = pieceOnTop.ref.current?.animateY(
+      topPiecePos.y,
+      300,
+      Easing.in(Easing.bounce),
+    );
+    animation.push(pieceDockAnim);
+    Animated.parallel(animation).start();
   }
 
   alertUnableToDock(stackIndex: number) {
@@ -221,7 +255,7 @@ export class RefBlockBoard extends Component<
   }
 
   dockToOther(stackIndex: number) {
-    let mainAnimation = [];
+    let animation = [];
     const {stacks, getTopPiecePos, dockOrigin, props} = this;
     const targetStack = stacks[stackIndex];
     const topPiecePos = getTopPiecePos(stackIndex);
@@ -258,7 +292,7 @@ export class RefBlockBoard extends Component<
       ),
     ]);
 
-    mainAnimation.push(appearAnim);
+    animation.push(appearAnim);
 
     if (targetStackCompleted && targetStack.capRef.current) {
       const readyForCapAnim = () => {
@@ -266,7 +300,8 @@ export class RefBlockBoard extends Component<
         targetStack.capRef.current?.setY(
           topPiecePos.y -
             Constants.blockHeight.piece -
-            Constants.blockHeight.top - 20,
+            Constants.blockHeight.top -
+            20,
         );
       };
 
@@ -286,7 +321,7 @@ export class RefBlockBoard extends Component<
         ),
       ]);
 
-      mainAnimation.push(capDockAnim);
+      animation.push(capDockAnim);
     }
 
     const completeMap = this.getCompleteMap();
@@ -301,7 +336,7 @@ export class RefBlockBoard extends Component<
       props.onChange(score);
     }
 
-    Animated.parallel(mainAnimation).start();
+    Animated.parallel(animation).start();
   }
 
   dock(stackIndex: number) {

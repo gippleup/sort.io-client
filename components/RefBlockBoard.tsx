@@ -47,8 +47,9 @@ type pieceModel = {
 
 type stackModel = {
   capRef: RefObject<RefBox>;
+  capBlockRef: RefObject<Block>;
   pieces: pieceModel[];
-  bottomRef: RefObject<RefBox>;
+  bottomRef: RefObject<Block>;
   max: number;
 };
 
@@ -104,8 +105,8 @@ export class RefBlockBoard extends Component<
   marginVertical = 15;
   marginHorizontal = 15;
 
-  checkIfStackCompleted(stackIndex: number) {
-    const targetStack = this.stacks[stackIndex];
+  checkIfStackCompleted(targetStack: stackModel) {
+    // const targetStack = this.stacks[stackIndex];
     let stackCompleted = targetStack.pieces.length === targetStack.max;
     targetStack.pieces.forEach((piece) => {
       if (piece.type !== targetStack.pieces[0].type) {
@@ -117,8 +118,8 @@ export class RefBlockBoard extends Component<
 
   getCompleteMap() {
     const filledStacks = this.stacks.filter((stack) => stack.pieces.length);
-    const completeMap = filledStacks.map((stack, i) =>
-      this.checkIfStackCompleted(i),
+    const completeMap = filledStacks.map((stack) =>
+      this.checkIfStackCompleted(stack),
     );
     return completeMap;
   }
@@ -167,7 +168,7 @@ export class RefBlockBoard extends Component<
 
     targetStack.pieces.push(pieceOnTop);
 
-    let originStackWasCompleted = this.checkIfStackCompleted(stackIndex);
+    let originStackWasCompleted = this.checkIfStackCompleted(targetStack);
 
     if (originStackWasCompleted && targetStack.capRef.current) {
       // targetStack.capRef.current.setScale(0);
@@ -210,7 +211,7 @@ export class RefBlockBoard extends Component<
     }
     targetStack.pieces.push(pieceOnTop);
 
-    let originStackWasCompleted = this.checkIfStackCompleted(stackIndex);
+    let originStackWasCompleted = this.checkIfStackCompleted(targetStack);
 
     if (originStackWasCompleted && targetStack.capRef.current) {
       const capDockAnim = Animated.parallel([
@@ -247,7 +248,20 @@ export class RefBlockBoard extends Component<
       return;
     }
     targetStack.pieces.push(pieceOnTop);
-    pieceOnTop?.ref.current?.setY(topPiecePos.y - 20);
+    const targetStackCompleted = this.checkIfStackCompleted(targetStack);
+    if (targetStackCompleted) {
+      targetStack.capRef.current?.setY(
+        topPiecePos.y - Constants.blockHeight.piece - Constants.blockHeight.top,
+      );
+      targetStack.capRef.current
+        ?.animateY(
+          topPiecePos.y - Constants.blockHeight.top,
+          500,
+          Easing.in(Easing.bounce),
+        )
+        .start();
+    }
+    pieceOnTop?.ref.current?.setY(topPiecePos.y - Constants.blockHeight.piece);
     pieceOnTop?.ref.current
       ?.animateY(topPiecePos.y, 300, Easing.in(Easing.bounce))
       .start();
@@ -260,6 +274,7 @@ export class RefBlockBoard extends Component<
     const targetStack = stacks[stackIndex];
     const topPiecePos = getTopPiecePos(stackIndex);
     const pieceOnTopOfOrigin = dockOrigin?.pieces.pop();
+    const targetStackWasBlank = targetStack.pieces.length === 0;
 
     if (!pieceOnTopOfOrigin || !pieceOnTopOfOrigin.ref.current) {
       return;
@@ -267,7 +282,25 @@ export class RefBlockBoard extends Component<
 
     this.readyToDock = false;
     targetStack.pieces.push(pieceOnTopOfOrigin);
-    let targetStackCompleted = this.checkIfStackCompleted(stackIndex);
+    let targetStackCompleted = this.checkIfStackCompleted(targetStack);
+
+    if (targetStackWasBlank) {
+      targetStack.bottomRef.current?.setState({
+        type: pieceOnTopOfOrigin.type,
+      });
+    }
+
+    if (dockOrigin?.pieces.length === 0) {
+      dockOrigin.bottomRef.current?.setState({
+        type: 9,
+      });
+    }
+
+    if (targetStackCompleted) {
+      targetStack.capBlockRef.current?.setState({
+        type: pieceOnTopOfOrigin.type,
+      });
+    }
 
     const readyForAppearAnim = () => {
       pieceOnTopOfOrigin?.ref.current?.setXY(
@@ -328,12 +361,12 @@ export class RefBlockBoard extends Component<
     const score = completeMap.filter((bool) => bool).length;
     const completedAllStack = completeMap.indexOf(false) === -1;
 
-    if (completedAllStack && props.onComplete) {
-      props.onComplete();
-    }
-
     if (props.onChange) {
       props.onChange(score);
+    }
+
+    if (completedAllStack && props.onComplete) {
+      props.onComplete();
     }
 
     Animated.parallel(animation).start();
@@ -448,18 +481,21 @@ export class RefBlockBoard extends Component<
                 Object.keys(checker).length === 1 &&
                 filteredStack.length === curStack.length;
 
+              const capBlockRef = React.createRef<Block>();
               const capRef = React.createRef<RefBox>();
               const pieces = filteredStack.map((type) => ({
                 ref: React.createRef<RefBox>(),
                 type,
               }));
-              const bottomRef = React.createRef<RefBox>();
+              const bottomRef = React.createRef<Block>();
               const stackModel = {
+                capBlockRef,
                 capRef,
                 pieces,
                 bottomRef,
                 max: curStack.length,
               };
+              console.log(filteredStack);
               this.stacks[stackIndex] = stackModel;
               return (
                 <Fragment key={'fragment' + i + j}>
@@ -481,9 +517,12 @@ export class RefBlockBoard extends Component<
                       opacity: completed ? 1 : 0,
                     }}>
                     <Block
+                      ref={capBlockRef}
                       base={TopBase}
                       shape={skinMap[props.skin].top}
-                      type={filteredStack[0] || 9}
+                      type={
+                        filteredStack[0] !== undefined ? filteredStack[0] : 9
+                      }
                       scale={scale}
                       visible={true}
                     />
@@ -516,7 +555,7 @@ export class RefBlockBoard extends Component<
                   })}
                   {/* This is Block Bottom */}
                   <AbsoluteRefBox
-                    ref={bottomRef}
+                    // ref={bottomRef}
                     key={'bottom' + i + j}
                     style={{
                       left:
@@ -529,10 +568,13 @@ export class RefBlockBoard extends Component<
                         Constants.blockHeight.bottom * scale,
                     }}>
                     <Block
+                      ref={bottomRef}
                       visible={true}
                       base={BottomBase}
                       shape={skinMap[props.skin].bottom}
-                      type={filteredStack[0] || 9}
+                      type={
+                        filteredStack[0] !== undefined ? filteredStack[0] : 9
+                      }
                       scale={scale}
                     />
                   </AbsoluteRefBox>

@@ -17,7 +17,7 @@ type BlockProps = {
   style?: ViewStyle;
 };
 
-class Block extends React.Component<BlockProps> {
+class Block extends React.Component<BlockProps, {type: BlockTypes}> {
   containerRef = React.createRef<View>();
   setVisible(bool: boolean) {
     this.containerRef.current?.setNativeProps({
@@ -30,9 +30,12 @@ class Block extends React.Component<BlockProps> {
   constructor(props: BlockProps) {
     super(props);
     this.renderShape = this.renderShape.bind(this);
+    this.state = {
+      type: props.type,
+    };
   }
 
-  renderShape() {
+  renderShape(type: BlockTypes) {
     const {props} = this;
     if (!props.shape) {
       return <></>;
@@ -40,13 +43,13 @@ class Block extends React.Component<BlockProps> {
     const Shape: React.FC<BasicBlockProps> = props.shape;
     return (
       <ShapeContainer>
-        <Shape scale={props.scale} type={props.type} />
+        <Shape scale={props.scale} type={type} />
       </ShapeContainer>
     );
   }
 
   render() {
-    const {props, renderShape} = this;
+    const {props, state, renderShape} = this;
     const Base = props.base;
     const initialVisiblity =
       props.visible === true || props.visible === undefined ? 'flex' : 'none';
@@ -56,7 +59,7 @@ class Block extends React.Component<BlockProps> {
         ref={this.containerRef}
         style={[props.style, {display: initialVisiblity}]}>
         <Base scale={props.scale} type={9} />
-        {renderShape()}
+        {renderShape(state.type)}
       </View>
     );
   }

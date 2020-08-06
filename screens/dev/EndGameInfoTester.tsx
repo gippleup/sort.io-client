@@ -1,12 +1,9 @@
-import React from 'react'
-import { View, Text } from 'react-native'
+import React from 'react';
+import {View, Text} from 'react-native';
 
 const EndGameInfoTester = () => {
-  return (
-    <View>
-      <Text></Text>
-    </View>
-  )
-}
+  const viewRef = React.createRef<View>();
+  return <View ref={viewRef} />;
+};
 
-export default EndGameInfoTester
+export default EndGameInfoTester;

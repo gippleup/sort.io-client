@@ -129,6 +129,9 @@ const GameScene: React.FC<GameSceneProps> = (props) => {
           onChange={(score) => {
             scoreCheckerRef.current?.setScore(score);
           }}
+          onComplete={() => {
+            console.log('잘됨');
+          }}
         />
       </BlockBoardContainer>
     </GameSceneContainer>

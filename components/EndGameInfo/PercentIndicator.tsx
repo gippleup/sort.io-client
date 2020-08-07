@@ -1,5 +1,5 @@
 import React, {Component, RefObject} from 'react';
-import {Text, View, Animated} from 'react-native';
+import {Text, View, Animated, Dimensions} from 'react-native';
 import AnimatedBox from 'react-native-animated-box';
 import styled from 'styled-components';
 
@@ -23,14 +23,23 @@ export class PercentIndicator extends Component<PercentIndicatorProps> {
     this.shellWidth = props.width || 200;
   }
 
+  static defaultProps = {
+    borderRadius: 20,
+    color: 'grey',
+    borderColor: 'black',
+    borderWidth: 2,
+    height: 20,
+    width: Dimensions.get('screen').width - 120,
+  };
+
   animateFill = (value: number) => {
-    if (!this.fillRef.current) {
-      return;
+    if (this.fillRef.current) {
+      this.fillRef.current.style.width.stopAnimation();
+      return Animated.timing(this.fillRef.current.style.width, {
+        toValue: value * this.shellWidth,
+        useNativeDriver: false,
+      });
     }
-    Animated.timing(this.fillRef.current?.style.width, {
-      toValue: value * this.shellWidth,
-      useNativeDriver: false,
-    }).start();
   };
 
   render() {

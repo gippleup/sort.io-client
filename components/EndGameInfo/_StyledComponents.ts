@@ -1,13 +1,7 @@
-import {
-  Text,
-  View,
-  Dimensions,
-  TextInput,
-  TextInputProps,
-  TouchableOpacity,
-} from 'react-native';
-// import {TouchableOpacity} from 'react-native-gesture-handler';
+import {View, Dimensions, TouchableOpacity} from 'react-native';
 import styled, {css} from 'styled-components';
+import DynamicText from '../DynamicText';
+import AnimatedRateText from './AnimatedRateText';
 
 export const GameInfoContainer: typeof View = styled(View)`
   width: 100%;
@@ -38,45 +32,12 @@ export const ContentContainer: typeof View = styled(View)`
   ${WhiteRoundBorder}
   width: ${Dimensions.get('screen').width - 40}px;
   background-color: blueviolet;
+  padding: 20px;
 `;
 
 export const SubContentContainer: typeof View = styled(View)`
   width: 100%;
   align-items: center;
-`;
-
-type InfoTextProp = {
-  fontFamily?: string;
-  size?: number;
-  color?: string;
-};
-
-export const InfoText: React.ClassicComponentClass<InfoTextProp> = styled(Text)`
-  font-family: ${(props) => props.fontFamily || ''};
-  font-size: ${(props) => props.size || 14}px;
-  /* background-color: red; */
-  line-height: ${(props) => (props.size || 14) * 1.4}px;
-  color: ${(props) => props.color || 'white'};
-`;
-
-InfoText.defaultProps = {
-  fontFamily: 'NotoSansKR-Regular',
-  size: 14,
-};
-
-// eslint-disable-next-line prettier/prettier
-export const PercentageText: React.ClassicComponentClass<InfoTextProp & TextInputProps> = styled(TextInput)`
-  font-family: ${(props) => props.fontFamily || ''};
-  font-size: ${(props) => props.size || 14}px;
-  /* background-color: red; */
-  line-height: ${(props) => (props.size || 14) * 0.8}px;
-  margin: 0;
-  padding: 0;
-  color: ${(props) => props.color || 'white'};
-`;
-
-export const Title: typeof InfoText = styled(InfoText)`
-  color: white;
 `;
 
 type SpaceProps = {
@@ -94,13 +55,18 @@ Space.defaultProps = {
   height: 0,
 };
 
-export const FlexHorizontal: typeof View = styled(View)`
+export const HorizontalSpaceBetween: typeof View = styled(View)`
+  width: 100%;
   flex-direction: row;
+  justify-content: space-between;
+  padding-horizontal: 10px;
 `;
 
 type RoundRectangleButtonProps = {
   width?: number;
+  flex?: boolean;
 };
+
 export const RoundRectangleButton:
   | React.ComponentClass<RoundRectangleButtonProps>
   | typeof TouchableOpacity = styled(TouchableOpacity)`
@@ -109,16 +75,75 @@ export const RoundRectangleButton:
   border-width: 3px;
   align-items: center;
   justify-content: center;
+  elevation: 10;
   ${(props) => {
     if (props.width) {
       return css`
         width: ${props.width}px;
       `;
-    } else {
+    } else if (props.flex) {
       return css`
         flex: 1;
+      `;
+    } else {
+      return css`
+        width: 100%;
       `;
     }
   }};
   background-color: white;
+`;
+
+export const Title: typeof DynamicText = styled(DynamicText)`
+  color: white;
+  font-size: 30px;
+  font-family: NotoSansKR-Black;
+  margin: 0px;
+  padding: 0px;
+  line-height: 45px;
+  /* background-color: red; */
+`;
+
+export const MetaStageInfo: typeof DynamicText = styled(DynamicText)`
+  color: white;
+  font-size: 15px;
+  font-family: NotoSansKR-Bold;
+  margin: 0px;
+  padding: 0px;
+  line-height: 25px;
+`;
+
+export const CurStage: typeof DynamicText = styled(DynamicText)`
+  color: yellow;
+  font-size: 40px;
+  font-family: NotoSansKR-Black;
+  margin: 0px;
+  padding: 0px;
+  line-height: 60px;
+`;
+
+const clearRateStyle = css`
+  color: gold;
+  font-size: 15px;
+  font-family: NotoSansKR-Black;
+  margin: 0px;
+  padding: 0px;
+  line-height: 25px;
+`;
+
+export const CurDifficulty: typeof DynamicText = styled(DynamicText)`
+  ${clearRateStyle}
+`;
+
+export const ClearRate: typeof AnimatedRateText = styled(AnimatedRateText)`
+  ${clearRateStyle}
+`;
+
+export const ButtonText: typeof DynamicText = styled(DynamicText)`
+  color: black;
+  font-size: 20px;
+  font-family: NotoSansKR-Bold;
+  margin: 0px;
+  padding: 0px;
+  line-height: 40px;
 `;

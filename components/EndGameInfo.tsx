@@ -1,22 +1,27 @@
 import React, {Component} from 'react';
-import {Modal, Dimensions, Animated, View, TextInput} from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
-import {RootState} from '../redux/reducers';
+import {Modal, Animated, Text, View, StyleSheet} from 'react-native';
 import {
-  GameInfoContainer,
   TitleContainer,
-  Title,
-  InfoText,
   ContentContainer,
   SubContentContainer,
-  Space,
-  PercentageText,
-  FlexHorizontal,
   RoundRectangleButton,
-} from './EndGameInfo/styledComponents';
-import {prettyStage, prettyPercent} from './EndGameInfo/utils';
+  Title,
+  MetaStageInfo,
+  CurStage,
+  CurDifficulty,
+  ClearRate,
+  ButtonText,
+  Space,
+  HorizontalSpaceBetween,
+} from './EndGameInfo/_StyledComponents';
+import {prettyStage} from './EndGameInfo/utils';
 import PercentIndicator from './EndGameInfo/PercentIndicator';
+import DynamicText from './DynamicText';
+import GameInfoContainer from './EndGameInfo/GameInfoContainer';
+import AnimatedRateText from './EndGameInfo/AnimatedRateText';
 import AnimatedBox from 'react-native-animated-box';
+import {FlexHorizontal} from './Generic/StyledComponents';
+import RankViewer from './RankViewer';
 
 type EndGameInfoProp = {
   gameType: 'single' | 'multi';
@@ -29,191 +34,178 @@ type EndGameInfoState = {
 };
 
 export class EndGameInfo extends Component<EndGameInfoProp, EndGameInfoState> {
+  _modal = React.createRef<Modal>();
+  _titleRef = React.createRef<DynamicText>();
   _percentageIndicatorRef = React.createRef<PercentIndicator>();
-  _percentageTextRef = React.createRef<TextInput>();
-  _infoContainerRef = React.createRef<AnimatedBox>();
+  _clearRateText = React.createRef<AnimatedRateText>();
+  _mainButtonTextRef = React.createRef<DynamicText>();
+  _subButtonTextRef = React.createRef<DynamicText>();
+  _infoContainerRef = React.createRef<GameInfoContainer>();
+  _thirdButtonContainer = React.createRef<AnimatedBox>();
+  _thirdButtonTextRef = React.createRef<DynamicText>();
   percentageTextAnim = new Animated.Value(0);
+
   constructor(props: Readonly<EndGameInfoProp>) {
     super(props);
-    const {clearPercentage} = prettyStage(props.stage);
+
     this.state = {
       gameState: 'success',
-      modalVisible: false,
+      modalVisible: true,
     };
-    this.percentageTextAnim.setValue(clearPercentage);
-    this.percentageTextAnim.addListener((state) => {
-      if (this._percentageTextRef.current) {
-        this._percentageTextRef.current.setNativeProps({
-          text: prettyPercent(state.value) + '% 완료',
-        });
-      }
-    });
+
+    this.renderResult = this.renderResult.bind(this);
+    this.renderSingleGameResult = this.renderSingleGameResult.bind(this);
+    this.renderMultiGameResult = this.renderMultiGameResult.bind(this);
   }
 
-  text = {
-    kor: {
-      success: '성공',
-      fail: '실패',
-      win: '승리',
-      defeat: '패배',
-    },
-  };
-
-  show = () => {
-    if (this.state.modalVisible) {
-      return;
-    }
+  alertSuccess() {
+    const {props} = this;
+    const {clearPercentage} = prettyStage(props.stage);
     this.setState({
       modalVisible: true,
     });
-    this.setInfoContainerOpacity(0);
-    this.animateInfoContainerOpacity(1);
-  };
-
-  hide = () => {
-    if (!this.state.modalVisible) {
-      return;
-    }
-    this.setState({
-      modalVisible: false,
+    this._titleRef.current?.setText('성공');
+    this._infoContainerRef.current?.show()?.start(() => {
+      this._animatePercent(clearPercentage)?.start();
     });
-    this.setInfoContainerOpacity(1);
-    this.animateInfoContainerOpacity(0);
-  };
-
-  setInfoContainerOpacity = (opacity: number) => {
-    if (!this._infoContainerRef.current) {
-      return;
-    }
-    this._infoContainerRef.current.style.opacity.setValue(opacity);
   }
 
-  animateInfoContainerOpacity = (opacity: number) => {
-    if (!this._infoContainerRef.current) {
-      return;
+  alertFail() {
+    const {props} = this;
+    const {clearPercentage} = prettyStage(props.stage);
+    this.setState({
+      modalVisible: true,
+    });
+    this._titleRef.current?.setText('실패!');
+    this._subButtonTextRef.current?.setText('다시하기');
+    this._infoContainerRef.current?.show()?.start(() => {
+      this._animatePercent(clearPercentage)?.start();
+    });
+  }
+
+  alertBattleResult() {
+    this.setState({
+      modalVisible: true,
+    });
+    this._titleRef.current?.setText('패배!');
+    this._subButtonTextRef.current?.setText('재대결 요청');
+    this._thirdButtonContainer.current?.setStyle({
+      display: 'flex',
+      width: '100%',
+      opacity: 1,
+    });
+  }
+
+  _animatePercent = (percent: number) => {
+    const animations = [];
+    if (this._percentageIndicatorRef.current && this._clearRateText.current) {
+      const fillAnim = this._percentageIndicatorRef.current.animateFill(
+        percent,
+      );
+      const clearRateAnim = this._clearRateText.current.animateTo(percent);
+      if (fillAnim) {
+        animations.push(fillAnim);
+        animations.push(clearRateAnim);
+      }
+      return Animated.parallel(animations);
     }
-    Animated.timing(this._infoContainerRef.current?.style.opacity, {
-      toValue: opacity,
-      useNativeDriver: false,
-    }).start();
   };
 
-  animatePercent = (percent: number) => {
-    if (!this._percentageIndicatorRef.current) {
-      return;
-    } else {
-      this._percentageIndicatorRef.current.animateFill(percent);
-      Animated.timing(this.percentageTextAnim, {
-        toValue: percent,
-        useNativeDriver: false,
-      }).start();
-    }
-  };
+  renderSingleGameResult() {
+    const {props} = this;
+    const {_percentageIndicatorRef, _clearRateText} = this;
+    const {bigStageNum, difficulty, smallStageNum} = prettyStage(props.stage);
 
-  render() {
-    const {
-      props,
-      state,
-      _percentageIndicatorRef,
-      _percentageTextRef,
-      _infoContainerRef,
-    } = this;
-    const {
-      bigStageNum,
-      difficulty,
-      smallStageNum,
-      clearPercentage,
-    } = prettyStage(props.stage);
-    const renderStageText = () => {
-      if (state.gameState === 'success') {
-        return `${difficulty.toUpperCase()} ${bigStageNum}-${smallStageNum}`;
-      }
-      if (state.gameState === 'fail') {
-        return `${difficulty.toUpperCase()} ${bigStageNum}-${smallStageNum}`;
-      }
-    };
+    const curStageText = `${difficulty.toUpperCase()} ${bigStageNum}-${smallStageNum}`;
 
     return (
-      <Modal visible={state.modalVisible} animated transparent>
-        <AnimatedBox
-          // eslint-disable-next-line react-native/no-inline-styles
-          style={{
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          ref={_infoContainerRef}>
+      <SubContentContainer>
+        <MetaStageInfo value="현재 스테이지" />
+        <CurStage value={curStageText} />
+        <PercentIndicator ref={_percentageIndicatorRef} value={0} />
+        <FlexHorizontal>
+          <CurDifficulty value={`${difficulty?.toUpperCase()} `} />
+          <ClearRate ref={_clearRateText} initialValue={0} postfix="% 완료" />
+        </FlexHorizontal>
+      </SubContentContainer>
+    );
+  }
+
+  renderMultiGameResult() {
+    return (
+      <SubContentContainer>
+        <HorizontalSpaceBetween>
+          <Text>대전 기록</Text>
+          <Text>128전 82승 32패 10무</Text>
+        </HorizontalSpaceBetween>
+        <HorizontalSpaceBetween>
+          <Text>승률</Text>
+          <Text>87.5%</Text>
+        </HorizontalSpaceBetween>
+        <Space height={10} />
+        <RankViewer style={styles.rankViewer} borderWidth={2} />
+      </SubContentContainer>
+    );
+  }
+
+  renderResult() {
+    const {props, renderSingleGameResult, renderMultiGameResult} = this;
+    if (props.gameType === 'single') {
+      return renderSingleGameResult();
+    } else {
+      return renderMultiGameResult();
+    }
+  }
+
+  render() {
+    const {state, renderResult} = this;
+    const {
+      _titleRef,
+      _modal,
+      _infoContainerRef,
+      _mainButtonTextRef,
+      _subButtonTextRef,
+      _thirdButtonContainer,
+      _thirdButtonTextRef,
+    } = this;
+    return (
+      <Modal ref={_modal} visible={state.modalVisible} transparent>
+        <GameInfoContainer ref={_infoContainerRef}>
           <TitleContainer>
-            <Title fontFamily="NotoSansKR-Black" size={30}>
-              승리
-            </Title>
+            <Title ref={_titleRef} value="승리" />
           </TitleContainer>
           <ContentContainer>
-            <SubContentContainer>
-              <Space height={15} />
-              <InfoText fontFamily="NotoSansKR-Bold" size={15}>
-                현재 스테이지
-              </InfoText>
-              <InfoText color="yellow" fontFamily="NotoSansKR-Black" size={40}>
-                {renderStageText()}
-              </InfoText>
-              <Space height={7} />
-              <PercentIndicator
-                ref={_percentageIndicatorRef}
-                borderRadius={20}
-                color="grey"
-                borderColor="black"
-                borderWidth={2}
-                value={clearPercentage}
-                height={20}
-                width={Dimensions.get('screen').width - 120}
-              />
-              <Space height={3} />
-              <FlexHorizontal>
-                <InfoText fontFamily="NotoSansKR-Bold">
-                  {`${difficulty?.toUpperCase()} `}
-                </InfoText>
-                <PercentageText
-                  ref={_percentageTextRef}
-                  // eslint-disable-next-line react-native/no-inline-styles
-                  fontFamily="NotoSansKR-Bold"
-                  value={prettyPercent(clearPercentage) + '% 완료'}
-                  editable={false}
-                />
-              </FlexHorizontal>
-              <Space height={10} />
-            </SubContentContainer>
+            {renderResult()}
+            <Space height={20} />
             <SubContentContainer>
               <FlexHorizontal>
-                <Space width={20} />
                 <RoundRectangleButton width={100} onPress={() => {}}>
-                  <InfoText
-                    color="black"
-                    size={25}
-                    fontFamily="NotoSansKR-Bold">
-                    홈
-                  </InfoText>
+                  <ButtonText ref={_mainButtonTextRef} value="홈" />
                 </RoundRectangleButton>
                 <Space width={10} />
-                <RoundRectangleButton onPress={() => {}}>
-                  <InfoText
-                    color="black"
-                    size={25}
-                    fontFamily="NotoSansKR-Bold">
-                    시작
-                  </InfoText>
+                <RoundRectangleButton flex onPress={() => {}}>
+                  <ButtonText ref={_subButtonTextRef} value="다음 스테이지" />
                 </RoundRectangleButton>
-                <Space width={20} />
               </FlexHorizontal>
+              <AnimatedBox
+                ref={_thirdButtonContainer}
+                style={styles.thirdButtonContainer}>
+                <Space height={8} />
+                <RoundRectangleButton onPress={() => {}}>
+                  <ButtonText ref={_thirdButtonTextRef} value="새로운 대결" />
+                </RoundRectangleButton>
+              </AnimatedBox>
             </SubContentContainer>
-            <Space height={20} />
           </ContentContainer>
-        </AnimatedBox>
+        </GameInfoContainer>
       </Modal>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  thirdButtonContainer: {display: 'none', opacity: 0},
+  rankViewer: {height: 200, width: '100%', borderColor: 'rgba(0,0,0,0.5)'},
+});
 
 export default EndGameInfo;

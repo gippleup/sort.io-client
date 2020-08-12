@@ -14,11 +14,12 @@ import Shop from '../screens/production/Shop';
 import TimerTester from '../screens/dev/TimerTester';
 import RefBoxTester from '../screens/dev/RefBoxTester';
 import RefBlockBoardTester from '../screens/dev/RefBlockBoardTester';
+import GoogleSignInTester from '../screens/dev/GoogleSignInTester';
 
 interface IRoutes {
   [index: string]: {
     devName: string;
-    component: () => JSX.Element;
+    component: React.ReactNode;
     type?: 'dev' | 'production';
     headerShown?: boolean;
   };
@@ -74,6 +75,10 @@ const routes: IRoutes = {
   SettingsTester: {
     devName: '설정창 테스터',
     component: SettingsTester,
+  },
+  GoogleSignInTester: {
+    devName: '구글 로그인',
+    component: GoogleSignInTester,
   },
   PD_GameScene: {
     type: 'production',

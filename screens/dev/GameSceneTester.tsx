@@ -1,43 +1,32 @@
 import React from 'react';
 import GameScene from '../../components/GameScene';
 import {BlockTypes} from '../../components/Block/Types';
+import { generateMap } from '../../api/sortio';
 
-const exStackMap: BlockTypes[][] = [
-  [0, 0, 0],
-  [-1, -1],
-  [-1, -1, -1],
-  [1, 1, -1, -1],
-  [2, 2, -1, -1],
-  [2, 2, -1, -1],
-  [0, 0, 0],
-  [-1, -1],
-  [-1, -1, -1],
-  [1, 1, -1, -1],
-  [-1, -1, -1],
-  [1, 1, -1, -1],
-  [-1, -1, -1],
-  [1, 1, -1, -1],
-  [-1, -1, -1],
-  [1, 1, -1, -1],
-  [-1, -1, -1],
-  [1, 1, -1, -1],
-  [1, 1, -1, -1],
-  [-1, -1, -1],
-  [1, 1, -1, -1],
-  [-1, -1, -1],
-  [1, 1, -1, -1],
-  [-1, -1, -1],
-  [1, 1, -1, -1],
-];
 
 const GameSceneTester = () => {
+  const [map, setMap] = React.useState<null | BlockTypes[][]>(null);
+  const option = {
+    blockStackCount: 10,
+    colorCount: 5,
+    maxScore: 8,
+    stackLengthMax: 8,
+    stackLengthMin: 2,
+    shuffleCount: 1000,
+  }
+  if (!map) {
+    generateMap(option).then((data) => {
+      setMap(data.question)
+    })
+    return <></>;
+  }
   return (
     <GameScene
       skin="spiky"
-      map={exStackMap}
+      map={map}
       title={'하드'}
       timeLimit={60}
-      maxScore={5}
+      maxScore={option.maxScore}
       mode={'multi'}
       onComplete={() => console.log('끝남')}
     />

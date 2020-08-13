@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, Image } from 'react-native'
-import { getCountryIconSvg } from './CounryFlagIcon/util'
+import { getCountryIconSvg } from '../api/sortio'
 import { SvgCss } from 'react-native-svg'
 
 type CountryFlagIconProps = {

@@ -150,7 +150,7 @@ export class RefBlockBoard extends Component<
         marginVertical +
         (blockHeight + marginVertical * 2) * stackRow +
         Constants.blockHeight.top * scale +
-        Constants.blockHeight.piece * scale * 5 -
+        Constants.blockHeight.piece * scale * Constants.maxStackLength -
         Constants.blockHeight.piece * scale * curStackLength,
     };
 
@@ -167,8 +167,8 @@ export class RefBlockBoard extends Component<
       return;
     }
 
+    
     targetStack.pieces.push(pieceOnTop);
-
     let originStackWasCompleted = this.checkIfStackCompleted(targetStack);
 
     if (originStackWasCompleted && targetStack.capRef.current) {
@@ -262,7 +262,7 @@ export class RefBlockBoard extends Component<
         )
         .start();
     }
-    pieceOnTop?.ref.current?.setY(topPiecePos.y - Constants.blockHeight.piece);
+    pieceOnTop?.ref.current?.setY(topPiecePos.y - Constants.blockHeight.piece * this.scale);
     pieceOnTop?.ref.current
       ?.animateY(topPiecePos.y, 300, Easing.in(Easing.bounce))
       .start();
@@ -306,7 +306,7 @@ export class RefBlockBoard extends Component<
     const readyForAppearAnim = () => {
       pieceOnTopOfOrigin?.ref.current?.setXY(
         topPiecePos.x,
-        topPiecePos.y - Constants.blockHeight.piece - 20,
+        topPiecePos.y - Constants.blockHeight.piece * this.scale - 20 * this.scale,
       );
       pieceOnTopOfOrigin.ref.current?.setScale(0);
     };

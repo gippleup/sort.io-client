@@ -25,6 +25,7 @@ type TimerProps = {
   onStart?: () => void;
   onFinish?: () => void;
   onAlert?: () => void;
+  auto?: boolean;
 };
 
 type TimerState = {
@@ -32,6 +33,7 @@ type TimerState = {
 };
 
 class Timer extends React.Component<TimerProps, TimerState> {
+  timerBaseRef = React.createRef<TimerBase>();
   static defaultProps: {
     iconName: string;
     integerSize: number;
@@ -72,6 +74,7 @@ class Timer extends React.Component<TimerProps, TimerState> {
         />
         <TimerBase
           {...props}
+          ref={this.timerBaseRef}
           onAlert={() => {
             this.setState({iconName: 'clock-alert'});
             if (props.onAlert) {

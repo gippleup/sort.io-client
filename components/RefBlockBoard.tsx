@@ -20,10 +20,10 @@ import PieceBase from './Block/PieceBase';
 import TouchAgent from './TouchAgent';
 import TopBase from './Block/TopBase';
 
-const LayoutContainer: typeof View = styled(View)`
-  justify-content: center;
-  align-items: center;
+const LayoutContainer: typeof View | React.ComponentClass<{marginLeft: number; marginTop: number}> = styled(View)`
   position: absolute;
+  margin-left: ${(props) => props.marginLeft}px;
+  margin-top: ${(props) => props.marginTop}px;
 `;
 
 const AbsoluteRefBox: typeof RefBox = styled(RefBox)`
@@ -34,9 +34,9 @@ const Row: typeof View = styled(View)`
   flex-direction: row;
 `;
 
-const Cell: typeof View = styled(View)`
-  width: ${Constants.blockWidth}px;
-  height: ${Constants.blockHeight.full}px;
+const Cell: typeof View | React.ComponentClass<{scale?: number}, any> = styled(View)<{scale?: number}>`
+  width: ${(props) => props.scale ? Constants.blockWidth * props.scale : Constants.blockWidth}px;
+  height: ${(props) => props.scale ? Constants.blockHeight.full * props.scale : Constants.blockHeight.full}px;
   justify-content: flex-end;
 `;
 
@@ -60,6 +60,7 @@ type RefBlockBoardProps = {
   skin: skins;
   onComplete?: () => void;
   onChange?: (score: number) => void;
+  onLayout?: (layout: LayoutChangeEvent) => void;
 };
 
 type RefBlockBoardState = {
@@ -190,7 +191,7 @@ export class RefBlockBoard extends Component<
     this.dockOrigin = targetStack;
     this.readyToDock = true;
     const pieceUndockAnim = pieceOnTop.ref.current?.animateY(
-      topPiecePos.y - 20,
+      topPiecePos.y - 20 * this.scale,
       300,
       Easing.out(Easing.back(3)),
     );
@@ -216,7 +217,7 @@ export class RefBlockBoard extends Component<
     if (originStackWasCompleted && targetStack.capRef.current) {
       const capDockAnim = Animated.parallel([
         targetStack.capRef.current.animateY(
-          topPiecePos.y - Constants.blockHeight.top,
+          topPiecePos.y - Constants.blockHeight.top * this.scale,
           300,
           Easing.in(Easing.bounce),
         ),
@@ -251,11 +252,11 @@ export class RefBlockBoard extends Component<
     const targetStackCompleted = this.checkIfStackCompleted(targetStack);
     if (targetStackCompleted) {
       targetStack.capRef.current?.setY(
-        topPiecePos.y - Constants.blockHeight.piece - Constants.blockHeight.top,
+        topPiecePos.y - Constants.blockHeight.piece * this.scale - Constants.blockHeight.top * this.scale,
       );
       targetStack.capRef.current
         ?.animateY(
-          topPiecePos.y - Constants.blockHeight.top,
+          topPiecePos.y - Constants.blockHeight.top * this.scale,
           500,
           Easing.in(Easing.bounce),
         )
@@ -319,7 +320,7 @@ export class RefBlockBoard extends Component<
       ),
       pieceOnTopOfOrigin?.ref.current?.animateXY(
         topPiecePos.x,
-        topPiecePos.y - Constants.blockHeight.piece,
+        topPiecePos.y - Constants.blockHeight.piece * this.scale,
         300,
         Easing.in(Easing.bounce),
       ),
@@ -332,8 +333,8 @@ export class RefBlockBoard extends Component<
         targetStack.capRef.current?.setOpacity(1);
         targetStack.capRef.current?.setY(
           topPiecePos.y -
-            Constants.blockHeight.piece -
-            Constants.blockHeight.top -
+          Constants.blockHeight.piece * this.scale -
+          Constants.blockHeight.top * this.scale -
             20,
         );
       };
@@ -347,8 +348,8 @@ export class RefBlockBoard extends Component<
         ),
         targetStack.capRef.current?.animateY(
           topPiecePos.y -
-            Constants.blockHeight.piece -
-            Constants.blockHeight.top,
+          Constants.blockHeight.piece * this.scale -
+          Constants.blockHeight.top * this.scale,
           300,
           Easing.in(Easing.bounce),
         ),
@@ -395,6 +396,9 @@ export class RefBlockBoard extends Component<
       ...this.state,
       layout: e.nativeEvent.layout,
     });
+    if (this.props.onLayout) {
+      this.props.onLayout(e);
+    }
   }
 
   render() {
@@ -420,6 +424,9 @@ export class RefBlockBoard extends Component<
     const marginHorizontal = (leftWidth / (maxColumns * 2)) * scale;
     const marginVertical = (leftHeight / (maxRows * 2)) * scale;
 
+    const layoutMarginLeft = (state.layout.width - maxColumns * (blockWidth + marginHorizontal * 2)) / 2
+    const layoutMarginTop = (state.layout.height - maxRows * (blockHeight + marginVertical * 2)) / 2
+
     this.scale = scale;
     this.blockWidth = blockWidth;
     this.blockHeight = blockHeight;
@@ -440,18 +447,18 @@ export class RefBlockBoard extends Component<
 
     return (
       <View style={this.props.style}>
-        <LayoutContainer>
+        <LayoutContainer marginLeft={layoutMarginLeft} marginTop={layoutMarginTop}>
           {layout.map((row, i) => (
             <Row key={'frameRow' + i} style={{marginVertical}}>
               {row.map((cell, j) => {
                 const stackIndex = layout[0].length * i + j;
                 if (props.initialMap[stackIndex] === undefined) {
                   return (
-                    <Cell key={'cell' + i + j} style={{marginHorizontal}} />
+                    <Cell key={'cell' + i + j} scale={scale} style={{marginHorizontal}} />
                   );
                 }
                 return (
-                  <Cell key={'cell' + i + j} style={{marginHorizontal}}>
+                  <Cell key={'cell' + i + j} scale={scale} style={{marginHorizontal}}>
                     <BlockFrame
                       pieceCount={props.initialMap[stackIndex].length}
                       scale={scale}
@@ -462,7 +469,7 @@ export class RefBlockBoard extends Component<
             </Row>
           ))}
         </LayoutContainer>
-        <LayoutContainer ref={this.layoutRef}>
+        <LayoutContainer marginLeft={layoutMarginLeft} marginTop={layoutMarginTop} ref={this.layoutRef}>
           {layout.map((row, i) =>
             row.map((cell, j) => {
               const stackIndex = layout[0].length * i + j;
@@ -495,7 +502,6 @@ export class RefBlockBoard extends Component<
                 bottomRef,
                 max: curStack.length,
               };
-              console.log(filteredStack);
               this.stacks[stackIndex] = stackModel;
               return (
                 <Fragment key={'fragment' + i + j}>
@@ -512,8 +518,8 @@ export class RefBlockBoard extends Component<
                         i * (blockHeight + marginVertical * 2) +
                         blockHeight -
                         Constants.blockHeight.bottom * scale -
-                        Constants.blockHeight.piece * curStack.length -
-                        Constants.blockHeight.top,
+                        Constants.blockHeight.piece * curStack.length * scale -
+                        Constants.blockHeight.top * scale,
                       opacity: completed ? 1 : 0,
                     }}>
                     <Block
@@ -542,7 +548,7 @@ export class RefBlockBoard extends Component<
                             i * (blockHeight + marginVertical * 2) +
                             blockHeight -
                             Constants.blockHeight.bottom * scale -
-                            Constants.blockHeight.piece * (k + 1),
+                            Constants.blockHeight.piece * (k + 1) * scale,
                         }}>
                         <Block
                           base={PieceBase}
@@ -583,7 +589,7 @@ export class RefBlockBoard extends Component<
             }),
           )}
         </LayoutContainer>
-        <LayoutContainer>
+        <LayoutContainer marginLeft={layoutMarginLeft} marginTop={layoutMarginTop}>
           {layout.map((row, i) => (
             <Row key={'agentRow' + i} style={{marginVertical}}>
               {row.map((cell, j) => {
@@ -593,11 +599,12 @@ export class RefBlockBoard extends Component<
                     <Cell
                       key={'agentRowCell' + i + j}
                       style={{marginHorizontal}}
+                      scale={scale}
                     />
                   );
                 }
                 return (
-                  <Cell key={'agentRowCell' + i + j} style={{marginHorizontal}}>
+                  <Cell key={'agentRowCell' + i + j} scale={scale} style={{marginHorizontal}}>
                     <TouchAgent
                       onTouchStart={() => {
                         if (!this.readyToDock) {

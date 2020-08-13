@@ -59,10 +59,10 @@ class ScoreChecker extends React.Component<ScoreCheckerProps> {
     const Space = () => (
       <View
         style={{
-          width: props.intervalWidth ? props.intervalWidth : 15 * props.scale,
+          width: props.intervalWidth ? props.intervalWidth : Constants.blockPadding * props.scale,
           height: props.intervalHeight
             ? props.intervalHeight
-            : 15 * props.scale,
+            : Constants.blockPadding * props.scale,
         }}
       />
     );

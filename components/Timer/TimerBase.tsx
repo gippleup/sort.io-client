@@ -27,6 +27,7 @@ type TimerProps = {
   onStart?: () => void;
   onFinish?: () => void;
   onAlert?: () => void;
+  auto?: boolean;
 };
 
 class TimerBase extends React.Component<TimerProps, {}> {
@@ -51,6 +52,7 @@ class TimerBase extends React.Component<TimerProps, {}> {
     this.alertTriggered = false;
     this.finishTriggered = false;
     this.leftTime = props.duration;
+    this.startTimer = this.startTimer.bind(this);
   }
 
   private timerAnim = new Animated.Value(this.props.duration);
@@ -86,7 +88,15 @@ class TimerBase extends React.Component<TimerProps, {}> {
         this.finishTriggered = true;
       }
     });
+    
+    timerAnim.setValue(props.duration);
+    if (props.auto) {
+      this.startTimer()
+    }
+  }
 
+  startTimer() {
+    const {timerAnim} = this;
     Animated.timing(timerAnim, {
       toValue: 0,
       useNativeDriver: true,

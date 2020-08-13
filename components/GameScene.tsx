@@ -106,29 +106,38 @@ type GameSceneProps = {
 };
 
 const GameScene: React.FC<GameSceneProps> = (props) => {
+  const timerRef = React.createRef<Timer>();
+  const scoreCheckerRef = React.createRef<ScoreChecker>();
+  const opponentScoreCheckerRef = React.createRef<ScoreChecker>();
+  const boardReadyStatus = React.useRef<{ opponent: boolean, player: boolean }>({ opponent: false, player: false });
+  const opponentBoardRef = React.createRef<RefBlockBoard>();
   let mapScale = 1;
-  if (props.map.length <= 6) {
+  if (props.map.length <= 3) {
     mapScale = 1;
   } else if (props.map.length <= 8) {
     mapScale = 0.75
   } else if (props.map.length <= 10) {
     mapScale = 0.7
-  } else if (props.map.length <= 15) {
-    mapScale = 0.65
-  } else if (props.map.length <= 18) {
-    mapScale = 0.55;
-  } else if (props.map.length <= 28) {
+  } else if (props.map.length <= 12) {
+    mapScale = 0.55
+  } else if (props.map.length <= 21) {
     mapScale = 0.5
+  } else if (props.map.length <= 24) {
+    mapScale = 0.4
+  } else if (props.map.length <= 27) {
+    mapScale = 0.38
+  } else if (props.map.length <= 36) {
+    mapScale = 0.36
   }
 
   let scoreCheckerMax = {
     single: {
-      width: 320,
-      height: 44,
+      width: 320 / 360 * Dimensions.get('screen').width,
+      height: 44 / 640 * Dimensions.get('screen').height,
     },
     multi: {
-      width: 130,
-      height: 32,
+      width: 130 / 360 * Dimensions.get('screen').width,
+      height: 32 / 640 * Dimensions.get('screen').height,
     },
   };
   let scoreCheckerScale = 0.5;
@@ -155,10 +164,6 @@ const GameScene: React.FC<GameSceneProps> = (props) => {
 
   let scoreCheckerLayout = Array(checkerRow).fill(Array(checkerColumn).fill(1));
 
-  const timerRef = React.createRef<Timer>();
-  const scoreCheckerRef = React.createRef<ScoreChecker>();
-  const opponentScoreCheckerRef = React.createRef<ScoreChecker>();
-  const boardReadyStatus = React.useRef<{opponent: boolean, player: boolean}>({opponent: false, player: false});
   const filledStack = props.map.filter((stack) => stack[0] !== -1);
   const completeMap = filledStack.map((stack) => {
     let completedStack = true;
@@ -199,6 +204,7 @@ const GameScene: React.FC<GameSceneProps> = (props) => {
     return (
       <OpponentGameContainer>
         <OpponentBoard
+          ref={opponentBoardRef}
           initialMap={props.map}
           skin={props.skin}
           onChange={(score) => {

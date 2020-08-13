@@ -1,13 +1,12 @@
 import BlockBoardTester from '../screens/dev/BlockBoardTester';
 import EndGameInfoTester from '../screens/dev/EndGameInfoTester';
 import ScoreCheckerTester from '../screens/dev/ScoreCheckerTester';
-import GameSceneTester from '../screens/dev/GameSceneTester';
 import ItemBoxTester from '../screens/dev/ItemBoxTester';
 import ProfileTester from '../screens/dev/ProfileTester';
 import PurchaseBoxTester from '../screens/dev/PurchaseBoxTester';
 import RankViewerTester from '../screens/dev/RankViewerTester';
 import SettingsTester from '../screens/dev/SettingsTester';
-import GameScene from '../components/GameScene';
+import GameScene from '../screens/production/GameScene';
 import Main from '../screens/production/Main';
 import SelectStage from '../screens/production/SelectStage';
 import Shop from '../screens/production/Shop';
@@ -15,6 +14,8 @@ import TimerTester from '../screens/dev/TimerTester';
 import RefBoxTester from '../screens/dev/RefBoxTester';
 import RefBlockBoardTester from '../screens/dev/RefBlockBoardTester';
 import GoogleSignInTester from '../screens/dev/GoogleSignInTester';
+import CountryFlagIconTester from '../screens/dev/CountryFlagIconTester';
+import GameSceneTester from '../screens/dev/GameSceneTester';
 
 interface IRoutes {
   [index: string]: {
@@ -79,6 +80,10 @@ const routes: IRoutes = {
   GoogleSignInTester: {
     devName: '구글 로그인',
     component: GoogleSignInTester,
+  },
+  FlagIconTester: {
+    devName: '국가 아이콘',
+    component: CountryFlagIconTester,
   },
   PD_GameScene: {
     type: 'production',

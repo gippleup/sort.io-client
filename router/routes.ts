@@ -16,6 +16,7 @@ import RefBlockBoardTester from '../screens/dev/RefBlockBoardTester';
 import GoogleSignInTester from '../screens/dev/GoogleSignInTester';
 import CountryFlagIconTester from '../screens/dev/CountryFlagIconTester';
 import GameSceneTester from '../screens/dev/GameSceneTester';
+import MultiGameTester from '../screens/dev/MultiGameTester';
 
 interface IRoutes {
   [index: string]: {
@@ -85,15 +86,21 @@ const routes: IRoutes = {
     devName: '국가 아이콘',
     component: CountryFlagIconTester,
   },
-  PD_GameScene: {
-    type: 'production',
-    devName: '게임화면',
-    component: GameScene,
+  MultiGameTester: {
+    devName: '멀티게임',
+    component: MultiGameTester,
+    headerShown: false,
   },
   PD_Main: {
     type: 'production',
     devName: '메인화면',
     component: Main,
+    headerShown: false,
+  },
+  PD_GameScene: {
+    type: 'production',
+    devName: '게임화면',
+    component: GameScene,
   },
   PD_SelectStage: {
     type: 'production',

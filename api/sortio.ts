@@ -1,11 +1,12 @@
 import { BlockTypes } from "../components/Block/Types"
 
-const API_BASE = 'http://ec2-3-35-52-143.ap-northeast-2.compute.amazonaws.com:3000'
+const API_BASE = 'http://ec2-3-34-99-63.ap-northeast-2.compute.amazonaws.com:3000'
 
 export const getCountryIconSvg = (lat: number, lng: number) => {
   const url = `${API_BASE}/country/icon`
   return fetch(`${url}?lat=${lat}&lng=${lng}`)
   .then((res)=> res.text())
+  .catch((err) => console.log(err))
 }
 
 

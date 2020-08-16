@@ -209,11 +209,11 @@ const GameScene: React.FC<GameSceneProps> = (props) => {
           skin={props.skin}
           onChange={(score) => {
             opponentScoreCheckerRef.current?.setScore(score);
-            if (score === props.maxScore && props.onComplete) {
-              props.onComplete();
-            }
+            // if (score === props.maxScore && props.onComplete) {
+            //   props.onComplete();
+            // }
           }}
-          // onComplete={props.onComplete}
+          onComplete={props.onComplete}
           scale={mapScale * 0.35}
           onLayout={() => {
             if (boardReadyStatus.current) {
@@ -300,11 +300,11 @@ const GameScene: React.FC<GameSceneProps> = (props) => {
           skin={props.skin}
           onChange={(score) => {
             scoreCheckerRef.current?.setScore(score);
-            if (score === props.maxScore && props.onComplete) {
-              props.onComplete();
-            }
+            // if (score === props.maxScore && props.onComplete) {
+            //   props.onComplete();
+            // }
           }}
-          // onComplete={props.onComplete}
+          onComplete={props.onComplete}
           scale={mapScale}
           onLayout={() => {
             if (boardReadyStatus.current) {

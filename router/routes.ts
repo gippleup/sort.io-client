@@ -101,16 +101,19 @@ const routes: IRoutes = {
     type: 'production',
     devName: '게임화면',
     component: GameScene,
+    headerShown: false,
   },
   PD_SelectStage: {
     type: 'production',
     devName: '스테이지 선택 화면',
     component: SelectStage,
+    headerShown: false,
   },
   PD_Shop: {
     type: 'production',
     devName: '상점 화면',
     component: Shop,
+    headerShown: false,
   },
 };
 

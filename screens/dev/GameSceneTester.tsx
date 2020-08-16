@@ -27,7 +27,7 @@ const GameSceneTester = () => {
       title={'하드'}
       timeLimit={60}
       maxScore={option.maxScore}
-      mode={'multi'}
+      mode={'single'}
       onComplete={() => console.log('끝남')}
     />
   );

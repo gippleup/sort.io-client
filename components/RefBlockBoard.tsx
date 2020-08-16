@@ -360,7 +360,7 @@ export class RefBlockBoard extends Component<
 
     const completeMap = this.getCompleteMap();
     const score = completeMap.filter((bool) => bool).length;
-    const completedAllStack = completeMap.indexOf(false) === -1;
+    const completedAllStack = completeMap.filter((bool) => !bool).length === 0;
 
     if (props.onChange) {
       props.onChange(score);
@@ -613,7 +613,7 @@ export class RefBlockBoard extends Component<
                           this.dock(stackIndex);
                         }
                       }}>
-                      <BlockFrame pieceCount={5} scale={scale} />
+                      <BlockFrame pieceCount={Constants.maxStackLength} scale={scale} />
                     </TouchAgent>
                   </Cell>
                 );

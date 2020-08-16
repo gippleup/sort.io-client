@@ -5,3 +5,10 @@ declare module "*.svg" {
 }
 
 declare module "react-native-svg-transformer"
+
+declare module "react-native-crypto-js" {
+  import CryptoJS from 'crypto-js'
+  export default CryptoJS;
+}
+
+declare module "react-native-config"

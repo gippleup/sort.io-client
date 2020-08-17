@@ -40,21 +40,6 @@ export const SubContentContainer: typeof View = styled(View)`
   align-items: center;
 `;
 
-type SpaceProps = {
-  height?: number;
-  width?: number;
-};
-
-export const Space: React.ComponentClass<SpaceProps> = styled(View)`
-  width: ${(props) => props.width}px;
-  height: ${(props) => props.height}px;
-`;
-
-Space.defaultProps = {
-  width: 0,
-  height: 0,
-};
-
 export const HorizontalSpaceBetween: typeof View = styled(View)`
   width: 100%;
   flex-direction: row;

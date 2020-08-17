@@ -6,7 +6,7 @@ import ProfileTester from '../screens/dev/ProfileTester';
 import PurchaseBoxTester from '../screens/dev/PurchaseBoxTester';
 import RankViewerTester from '../screens/dev/RankViewerTester';
 import SettingsTester from '../screens/dev/SettingsTester';
-import GameScene from '../screens/production/GameScene';
+import GameScreen from '../screens/production/GameScreen';
 import Main from '../screens/production/Main';
 import SelectStage from '../screens/production/SelectStage';
 import Shop from '../screens/production/Shop';
@@ -17,13 +17,15 @@ import GoogleSignInTester from '../screens/dev/GoogleSignInTester';
 import CountryFlagIconTester from '../screens/dev/CountryFlagIconTester';
 import GameSceneTester from '../screens/dev/GameSceneTester';
 import MultiGameTester from '../screens/dev/MultiGameTester';
+import { StackHeaderProps } from '@react-navigation/stack';
 
 interface IRoutes {
   [index: string]: {
     devName: string;
-    component: React.ReactNode;
+    component: React.FunctionComponent | React.ComponentClass;
     type?: 'dev' | 'production';
     headerShown?: boolean;
+    header?: React.FunctionComponent<StackHeaderProps>;
   };
 }
 const routes: IRoutes = {
@@ -100,7 +102,7 @@ const routes: IRoutes = {
   PD_GameScene: {
     type: 'production',
     devName: '게임화면',
-    component: GameScene,
+    component: GameScreen,
     headerShown: false,
   },
   PD_SelectStage: {
@@ -108,6 +110,7 @@ const routes: IRoutes = {
     devName: '스테이지 선택 화면',
     component: SelectStage,
     headerShown: false,
+    // header: SelectStageHeader,
   },
   PD_Shop: {
     type: 'production',

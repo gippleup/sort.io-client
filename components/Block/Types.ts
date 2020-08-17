@@ -1,5 +1,5 @@
-export type BlockTypes = -1 | 0 | 1 | 2 | 3 | 4 | 9;
+export type BlockTypes = number;
 export type BasicBlockProps = {
-  type: BlockTypes;
+  type: number;
   scale?: number;
 };

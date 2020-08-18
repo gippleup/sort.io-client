@@ -1,4 +1,5 @@
 import {BlockStack} from './BlockStack';
+import Block from '../components/Block';
 
 const randomIndexFromArray = (array: any[]): number => {
   const randomValidIndex = Math.floor(Math.random() * array.length);
@@ -86,17 +87,60 @@ const moveBlockFromTo = (stackMap: BlockStack[], fromIndex: number, toIndex: num
   return stackMap;
 }
 
+// TO DO: 하나의 스택을 모두 비워서 골고루 뿌리는 식으로 스까야 한다.
 const shuffleStacks = (stackMap: BlockStack[], shuffleCount: number) => {
-  for (let i = 0; i < shuffleCount; i += 1) {
-    const stackHasAnyBlock = stackMap.filter((stack) => !stack.isEmpty);
-    const stackHasAnySpace = stackMap.filter((stack) => !stack.isFull);
-    const randomStackFromNotEmpties: BlockStack = pickRandomFromArray(stackHasAnyBlock);
-    const randomStackFromNotFulls: BlockStack = pickRandomFromArray(stackHasAnySpace);
-    if (randomStackFromNotEmpties !== randomStackFromNotFulls) {
-      const lastEleInFromStack = randomStackFromNotEmpties.undock() as number;
-      randomStackFromNotFulls.dock(lastEleInFromStack)
+  const spreadStack = (spreadTarget: BlockStack) => {
+    while (!spreadTarget.isEmpty) {
+      const randomStacksToFill = stackMap
+        .filter((stack) => !stack.isFull && stack !== spreadTarget);
+      const fillTarget: BlockStack = pickRandomFromArray(randomStacksToFill);
+      if (!fillTarget) return;
+      const lastEle = spreadTarget.undock() as number;
+      fillTarget.dock(lastEle);
     }
   }
+
+  const fillStack = (fillTarget: BlockStack) => {
+    while(!fillTarget.isFull) {
+      const randomStacksToPick = stackMap
+        .filter((stack) => !stack.isEmpty && stack !== fillTarget);
+      const pickTarget: BlockStack = pickRandomFromArray(randomStacksToPick);
+      if (!pickTarget) return;
+      const lastEle = pickTarget.undock() as number;
+      fillTarget.dock(lastEle);
+    }
+  }
+
+  const shuffle = () => {
+    for (let i = 0; i < stackMap.length; i += 1) {
+      const targetStack = stackMap[i];
+      const countMap = targetStack.stack.reduce((acc: {[index: number]: number}, block: number) => {
+        if (acc[block] === undefined) {
+          acc[block] = 1;
+        } else {
+          acc[block] += 1;
+        }
+        return acc;
+      }, {});
+      const has3SameColor = Object.values(countMap).filter((num) => num > 2).length > 0;
+      if (has3SameColor) {
+        spreadStack(targetStack);
+      } else {
+        fillStack(targetStack);
+      }
+    }
+  }
+
+  for (let i = 0; i < shuffleCount; i += 1) {
+    if (i % 2 === 0) {
+      const stacksHasAnySpace = stackMap.filter((stack) => !stack.isFull);
+      const randomStackFromAnySpaces = pickRandomFromArray(stacksHasAnySpace);
+      fillStack(randomStackFromAnySpaces);
+    } else {
+      shuffle();
+    }
+  }
+
   return stackMap;
 }
 

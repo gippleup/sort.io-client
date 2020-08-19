@@ -7,9 +7,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import MoneyIndicator from '../../../components/Main/MoneyIndicator'
 import { FlexHorizontal } from '../../../components/Generic/StyledComponents'
 import { useNavigation } from '@react-navigation/native'
+import usePlayData from '../../../hooks/usePlayData'
 
 const HeaderContainer = styled(View)`
-  background-color: rgba(255,255,255,0.1);
+  background-color: rgba(255,255,255,0.2);
   width: 100%;
   flex-direction: row;
   padding: 5px;
@@ -29,7 +30,8 @@ const HeaderText = styled(Text)`
 `;
 
 const SelectStageHeader = () => {
-  const navigation = useNavigation();
+ const navigation = useNavigation();
+const playData = usePlayData();
   return (
     <HeaderContainer>
       <FlexHorizontal>
@@ -38,7 +40,7 @@ const SelectStageHeader = () => {
         </NavigationButton>
         <HeaderText>싱글 플레이</HeaderText>
       </FlexHorizontal>
-      <MoneyIndicator value={10000} />
+      <MoneyIndicator value={playData.user.gold} />
     </HeaderContainer>
   )
 }

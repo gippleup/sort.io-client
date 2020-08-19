@@ -7,6 +7,9 @@ import MainButton from '../../components/Main/MainButton'
 import PatternBackground from '../../components/GameScene/PatternBackground'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import styled from 'styled-components'
+import { useNavigation } from '@react-navigation/native'
+import usePlayData from '../../hooks/usePlayData'
+
 const backgroundImage = require('../../assets/BackgroundPattern.png');
 
 const ButtonIcon: typeof Icon = styled(Icon)`
@@ -16,6 +19,9 @@ const ButtonIcon: typeof Icon = styled(Icon)`
 `;
 
 const Main = () => {
+  const navigation = useNavigation();
+  const playData = usePlayData();
+
   return (
     <View style={{flex: 1, backgroundColor: 'grey'}}>
       <PatternBackground
@@ -28,7 +34,7 @@ const Main = () => {
         <VolumeControl/>
       </View>
       <View style={{ position: 'absolute', right: 10, top: 10 }}>
-        <MoneyIndicator value={10000000} />
+        <MoneyIndicator value={playData?.user.gold} />
       </View>
       <View style={{alignItems: 'center', marginTop: 120, marginBottom: 40}}>
         <Logo fontSize={60} strokeWidth={2} color="white" strokeColor="rgba(0,0,0,0.2)" />
@@ -37,7 +43,7 @@ const Main = () => {
         <MainButton
           preComponent={<ButtonIcon name="gamepad" color="tomato" />}
           text="싱글 플레이"
-          onPress={() => { }}
+          onPress={() => navigation.navigate('PD_SelectStage')}
         />
         <MainButton
           preComponent={<ButtonIcon name="users" color="mediumseagreen" />}

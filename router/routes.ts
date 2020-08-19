@@ -6,7 +6,7 @@ import ProfileTester from '../screens/dev/ProfileTester';
 import PurchaseBoxTester from '../screens/dev/PurchaseBoxTester';
 import RankViewerTester from '../screens/dev/RankViewerTester';
 import SettingsTester from '../screens/dev/SettingsTester';
-import GameScreen from '../screens/production/GameScreen';
+import GameScreen, { GameScreenParams } from '../screens/production/GameScreen';
 import Main from '../screens/production/Main';
 import SelectStage from '../screens/production/SelectStage';
 import Shop from '../screens/production/Shop';
@@ -18,17 +18,23 @@ import CountryFlagIconTester from '../screens/dev/CountryFlagIconTester';
 import GameSceneTester from '../screens/dev/GameSceneTester';
 import MultiGameTester from '../screens/dev/MultiGameTester';
 import { StackHeaderProps } from '@react-navigation/stack';
+import Developer from './Developer';
 
-interface IRoutes {
-  [index: string]: {
+type Routes = {
+  [index in keyof RootStackParamList]: {
     devName: string;
     component: React.FunctionComponent | React.ComponentClass;
     type?: 'dev' | 'production';
     headerShown?: boolean;
     header?: React.FunctionComponent<StackHeaderProps>;
   };
-}
-const routes: IRoutes = {
+};
+
+const routes: Routes = {
+  Developer: {
+    devName: '개발자',
+    component: Developer,
+  },
   RefBoxTester: {
     devName: '레프 박스 테스터',
     component: RefBoxTester,
@@ -119,5 +125,28 @@ const routes: IRoutes = {
     headerShown: false,
   },
 };
+
+export type RootStackParamList = {
+  RefBoxTester: undefined;
+  RefBlockBoardTester: undefined;
+  BlockBoardTester: undefined;
+  TimerTester: undefined;
+  ScoreCheckerTester: undefined;
+  GameSceneTester: undefined;
+  EndGameInfoTester: undefined;
+  ItemBoxTester: undefined;
+  ProfileTester: undefined;
+  PurchaseBoxTester: undefined;
+  RankViewerTester: undefined;
+  SettingsTester: undefined;
+  GoogleSignInTester: undefined;
+  FlagIconTester: undefined;
+  MultiGameTester: undefined;
+  Developer: undefined;
+  PD_Main: undefined;
+  PD_GameScene: GameScreenParams;
+  PD_SelectStage: undefined;
+  PD_Shop: undefined;
+}
 
 export default routes;

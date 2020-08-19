@@ -122,8 +122,8 @@ const shuffleStacks = (stackMap: BlockStack[], shuffleCount: number) => {
         }
         return acc;
       }, {});
-      const has3SameColor = Object.values(countMap).filter((num) => num > 2).length > 0;
-      if (has3SameColor) {
+      const hasSameColor = Object.values(countMap).filter((num) => num > 1).length > 0;
+      if (hasSameColor) {
         spreadStack(targetStack);
       } else {
         fillStack(targetStack);
@@ -142,6 +142,19 @@ const shuffleStacks = (stackMap: BlockStack[], shuffleCount: number) => {
   }
 
   return stackMap;
+}
+
+export const checkIfFinished = (stackMap: BlockStack[]) => {
+  const successMap = stackMap.map((stack) => {
+    const allBlocksHasSameColor = stack.stack.reduce((acc, block) => {
+      if (acc === false) return acc;
+      if (block !== stack.stack[0]) return false;
+      return true;
+    }, true); 
+    return stack.isFull && allBlocksHasSameColor;
+  })
+  const failCount = successMap.filter((result) => result === false).length;
+  return failCount === 0;
 }
 
 export type MapOption = {
@@ -171,7 +184,13 @@ export const generateMap = (mapOption: MapOption) => {
     return blockStack.stack.slice(0).concat(space);
   });
 
-  const shuffled = shuffleStacks(seed, shuffleCount || 1000);
+  let shuffled = shuffleStacks(seed, shuffleCount || 100);
+  shuffled = answer.map((stackData) => new BlockStack({initialBlockState: stackData, limit: stackData.length}));
+  let mistakenlyFinished = checkIfFinished(shuffled);
+  while (mistakenlyFinished) {
+    shuffled = shuffleStacks(seed, shuffleCount || 100);
+    mistakenlyFinished = checkIfFinished(shuffled);
+  }
   const question = shuffled.map((blockStack) => {
     const mappedStack = blockStack.stack;
     const space = Array(blockStack.limit - blockStack.stack.length).fill(-1);

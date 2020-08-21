@@ -35,7 +35,7 @@ const SelectStage = () => {
     navigation.navigate('PD_GameScene', {
       mode: 'single',
       subType,
-      level: 0,
+      level: lastSinglePlayData ? lastPlayedDifficulty + 1 : 0,
       leftTrial: 2,
     })
   }
@@ -60,6 +60,22 @@ const SelectStage = () => {
     })
   }
 
+  const onPressCurrentRankGraphIcon = () => {
+    popup.show(() => {
+      return (
+        <></>
+      );
+    })
+  }
+
+  const onPressSinglePlayRankGraphIcon = () => {
+    popup.show(() => {
+      return (
+        <></>
+      );
+    })
+  }
+
   return (
     <View>
       <PatternBackground
@@ -81,7 +97,7 @@ const SelectStage = () => {
                   <CustomText>{lastSinglePlayData ? lastPlayedDiffStr : '-'}</CustomText>
                 </CustomTextContainer>
               </TouchableOpacity>
-              <GraphButton>
+              <GraphButton onPress={onPressCurrentRankGraphIcon}>
                 <GraphIcon name="graph"/>
               </GraphButton>
             </FlexHorizontal>
@@ -95,7 +111,7 @@ const SelectStage = () => {
                   <CustomText small> (15.8%)</CustomText>
                 </CustomTextContainer>
               </TouchableOpacity>
-              <GraphButton>
+              <GraphButton onPress={onPressSinglePlayRankGraphIcon}>
                 <GraphIcon name="graph" />
               </GraphButton>
             </FlexHorizontal>

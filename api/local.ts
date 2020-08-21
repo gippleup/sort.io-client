@@ -13,12 +13,10 @@ export type SortIoUser = {
 }
 
 export type SinglePlayData = {
-  id: number;
-  userId: number; //로컬로 플레이해서 userId가 없는 경우는 추후에 연결됐을 때 싹 필터링해서 업데이트하자.
-  hasWon: boolean;
+  id?: number;
+  userId: null | number; //로컬로 플레이해서 userId가 없는 경우는 추후에 연결됐을 때 싹 필터링해서 업데이트하자.
   createdAt: string;
   difficulty: number;
-  timeConsumed: number;
 }
 
 export type MultiPlayData = {
@@ -38,7 +36,7 @@ export type PlayData = {
   multi: MultiPlayData[];
 }
 
-const subscriber: Function[] = [];
+const subscriber: {[index: string]: Function} = {};
 
 const encrypt = (str: string) => {
   const encrypted = CryptoJS.AES.encrypt(str, publicKey).toString();
@@ -57,11 +55,11 @@ export const getPlayData = (): Promise<PlayData> => {
         if (data) {
           const decryptedData = JSON.parse(decrypt(data));
           resolve(decryptedData);
-          subscriber.forEach((callback) => callback(decryptedData))
+          Object.values(subscriber).forEach((callback) => callback(decryptedData))
         } else {
           initializePlayData().then((data) => {
             resolve(data);
-            subscriber.forEach((callback) => callback(data));
+            Object.values(subscriber).forEach((callback) => callback(data));
           });
         }
       })
@@ -69,7 +67,12 @@ export const getPlayData = (): Promise<PlayData> => {
 }
 
 export const setPlayData = (data: PlayData) => {
-  subscriber.forEach((callback) => callback(data))
+  console.log(subscriber);
+  Object.values(subscriber).forEach((callback) => {
+    if (typeof callback === 'function') {
+      callback(data);
+    }
+  })
   const encrypted = encrypt(JSON.stringify(data));
   return AsyncStorage.setItem('playData', encrypted);
 }
@@ -97,7 +100,7 @@ export const initializePlayData = async (): Promise<PlayData> => {
 export const modifyGold = (amount: number) => {
   return getPlayData().then((data) => {
     const curGold = data.user.gold;
-    setPlayData({
+    return setPlayData({
       ...data,
       user: {
         ...data.user,
@@ -110,7 +113,7 @@ export const modifyGold = (amount: number) => {
 export const modifyTicket = (amount: number) => {
   return getPlayData().then((data)=> {
     const curTicket = data.user.ticket;
-    setPlayData({
+    return setPlayData({
       ...data,
       user: {
         ...data.user,
@@ -130,6 +133,16 @@ export const clearPlayData = () => {
   return AsyncStorage.removeItem('playData');
 }
 
-export const subscribePlayData = (callback: (data: PlayData) => any) => {
-  subscriber.push(callback);
+export const subscribePlayData = (key: string, callback: (data: PlayData) => any) => {
+  subscriber[key] = callback;
+  return () => delete subscriber[key];
+}
+
+export const saveSingleGameResult = (gameResult: SinglePlayData) => {
+  return getPlayData().then((data: PlayData) => {
+    return setPlayData({
+      ...data,
+      single: [...data.single, {...gameResult, id: data.single.length}]
+    })
+  })
 }

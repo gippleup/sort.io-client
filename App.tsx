@@ -19,6 +19,7 @@ import Developer from './router/Developer';
 import {Provider as ReduxProvider} from 'react-redux';
 import store from './redux/store';
 import { PopupProvider } from './hooks/usePopup';
+import {cardTransitionSpecs, cardTransitions} from './router/cardTransition';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -40,6 +41,8 @@ const App: () => React.ReactNode = () => {
                     options={{
                       headerShown: options.headerShown,
                       header: options.header,
+                      transitionSpec: cardTransitionSpecs,
+                      cardStyleInterpolator: cardTransitions.forSlide,
                     }}
                   />
                 );

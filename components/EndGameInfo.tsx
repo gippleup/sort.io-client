@@ -11,9 +11,9 @@ import {
   CurDifficulty,
   ClearRate,
   ButtonText,
-  Space,
   HorizontalSpaceBetween,
 } from './EndGameInfo/_StyledComponents';
+import {Space} from './Generic/StyledComponents';
 import {prettyStage} from './EndGameInfo/utils';
 import PercentIndicator from './EndGameInfo/PercentIndicator';
 import DynamicText from './DynamicText';

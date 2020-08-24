@@ -31,7 +31,7 @@ const App: () => React.ReactNode = () => {
         <ReduxProvider store={store}>
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Developer">
-              {/* <Stack.Screen name="Developer" component={Developer} /> */}
+              <Stack.Screen name="Developer" component={Developer} />
               {Object.entries(routes).map(([routeName, options]) => {
                 return (
                   <Stack.Screen
@@ -42,7 +42,7 @@ const App: () => React.ReactNode = () => {
                       headerShown: options.headerShown,
                       header: options.header,
                       transitionSpec: cardTransitionSpecs,
-                      cardStyleInterpolator: cardTransitions.forSlide,
+                      cardStyleInterpolator: cardTransitions.forFade,
                     }}
                   />
                 );

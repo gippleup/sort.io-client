@@ -7,7 +7,7 @@ type MoneyIconProps = {
   size: number;
 }
 
-const MoneyIcon = (props: MoneyIconProps) => {
+const MoneyIcon: React.FC<MoneyIconProps> = (props) => {
   const {size} = props;
   return (
     <FlexHorizontal>
@@ -25,6 +25,10 @@ const MoneyIcon = (props: MoneyIconProps) => {
       </View>
     </FlexHorizontal>
   )
+}
+
+MoneyIcon.defaultProps = {
+  size: 20,
 }
 
 export default MoneyIcon

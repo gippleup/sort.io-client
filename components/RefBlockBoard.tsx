@@ -73,6 +73,7 @@ export class RefBlockBoard extends Component<
 > {
   constructor(props: RefBlockBoardProps) {
     super(props);
+    this.stacks = Array(props.initialMap.length);
     this.state = {
       layout: null,
     };
@@ -93,7 +94,7 @@ export class RefBlockBoard extends Component<
     this.getCompleteMap = this.getCompleteMap.bind(this);
   }
 
-  stacks: stackModel[] = Array(this.props.initialMap.length);
+  stacks: stackModel[];
   layoutRef = React.createRef<View>();
   readyToDock = false;
   dockOrigin: stackModel | null = null;
@@ -293,7 +294,7 @@ export class RefBlockBoard extends Component<
 
     if (dockOrigin?.pieces.length === 0) {
       dockOrigin.bottomRef.current?.setState({
-        type: 9,
+        type: 50,
       });
     }
 
@@ -372,7 +373,7 @@ export class RefBlockBoard extends Component<
 
     Animated.parallel(animation).start();
   }
-
+  
   dock(stackIndex: number) {
     const {
       stacks,
@@ -399,6 +400,12 @@ export class RefBlockBoard extends Component<
     if (this.props.onLayout) {
       this.props.onLayout(e);
     }
+  }
+
+  clear() {
+    this.setState({
+      layout: null,
+    })
   }
 
   render() {
@@ -527,7 +534,7 @@ export class RefBlockBoard extends Component<
                       base={TopBase}
                       shape={skinMap[props.skin].top}
                       type={
-                        filteredStack[0] !== undefined ? filteredStack[0] : 9
+                        filteredStack[0] !== undefined ? filteredStack[0] : 50
                       }
                       scale={scale}
                       visible={true}
@@ -579,7 +586,7 @@ export class RefBlockBoard extends Component<
                       base={BottomBase}
                       shape={skinMap[props.skin].bottom}
                       type={
-                        filteredStack[0] !== undefined ? filteredStack[0] : 9
+                        filteredStack[0] !== undefined ? filteredStack[0] : 50
                       }
                       scale={scale}
                     />

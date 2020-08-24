@@ -7,8 +7,8 @@ import styled from 'styled-components'
 const IndicatorShell = styled(View)`
   align-items: center;
   justify-content: center;
-  background-color: dodgerblue;
-  border-color: rgba(255,255,255,0.7);
+  background-color: rgba(0,0,0,0.2);
+  border-color: rgba(255,255,255,0.5);
   border-width: 2px;
   width: 160px;
   border-radius: 50px;

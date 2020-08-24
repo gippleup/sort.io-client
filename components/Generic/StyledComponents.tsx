@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import {View, Text, ColorValue} from 'react-native';
 import styled from 'styled-components';
 
 export const FlexHorizontal: typeof View = styled(View)`
@@ -26,7 +26,7 @@ type NotoSansProps = {
   size?: number;
 }
 
-export const NotoSans: typeof Text & React.ComponentClass<NotoSansProps, {}> = styled(Text)<NotoSansProps>`
+export const NotoSans: typeof Text | React.ComponentClass<NotoSansProps, {}> = styled(Text)<NotoSansProps>`
   font-family: NotoSansKR-${(props) => props.type};
   line-height: ${(props) => props.size * 9/6}px;
   font-size: ${(props) => props.size}px;
@@ -65,4 +65,27 @@ export const ExtraSmallText: typeof Text = styled(Text)`
   font-family: NotoSansKR-Light;
   font-size: 7px;
   line-height: 12px;
+`;
+
+type CircleProps = {
+  size: number;
+  borderWidth?: number;
+  backgroundColor?: string;
+};
+
+export const Circle: React.FC<CircleProps> = styled(View)<CircleProps>`
+  border-radius: ${(props) => props.size / 2}px;
+  width: ${(props) => props.size}px;
+  height: ${(props) => props.size}px;
+  padding: ${(props) => `${props.padding || 0}px`};
+  background-color: ${(props) => props.backgroundColor || 'lightgrey'};
+  align-items: center;
+  justify-content: center;
+`;
+
+export const RoundPaddingCenter: typeof View = styled(View)`
+  background-color: white;
+  padding: 15px;
+  align-self: center;
+  border-radius: 20px;
 `;

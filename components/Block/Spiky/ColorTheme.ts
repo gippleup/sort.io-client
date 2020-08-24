@@ -40,7 +40,7 @@ for (let i = 0; i < blockTypeCount; i += 1) {
     .set('hsl.h', hue + 360 / blockTypeCount * i)
     .set('hsl.l',
       i % 4 === 0 ? 0.7
-        : i % 4 === 1 ? 0.6
+        : i % 4 === 1 ? 0.3
           : i % 4 === 2 ? 0.4
             : i % 4 === 3 ? 0.4 : '')
     .set('hsl.s',

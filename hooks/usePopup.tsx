@@ -9,7 +9,21 @@ const PopupContentContainer = styled(View)`
   justify-content: center;
 `;
 
-export const PopupContext = React.createContext<any>(null);
+type PopupContainer = {
+  component: React.ReactElement;
+  hide: () => void;
+  show: (target: React.ComponentClass | React.FunctionComponent) => void;
+  addListener: (type: 'show' | 'hide', cb: () => any) => void;
+  removeListener: (type: 'show' | 'hide', cb: () => any) => void;
+}
+
+export const PopupContext = React.createContext<PopupContainer>({
+  component: <></>,
+  hide: () => {},
+  show: () => {},
+  addListener: () => {},
+  removeListener: () => {},
+});
 
 type PopupProviderProps = {
   children: React.ReactElement;
@@ -19,11 +33,19 @@ export const PopupProvider = (props: PopupProviderProps) => {
   const [target, setTarget] = React.useState<React.ComponentClass | React.FunctionComponent>();
   const [visible, setVisible] = React.useState(false);
 
-  const popupContainer = {
+  const listener: {[index in "show" | "hide"]: Function[]} = {
+    show: [],
+    hide: [],
+  };
+
+  const popupContainer: PopupContainer = {
     component: (
       <Modal
         animationType="fade"
-        onRequestClose={() => setVisible(false)}
+        onRequestClose={() => {
+          setVisible(false);
+          listener.hide.forEach((cb) => cb())
+        }}
         visible={visible}
         transparent
       >
@@ -32,11 +54,21 @@ export const PopupProvider = (props: PopupProviderProps) => {
         </PopupContentContainer>
       </Modal>
     ),
-    hide: () => setVisible(false),
-    show: (target: React.ComponentClass | React.FunctionComponent) => {
+    hide: () => {
+      setVisible(false)
+      listener.hide.forEach((cb) => cb())
+    },
+    show: (target) => {
       setTarget(target);
       setVisible(true);
+      listener.show.forEach((cb) => cb())
     },
+    addListener: (type: 'show' | 'hide', callback: () => any) => {
+      listener[type].push(callback);
+    },
+    removeListener: (type: 'show' | 'hide', callback: () => any) => {
+      listener[type] = listener[type].filter((cb) => cb.toString() !== callback.toString());
+    }
   }
 
   return <PopupContext.Provider value={popupContainer}>{props.children}</PopupContext.Provider>

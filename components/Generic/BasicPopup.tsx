@@ -23,7 +23,7 @@ const Content = styled(View)`
   justify-content: center;
 `;
 
-const ButtonShell: typeof View = styled(View)`
+export const ButtonShell: typeof View = styled(View)`
   padding: 5px;
   padding-left: 15px;
   padding-right: 15px;
@@ -34,7 +34,7 @@ const ButtonShell: typeof View = styled(View)`
   elevation: 5;
 `;
 
-type PopupButton = {
+export type PopupButton = {
   text: string;
   onPress: () => any;
   style?: ViewStyle;
@@ -42,12 +42,12 @@ type PopupButton = {
 
 type BasicPopupProps = {
   title?: string;
-  content: React.ReactNode;
+  content?: React.ReactNode;
   buttons?: PopupButton[];
   buttonAlign?: 'vertical' | 'horizontal';
 }
 
-const BasicPopup = (props: BasicPopupProps) => {
+const BasicPopup: React.FC<BasicPopupProps> = (props) => {
   const {title, content, buttons, buttonAlign} = props;
   const renderTitle = () => {
     if (!title) return <></>;
@@ -104,7 +104,7 @@ const BasicPopup = (props: BasicPopupProps) => {
     <View>
       {renderTitle()}
       <Content>
-        {content}
+        {content || props.children}
       </Content>
       {renderButtons()}
     </View>

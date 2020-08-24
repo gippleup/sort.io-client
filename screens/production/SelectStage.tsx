@@ -20,6 +20,10 @@ import usePopup from '../../hooks/usePopup';
 import { getLevelString } from './GameScreen/utils';
 import StartChallengePopup from './SelectStage/StartChallengePopup';
 import StartTrainingPopup from './SelectStage/StartTrainingPopup';
+import RankGraphPopup from './SelectStage/RankGraphPopup';
+import TicketPurchasePopup from './SelectStage/TicketPurchasePopup';
+import { useTicket } from '../../api/local';
+import NotEnoughTicketPopup from './SelectStage/NotEnoughTicketPopup';
 
 const backgroundImage = require('../../assets/BackgroundPattern.png');
 
@@ -31,12 +35,25 @@ const SelectStage = () => {
   const lastPlayedDifficulty = lastSinglePlayData ? lastSinglePlayData.difficulty : 0;
   const lastPlayedDiffStr = getLevelString(lastPlayedDifficulty)
 
-  const startSingleGame = (subType: 'challenge' | 'training') => {
+  const startSingleGame = async (subType: 'challenge' | 'training') => {
+    if (subType === 'challenge') {
+      if (playData.user.ticket < 1) {
+        return popup.show(() => {
+          return (
+            <NotEnoughTicketPopup />
+          )
+        })
+      } else {
+        await useTicket(1);
+      }
+    }
+
     navigation.navigate('PD_GameScene', {
       mode: 'single',
       subType,
-      level: lastSinglePlayData ? lastPlayedDifficulty + 1 : 0,
+      level: lastPlayedDifficulty,
       leftTrial: 2,
+      successiveWin: 0,
     })
   }
 
@@ -63,8 +80,8 @@ const SelectStage = () => {
   const onPressCurrentRankGraphIcon = () => {
     popup.show(() => {
       return (
-        <></>
-      );
+        <RankGraphPopup/>
+      )
     })
   }
 
@@ -73,6 +90,14 @@ const SelectStage = () => {
       return (
         <></>
       );
+    })
+  }
+
+  const onPressTicketPurchase = () => {
+    popup.show(() => {
+      return (
+        <TicketPurchasePopup/>
+      )
     })
   }
 
@@ -126,7 +151,7 @@ const SelectStage = () => {
               <CustomText small>{playData.user.ticket}</CustomText>
               </CustomTextContainer>
               <Space width={10} />
-              <TouchableOpacity>
+              <TouchableOpacity onPress={onPressTicketPurchase}>
                 <CustomTextContainer fit>
                   <CustomText dark small>티켓 구매</CustomText>
                 </CustomTextContainer>

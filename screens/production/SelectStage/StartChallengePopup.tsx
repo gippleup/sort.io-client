@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import { getLevelString } from '../GameScreen/utils';
 import BasicPopup from '../../../components/Generic/BasicPopup';
 import { AskPopupContentContainer } from './_StyledComponents';
-import { SubTitleText, NotoSans } from '../../../components/Generic/StyledComponents';
+import { SubTitleText, NotoSans, Space } from '../../../components/Generic/StyledComponents';
 import usePopup from '../../../hooks/usePopup';
 import { useNavigation } from '@react-navigation/native';
 import usePlayData from '../../../hooks/usePlayData';
@@ -18,7 +18,7 @@ const StartChallengePopup = (props: StartChallengePopupProps) => {
   const playData = usePlayData();
   const lastSinglePlayData = playData.single[playData.single.length - 1];
   const lastPlayedDifficulty = lastSinglePlayData ? lastSinglePlayData.difficulty : 0;
-  const diffToChallenge = lastPlayedDifficulty + 1;
+  const diffToChallenge = lastPlayedDifficulty;
   const diffToChallengeStr = getLevelString(diffToChallenge);
 
   const startSingleGame = (subType: 'challenge' | 'training') => {
@@ -37,7 +37,13 @@ const StartChallengePopup = (props: StartChallengePopupProps) => {
         <AskPopupContentContainer>
           <SubTitleText>도전할 랭크: {lastSinglePlayData ? diffToChallengeStr : getLevelString(0)}</SubTitleText>
           <NotoSans type="Light">티켓을 하나 소모하여 더 높은 난이도에 도전합니다.</NotoSans>
-          <View style={{alignItems: 'center'}}>
+          <Space height={10}/>
+          <View>
+            <NotoSans size={16} style={{color: 'orange'}} type="Bold">챌린지모드 보상</NotoSans>
+            <NotoSans style={{color: 'tomato'}} type="Regular">: 10골드 + 10골드 * (0 + ...연승횟수) * 2</NotoSans>
+            <NotoSans size={13} type="Light">예) 1승: 10골드 + 10골드(0 + 1) * 2 = 30골드</NotoSans>
+            <NotoSans size={13} type="Light">예) 2연승: 10골드 + 10골드(0 + 1 + 2) * 2 = 70골드</NotoSans>
+            <NotoSans size={13} type="Light">예) 3연승: 10골드 + 10골드(0 + 1 + 2 + 3) * 2 = 130골드</NotoSans>
           </View>
         </AskPopupContentContainer>
       )}

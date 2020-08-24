@@ -10,6 +10,7 @@ export type SortIoUser = {
   isTemp: boolean;
   gold: number;
   ticket: number;
+  itmes: string;
 }
 
 export type SinglePlayData = {
@@ -53,7 +54,7 @@ export const getPlayData = (): Promise<PlayData> => {
     AsyncStorage.getItem('playData')
       .then((data) => {
         if (data) {
-          const decryptedData = JSON.parse(decrypt(data));
+          const decryptedData = JSON.parse(decrypt(data)) as PlayData;
           resolve(decryptedData);
           Object.values(subscriber).forEach((callback) => callback(decryptedData))
         } else {
@@ -67,7 +68,6 @@ export const getPlayData = (): Promise<PlayData> => {
 }
 
 export const setPlayData = (data: PlayData) => {
-  console.log(subscriber);
   Object.values(subscriber).forEach((callback) => {
     if (typeof callback === 'function') {
       callback(data);
@@ -80,9 +80,11 @@ export const setPlayData = (data: PlayData) => {
 export const initializePlayData = async (): Promise<PlayData> => {
   const serverGeneratedGuest = await makeGuestId();
   const tempOfflineUser = {
-    id: null,
+    createdAt: new Date(Date.now()).toISOString(),
     gold: 0,
+    id: null,
     isTemp: true,
+    items: "",
     name: 'tempOfflineLogin',
     ticket: 0,
   };

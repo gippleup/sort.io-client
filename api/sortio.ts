@@ -1,5 +1,5 @@
 import { BlockTypes } from "../components/Block/Types"
-import {SortIoUser} from './local'
+import {SortIoUser, PlayData} from './local'
 
 const API_BASE = 'http://ec2-3-34-99-63.ap-northeast-2.compute.amazonaws.com:3000'
 
@@ -34,7 +34,23 @@ export const generateMap = (option: MapOption): Promise<{answer: BlockTypes[][],
 export const makeGuestId = (): Promise<SortIoUser> => {
   const url = `${API_BASE}/user/guest/create`
   return fetch(url)
-    .then((res) => res.json())
-    .catch((err) => null);
+    .then((res) => {
+      return res.json()
+    })
+    .catch((err) => {
+      console.log(err);
+      return null;
+    });
 }
 
+export const getPlayDataByUserId = (userId: number): Promise<PlayData> => {
+  const url = `${API_BASE}/user/playdata?userId=${userId}`
+  return fetch(url)
+    .then((res) => {
+      return res.json();
+    })
+    .catch((err) => {
+      console.log(err);
+      return null;
+    })
+}

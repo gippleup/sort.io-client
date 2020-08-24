@@ -4,22 +4,24 @@ import Graph from '../../components/Graph'
 import { getPlayData, SinglePlayData } from '../../api/local'
 import { scale } from 'chroma-js'
 import { getLevelString } from '../production/GameScreen/utils'
+import { NotoSans } from '../../components/Generic/StyledComponents'
 
 const GraphTester = () => {
-  const [data, setData] = React.useState<SinglePlayData[]>([]);
-  if (!data.length) {
+  const [data, setData] = React.useState<SinglePlayData[] | null>(null);
+  if (!data) {
     getPlayData().then((data) => setData(data.single))
+    return <></>;
   }
+  
   return (
     <View>
       <Graph 
-        data={data}
-        xExtractor={(_, i: number) => i * 50}
-        yExtractor={(entry: SinglePlayData) => entry.difficulty * 50}
+        data={data.slice(0, 8)}
+        xExtractor={(_, i: number) => i}
+        yExtractor={(entry: SinglePlayData) => entry.difficulty}
         xAxisMapper={(_, i) => i + 1}
         yAxisMapper={(entry: SinglePlayData, i) => getLevelString(entry.difficulty).replace(/[aeiou]/g, '')}
         width={300}
-        height={200}
       />
     </View>
   )

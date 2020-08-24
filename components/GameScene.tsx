@@ -10,6 +10,7 @@ import { skins } from './BlockStack/skinMap';
 import ProfilePic from './GameScene/ProfilePic';
 import CountryFlagIcon from './CountryFlagIcon';
 import Constants from '../assets/Constants';
+import { decideMapScale } from './GameScene/utils';
 
 const backgroundImage = require('../assets/BackgroundPattern.png');
 
@@ -105,32 +106,17 @@ type GameSceneProps = {
   mode: 'single' | 'multi';
 };
 
-const GameScene: React.FC<GameSceneProps> = (props) => {
-  const timerRef = React.createRef<Timer>();
-  const scoreCheckerRef = React.createRef<ScoreChecker>();
-  const opponentScoreCheckerRef = React.createRef<ScoreChecker>();
-  const boardReadyStatus = React.useRef<{ opponent: boolean, player: boolean }>({ opponent: false, player: false });
-  const opponentBoardRef = React.createRef<RefBlockBoard>();
-  let mapScale = 1;
-  if (props.map.length <= 3) {
-    mapScale = 1;
-  } else if (props.map.length <= 8) {
-    mapScale = 0.75
-  } else if (props.map.length <= 10) {
-    mapScale = 0.7
-  } else if (props.map.length <= 12) {
-    mapScale = 0.55
-  } else if (props.map.length <= 21) {
-    mapScale = 0.5
-  } else if (props.map.length <= 24) {
-    mapScale = 0.4
-  } else if (props.map.length <= 27) {
-    mapScale = 0.38
-  } else if (props.map.length <= 36) {
-    mapScale = 0.36
-  }
-
-  let scoreCheckerMax = {
+class GameScene extends React.Component<GameSceneProps, {}>{
+  timerRef = React.createRef<Timer>();
+  scoreCheckerRef = React.createRef<ScoreChecker>();
+  opponentScoreCheckerRef = React.createRef<ScoreChecker>();
+  boardReadyStatus = {
+    opponent: false,
+    player: false,
+  };
+  opponentBoardRef = React.createRef<RefBlockBoard>();
+  mapScale = 1;
+  scoreCheckerMax = {
     single: {
       width: 320 / 360 * Dimensions.get('screen').width,
       height: 44 / 640 * Dimensions.get('screen').height,
@@ -140,53 +126,68 @@ const GameScene: React.FC<GameSceneProps> = (props) => {
       height: 32 / 640 * Dimensions.get('screen').height,
     },
   };
-  let scoreCheckerScale = 0.5;
-  let checkerMaxWidth = scoreCheckerMax[props.mode].width;
-  let checkerMaxHeight = scoreCheckerMax[props.mode].height;
-  if (props.maxScore <= 8) {
-    scoreCheckerScale = 0.45;
-  } else if (props.maxScore <= 15) {
-    scoreCheckerScale = 0.3;
-  } else if (props.maxScore <= 18) {
-    scoreCheckerScale = 0.25;
-  } else if (props.maxScore <= 21) {
-    scoreCheckerScale = 0.2;
-  } else if (props.maxScore <= 28) {
-    scoreCheckerScale = 0.19;
-  }
+  scoreCheckerScale = 0.5;
+  checkerMaxWidth = 320;
+  checkerMaxHeight = 44;
+  initialScore = 0;
+  scoreCheckerLayout = [[]];
 
-  let checkerColumn = Math.ceil(checkerMaxWidth / ((Constants.blockWidth + Constants.blockPadding * 2) * scoreCheckerScale));
-  let checkerRow = Math.ceil(props.maxScore / checkerColumn);
+  constructor(props: Readonly<GameSceneProps>) {
+    super(props);
+    this.mapScale = decideMapScale(props.map.length);
+    this.checkerMaxWidth = this.scoreCheckerMax[props.mode].width;
+    this.checkerMaxHeight = this.scoreCheckerMax[props.mode].height;
 
-  if (props.mode === 'multi') {
-    scoreCheckerScale *= (0.33 / 0.5);
-  }
+    if (props.maxScore <= 8) {
+      this.scoreCheckerScale = 0.45;
+    } else if (props.maxScore <= 16) {
+      this.scoreCheckerScale = 0.25;
+    } else if (props.maxScore <= 21) {
+      this.scoreCheckerScale = 0.2;
+    } else if (props.maxScore <= 28) {
+      this.scoreCheckerScale = 0.19;
+    }
 
-  let scoreCheckerLayout = Array(checkerRow).fill(Array(checkerColumn).fill(1));
+    if (props.mode === 'multi') {
+      this.scoreCheckerScale *= (0.33 / 0.5);
+    }
 
-  const filledStack = props.map.filter((stack) => stack[0] !== -1);
-  const completeMap = filledStack.map((stack) => {
-    let completedStack = true;
-    stack.forEach((block) => {
-      if (block !== stack[0]) {
-        completedStack = false;
-      }
+    let paddedWidth = (Constants.blockWidth + Constants.blockPadding * 2);
+    let checkerColumn = Math.ceil(this.checkerMaxWidth / ( paddedWidth * this.scoreCheckerScale));
+    let checkerRow = Math.ceil(props.maxScore / checkerColumn);
+    this.scoreCheckerLayout = Array(checkerRow).fill(Array(checkerColumn).fill(1));
+    const filledStack = props.map.filter((stack) => stack[0] !== -1);
+    const completeMap = filledStack.map((stack) => {
+      let completedStack = true;
+      stack.forEach((block) => {
+        if (block !== stack[0]) {
+          completedStack = false;
+        }
+      });
+      return completedStack;
     });
-    return completedStack;
-  });
-  const initialScore = completeMap.filter((bool) => bool).length;
+    this.initialScore = completeMap.filter((bool) => bool).length;
 
-
-  const startTimerIfBothReady = () => {
-    if (boardReadyStatus.current) {
-      const {player, opponent} = boardReadyStatus.current;
-      if (player === true && opponent === true) {
-        timerRef.current?.timerBaseRef.current?.startTimer();
-      }
+    this.startTimerIfBothReady = this.startTimerIfBothReady.bind(this);
+    this.renderOpponentBoard = this.renderOpponentBoard.bind(this);
+    this.renderOpponentScoreChecker = this.renderOpponentScoreChecker.bind(this);
+    this.renderProfile = this.renderProfile.bind(this);
+    this.renderStageTitle = this.renderStageTitle.bind(this);
+  }
+  
+  startTimerIfBothReady = () => {
+    const {boardReadyStatus, props, timerRef} = this;
+    const { player, opponent } = boardReadyStatus;
+    if (props.mode === 'single' && player === true) {
+      timerRef.current?.timerBaseRef.current?.startTimer();
+    }
+    if (props.mode === 'multi' && player === true && opponent === true) {
+      timerRef.current?.timerBaseRef.current?.startTimer();
     }
   }
 
-  const renderStageTitle = () => {
+  renderStageTitle = () => {
+    const {props} = this;
     if (props.mode === 'multi') {
       return <></>;
     }
@@ -197,10 +198,20 @@ const GameScene: React.FC<GameSceneProps> = (props) => {
     )
   }
 
-  const renderOpponentBoard = () => {
+  renderOpponentBoard = () => {
+    const {
+      props,
+      opponentBoardRef,
+      opponentScoreCheckerRef,
+      mapScale,
+      boardReadyStatus,
+      startTimerIfBothReady
+    } = this;
+
     if (props.mode === 'single') {
       return <></>;
     }
+
     return (
       <OpponentGameContainer>
         <OpponentBoard
@@ -216,17 +227,22 @@ const GameScene: React.FC<GameSceneProps> = (props) => {
           onComplete={props.onComplete}
           scale={mapScale * 0.35}
           onLayout={() => {
-            if (boardReadyStatus.current) {
-              boardReadyStatus.current.opponent = true
-              startTimerIfBothReady();
-            }
+            boardReadyStatus.opponent = true
+            startTimerIfBothReady();
           }}
         />
       </OpponentGameContainer>
     )
   }
 
-  const renderOpponentScoreChecker = () => {
+  renderOpponentScoreChecker = () => {
+    const {
+      props,
+      opponentScoreCheckerRef,
+      scoreCheckerScale,
+      initialScore,
+      scoreCheckerLayout,
+    } = this;
     if (props.mode === 'single') {
       return <></>;
     }
@@ -245,8 +261,8 @@ const GameScene: React.FC<GameSceneProps> = (props) => {
     )
   }
 
-
-  const renderProfile = () => {
+  renderProfile = () => {
+    const {props} = this;
     if (props.mode === 'single') {
       return <></>;
     }
@@ -255,67 +271,82 @@ const GameScene: React.FC<GameSceneProps> = (props) => {
     )
   }
 
-  return (
-    <GameSceneContainer>
-      <PatternBackground
-        source={backgroundImage}
-        width={Dimensions.get('screen').width}
-        height={Dimensions.get('screen').height}
-        scale={0.5}
-      />
-      <GameInfoContainer>
-        {renderOpponentBoard()}        
-        <MetaInfoContainer>
-          {renderStageTitle()}
-          <TimerContainer>
-            <Timer
-              ref={timerRef}
-              iconSize={20}
-              color="white"
-              alertAt={15}
-              integerSize={50}
-              decimalSize={20}
-              duration={props.timeLimit}
-              onFinish={props.onTimeOut}
-              auto={false}
-            />
-          </TimerContainer>
-          {renderOpponentScoreChecker()}
-          <ScoreCheckerContainer>
-            {renderProfile()}
-            <ScoreChecker
-              ref={scoreCheckerRef}
-              skin={props.skin}
-              initialScore={initialScore}
-              maxScore={props.maxScore}
-              scale={scoreCheckerScale}
-              layout={scoreCheckerLayout}
-            />
-          </ScoreCheckerContainer>
-        </MetaInfoContainer>
-      </GameInfoContainer>
-      <BlockBoardContainer>
-        <StyledRefBoard
-          initialMap={props.map}
-          skin={props.skin}
-          onChange={(score) => {
-            scoreCheckerRef.current?.setScore(score);
-            // if (score === props.maxScore && props.onComplete) {
-            //   props.onComplete();
-            // }
-          }}
-          onComplete={props.onComplete}
-          scale={mapScale}
-          onLayout={() => {
-            if (boardReadyStatus.current) {
-              boardReadyStatus.current.player = true
-              startTimerIfBothReady()
-            }
-          }}
+  render() {
+    const {
+      renderOpponentBoard,
+      renderOpponentScoreChecker,
+      renderProfile,
+      renderStageTitle,
+      props,
+      scoreCheckerRef,
+      initialScore,
+      scoreCheckerScale,
+      scoreCheckerLayout,
+      boardReadyStatus,
+      startTimerIfBothReady,
+      mapScale,
+      timerRef,
+    } = this;
+    return (
+      <GameSceneContainer>
+        <PatternBackground
+          source={backgroundImage}
+          width={Dimensions.get('screen').width}
+          height={Dimensions.get('screen').height}
+          scale={0.5}
         />
-      </BlockBoardContainer>
-    </GameSceneContainer>
-  );
-};
+        <GameInfoContainer>
+          {renderOpponentBoard()}
+          <MetaInfoContainer>
+            {renderStageTitle()}
+            <TimerContainer>
+              <Timer
+                ref={timerRef}
+                iconSize={20}
+                color="white"
+                alertAt={15}
+                integerSize={50}
+                decimalSize={20}
+                duration={props.timeLimit}
+                onFinish={props.onTimeOut}
+                auto={false}
+              />
+            </TimerContainer>
+            {renderOpponentScoreChecker()}
+            <ScoreCheckerContainer>
+              {renderProfile()}
+              <ScoreChecker
+                ref={scoreCheckerRef}
+                skin={props.skin}
+                initialScore={initialScore}
+                maxScore={props.maxScore}
+                scale={scoreCheckerScale}
+                layout={scoreCheckerLayout}
+              />
+            </ScoreCheckerContainer>
+          </MetaInfoContainer>
+        </GameInfoContainer>
+        <BlockBoardContainer>
+          <StyledRefBoard
+            initialMap={props.map}
+            skin={props.skin}
+            onChange={(score) => {
+              scoreCheckerRef.current?.setScore(score);
+              // if (score === props.maxScore && props.onComplete) {
+              //   props.onComplete();
+              // }
+            }}
+            onComplete={props.onComplete}
+            scale={mapScale}
+            onLayout={() => {
+              boardReadyStatus.player = true
+              startTimerIfBothReady()
+            }}
+          />
+        </BlockBoardContainer>
+      </GameSceneContainer>
+    );
+  }
+}
 
 export default GameScene;

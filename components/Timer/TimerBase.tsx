@@ -53,6 +53,7 @@ class TimerBase extends React.Component<TimerProps, {}> {
     this.finishTriggered = false;
     this.leftTime = props.duration;
     this.startTimer = this.startTimer.bind(this);
+    this.stopTimer = this.stopTimer.bind(this);
   }
 
   private timerAnim = new Animated.Value(this.props.duration);
@@ -103,6 +104,11 @@ class TimerBase extends React.Component<TimerProps, {}> {
       easing: Easing.linear,
       duration: this.leftTime * 1000,
     }).start();
+  }
+
+  stopTimer() {
+    const {timerAnim} = this;
+    timerAnim.stopAnimation();
   }
 
   componentWillUnmount() {

@@ -18,7 +18,8 @@ import CountryFlagIconTester from '../screens/dev/CountryFlagIconTester';
 import GameSceneTester from '../screens/dev/GameSceneTester';
 import MultiGameTester from '../screens/dev/MultiGameTester';
 import { StackHeaderProps } from '@react-navigation/stack';
-import Developer from './Developer';
+import GraphTester from '../screens/dev/GraphTester';
+import AsyncStorageController from '../screens/dev/AsyncStorageController';
 
 type Routes = {
   [index in keyof RootStackParamList]: {
@@ -31,10 +32,6 @@ type Routes = {
 };
 
 const routes: Routes = {
-  Developer: {
-    devName: '개발자',
-    component: Developer,
-  },
   RefBoxTester: {
     devName: '레프 박스 테스터',
     component: RefBoxTester,
@@ -99,6 +96,16 @@ const routes: Routes = {
     component: MultiGameTester,
     headerShown: false,
   },
+  GraphTester: {
+    devName: '그래프',
+    component: GraphTester,
+    headerShown: false,
+  },
+  AsyncStorageController: {
+    devName: '로컬 데이터 관리',
+    component: AsyncStorageController,
+    headerShown: false,
+  },
   PD_Main: {
     type: 'production',
     devName: '메인화면',
@@ -127,6 +134,7 @@ const routes: Routes = {
 };
 
 export type RootStackParamList = {
+  AsyncStorageController: undefined;
   RefBoxTester: undefined;
   RefBlockBoardTester: undefined;
   BlockBoardTester: undefined;
@@ -143,6 +151,7 @@ export type RootStackParamList = {
   FlagIconTester: undefined;
   MultiGameTester: undefined;
   Developer: undefined;
+  GraphTester: undefined;
   PD_Main: undefined;
   PD_GameScene: GameScreenParams;
   PD_SelectStage: undefined;

@@ -8,7 +8,7 @@ type CardTransitionSpecs = {
 }
 
 enum CardTransitionNames {
-  forSlide, forZoom,
+  forSlide, forZoom, forFade,
 }
 
 type CardTransitions = {
@@ -82,4 +82,12 @@ export const cardTransitions: CardTransitions = {
       },
     };
   },
+  forFade: (props) => {
+    const {current} = props;
+    return {
+      cardStyle: {
+        opacity: current.progress,
+      }
+    }
+  }
 }

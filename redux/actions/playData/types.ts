@@ -7,3 +7,4 @@ export const USE_TICKET = 'USE_TICKET';
 export const SAVE_SINGLEPLAY = 'SAVE_SINGLEPLAY';
 export const SAVE_MULTIPLAY = 'SAVE_MULTIPLAY';
 export const UPDATE_PLAYDATA = 'UPDATE_PLAYDATA';
+export const UPDATE_USER = 'UPDATE_USER';

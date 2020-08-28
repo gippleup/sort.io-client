@@ -9,6 +9,10 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import styled from 'styled-components'
 import { useNavigation } from '@react-navigation/native'
 import usePlayData from '../../hooks/usePlayData'
+import GoogleSignin from '../../components/GoogleSignin'
+import { FlexHorizontal, Space, NotoSans } from '../../components/Generic/StyledComponents'
+import { useDispatch } from 'react-redux'
+import { loadPlayData, signInWithGoogle, signOutWithGoogle } from '../../redux/actions/playData/thunk'
 
 const backgroundImage = require('../../assets/BackgroundPattern.png');
 
@@ -21,6 +25,19 @@ const ButtonIcon: typeof Icon = styled(Icon)`
 const Main = () => {
   const navigation = useNavigation();
   const playData = usePlayData();
+  const dispatch = useDispatch();
+
+  if (!playData.loaded) {
+    dispatch(loadPlayData());
+  }
+
+  const onSignIn = () => {
+    dispatch(signInWithGoogle());
+  }
+
+  const onSignOut = () => {
+    dispatch(signOutWithGoogle());
+  }
 
   return (
     <View style={{flex: 1, backgroundColor: 'grey'}}>
@@ -31,13 +48,23 @@ const Main = () => {
         scale={0.5}
       />
       <View style={{position: 'absolute', left: 10, top: 10}}>
-        <VolumeControl/>
+        <FlexHorizontal>
+          <VolumeControl/>
+          <Space width={5} />
+          <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)', padding: 5, borderRadius: 50}}>
+            <GoogleSignin onSignOut={onSignOut} onSignIn={onSignIn} size={40} />
+          </View>
+        </FlexHorizontal>
       </View>
       <View style={{ position: 'absolute', right: 10, top: 10 }}>
         <MoneyIndicator value={playData?.user.gold} />
       </View>
       <View style={{alignItems: 'center', marginTop: 120, marginBottom: 40}}>
         <Logo fontSize={60} strokeWidth={2} color="white" strokeColor="rgba(0,0,0,0.2)" />
+        <FlexHorizontal>
+          <NotoSans type="Bold" style={{color: 'yellow'}}>Welcome! </NotoSans>
+          <NotoSans type="Black" style={{color: 'white'}}>{playData.user.name}</NotoSans>
+        </FlexHorizontal>
       </View>
       <View style={{alignItems: 'center'}}>
         <MainButton

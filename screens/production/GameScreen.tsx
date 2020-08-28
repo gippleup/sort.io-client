@@ -1,15 +1,17 @@
 import React from 'react'
-import { View, Text, BackHandler } from 'react-native'
-import { RouteProp, useNavigation, EventArg } from '@react-navigation/native'
+import { View, Text, BackHandler, AppStateEvent } from 'react-native'
+import { RouteProp, useNavigation, EventArg, StackNavigationState, EventListenerCallback, EventMapCore, CommonActions } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import {generateMap as generateMap_Local} from '../../algo/generateMap';
 import {generateMap as generateMap_Server} from '../../api/sortio';
 import GameScene from '../../components/GameScene';
 import { RootStackParamList } from '../../router/routes';
 import {GameMode, GameSubType, generateOptionByLevel} from './GameScreen/utils'
-import { saveSingleGameResult, saveGold } from '../../api/local';
-import usePopup from '../../hooks/usePopup';
-import CancelGamePopup from './GameScreen/CancelGamePopup';
+import { useDispatch } from 'react-redux';
+import { depositGold, saveSinglePlay } from '../../redux/actions/playData/thunk';
+import { StackNavigationEventMap } from '@react-navigation/stack/lib/typescript/src/types';
+
+export type StateEventCallback = EventListenerCallback<StackNavigationEventMap & EventMapCore<StackNavigationState>, "state">
 
 export type BeforeRemoveEvent = EventArg<"beforeRemove", true, {
   action: Readonly<{
@@ -39,10 +41,11 @@ type GameScreenProps = {
 const GameScreen = (props: GameScreenProps) => {
   const [map, setMap] = React.useState<null | number[][]>(null);
   const option = generateOptionByLevel(props.route.params.level);
-  const popup = usePopup();
-  const navigation = useNavigation();
+  const navigation = props.navigation;
   const gameSceneRef = React.createRef<GameScene>();
   const {mode, leftTrial, level, subType, successiveWin} = props.route.params;
+  let stageFinished = false;
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     const restartTimer = () => {
@@ -59,38 +62,37 @@ const GameScreen = (props: GameScreenProps) => {
         stopTimer();
     }
 
-    popup.addListener("hide", restartTimer);
-
     BackHandler.addEventListener("hardwareBackPress", () => {
       stopTimer();
       return null;
     })
 
     const blockGoBack = (e: BeforeRemoveEvent) => {
-      setTimeout(() => {
-        popup.show(() => {
+      const {payload, type} = e.data.action;
+      if (type === "GO_BACK") {
+        if (stageFinished) return;
+        e.preventDefault();
+        setTimeout(() => {
           let text = '';
+  
           if (subType === 'challenge') {
             text = '챌린지를 종료하시겠습니까?'
           } else if (subType === 'training') {
-            text = '연습모드를 종료하시겠습니까?'
+            text = '연습게임을 종료하시겠습니까?'
           }
-          return (
-            <CancelGamePopup
-              onPressYes={() => navigation.dispatch(e.data.action)}
-              text={text}
-            />
-          )
+  
+          navigation.navigate('Popup_CancelGame', {
+            text: text,
+          });        
         })
-      })
-      e.preventDefault();
+      }
     }
 
     navigation.addListener("beforeRemove", blockGoBack);
-
+    navigation.addListener("focus", restartTimer);
     return () => {
       navigation.removeListener("beforeRemove", blockGoBack);
-      popup.removeListener("hide", restartTimer);
+      navigation.removeListener("focus", restartTimer);
     }
   })
 
@@ -106,6 +108,7 @@ const GameScreen = (props: GameScreenProps) => {
   }
 
   const finishStageWith = (result: 'fail' | 'success') => {
+    stageFinished = true;
     const nextLevel = level + (result === 'success' ? 1 : -1);
     const nextSuccessiveWin = result === 'success' ? successiveWin + 1 : 0;
     const successiveWins = [];
@@ -116,32 +119,27 @@ const GameScreen = (props: GameScreenProps) => {
     const bonus = successiveWins.length ? 10 * successiveWins.reduce((acc, ele) => acc + ele) * goldMultiplier : 0;
     const reward = 10 + bonus;
     
-    saveGold(reward).then(async () => {
-      if (leftTrial > 0) {
-        props.navigation.replace('PD_GameScene', {
-          mode: mode,
-          level: nextLevel,
-          leftTrial: leftTrial - 1,
-          subType: subType,
-          successiveWin: nextSuccessiveWin,
-        })
-      } else {
-        if (subType === 'challenge') {
-          await saveSingleGameResult({
-            createdAt: new Date(Date.now()).toDateString(),
-            difficulty: level,
-            userId: null,
-          })
-        }
-        navigation.goBack();
+    dispatch(depositGold(reward))
+    
+    if (leftTrial > 0) {
+      props.navigation.replace('PD_GameScene', {
+        mode: mode,
+        level: nextLevel,
+        leftTrial: leftTrial - 1,
+        subType: subType,
+        successiveWin: nextSuccessiveWin,
+      })
+    } else {
+      if (subType === 'challenge') {
+        dispatch(saveSinglePlay(level))
       }
-    })
-
+      navigation.goBack();
+    }
   }
 
   return (
     <GameScene
-      ref={gameSceneRef}
+    ref={gameSceneRef}
       skin="spiky"
       map={map}
       title={option.levelStr}

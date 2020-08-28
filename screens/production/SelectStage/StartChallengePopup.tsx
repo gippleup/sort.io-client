@@ -4,29 +4,34 @@ import { getLevelString } from '../GameScreen/utils';
 import BasicPopup from '../../../components/Generic/BasicPopup';
 import { AskPopupContentContainer } from './_StyledComponents';
 import { SubTitleText, NotoSans, Space } from '../../../components/Generic/StyledComponents';
-import usePopup from '../../../hooks/usePopup';
 import { useNavigation } from '@react-navigation/native';
 import usePlayData from '../../../hooks/usePlayData';
+import { useTicket } from '../../../redux/actions/playData/thunk';
+import { useDispatch } from 'react-redux';
 
-type StartChallengePopupProps = {
-  onPressStart: () => any;
-}
-
-const StartChallengePopup = (props: StartChallengePopupProps) => {
-  const popup = usePopup();
+const StartChallengePopup = () => {
   const navigation = useNavigation();
   const playData = usePlayData();
+  const dispatch = useDispatch();
   const lastSinglePlayData = playData.single[playData.single.length - 1];
   const lastPlayedDifficulty = lastSinglePlayData ? lastSinglePlayData.difficulty : 0;
   const diffToChallenge = lastPlayedDifficulty;
   const diffToChallengeStr = getLevelString(diffToChallenge);
 
-  const startSingleGame = (subType: 'challenge' | 'training') => {
+  const startSingleGame = () => {
+    navigation.goBack();
+    if (playData.user.ticket < 1) {
+      return navigation.navigate('Popup_NotEnoughTicket')
+    } else {
+      dispatch(useTicket(1));
+    }
+
     navigation.navigate('PD_GameScene', {
       mode: 'single',
-      subType,
-      level: 0,
+      subType: 'challenge',
+      level: lastPlayedDifficulty,
       leftTrial: 2,
+      successiveWin: 0,
     })
   }
 
@@ -50,12 +55,7 @@ const StartChallengePopup = (props: StartChallengePopupProps) => {
       buttons={[
         {
           text: '시작하기',
-          onPress: () => {
-            popup.hide();
-            if (props.onPressStart) {
-              props.onPressStart();
-            }
-          },
+          onPress: startSingleGame,
           style: {
             backgroundColor: 'palegreen',
             elevation: 5,
@@ -63,7 +63,7 @@ const StartChallengePopup = (props: StartChallengePopupProps) => {
         },
         {
           text: '취소하기',
-          onPress: popup.hide,
+          onPress: navigation.goBack,
           style: {
             backgroundColor: 'lightgrey',
             elevation: 5,

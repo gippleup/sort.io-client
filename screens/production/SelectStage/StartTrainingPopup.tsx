@@ -4,8 +4,10 @@ import { getLevelString } from '../GameScreen/utils';
 import BasicPopup from '../../../components/Generic/BasicPopup';
 import { AskPopupContentContainer } from './_StyledComponents';
 import { SubTitleText, NotoSans, Space } from '../../../components/Generic/StyledComponents';
-import usePopup from '../../../hooks/usePopup';
 import usePlayData from '../../../hooks/usePlayData';
+import { useNavigation } from '@react-navigation/native';
+import { useTicket } from '../../../redux/actions/playData/thunk';
+import { useDispatch } from 'react-redux';
 
 type StartTrainingProps = {
   onPressStart: () => any;
@@ -13,11 +15,24 @@ type StartTrainingProps = {
 
 const StartTrainingPopup = (props: StartTrainingProps) => {
   const playData = usePlayData();
-  const popup = usePopup();
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
   const lastSinglePlayData = playData.single[playData.single.length - 1];
   const lastPlayedDifficulty = lastSinglePlayData ? lastSinglePlayData.difficulty : 0;
   const diffToChallenge = lastPlayedDifficulty;
   const diffToChallengeStr = getLevelString(diffToChallenge);
+
+  const startSingleGame = () => {
+    navigation.goBack();
+    navigation.navigate('PD_GameScene', {
+      mode: 'single',
+      subType: 'training',
+      level: lastPlayedDifficulty,
+      leftTrial: 2,
+      successiveWin: 0,
+    })
+  }
+
   return (
     <BasicPopup
       title="연습하기"
@@ -38,12 +53,7 @@ const StartTrainingPopup = (props: StartTrainingProps) => {
       buttons={[
         {
           text: '시작하기',
-          onPress: () => {
-            popup.hide();
-            if (props.onPressStart) {
-              props.onPressStart();
-            }
-          },
+          onPress: startSingleGame,
           style: {
             backgroundColor: 'palegreen',
             elevation: 5,
@@ -51,7 +61,7 @@ const StartTrainingPopup = (props: StartTrainingProps) => {
         },
         {
           text: '취소하기',
-          onPress: popup.hide,
+          onPress: navigation.goBack,
           style: {
             backgroundColor: 'lightgrey',
             elevation: 5,

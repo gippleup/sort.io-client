@@ -6,11 +6,12 @@ import styled from 'styled-components'
 import { NotoSans, FlexHorizontal, Space, Circle, RoundPaddingCenter } from '../../../components/Generic/StyledComponents'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import MoneyIcon from '../../../components/Main/MoneyIcon'
-import usePopup from '../../../hooks/usePopup'
 import usePlayData from '../../../hooks/usePlayData'
-import { saveTicket, useGold } from '../../../api/local'
 import chroma from 'chroma-js'
 import Flickery from '../../../components/Flickery'
+import { useDispatch } from 'react-redux'
+import * as thunkAction from '../../../redux/actions/playData/thunk'
+import { useNavigation } from '@react-navigation/native'
 
 const ItemIconContainer = styled(View)`
   border-radius: 10px;
@@ -54,16 +55,17 @@ const TicketPurchasePopup = () => {
   const increaseQuantity = () => setQuantity(Math.max(quantity - 1, 0));
   const decreaseQuantity = () => setQuantity(quantity + 1);
   const playData = usePlayData();
-  const popup = usePopup();
+  const dispatch = useDispatch();
   const [alertVisible, setAlertVisible] = React.useState(false);
   const flickerRef = React.createRef<Flickery>();
+  const total = ticketPrice * quantity;
+  const navigation = useNavigation();
   
   const purchaseTicket = () => {
     if (quantity === 0) return;
-    if (playData.user.gold >= ticketPrice * quantity) {
-      useGold(ticketPrice * quantity).then(() => {
-        saveTicket(quantity).then(popup.hide);
-      })
+    if (playData.user.gold >= total) {
+      dispatch(thunkAction.purchaseTicket(quantity));
+      navigation.goBack();
     } else {
       setAlertVisible(true);
       setTimeout(() => {
@@ -79,7 +81,7 @@ const TicketPurchasePopup = () => {
     },
     {
       text: '취소하기',
-      onPress: popup.hide,
+      onPress: navigation.goBack,
     },
   ]
 
@@ -92,55 +94,56 @@ const TicketPurchasePopup = () => {
   return (
     <>
     <BasicPopup title="티켓 구매" buttons={buttons} buttonAlign="horizontal">
-      <FlexHorizontal style={{alignItems: 'flex-start'}}>
-        <ItemIconContainer>
-          <TicketIcon/>
-        </ItemIconContainer>
-        <Space width={10}/>
-        <FlexHorizontal style={{alignItems: 'flex-end'}}>
-          <View style={{alignItems: 'center'}}>
-            <NotoSans type="Bold">구매 수량</NotoSans> 
-            <Space height={5} />
-            <FlexHorizontal>
-              <PurchaseQuantity type="Bold">{quantity}</PurchaseQuantity>
+      <View style={{width: 240}}>
+        <FlexHorizontal style={{alignItems: 'flex-start'}}>
+          <ItemIconContainer>
+            <TicketIcon/>
+          </ItemIconContainer>
+          <Space width={10}/>
+          <FlexHorizontal style={{alignItems: 'flex-end', justifyContent: 'space-between', flex: 1}}>
+            <View style={{alignItems: 'center'}}>
+              <NotoSans type="Bold">구매 수량</NotoSans> 
+              <Space height={5} />
+              <FlexHorizontal>
+                <PurchaseQuantity type="Bold">{quantity}</PurchaseQuantity>
+              </FlexHorizontal>
+            </View>
+            <View>
+              <FlexHorizontal>
+                <TouchableOpacity onLongPress={increaseQuantity} onPress={increaseQuantity}>
+                  <Circle size={50}>
+                    <FAIcon name="caret-down" size={40} />
+                  </Circle>
+                </TouchableOpacity>
+                <Space width={5} />
+                <TouchableOpacity onLongPress={decreaseQuantity} onPress={decreaseQuantity}>
+                  <Circle size={50}>
+                    <FAIcon name="caret-up" size={40} />
+                    <Space height={5} />
+                  </Circle>
+                </TouchableOpacity>
+              </FlexHorizontal>
+            </View>
+          </FlexHorizontal>
+        </FlexHorizontal>
+        <Space height={10} />
+        <View style={{width: '100%'}}>
+          <FlexHorizontal style={{justifyContent: 'space-between'}}>
+            <FlexHorizontal style={{justifyContent: 'space-between', width: 110, borderBottomWidth: 1, paddingBottom: 3, alignSelf: 'flex-start'}}>
+              <FlexHorizontal>
+                <MoneyIcon size={10} />
+                <NotoSans style={{ color: 'orange' }} type="Black">{ticketPrice}</NotoSans>
+              </FlexHorizontal>
+              <NotoSans style={{color: 'grey'}} type="Black">X {quantity}</NotoSans>
             </FlexHorizontal>
-          </View>
-          <Space width={10} />
-          <View>
+            <NotoSans style={{color: 'black'}} type="Black">=</NotoSans>
             <FlexHorizontal>
-              <TouchableOpacity onLongPress={increaseQuantity} onPress={increaseQuantity}>
-                <Circle size={50}>
-                  <FAIcon name="caret-down" size={40} />
-                </Circle>
-              </TouchableOpacity>
+              <MoneyIcon size={10}/>
               <Space width={5} />
-              <TouchableOpacity onLongPress={decreaseQuantity} onPress={decreaseQuantity}>
-                <Circle size={50}>
-                  <FAIcon name="caret-up" size={40} />
-                  <Space height={5} />
-                </Circle>
-              </TouchableOpacity>
+              <NotoSans style={{ color: 'orange' }} type="Black">{ticketPrice * quantity}</NotoSans>
             </FlexHorizontal>
-          </View>
-        </FlexHorizontal>
-      </FlexHorizontal>
-      <Space height={10} />
-      <View style={{width: '100%'}}>
-        <FlexHorizontal style={{justifyContent: 'space-between'}}>
-          <FlexHorizontal style={{justifyContent: 'space-between', width: 110, borderBottomWidth: 1, paddingBottom: 3, alignSelf: 'flex-start'}}>
-            <FlexHorizontal>
-              <MoneyIcon size={10} />
-              <NotoSans style={{ color: 'orange' }} type="Black">{ticketPrice}</NotoSans>
-            </FlexHorizontal>
-            <NotoSans style={{color: 'grey'}} type="Black">X {quantity}</NotoSans>
           </FlexHorizontal>
-          <NotoSans style={{color: 'black'}} type="Black">=</NotoSans>
-          <FlexHorizontal>
-            <MoneyIcon size={10}/>
-            <Space width={5} />
-            <NotoSans style={{ color: 'orange' }} type="Black">{ticketPrice * quantity}</NotoSans>
-          </FlexHorizontal>
-        </FlexHorizontal>
+        </View>
       </View>
     </BasicPopup>
     <Modal transparent animationType="fade" onRequestClose={() => setAlertVisible(false)} visible={alertVisible}>

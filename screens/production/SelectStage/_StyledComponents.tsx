@@ -93,7 +93,7 @@ export const RecordEntryContainer = styled(View)`
   align-items: center;
 `;
 
-export const GraphIcon: typeof SLIcon = styled(SLIcon)`
+export const PaddedSLIcon: typeof SLIcon = styled(SLIcon)`
   font-size: 20px;
   padding: 15px;
   background-color: white;

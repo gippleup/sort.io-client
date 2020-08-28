@@ -1,10 +1,7 @@
 export const LOAD_PLAYDATA = 'LOAD_PLAYDATA';
-export const SAVE_PLAYDATA = 'SAVE_PLAYDATA';
-export const SAVE_GOLD = 'SAVE_GOLD';
-export const USE_GOLD = 'USE_GOLD';
-export const SAVE_TICKET = 'SAVE_TICKET';
-export const USE_TICKET = 'USE_TICKET';
-export const SAVE_SINGLEPLAY = 'SAVE_SINGLEPLAY';
-export const SAVE_MULTIPLAY = 'SAVE_MULTIPLAY';
 export const UPDATE_PLAYDATA = 'UPDATE_PLAYDATA';
 export const UPDATE_USER = 'UPDATE_USER';
+export const UPDATE_GOLD = 'UPDATE_GOLD';
+export const UPDATE_TICKET = 'UPDATE_TICKET';
+export const UPDATE_SINGLEPLAY = 'UPDATE_SINGLEPLAY';
+export const UPDATE_MULTIPLAY = 'UPDATE_MULTIPLAY';

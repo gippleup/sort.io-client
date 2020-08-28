@@ -8,7 +8,7 @@ type BlockFrameProps = {
 };
 
 const BlockFrame: React.FC<BlockFrameProps> = (props) => {
-  const bgColor = 'rgba(0, 0, 0, 0.5)';
+  const bgColor = 'rgba(20, 20, 20, 0.5)';
   return (
     <View
       style={{
@@ -19,6 +19,8 @@ const BlockFrame: React.FC<BlockFrameProps> = (props) => {
             Constants.blockHeight.piece * props.pieceCount) *
           props.scale,
         backgroundColor: bgColor,
+        borderWidth: 0.5,
+        borderColor: 'rgba(255,255,255,0.2)'
       }}
     />
   );

@@ -1,43 +1,26 @@
 import React from 'react';
-import {View, Text, ViewStyle, ScrollView} from 'react-native';
+import {View, Text, ViewStyle, ScrollView, TextStyle} from 'react-native';
 import RankListEntry from './RankViewer/RankListEntry';
 
-const fakeRankList = [
-  {
-    username: '백만송이',
-    rank: 14523,
-    rate: 0.125,
-  },
-  {
-    username: '천만송이',
-    rank: 14524,
-    rate: 0.125,
-  },
-  {
-    username: '화산송이',
-    rank: 14525,
-    rate: 0.126,
-  },
-  {
-    username: '버섯송이',
-    rank: 14526,
-    rate: 0.126,
-  },
-  {
-    username: '표고송이',
-    rank: 14527,
-    rate: 0.126,
-  },
-  {
-    username: '미친송이',
-    rank: 14528,
-    rate: 0.126,
-  },
-];
+export type RankViewerDataEntry = { username: string; userId?: number; rank: number; rate: number };
+export type RankViewerData = RankViewerDataEntry[];
+
+const defaulEmphaisStyle: ViewStyle = {
+  backgroundColor: 'gold',
+}
 
 type RankViewrProps = {
-  style?: ViewStyle;
   borderWidth?: number;
+  data: RankViewerData;
+  style?: ViewStyle;
+  contentContainerStyle?: ViewStyle;
+  entryStyle?: (entry: RankViewerDataEntry, i: number, isEnd: boolean) => {
+    usernameStyle?: TextStyle;
+    rankTextStyle?: TextStyle;
+    rankRateStyle?: TextStyle;
+    textStyle?: TextStyle;
+    containerStyle?: ViewStyle;
+  };
 };
 
 class RankViewer extends React.Component<RankViewrProps> {
@@ -52,23 +35,37 @@ class RankViewer extends React.Component<RankViewrProps> {
     return (
       <View
         style={{
+          width: '100%',
           borderTopWidth: props.borderWidth,
           borderBottomWidth: props.borderWidth,
-          width: props.style?.width,
           borderColor: props.style?.borderColor,
+          alignItems: 'center',
         }}>
         <ScrollView
           ref={_scrollViewRef}
+          contentContainerStyle={props.contentContainerStyle}
           style={{
             ...props.style,
             borderLeftWidth: props.borderWidth,
             borderRightWidth: props.borderWidth,
           }}>
-          {fakeRankList.map((rankListEntryData) => {
+          {props.data.map((rankListEntryData, i) => {
+            let style;
+            const isEnd = i === props.data.length - 1;
+
+            if (props.entryStyle) {
+              style = props.entryStyle(rankListEntryData, i, isEnd);
+            }
+
             return (
               <RankListEntry
                 key={rankListEntryData.rank}
                 data={rankListEntryData}
+                style={style?.containerStyle}
+                usernameStyle={style?.usernameStyle}
+                rankRateStyle={style?.rankRateStyle}
+                rankTextStyle={style?.rankTextStyle}
+                textStyle={style?.textStyle}
               />
             );
           })}

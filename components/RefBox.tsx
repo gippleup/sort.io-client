@@ -8,7 +8,6 @@ import {
   Easing,
   StyleSheet,
 } from 'react-native';
-import styled from 'styled-components';
 
 type RefBoxProps = {
   component?: React.ComponentType<any>;
@@ -40,6 +39,7 @@ export class RefBox extends Component<RefBoxProps> {
     const flattenedStyle = StyleSheet.flatten(props.style);
     const propOpacity = flattenedStyle ? flattenedStyle.opacity : 1;
     this.animOpacity.setValue(propOpacity !== undefined ? propOpacity : 1);
+    this.stopAllAnimation = this.stopAllAnimation.bind(this);
   }
 
   originX = 0;
@@ -59,6 +59,14 @@ export class RefBox extends Component<RefBoxProps> {
   animScale: Animated.Value = new Animated.Value(1);
   animAngle: Animated.Value = new Animated.Value(0);
   animOpacity: Animated.Value = new Animated.Value(1);
+
+  stopAllAnimation() {
+    this.animX.stopAnimation();
+    this.animY.stopAnimation();
+    this.animScale.stopAnimation();
+    this.animAngle.stopAnimation();
+    this.animOpacity.stopAnimation();
+  }
 
   setStyle(option: ViewStyle) {
     this.boxRef.current?.setNativeProps({style: option});

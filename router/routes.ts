@@ -17,21 +17,38 @@ import GoogleSignInTester from '../screens/dev/GoogleSignInTester';
 import CountryFlagIconTester from '../screens/dev/CountryFlagIconTester';
 import GameSceneTester from '../screens/dev/GameSceneTester';
 import MultiGameTester from '../screens/dev/MultiGameTester';
-import { StackHeaderProps } from '@react-navigation/stack';
+import { StackHeaderProps, StackNavigationOptions } from '@react-navigation/stack';
 import GraphTester from '../screens/dev/GraphTester';
 import AsyncStorageController from '../screens/dev/AsyncStorageController';
+import CancelGamePopup, { CancelGameParams } from '../screens/production/GameScreen/CancelGamePopup';
+import { cardTransitions } from './cardTransition';
+import NotEnoughTicketPopup from '../screens/production/SelectStage/NotEnoughTicketPopup';
+import RankGraphPopup from '../screens/production/SelectStage/RankGraphPopup';
+import StartChallengePopup from '../screens/production/SelectStage/StartChallengePopup';
+import StartTrainingPopup from '../screens/production/SelectStage/StartTrainingPopup';
+import TicketPurchasePopup from '../screens/production/SelectStage/TicketPurchasePopup';
+import SinglePlayRankPopup from '../screens/production/SelectStage/SinglePlayRankPopup';
 
 type Routes = {
-  [index in keyof RootStackParamList]: {
+  [index: string]: {
     devName: string;
-    component: React.FunctionComponent | React.ComponentClass;
+    component: React.FunctionComponent<any> | React.ComponentClass<any, any> | React.FC<any>;
     type?: 'dev' | 'production';
     headerShown?: boolean;
     header?: React.FunctionComponent<StackHeaderProps>;
+    options?: StackNavigationOptions;
   };
 };
 
-const routes: Routes = {
+const CommonPopupOption = {
+  cardStyle: {
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  headerShown: false,
+  cardStyleInterpolator: cardTransitions.forFade,
+}
+
+const routes: Omit<Routes, "Developer"> = {
   RefBoxTester: {
     devName: '레프 박스 테스터',
     component: RefBoxTester,
@@ -131,6 +148,41 @@ const routes: Routes = {
     component: Shop,
     headerShown: false,
   },
+  Popup_CancelGame: {
+    devName: '게임 중단 팝업',
+    component: CancelGamePopup,
+    options: CommonPopupOption
+  },
+  Popup_NotEnoughTicket: {
+    devName: '티켓 부족 팝업',
+    component: NotEnoughTicketPopup,
+    options: CommonPopupOption
+  },
+  Popup_RankGraph: {
+    devName: '랭크 그래프 팝업',
+    component: RankGraphPopup,
+    options: CommonPopupOption
+  },
+  Popup_StartChallenge: {
+    devName: '챌린지 게임 팝업',
+    component: StartChallengePopup,
+    options: CommonPopupOption
+  },
+  Popup_StartTraining: {
+    devName: '연습 게임 팝업',
+    component: StartTrainingPopup,
+    options: CommonPopupOption
+  },
+  Popup_TicketPurchase: {
+    devName: '티켓 구매 팝업',
+    component: TicketPurchasePopup,
+    options: CommonPopupOption
+  },
+  Popup_SinglePlayRank: {
+    devName: '싱글 게임 랭크 팝업',
+    component: SinglePlayRankPopup,
+    options: CommonPopupOption
+  },
 };
 
 export type RootStackParamList = {
@@ -156,6 +208,13 @@ export type RootStackParamList = {
   PD_GameScene: GameScreenParams;
   PD_SelectStage: undefined;
   PD_Shop: undefined;
+  Popup_CancelGame: CancelGameParams;
+  Popup_NotEnoughTicket: undefined;
+  Popup_RankGraph: undefined;
+  Popup_StartChallenge: undefined;
+  Popup_StartTraning: undefined;
+  Popup_TicketPurchase: undefined;
+  Popup_SinglePlayRank: undefined;
 }
 
 export default routes;

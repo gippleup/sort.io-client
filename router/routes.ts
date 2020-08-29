@@ -28,6 +28,9 @@ import StartChallengePopup from '../screens/production/SelectStage/StartChalleng
 import StartTrainingPopup from '../screens/production/SelectStage/StartTrainingPopup';
 import TicketPurchasePopup from '../screens/production/SelectStage/TicketPurchasePopup';
 import SinglePlayRankPopup from '../screens/production/SelectStage/SinglePlayRankPopup';
+import ParticleTester from '../screens/dev/ParticleTester';
+import NativeRefTester from '../screens/dev/NativeRefTester';
+import ForFun from '../screens/dev/ForFun';
 
 type Routes = {
   [index: string]: {
@@ -49,6 +52,16 @@ const CommonPopupOption = {
 }
 
 const routes: Omit<Routes, "Developer"> = {
+  ForFun: {
+    devName: '애니메이팅 꿀잼',
+    component: ForFun,
+    headerShown: false,
+  },
+  NativeRefTester: {
+    devName: '네이티브 레프 테스터',
+    component: NativeRefTester,
+    headerShown: false,
+  },
   RefBoxTester: {
     devName: '레프 박스 테스터',
     component: RefBoxTester,
@@ -61,6 +74,11 @@ const routes: Omit<Routes, "Developer"> = {
   BlockBoardTester: {
     devName: '블록보드 테스터',
     component: BlockBoardTester,
+    headerShown: false,
+  },
+  ParticleTester: {
+    devName: '파티클 테스터',
+    component: ParticleTester,
     headerShown: false,
   },
   TimerTester: {
@@ -186,6 +204,8 @@ const routes: Omit<Routes, "Developer"> = {
 };
 
 export type RootStackParamList = {
+  ForFun: undefined;
+  ParticleTester: undefined;
   AsyncStorageController: undefined;
   RefBoxTester: undefined;
   RefBlockBoardTester: undefined;
@@ -204,6 +224,7 @@ export type RootStackParamList = {
   MultiGameTester: undefined;
   Developer: undefined;
   GraphTester: undefined;
+  NativeRefTester: undefined;
   PD_Main: undefined;
   PD_GameScene: GameScreenParams;
   PD_SelectStage: undefined;

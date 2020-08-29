@@ -1,11 +1,14 @@
 // Reference: https://easings.net/
-export type Easings = 
+export type Easings =
   "easeInSine" |
   "easeOutSine" |
   "easeInOutSine" |
   "easeInQuad" |
   "easeOutQuad" |
   "easeInOutQuad" |
+  "easeInCubic" |
+  "easeOutCubic" |
+  "easeInOutCubic" |
   "easeInQuart" |
   "easeOutQuart" |
   "easeInOutQuart" |
@@ -17,6 +20,9 @@ export type Easings =
   "easeInOutExpo" |
   "easeInCirc" |
   "easeOutCirc" |
+  "easeInBack" |
+  "easeOutBack" |
+  "easeInOutBack" |
   "easeInOutCirc" |
   "easeInElastic" |
   "easeOutElastic" |

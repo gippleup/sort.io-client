@@ -100,7 +100,7 @@ export class RefBlockBoard extends Component<
   dockOrigin: stackModel | null = null;
   isAnimating = false;
   dockCount = 0;
-  forceFinishCallbacks: {[index: number]: {
+  forceFinishCallbacks: {[index: string]: {
     execute: Function;
     delete: Function;
     executeNDelete: Function;
@@ -197,6 +197,7 @@ export class RefBlockBoard extends Component<
 
     this.dockOrigin = targetStack;
     this.readyToDock = true;
+    pieceOnTop.ref.current.setScale(1);
     const pieceUndockAnim = pieceOnTop.ref.current?.animateY(
       topPiecePos.y - 20 * this.scale,
       300,
@@ -204,7 +205,31 @@ export class RefBlockBoard extends Component<
     );
 
     animation.push(pieceUndockAnim);
-    Animated.parallel(animation).start();
+
+    const forceFinishUndockAnim = () => {
+      if (!targetStack.capRef || !pieceOnTop.ref) return;
+      targetStack.capRef.current?.setY(topPiecePos.y - 20 - Constants.blockHeight.top * this.scale);
+      targetStack.capRef.current?.setScale(0);
+      pieceOnTop.ref.current?.setY(topPiecePos.y - 20 * this.scale);
+    }
+
+    const undockAnim = Animated.parallel(animation);
+    
+    const forceFinish = {
+      execute: forceFinishUndockAnim,
+      delete: () => delete this.forceFinishCallbacks.undock,
+      executeNDelete: () => {
+        undockAnim.stop();
+        forceFinishUndockAnim();
+        delete this.forceFinishCallbacks.undock;
+      }
+    };
+
+    this.forceFinishCallbacks.undock = forceFinish;
+
+    undockAnim.start(() => {
+      forceFinish.delete();
+    })
   }
 
   dockToSelf(stackIndex: number) {
@@ -243,8 +268,32 @@ export class RefBlockBoard extends Component<
       300,
       Easing.in(Easing.bounce),
     );
+
     animation.push(pieceDockAnim);
-    Animated.parallel(animation).start();
+    const dockToSelfAnim = Animated.parallel(animation);
+
+    const forceFinishDockToSelfAnim = () => {
+      if (!targetStack.capRef || !pieceOnTop.ref) return;
+      targetStack.capRef.current?.setY(topPiecePos.y - Constants.blockHeight.top * this.scale);
+      targetStack.capRef.current?.setScale(1);
+      pieceOnTop.ref.current?.setY(topPiecePos.y);
+    }
+
+    const forceFinish = {
+      execute: forceFinishDockToSelfAnim,
+      delete: () => delete this.forceFinishCallbacks.dockToSelf,
+      executeNDelete: () => {
+        dockToSelfAnim.stop();
+        forceFinishDockToSelfAnim();
+        delete this.forceFinishCallbacks.dockToSelf;
+      }
+    };
+
+    this.forceFinishCallbacks.dockToSelf = forceFinish;
+
+    dockToSelfAnim.start(()=>{
+      forceFinish.executeNDelete();
+    })
   }
 
   alertUnableToDock(stackIndex: number) {
@@ -311,11 +360,11 @@ export class RefBlockBoard extends Component<
     }
 
     const readyForAppearAnim = () => {
+      pieceOnTopOfOrigin.ref.current?.setScale(0);
       pieceOnTopOfOrigin.ref.current?.setXY(
         topPiecePos.x,
         topPiecePos.y - Constants.blockHeight.piece * this.scale - 20 * this.scale,
       );
-      pieceOnTopOfOrigin.ref.current?.setScale(0);
     };
 
     readyForAppearAnim();
@@ -393,15 +442,15 @@ export class RefBlockBoard extends Component<
     
     const forceFinish = {
       execute: forceFinishDockToOtherAnim,
-      delete: () => delete this.forceFinishCallbacks[this.dockCount],
+      delete: () => delete this.forceFinishCallbacks.dockToOther,
       executeNDelete: () => {
         dockToOtherAnim.stop();
         forceFinishDockToOtherAnim();
-        delete this.forceFinishCallbacks[dockCount];
+        delete this.forceFinishCallbacks.dockToOther;
       }
     };
 
-    this.forceFinishCallbacks[this.dockCount] = forceFinish;
+    this.forceFinishCallbacks.dockToOther = forceFinish;
 
     dockToOtherAnim.start(() => {
       forceFinish.delete();

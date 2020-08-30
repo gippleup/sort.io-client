@@ -27,7 +27,17 @@ type AnimatibleKeys = Extract<keyof ViewStyle,
   "left" |
   "top" |
   "bottom" |
-  "right"
+  "right" |
+  "paddingLeft" |
+  "paddingTop" |
+  "paddingRight" |
+  "paddingBottom" |
+  "marginLeft" |
+  "marginRight" |
+  "marginTop" |
+  "marginBottom" |
+  "padding" |
+  "margin"
 >;
 
 type AnimatibleStyle = Pick<ViewStyle, AnimatibleKeys>;
@@ -36,7 +46,7 @@ type NativeRefBoxProps = {
   style?: ViewStyle;
 }
 
-const defaultValue = {
+const defaultValue: Record<AnimatibleKeys, number | string> = {
   borderBottomEndRadius: 0,
   borderBottomLeftRadius: 0,
   borderBottomRightRadius: 0,
@@ -55,6 +65,16 @@ const defaultValue = {
   top: 0,
   bottom: 0,
   right: 0,
+  margin: 0,
+  marginBottom: 0,
+  marginLeft: 0,
+  marginRight: 0,
+  marginTop: 0,
+  padding: 0,
+  paddingBottom: 0,
+  paddingLeft: 0,
+  paddingRight: 0,
+  paddingTop: 0,
   borderColor: 'rgba(0,0,0,0)',
   borderTopColor: 'rgba(0,0,0,0)',
   backgroundColor: 'rgba(0,0,0,0)',

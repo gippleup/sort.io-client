@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import Graph from '../../components/Graph'
-import { getPlayData, SinglePlayData } from '../../api/local'
+import { getLocalPlayData, SinglePlayData } from '../../api/local'
 import { scale } from 'chroma-js'
 import { getLevelString } from '../production/GameScreen/utils'
 import { NotoSans } from '../../components/Generic/StyledComponents'
@@ -9,7 +9,7 @@ import { NotoSans } from '../../components/Generic/StyledComponents'
 const GraphTester = () => {
   const [data, setData] = React.useState<SinglePlayData[] | null>(null);
   if (!data) {
-    getPlayData().then((data) => setData(data.single))
+    getLocalPlayData().then((data) => setData(data.single))
     return <></>;
   }
   

@@ -60,7 +60,6 @@ export const RoundRectangleButton:
   border-width: 3px;
   align-items: center;
   justify-content: center;
-  elevation: 10;
   ${(props) => {
     if (props.width) {
       return css`

@@ -40,6 +40,12 @@ const LevelInfoContainer = styled(View)`
   flex: 2;
 `;
 
+const LevelInfo = styled(Text)`
+  color: white;
+  font-size: 25px;
+  font-weight: bold;
+`;
+
 const ProfileContainer = styled(View)`
   width: 32px;
   height: 32px;
@@ -52,12 +58,6 @@ const ProfileContainer = styled(View)`
 
 const MetaInfoContainer = styled(View)`
   flex: 1;
-`;
-
-const LevelInfo = styled(Text)`
-  color: white;
-  font-size: 25px;
-  font-weight: bold;
 `;
 
 const TimerContainer = styled(View)`

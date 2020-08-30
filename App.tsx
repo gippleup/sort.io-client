@@ -23,7 +23,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 const App: () => React.ReactNode = () => {
   return (
     <>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" hidden />
       <ReduxProvider store={store}>
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Developer">

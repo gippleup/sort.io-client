@@ -39,6 +39,7 @@
     "@babel/core": "7.10.5",
     "@babel/runtime": "7.10.5",
     "@react-native-community/eslint-config": "1.1.0",
+    "@react-native-community/slider": "^3.0.3",
     "@types/chroma-js": "^2.0.0",
     "@types/crypto-js": "^3.1.47",
     "@types/d3": "^5.7.2",

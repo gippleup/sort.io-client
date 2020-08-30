@@ -8,7 +8,7 @@ const option = {
   maxScore: 8,
   stackLengthMax: 8,
   stackLengthMin: 2,
-  shuffleCount: 1000,
+  shuffleCount: 100,
 }
 
 const MultiGameTester = () => {

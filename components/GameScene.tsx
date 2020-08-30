@@ -4,7 +4,8 @@ import PatternBackground from './GameScene/PatternBackground';
 import Timer from './Timer';
 import styled from 'styled-components';
 import ScoreChecker from './ScoreChecker';
-import RefBlockBoard from './RefBlockBoard';
+// import RefBlockBoard from './RefBlockBoard';
+import NativeRefBlockBoard from './NativeRefBlockBoard';
 import {BlockTypes} from './Block/Types';
 import { skins } from './BlockStack/skinMap';
 import ProfilePic from './GameScene/ProfilePic';
@@ -77,7 +78,7 @@ const BlockBoardContainer = styled(View)`
   justify-content: center;
 `;
 
-const OpponentBoard: typeof RefBlockBoard = styled(RefBlockBoard)`
+const OpponentBoard: typeof NativeRefBlockBoard = styled(NativeRefBlockBoard)`
   width: 100%;
   height: 100%;
   background-color: rgba(0,0,0,0.2);
@@ -85,7 +86,7 @@ const OpponentBoard: typeof RefBlockBoard = styled(RefBlockBoard)`
   border-color: rgba(0,0,0,0.5);
 `;
 
-const StyledRefBoard: typeof RefBlockBoard = styled(RefBlockBoard)`
+const StyledRefBoard: typeof NativeRefBlockBoard = styled(NativeRefBlockBoard)`
   width: ${(340 / 360) * Dimensions.get('screen').width}px;
   max-width: 340px;
   height: ${(400 / 640) * Dimensions.get('screen').height}px;
@@ -114,7 +115,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
     opponent: false,
     player: false,
   };
-  opponentBoardRef = React.createRef<RefBlockBoard>();
+  opponentBoardRef = React.createRef<NativeRefBlockBoard>();
   mapScale = 1;
   scoreCheckerMax = {
     single: {

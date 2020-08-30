@@ -1,10 +1,10 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import RefBlockBoard from '../../components/RefBlockBoard';
+import NativeRefBlockBoard from '../../components/NativeRefBlockBoard';
 import styled from 'styled-components';
 import {BlockTypes} from '../../components/Block/Types';
 
-const MyBoard: typeof RefBlockBoard = styled(RefBlockBoard)`
+const MyBoard: typeof NativeRefBlockBoard = styled(NativeRefBlockBoard)`
   background-color: royalblue;
   width: 340px;
   height: 400px;

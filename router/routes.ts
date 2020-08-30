@@ -31,6 +31,7 @@ import SinglePlayRankPopup from '../screens/production/SelectStage/SinglePlayRan
 import ParticleTester from '../screens/dev/ParticleTester';
 import NativeRefTester from '../screens/dev/NativeRefTester';
 import ForFun from '../screens/dev/ForFun';
+import StageClearPopup, { StageClearPopupParams } from '../screens/production/GameScreen/StageClearPopup';
 
 type Routes = {
   [index: string]: {
@@ -201,6 +202,11 @@ const routes: Omit<Routes, "Developer"> = {
     component: SinglePlayRankPopup,
     options: CommonPopupOption
   },
+  Popup_StageClear: {
+    devName: '스테이지 클리어 팝업',
+    component: StageClearPopup,
+    options: CommonPopupOption
+  },
 };
 
 export type RootStackParamList = {
@@ -236,6 +242,7 @@ export type RootStackParamList = {
   Popup_StartTraning: undefined;
   Popup_TicketPurchase: undefined;
   Popup_SinglePlayRank: undefined;
+  Popup_StageClear: StageClearPopupParams;
 }
 
 export default routes;

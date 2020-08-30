@@ -32,6 +32,7 @@ const StartChallengePopup = () => {
       level: lastPlayedDifficulty,
       leftTrial: 2,
       successiveWin: 0,
+      results: [],
     })
   }
 

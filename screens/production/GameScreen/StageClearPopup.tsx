@@ -1,0 +1,150 @@
+import React from 'react'
+import { View, Text, Animated, Easing } from 'react-native'
+import StrokedText from '../../../components/StrokedText'
+import { FlexHorizontal } from '../../../components/Generic/StyledComponents';
+import AnimatedCheckbox from '../../../components/AnimatedCheckbox';
+import { useNavigation, RouteProp } from '@react-navigation/native';
+import chroma from 'chroma-js';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../../router/routes';
+import { useDispatch } from 'react-redux';
+import { depositGold, saveSinglePlay } from '../../../redux/actions/playData/thunk';
+import { GameSubType, GameMode } from './utils';
+
+const findLastBoolean = (resultArr: (null | boolean)[]) => {
+  let index = 0, value: null | boolean = false;
+  for (let i = resultArr.length - 1; i > -1; i -= 1) {
+    if (resultArr[i] !== null) {
+      index = i;
+      value = resultArr[i]
+      break;
+    }
+  }
+  return {
+    index,
+    value,
+  }
+}
+
+
+type StageClearPopupNavigationProp = StackNavigationProp<RootStackParamList, 'Popup_StageClear'>
+type StageClearPopupRouteProp = RouteProp<RootStackParamList, 'Popup_StageClear'>
+
+export type StageClearPopupParams = {
+  results: (null | boolean)[];
+  mode: GameMode;
+  subType: GameSubType;
+  level: number;
+  leftTrial: number;
+  successiveWin: number;
+}
+
+type StageClearPopupProps = {
+  route: StageClearPopupRouteProp;
+  navigation: StageClearPopupNavigationProp;
+}
+
+const StageClearPopup = (props: StageClearPopupProps) => {
+  const dispatch = useDispatch();
+  const { mode, leftTrial, level, subType, successiveWin, results } = props.route.params;
+
+  const finishStageWith = (result: 'fail' | 'success') => {
+    const nextLevel = level + (result === 'success' ? 1 : -1);
+    const nextSuccessiveWin = result === 'success' ? successiveWin + 1 : 0;
+    const successiveWins = [];
+    for (let i = 0; i < nextSuccessiveWin; i += 1) {
+      successiveWins.push(i + 1);
+    }
+    const goldMultiplier = subType === 'challenge' ? 2 : 1;
+    const bonus = successiveWins.length ? 10 * successiveWins.reduce((acc, ele) => acc + ele) * goldMultiplier : 0;
+    const reward = 10 + bonus;
+
+    dispatch(depositGold(reward))
+
+    props.navigation.pop();
+    if (leftTrial > 0) {
+      props.navigation.replace('PD_GameScene', {
+        mode: mode,
+        level: nextLevel,
+        leftTrial: leftTrial - 1,
+        subType: subType,
+        successiveWin: nextSuccessiveWin,
+        results,
+      })
+    } else {
+      if (subType === 'challenge') {
+        dispatch(saveSinglePlay(level))
+      }
+      navigation.goBack();
+    }
+  }
+
+  const navigation = useNavigation();
+  const { index: round, value: hasWin } = findLastBoolean(props.route.params.results);
+  const title = hasWin ? "SUCCESS!" : "FAIL!"
+  const subTitle = `${round + 1}   /   3`;
+  const titleAppearAnim = new Animated.Value(0);
+
+  const titleScale = titleAppearAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 1],
+  });
+
+  React.useEffect(() => {
+    Animated.timing(titleAppearAnim, {
+      toValue: 1,
+      duration: 1000,
+      easing: Easing.elastic(5),
+      useNativeDriver: true,
+    }).start()
+  })
+
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <StrokedText
+        text={subTitle}
+        fillColor={hasWin ? "yellow" : "red"}
+        strokeColor={hasWin ? "goldenrod" : chroma("red").set('hsl.l', 0.3).hex()}
+        strokeWidth={10}
+        fontFamily="NotoSansKR-Black"
+        fontSize={40}
+        width={300}
+        height={60}
+        dyMultiplier={0.37}
+      />
+      <Animated.View style={{scaleX: titleScale, scaleY: titleScale}}>
+        <StrokedText
+          text={title}
+          fillColor={hasWin ? "yellow" : "red"}
+          strokeColor={hasWin ? "goldenrod" : chroma("red").set('hsl.l', 0.3).hex()}
+          strokeWidth={10}
+          fontFamily="NotoSansKR-Black"
+          fontSize={60}
+          width={300}
+          height={80}
+          dyMultiplier={0.37}
+        />
+      </Animated.View>
+      <View style={{scaleX: 0.7, scaleY: 0.7, backgroundColor: 'dodgerblue', borderRadius: 100, borderWidth: 5, borderColor: 'white'}}>
+        <FlexHorizontal>
+          {results.map((result, i) => {
+            return (
+              <AnimatedCheckbox
+                key={i}
+                blank={result === null ? true : false}
+                checked={result === true}
+                animated={round === i}
+                onAnimationFinished={() => {
+                  finishStageWith(hasWin ? "success" : "fail")
+                  // navigation.goBack();
+                }}
+              />
+            )
+          })}
+        </FlexHorizontal>
+      </View>
+    </View>
+  )
+}
+
+export default StageClearPopup

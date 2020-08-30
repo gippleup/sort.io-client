@@ -67,7 +67,7 @@ export const generateOptionByLevel = (level: number) => {
   }
   return {
     map,
-    time: 120 / (levelEnumNum | 1),
+    time: 120,
     levelStr,
   };
 }

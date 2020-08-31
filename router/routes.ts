@@ -32,6 +32,7 @@ import ParticleTester from '../screens/dev/ParticleTester';
 import NativeRefTester from '../screens/dev/NativeRefTester';
 import ForFun from '../screens/dev/ForFun';
 import StageClearPopup, { StageClearPopupParams } from '../screens/production/GameScreen/StageClearPopup';
+import AnimatedNumberTester from '../screens/dev/AnimatedNumberTester';
 
 type Routes = {
   [index: string]: {
@@ -53,6 +54,11 @@ const CommonPopupOption = {
 }
 
 const routes: Omit<Routes, "Developer"> = {
+  AnimatedNumberTester: {
+    devName: '숫자 애니메이팅 테스터',
+    component: AnimatedNumberTester,
+    headerShown: false,
+  },
   ForFun: {
     devName: '애니메이팅 꿀잼',
     component: ForFun,
@@ -210,6 +216,7 @@ const routes: Omit<Routes, "Developer"> = {
 };
 
 export type RootStackParamList = {
+  AnimatedNumberTester: undefined;
   ForFun: undefined;
   ParticleTester: undefined;
   AsyncStorageController: undefined;

@@ -3,6 +3,7 @@ import { View, Text, TextInput } from 'react-native'
 import { FlexHorizontal } from '../Generic/StyledComponents'
 import MoneyIcon from './MoneyIcon'
 import styled from 'styled-components'
+import AnimatedNumber from '../AnimatedNumber'
 
 const IndicatorShell = styled(View)`
   align-items: center;
@@ -15,7 +16,7 @@ const IndicatorShell = styled(View)`
   flex-direction: row;
 `;
 
-const MoneyText: typeof TextInput = styled(TextInput)`
+const MoneyText: typeof AnimatedNumber = styled(AnimatedNumber)`
   font-family: NotoSansKR-Black;
   color: gold;
   margin-left: 5px;
@@ -28,19 +29,13 @@ type MoneyIndicatorProps = {
 }
 
 const MoneyIndicator = (props: MoneyIndicatorProps) => {
-  const [prevValue, setPrevValue] = React.useState(props.value);
-  React.useEffect(() => {
-    if (props.value !== prevValue) {
-      console.log('여기에서 돈 바뀌는 거 애니메이션으로 보여줘야 됨')
-    }
-  })
   return (
     <IndicatorShell>
       <View style={{marginLeft: 8}}>
         <MoneyIcon size={15} />
       </View>
       <View style={{alignItems: 'flex-end', marginRight: 25, flex: 1}}>
-        <MoneyText value={`${prevValue}`} />
+        <MoneyText value={props.value} animationType="rain" />
       </View>
     </IndicatorShell>
   )

@@ -6,7 +6,7 @@ import { TextInput } from 'react-native-gesture-handler';
 type AnimatedNumberProps = {
   value: number;
   style?: TextStyle;
-  animationType?: "slide" | "instant";
+  animationType?: "slide" | "instant" | "rain";
 }
 
 type AnimatedNumberState = {
@@ -60,7 +60,7 @@ class AnimatedNumber extends React.Component<AnimatedNumberProps, AnimatedNumber
 
   componentDidMount() {
     const {props} = this;
-    if (props.animationType === "instant") {
+    if (props.animationType === "rain") {
       this.instantAnim.addListener((state) => {
         const $ = this.textInputRef.current;
         const roundedValue = Math.round(state.value);
@@ -86,7 +86,7 @@ class AnimatedNumber extends React.Component<AnimatedNumberProps, AnimatedNumber
         appeared: false,
       })
     } else if (!this.state.appeared) {
-      if (this.props.animationType === "instant") {
+      if (this.props.animationType === "rain") {
         const valueDiff = this.state.numToRender - this.state.prevNumToRender;
         const duration = Math.log(Math.abs(valueDiff)) * 100;
         Animated.timing(this.instantAnim, {
@@ -142,21 +142,27 @@ class AnimatedNumber extends React.Component<AnimatedNumberProps, AnimatedNumber
 
   renderNumberInstantAnim() {
     const {props, state} = this;
-    return <TextInput ref={this.textInputRef} style={props.style} />
+    return <TextInput editable={false} ref={this.textInputRef} style={props.style} />
   }
 
-  renderNumber(animationType: "slide" | "instant") {
+  renderNumber(animationType: "slide" | "instant" | "rain") {
     if (animationType === "slide") {
       return this.renderNumberSlideAnim();
-    } else {
+    } else if (animationType === "rain") {
       return this.renderNumberInstantAnim();
+    } else {
+      return (
+        <Text style={this.props.style}>
+          {this.props.value}
+        </Text>
+      )
     }
   }
 
   render() {
     const {props} = this;
     const { renderNumber } = this;
-    const animationType = props.animationType || "slide"
+    const animationType = props.animationType || "rain"
     return (
       <FlexHorizontal>
         {renderNumber(animationType)}

@@ -17,6 +17,9 @@ import Developer from './router/Developer';
 import {Provider as ReduxProvider} from 'react-redux';
 import store from './redux/store';
 import {cardTransitionSpecs, cardTransitions} from './router/cardTransition';
+import {enableScreens} from 'react-native-screens';
+
+enableScreens();
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -26,7 +29,7 @@ const App: () => React.ReactNode = () => {
       <StatusBar barStyle="dark-content" hidden />
       <ReduxProvider store={store}>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Developer">
+          <Stack.Navigator mode="modal" initialRouteName="Developer">
             <Stack.Screen name="Developer" component={Developer} />
             {Object.entries(routes).map(([routeName, routerOption]) => {
               return (

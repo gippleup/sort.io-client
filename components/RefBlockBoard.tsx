@@ -59,7 +59,7 @@ type RefBlockBoardProps = {
   scale?: number;
   skin: skins;
   onComplete?: () => void;
-  onChange?: (score: number) => void;
+  onScoreChange?: (score: number) => void;
   onLayout?: (layout: LayoutChangeEvent) => void;
 };
 
@@ -418,8 +418,8 @@ export class RefBlockBoard extends Component<
     const score = completeMap.filter((bool) => bool).length;
     const completedAllStack = completeMap.filter((bool) => !bool).length === 0;
 
-    if (props.onChange) {
-      props.onChange(score);
+    if (props.onScoreChange) {
+      props.onScoreChange(score);
     }
 
     const forceFinishDockToOtherAnim = () => {

@@ -58,9 +58,12 @@ type RefBlockBoardProps = {
   initialMap: BlockTypes[][];
   scale?: number;
   skin: skins;
+  onDock?: (stackIndex: number) => void;
+  onUndock?: (stackIndex: number) => void;
   onComplete?: () => void;
-  onChange?: (score: number) => void;
+  onScoreChange?: (score: number) => void;
   onLayout?: (layout: LayoutChangeEvent) => void;
+  fps?: number;
 };
 
 type RefBlockBoardState = {
@@ -190,6 +193,7 @@ export class RefBlockBoard extends Component<
         },
         duration: 100,
         easing: "easeInOutSine",
+        fps: this.props.fps || 60,
       }).start();
     }
 
@@ -205,6 +209,7 @@ export class RefBlockBoard extends Component<
       },
       duration: 300,
       easing: "easeOutBack",
+      fps: this.props.fps || 60,
     })
 
     pieceUndockAnim.start();
@@ -231,6 +236,7 @@ export class RefBlockBoard extends Component<
         },
         duration: 300,
         easing: "easeOutBounce",
+        fps: this.props.fps || 60,
       })
       animateCapScale = targetStack.capRef.current.animate({
         style: {
@@ -239,6 +245,7 @@ export class RefBlockBoard extends Component<
         },
         duration: 300,
         easing: "easeInOutSine",
+        fps: this.props.fps || 60,
       });
     }
 
@@ -249,7 +256,8 @@ export class RefBlockBoard extends Component<
         top: topPiecePos.y,
       },
       duration: 300,
-      easing: "easeOutBounce"
+      easing: "easeOutBounce",
+      fps: this.props.fps || 60,
     })
 
     if (animateCapY && animateCapScale) {
@@ -280,7 +288,8 @@ export class RefBlockBoard extends Component<
           top: topPiecePos.y - Constants.blockHeight.top * this.scale,
         },
         duration: 500,
-        easing: "easeOutBounce"
+        easing: "easeOutBounce",
+        fps: this.props.fps || 60,
       });
       animateCapScale?.start();
     }
@@ -290,7 +299,8 @@ export class RefBlockBoard extends Component<
         top: topPiecePos.y
       },
       duration: 300,
-      easing: "easeOutBounce"
+      easing: "easeOutBounce",
+      fps: this.props.fps || 60,
     }).start();
     return;
   }
@@ -345,7 +355,8 @@ export class RefBlockBoard extends Component<
         top: topPiecePos.y - Constants.blockHeight.piece * this.scale,
       },
       duration: 300,
-      easing: "easeOutBounce"
+      easing: "easeOutBounce",
+      fps: props.fps || 60,
     }).start();
 
     if (targetStackCompleted && targetStack.capRef.current) {
@@ -366,7 +377,8 @@ export class RefBlockBoard extends Component<
           scaleY: 1,
         },
         duration: 100,
-        easing: "easeInOutSine"
+        easing: "easeInOutSine",
+        fps: props.fps || 60,
       }).start(() => {
         targetStack.capRef?.current?.animate({
           style: {
@@ -375,7 +387,8 @@ export class RefBlockBoard extends Component<
               Constants.blockHeight.top * this.scale,
           },
           duration: 300,
-          easing: "easeOutBounce"
+          easing: "easeOutBounce",
+          fps: props.fps || 60,
         }).start();
       })
     }
@@ -384,8 +397,8 @@ export class RefBlockBoard extends Component<
     const score = completeMap.filter((bool) => bool).length;
     const completedAllStack = completeMap.filter((bool) => !bool).length === 0;
 
-    if (props.onChange) {
-      props.onChange(score);
+    if (props.onScoreChange) {
+      props.onScoreChange(score);
     }
 
     if (completedAllStack && props.onComplete) {
@@ -394,6 +407,7 @@ export class RefBlockBoard extends Component<
   }
   
   dock(stackIndex: number) {
+    const {props} = this;
     const {
       stacks,
       dockToSelf,
@@ -401,6 +415,7 @@ export class RefBlockBoard extends Component<
       alertUnableToDock,
       dockOrigin,
     } = this;
+
     const targetStack = stacks[stackIndex];
     if (targetStack === dockOrigin) {
       dockToSelf(stackIndex);
@@ -635,8 +650,10 @@ export class RefBlockBoard extends Component<
                     <TouchAgent
                       onTouchStart={() => {
                         if (!this.readyToDock) {
+                          if (props.onUndock) props.onUndock(stackIndex)
                           this.undock(stackIndex);
                         } else {
+                          if (props.onDock) props.onDock(stackIndex)
                           this.dock(stackIndex);
                         }
                       }}>

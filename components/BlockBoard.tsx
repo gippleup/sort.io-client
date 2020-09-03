@@ -25,7 +25,7 @@ type BlockBoardProps = {
   stackMap: number[][];
   style: ViewStyle;
   skin: skins;
-  onChange?: (curScore: number) => void;
+  onScoreChange?: (curScore: number) => void;
 };
 
 class BlockBoard extends React.Component<BlockBoardProps, {}> {
@@ -57,8 +57,8 @@ class BlockBoard extends React.Component<BlockBoardProps, {}> {
       (acc, ele) => (ele.completed ? acc + 1 : acc),
       0,
     );
-    if (props.onChange) {
-      props.onChange(curScore);
+    if (props.onScoreChange) {
+      props.onScoreChange(curScore);
     }
   }
 

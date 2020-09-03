@@ -104,7 +104,10 @@ type GameSceneProps = {
   skin: skins;
   onComplete?: () => void;
   onTimeOut?: () => void;
+  onDock?: (stackIndex: number) => void;
+  onUndock?: (stackIndex: number) => void;
   mode: 'single' | 'multi';
+  fps?: number;
 };
 
 class GameScene extends React.Component<GameSceneProps, {}>{
@@ -219,7 +222,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
           ref={opponentBoardRef}
           initialMap={props.map}
           skin={props.skin}
-          onChange={(score) => {
+          onScoreChange={(score) => {
             opponentScoreCheckerRef.current?.setScore(score);
             // if (score === props.maxScore && props.onComplete) {
             //   props.onComplete();
@@ -231,6 +234,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
             boardReadyStatus.opponent = true
             startTimerIfBothReady();
           }}
+          fps={props.fps}
         />
       </OpponentGameContainer>
     )
@@ -331,18 +335,21 @@ class GameScene extends React.Component<GameSceneProps, {}>{
           <StyledRefBoard
             initialMap={props.map}
             skin={props.skin}
-            onChange={(score) => {
+            onScoreChange={(score) => {
               scoreCheckerRef.current?.setScore(score);
               // if (score === props.maxScore && props.onComplete) {
               //   props.onComplete();
               // }
             }}
+            onDock={props.onDock}
+            onUndock={props.onUndock}
             onComplete={props.onComplete}
             scale={mapScale}
             onLayout={() => {
               boardReadyStatus.player = true
               startTimerIfBothReady()
             }}
+            fps={props.fps}
           />
         </BlockBoardContainer>
       </GameSceneContainer>

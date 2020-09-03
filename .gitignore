@@ -57,3 +57,10 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+
+# Perf Monitor
+trace.html
+
+# Shell Scripts
+*.sh

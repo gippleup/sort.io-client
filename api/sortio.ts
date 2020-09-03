@@ -1,7 +1,9 @@
 import { BlockTypes } from "../components/Block/Types"
 import {SortIoUser, PlayData, SinglePlayData, MultiPlayData} from './local'
 
-const API_BASE = 'http://54.180.142.19:3000'
+const dev = true;
+
+const API_BASE = dev ? 'http://localhost:3000' : 'http://54.180.142.19:3000'
 
 const POST_OPTION: Partial<RequestInit> = {
   method: 'POST',
@@ -201,4 +203,8 @@ export const getRank = (userId: number, padding: number = 2): Promise<RankData> 
   return fetch(url)
   .then((res) => res.json())
   .catch(() => null)
+}
+
+export const configureSocket = () => {
+  return new WebSocket(`${API_BASE}/match`)
 }

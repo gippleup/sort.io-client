@@ -2,63 +2,95 @@ import React, { Component } from 'react'
 import { Text, View } from 'react-native'
 import GameScene from './GameScene';
 import { BlockTypes } from './Block/Types';
-import { generateMap, MapOption } from '../api/sortio';
+import { generateMap, MapOption, configureSocket } from '../api/sortio';
+import usePlayData from '../hooks/usePlayData';
 
 type MultiGameProps = {
   mapOption: MapOption;
 }
 
-type MultiGameState = {
-  map: null | BlockTypes[][];
-}
+export const MutiGame = (props: MultiGameProps) => {
+  const [map, setMap] = React.useState<number[][] | null>(null);
+  const roomId = React.useRef<null | number>(null);
+  const socket = React.useRef(configureSocket()).current;
+  const gameSceneRef = React.createRef<GameScene>();
+  const playData = usePlayData();
 
-export class MutiGame extends Component<MultiGameProps, MultiGameState> {
-  constructor(props: Readonly<MultiGameProps>) {
-    super(props);
-    this.state = {
-      map: null,
-    }
+  socket.onopen = () => {
+    socket.send(JSON.stringify({
+      type: 'ENTER',
+      payload: {
+        userId: playData.user.id,
+      }
+    }));
   }
 
-  componentDidMount() {
-    if (!this.state.map) {
-      generateMap(this.props.mapOption).then((data) => {
-        this.setState({map: data.question})
-      })
-    }
-    const socket = new WebSocket('ws://ec2-3-34-99-63.ap-northeast-2.compute.amazonaws.com:3000/match')
-    socket.onopen = () => {
-      socket.send(JSON.stringify({
-        type: 'enter',
-        roomId: 1,
-        userId: 13,
-      }));
-    }
-    socket.onerror = (e) => {
-      console.log('에러남', e);
-    }
-    socket.onmessage = (e) => {
-      console.log(JSON.parse(e.data));
-    }
+  socket.onerror = (e) => {
+    console.log('에러남', e);
   }
 
-  render() {
-    const {state, props} = this;
-    if (!state.map) {
-      return <></>;
+  socket.onmessage = (e) => {
+    const parsedData = JSON.parse(e.data);
+    if (parsedData.type === "MATCH") {
+      setMap(parsedData.payload.map);
+      roomId.current = parsedData.payload.roomId;
     }
-    return (
-      <GameScene
-        skin="spiky"
-        map={state.map}
-        title={'하드'}
-        timeLimit={60}
-        maxScore={props.mapOption.maxScore}
-        mode={'multi'}
-        onComplete={() => console.log('끝남')}
-      />
-    );
+    if (parsedData.type === "DOCK" || parsedData.type === "UNDOCK") {
+      const {userId, stackIndex, roomId} = parsedData.payload;
+      const $opponentBoard = gameSceneRef.current?.opponentBoardRef.current;
+      if (userId !== playData.user.id) {
+        if (parsedData.type === "UNDOCK") {
+          $opponentBoard?.undock(stackIndex);
+        }
+        if (parsedData.type === "DOCK") {
+          $opponentBoard?.dock(stackIndex);
+        }
+      }
+    }
+    console.log(parsedData);
   }
+
+  React.useEffect(() => {
+    return () => {
+    }
+  })
+
+  if (!map) {
+    return <></>;
+  }
+
+  return (
+    <GameScene
+      ref={gameSceneRef}
+      mode={'multi'}
+      title={'하드'}
+      map={map}
+      skin="spiky"
+      timeLimit={60}
+      maxScore={props.mapOption.maxScore}
+      onComplete={() => console.log('끝남')}
+      onDock={(stackIndex) => {
+        socket.send(JSON.stringify({
+          type: 'DOCK',
+          payload: {
+            userId: playData.user.id,
+            stackIndex: stackIndex,
+            roomId: roomId.current,
+          }
+        }))
+      }}
+      onUndock={(stackIndex) => {
+        socket.send(JSON.stringify({
+          type: 'UNDOCK',
+          payload: {
+            userId: playData.user.id,
+            stackIndex: stackIndex,
+            roomId: roomId.current,
+          }
+        }))
+      }}
+    />
+  );
 }
 
 export default MutiGame

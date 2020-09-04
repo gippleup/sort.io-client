@@ -93,7 +93,7 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
     this.setScale = this.setScale.bind(this);
     this.setOpacity = this.setOpacity.bind(this);
   }
-  style: ViewStyle = this.props.style;
+  style: ViewStyle = this.props.style || {};
   ref: RefObject<View> = React.createRef();
   animations: NodeJS.Timeout[] = [];
   setStyle(style: ViewStyle) {
@@ -134,14 +134,14 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
         curValue = chroma(curColor).hex();
         diffValue = chroma.scale([curValue, targetValue]);
       } else {
-        targetValue = Number(style[key] || 0);
-        curValue = Number(this.style[key] || defaultValue[key]);
+        targetValue = Number(style[key] === undefined ? 0 : style[key]);
+        curValue = Number(this.style[key] === undefined ? defaultValue[key] : this.style[key]);
         diffValue = targetValue - curValue;
       }
       startValue[key] = curValue;
       acc[key] = diffValue;
       return acc;
-    }, {})
+    }, {});
 
     const start = (onComplete?: () => any) => {
       let callback: Function | undefined;

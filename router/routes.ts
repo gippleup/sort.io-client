@@ -33,9 +33,10 @@ import NativeRefTester from '../screens/dev/NativeRefTester';
 import ForFun from '../screens/dev/ForFun';
 import StageClearPopup, { StageClearPopupParams } from '../screens/production/GameScreen/StageClearPopup';
 import AnimatedNumberTester from '../screens/dev/AnimatedNumberTester';
+import MultigameWaitingPopup from '../screens/production/Main/MultiWaitingPopup';
 
 type Routes = {
-  [index: string]: {
+  [T in keyof RootStackParamList]: {
     devName: string;
     component: React.FunctionComponent<any> | React.ComponentClass<any, any> | React.FC<any>;
     type?: 'dev' | 'production';
@@ -45,7 +46,7 @@ type Routes = {
   };
 };
 
-const CommonPopupOption = {
+const CommonPopupOption: StackNavigationOptions = {
   cardStyle: {
     backgroundColor: 'rgba(0,0,0,0.3)',
   },
@@ -213,6 +214,11 @@ const routes: Omit<Routes, "Developer"> = {
     component: StageClearPopup,
     options: CommonPopupOption
   },
+  Popup_MultiWaiting: {
+    devName: '멀티 대기 팝업',
+    component: MultigameWaitingPopup,
+    options: CommonPopupOption,
+  }
 };
 
 export type RootStackParamList = {
@@ -246,10 +252,11 @@ export type RootStackParamList = {
   Popup_NotEnoughTicket: undefined;
   Popup_RankGraph: undefined;
   Popup_StartChallenge: undefined;
-  Popup_StartTraning: undefined;
+  Popup_StartTraining: undefined;
   Popup_TicketPurchase: undefined;
   Popup_SinglePlayRank: undefined;
   Popup_StageClear: StageClearPopupParams;
+  Popup_MultiWaiting: undefined;
 }
 
 export default routes;

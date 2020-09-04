@@ -1,7 +1,7 @@
-import React from 'react'
-import { View, Text, Animated, Easing } from 'react-native'
+import React, { RefObject } from 'react'
+import { View, Animated, Easing, TextInput } from 'react-native'
 import StrokedText from '../../../components/StrokedText'
-import { FlexHorizontal } from '../../../components/Generic/StyledComponents';
+import { FlexHorizontal, NotoSans } from '../../../components/Generic/StyledComponents';
 import AnimatedCheckbox from '../../../components/AnimatedCheckbox';
 import { useNavigation, RouteProp } from '@react-navigation/native';
 import chroma from 'chroma-js';
@@ -9,23 +9,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../router/routes';
 import { useDispatch } from 'react-redux';
 import { depositGold, saveSinglePlay } from '../../../redux/actions/playData/thunk';
-import { GameSubType, GameMode } from './utils';
-
-const findLastBoolean = (resultArr: (null | boolean)[]) => {
-  let index = 0, value: null | boolean = false;
-  for (let i = resultArr.length - 1; i > -1; i -= 1) {
-    if (resultArr[i] !== null) {
-      index = i;
-      value = resultArr[i]
-      break;
-    }
-  }
-  return {
-    index,
-    value,
-  }
-}
-
+import { GameSubType, GameMode, findLastBoolean, getLevelString } from './utils';
+import Svg, { Text } from 'react-native-svg';
 
 type StageClearPopupNavigationProp = StackNavigationProp<RootStackParamList, 'Popup_StageClear'>
 type StageClearPopupRouteProp = RouteProp<RootStackParamList, 'Popup_StageClear'>
@@ -49,7 +34,7 @@ const StageClearPopup = (props: StageClearPopupProps) => {
   const { mode, leftTrial, level, subType, successiveWin, results } = props.route.params;
 
   const finishStageWith = (result: 'fail' | 'success') => {
-    const nextLevel = level + (result === 'success' ? 1 : -1);
+    const nextLevel = Math.max(level + (result === 'success' ? 1 : -1), 0);
     const nextSuccessiveWin = result === 'success' ? successiveWin + 1 : 0;
     const successiveWins = [];
     for (let i = 0; i < nextSuccessiveWin; i += 1) {
@@ -110,7 +95,7 @@ const StageClearPopup = (props: StageClearPopupProps) => {
         fontSize={40}
         width={300}
         height={60}
-        dyMultiplier={0.37}
+        dyMultiplier={0.35}
       />
       <Animated.View style={{scaleX: titleScale, scaleY: titleScale}}>
         <StrokedText
@@ -122,7 +107,7 @@ const StageClearPopup = (props: StageClearPopupProps) => {
           fontSize={60}
           width={300}
           height={80}
-          dyMultiplier={0.37}
+          dyMultiplier={0.35}
         />
       </Animated.View>
       <View style={{scaleX: 0.7, scaleY: 0.7, backgroundColor: 'dodgerblue', borderRadius: 100, borderWidth: 5, borderColor: 'white'}}>
@@ -136,12 +121,30 @@ const StageClearPopup = (props: StageClearPopupProps) => {
                 animated={round === i}
                 onAnimationFinished={() => {
                   finishStageWith(hasWin ? "success" : "fail")
-                  // navigation.goBack();
                 }}
               />
             )
           })}
         </FlexHorizontal>
+      </View>
+      <View
+        style={{
+          backgroundColor: 'white',
+          paddingHorizontal: 30,
+          borderRadius: 50,
+          paddingVertical: 10
+        }}>
+        <NotoSans
+          type="Black"
+          size={40}
+          style={{
+            color: chroma('brown')
+              .set('hsl.l', 0.6)
+              .desaturate(2)
+              .hex()
+          }}>
+          {getLevelString(level)}
+        </NotoSans>
       </View>
     </View>
   )

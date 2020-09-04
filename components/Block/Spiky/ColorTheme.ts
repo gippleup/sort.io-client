@@ -33,7 +33,7 @@ const extractRandomFromArray = (array: any[]) => {
 const mainColor = chroma('red').hex();
 
 const colorArr = [];
-const blockTypeCount = 24;
+const blockTypeCount = 24; // This is the max allowance for color counts.
 const hue = chroma(mainColor).get('hsl.h');
 for (let i = 0; i < blockTypeCount; i += 1) {
   const adjustedColor = chroma(mainColor)

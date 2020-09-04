@@ -67,6 +67,10 @@ const GameScreen = (props: GameScreenProps) => {
 
     const blockGoBack = (e: BeforeRemoveEvent) => {
       const {payload, type} = e.data.action;
+      if (type === "POP") {
+        e.preventDefault();
+        return;
+      }
       if (type === "GO_BACK") {
         if (stageFinished) return;
         e.preventDefault();
@@ -107,7 +111,6 @@ const GameScreen = (props: GameScreenProps) => {
 
   const navigateToStageClearPopup = (result: "suceess" | "fail") => {
     stageFinished = true;
-    console.log(results);
     const nextResults = results.concat(result === "suceess" ? true : false);
     navigation.navigate('Popup_StageClear', {
       results: nextResults,
@@ -119,14 +122,15 @@ const GameScreen = (props: GameScreenProps) => {
     });
   }
 
+
   return (
     <GameScene
     ref={gameSceneRef}
       skin="spiky"
       map={map}
       title={option.levelStr}
-      timeLimit={option.time}
-      // timeLimit={1}
+      // timeLimit={option.time}
+      timeLimit={1000}
       maxScore={option.map.maxScore}
       mode={mode}
       onComplete={() => {
@@ -135,6 +139,7 @@ const GameScreen = (props: GameScreenProps) => {
       onTimeOut={() => {
         navigateToStageClearPopup("fail")
       }}
+      fps={60}
     />
   );
 }

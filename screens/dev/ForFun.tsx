@@ -121,7 +121,11 @@ const ForFun = () => {
             />
           </FlexHorizontal>
         </View>
-        <TouchableOpacity onPress={randomTransform}>
+        <TouchableOpacity onPress={() => {
+          requestAnimationFrame(() => {
+            randomTransform();
+          })
+        }}>
           <RoundRectangleButton>
             <NotoSans size={40} type="Black">
               변해라 얍!!

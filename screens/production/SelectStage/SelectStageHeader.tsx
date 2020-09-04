@@ -40,7 +40,7 @@ const playData = usePlayData();
         </NavigationButton>
         <HeaderText>싱글 플레이</HeaderText>
       </FlexHorizontal>
-      <MoneyIndicator value={playData.user.gold} />
+      <MoneyIndicator value={playData.loaded ? playData?.user.gold : 0} />
     </HeaderContainer>
   )
 }

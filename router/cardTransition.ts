@@ -29,7 +29,7 @@ export const cardTransitionSpecs: CardTransitionSpecs = {
       duration: 300,
       easing: Easing.inOut(Easing.ease),
     },
-  }
+  },
 }
 
 export const cardTransitions: CardTransitions = {
@@ -85,8 +85,12 @@ export const cardTransitions: CardTransitions = {
   forFade: (props) => {
     const {current} = props;
     return {
+      // containerStyle: {
+      //   backgroundColor: 'transparent',
+      // },
       cardStyle: {
         opacity: current.progress,
+        // backgroundColor: 'transparent'
       }
     }
   }

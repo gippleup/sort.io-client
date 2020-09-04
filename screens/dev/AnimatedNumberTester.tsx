@@ -8,7 +8,9 @@ import { RoundRectangleButton } from '../../components/EndGameInfo/_StyledCompon
 const AnimatedNumberTester = () => {
   const [number, setNumber] = React.useState(100);
   const renderAddButton = (amount: number) => (
-    <TouchableOpacity onPress={() => setNumber(number + amount)}>
+    <TouchableOpacity onPress={() => requestAnimationFrame(() => {
+      setNumber(number + amount)
+    })}>
       <RoundPaddingCenter>
         <NotoSans type="Black">{amount}</NotoSans>
       </RoundPaddingCenter>
@@ -17,7 +19,7 @@ const AnimatedNumberTester = () => {
   return (
     <View style={{flex: 1, backgroundColor: 'grey', alignItems: 'center'}}>
       <AnimatedNumber
-        animationType="instant"
+        animationType="rain"
         style={{
           color: 'white',
           fontSize: 40,

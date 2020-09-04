@@ -1,5 +1,4 @@
 import {BlockStack} from './BlockStack';
-import Block from '../components/Block';
 
 const randomIndexFromArray = (array: any[]): number => {
   const randomValidIndex = Math.floor(Math.random() * array.length);

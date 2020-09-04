@@ -13,7 +13,7 @@ export const decideMapScale = (mapLength: number) => {
   } else if (mapLength <= 21) {
     mapScale = 0.5
   } else if (mapLength <= 24) {
-    mapScale = 0.4
+    mapScale = 0.44
   } else if (mapLength <= 27) {
     mapScale = 0.38
   } else if (mapLength <= 36) {

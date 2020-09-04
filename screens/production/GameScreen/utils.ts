@@ -23,14 +23,14 @@ export enum GameLevel {
   Nihil = 96,
 };
 
-const _getLeveEnumNumArr = (level: number) => {
+const _getLeveEnumNumArr = () => {
   return Object.keys(GameLevel)
     .filter((str) => str.match(/\d/g))
     .map((str) => Number(str));
 }
 
 const _getLevelEnumNum = (level: number) => {
-  return _getLeveEnumNumArr(level)
+  return _getLeveEnumNumArr()
     .filter((num) => num <= level)
     .reduce((acc, ele) => {
       if (ele > acc) return ele;
@@ -39,7 +39,7 @@ const _getLevelEnumNum = (level: number) => {
 }
 
 export const getLevelIndex = (level: number) => {
-  const levelEnumNumArr = _getLeveEnumNumArr(level);
+  const levelEnumNumArr = _getLeveEnumNumArr();
   const levelEnumNum = _getLevelEnumNum(level);
   const levelIndex = levelEnumNumArr.indexOf(levelEnumNum);
   return levelIndex;
@@ -57,12 +57,20 @@ export const generateOptionByLevel = (level: number) => {
   const levelIndex = getLevelIndex(level);
   const levelStr = getLevelString(level);
   const levelEnumNum = _getLevelEnumNum(level);
+  // const map = {
+  //   blockStackCount: levelIndex + 3,
+  //   colorCount: levelIndex + 2,
+  //   maxScore: levelIndex + 2,
+  //   stackLengthMax: 8,
+  //   stackLengthMin: Math.min(levelIndex + 2, 5),
+  //   shuffleCount: 100,
+  // }
   const map = {
-    blockStackCount: levelIndex + 3,
-    colorCount: levelIndex + 2,
-    maxScore: levelIndex + 2,
+    blockStackCount: 16,
+    colorCount: 15,
+    maxScore: 15,
     stackLengthMax: 8,
-    stackLengthMin: Math.min(levelIndex + 2, 5),
+    stackLengthMin: 5,
     shuffleCount: 100,
   }
   return {
@@ -70,4 +78,19 @@ export const generateOptionByLevel = (level: number) => {
     time: 120,
     levelStr,
   };
+}
+
+export const findLastBoolean = (resultArr: (null | boolean)[]) => {
+  let index = 0, value: null | boolean = false;
+  for (let i = resultArr.length - 1; i > -1; i -= 1) {
+    if (resultArr[i] !== null) {
+      index = i;
+      value = resultArr[i]
+      break;
+    }
+  }
+  return {
+    index,
+    value,
+  }
 }

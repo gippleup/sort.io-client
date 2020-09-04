@@ -1,4 +1,4 @@
-import {View, Text, ColorValue} from 'react-native';
+import {View, Text, ColorValue, TextProps} from 'react-native';
 import styled from 'styled-components';
 
 export const FlexHorizontal: typeof View = styled(View)`
@@ -24,17 +24,20 @@ Space.defaultProps = {
 type NotoSansProps = {
   type: 'Black' | 'Bold' | 'Light' | 'Medium' | 'Regular' | 'Thin';
   size?: number;
+  color?: string;
 }
 
-export const NotoSans: typeof Text | React.ComponentClass<NotoSansProps, {}> = styled(Text)<NotoSansProps>`
+export const NotoSans: React.FC<NotoSansProps & TextProps> = styled(Text)<NotoSansProps>`
   font-family: NotoSansKR-${(props) => props.type};
   line-height: ${(props) => props.size * 9/6}px;
   font-size: ${(props) => props.size}px;
+  color: ${(props) => props.color};
 `;
 
 NotoSans.defaultProps = {
   type: 'Regular',
   size: 14,
+  color: 'black',
 }
 
 export const TitleText: typeof Text = styled(Text)`

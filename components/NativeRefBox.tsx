@@ -37,7 +37,10 @@ type AnimatibleKeys = Extract<keyof ViewStyle,
   "marginTop" |
   "marginBottom" |
   "padding" |
-  "margin"
+  "margin" |
+  "translateX" |
+  "translateY" |
+  "rotation"
 >;
 
 type AnimatibleStyle = Pick<ViewStyle, AnimatibleKeys>;
@@ -75,6 +78,9 @@ const defaultValue: Record<AnimatibleKeys, number | string> = {
   paddingLeft: 0,
   paddingRight: 0,
   paddingTop: 0,
+  translateX: 0,
+  translateY: 0,
+  rotation: 0,
   borderColor: 'rgba(0,0,0,0)',
   borderTopColor: 'rgba(0,0,0,0)',
   backgroundColor: 'rgba(0,0,0,0)',

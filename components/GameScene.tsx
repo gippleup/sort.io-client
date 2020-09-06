@@ -8,97 +8,30 @@ import ScoreChecker from './ScoreChecker';
 import NativeRefBlockBoard from './NativeRefBlockBoard';
 import {BlockTypes} from './Block/Types';
 import { skins } from './BlockStack/skinMap';
-import ProfilePic from './GameScene/ProfilePic';
 import CountryFlagIcon from './CountryFlagIcon';
 import Constants from '../assets/Constants';
 import { decideMapScale } from './GameScene/utils';
+import {
+  BlockBoardContainer,
+  GameInfoContainer,
+  GameSceneContainer,
+  LevelInfo,
+  LevelInfoContainer,
+  MetaInfoContainer,
+  OpponentBoard,
+  OpponentGameContainer,
+  ProfileContainer,
+  ScoreCheckerContainer,
+  StyledRefBoard,
+  TimerContainer
+} from './GameScene/_StyledComponent'
 
 const backgroundImage = require('../assets/BackgroundPattern.png');
-
-const GameSceneContainer = styled(View)`
-  flex: 1;
-`;
-
-const GameInfoContainer = styled(View)`
-  flex: 25;
-  flex-direction: row;
-`;
-
-const OpponentGameContainer = styled(View)`
-  justify-content: center;
-  align-items: center;
-  flex: 0.5;
-  width: ${(119 / 360) * Dimensions.get('screen').width}px;
-  max-width: 119px;
-  height: ${(140 / 640) * Dimensions.get('screen').height}px;
-  max-height: 140px;
-`;
-
-const LevelInfoContainer = styled(View)`
-  align-items: center;
-  justify-content: flex-end;
-  flex: 2;
-`;
-
-const LevelInfo = styled(Text)`
-  color: white;
-  font-size: 25px;
-  font-weight: bold;
-`;
-
-const ProfileContainer = styled(View)`
-  width: 32px;
-  height: 32px;
-  align-items: center;
-  justify-content: center;
-  background-color: lightgrey;
-  border-radius: 16px;
-  margin-right: 10px;
-`;
-
-const MetaInfoContainer = styled(View)`
-  flex: 1;
-`;
-
-const TimerContainer = styled(View)`
-  align-items: center;
-  justify-content: center;
-`;
-
-const ScoreCheckerContainer: typeof View = styled(View)`
-  align-items: center;
-  justify-content: center;
-  margin-vertical: 5px;
-  flex-direction: row;
-`;
-
-const BlockBoardContainer = styled(View)`
-  flex: 65;
-  align-items: center;
-  justify-content: center;
-`;
-
-const OpponentBoard: typeof NativeRefBlockBoard = styled(NativeRefBlockBoard)`
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.2);
-  border-width: 0.5px;
-  border-color: rgba(0,0,0,0.5);
-`;
-
-const StyledRefBoard: typeof NativeRefBlockBoard = styled(NativeRefBlockBoard)`
-  width: ${(340 / 360) * Dimensions.get('screen').width}px;
-  max-width: 340px;
-  height: ${(400 / 640) * Dimensions.get('screen').height}px;
-  max-height: 400px;
-  border-width: 1px;
-  border-color: rgba(0, 0, 0, 0.5);
-  background-color: rgba(0, 0, 0, 0.3);
-`;
 
 type GameSceneProps = {
   title: string;
   timeLimit: number;
+  isManualTimer?: boolean;
   maxScore: number;
   map: BlockTypes[][];
   skin: skins;
@@ -106,8 +39,11 @@ type GameSceneProps = {
   onTimeOut?: () => void;
   onDock?: (stackIndex: number) => void;
   onUndock?: (stackIndex: number) => void;
+  onReady?: () => any;
+  readyDuration?: number;
   mode: 'single' | 'multi';
   fps?: number;
+  timerRoundTo?: number;
 };
 
 class GameScene extends React.Component<GameSceneProps, {}>{
@@ -135,6 +71,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
   checkerMaxHeight = 44;
   initialScore = 0;
   scoreCheckerLayout = [[]];
+  onReadyDispatched = false;
 
   constructor(props: Readonly<GameSceneProps>) {
     super(props);
@@ -177,16 +114,34 @@ class GameScene extends React.Component<GameSceneProps, {}>{
     this.renderOpponentScoreChecker = this.renderOpponentScoreChecker.bind(this);
     this.renderProfile = this.renderProfile.bind(this);
     this.renderStageTitle = this.renderStageTitle.bind(this);
+    this.checkIfBoardReady = this.checkIfBoardReady.bind(this);
+  }
+
+  checkIfBoardReady = () => {
+    const { boardReadyStatus, props, onReadyDispatched } = this;
+    const { player, opponent } = boardReadyStatus;
+    let isReady = false;
+    if (props.mode === 'single' && player === true) {
+      isReady = true;
+    }
+
+    if (props.mode === 'multi' && player === true && opponent === true) {
+      isReady = true;
+    }
+
+    if (isReady && props.onReady && !onReadyDispatched) {
+      this.onReadyDispatched = true;
+      props.onReady();
+    }
+
+    return isReady;
   }
   
   startTimerIfBothReady = () => {
-    const {boardReadyStatus, props, timerRef} = this;
-    const { player, opponent } = boardReadyStatus;
-    if (props.mode === 'single' && player === true) {
-      timerRef.current?.timerBaseRef.current?.startTimer();
-    }
-    if (props.mode === 'multi' && player === true && opponent === true) {
-      timerRef.current?.timerBaseRef.current?.startTimer();
+    const {props, timerRef} = this;
+    const boardIsReady = this.checkIfBoardReady();
+    if (boardIsReady) {
+      timerRef.current?.timerBaseRef.current?.startTimer();      
     }
   }
 
@@ -202,6 +157,16 @@ class GameScene extends React.Component<GameSceneProps, {}>{
     )
   }
 
+  private onLayout() {
+    const {checkIfBoardReady, startTimerIfBothReady, props} = this;
+    const delay = props.readyDuration || 0;
+    if (!props.isManualTimer) {
+      setTimeout(startTimerIfBothReady, delay);
+    } else {
+      setTimeout(checkIfBoardReady, delay);
+    }
+  }
+
   renderOpponentBoard = () => {
     const {
       props,
@@ -209,7 +174,6 @@ class GameScene extends React.Component<GameSceneProps, {}>{
       opponentScoreCheckerRef,
       mapScale,
       boardReadyStatus,
-      startTimerIfBothReady
     } = this;
 
     if (props.mode === 'single') {
@@ -232,7 +196,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
           scale={mapScale * 0.35}
           onLayout={() => {
             boardReadyStatus.opponent = true
-            startTimerIfBothReady();
+            this.onLayout();
           }}
           fps={props.fps}
         />
@@ -315,6 +279,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
                 duration={props.timeLimit}
                 onFinish={props.onTimeOut}
                 auto={false}
+                roundTo={props.timerRoundTo}
               />
             </TimerContainer>
             {renderOpponentScoreChecker()}
@@ -346,8 +311,8 @@ class GameScene extends React.Component<GameSceneProps, {}>{
             onComplete={props.onComplete}
             scale={mapScale}
             onLayout={() => {
-              boardReadyStatus.player = true
-              startTimerIfBothReady()
+              boardReadyStatus.player = true;
+              this.onLayout();
             }}
             fps={props.fps}
           />

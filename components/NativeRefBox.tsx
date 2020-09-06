@@ -1,5 +1,5 @@
 import React, { Component, RefObject } from 'react'
-import { Text, View, ViewStyle } from 'react-native'
+import { Text, View, ViewStyle, StyleSheet } from 'react-native'
 import * as easingFunc from './NativeRefBox/easings';
 import chroma, { Color, Scale } from 'chroma-js';
 
@@ -81,12 +81,12 @@ const defaultValue: Record<AnimatibleKeys, number | string> = {
   translateX: 0,
   translateY: 0,
   rotation: 0,
-  borderColor: 'rgba(0,0,0,0)',
-  borderTopColor: 'rgba(0,0,0,0)',
-  backgroundColor: 'rgba(0,0,0,0)',
-  borderLeftColor: 'rgba(0,0,0,0)',
-  borderRightColor: 'rgba(0,0,0,0)',
-  borderBottomColor: 'rgba(0,0,0,0)',
+  borderColor: 'black',
+  borderTopColor: 'black',
+  backgroundColor: 'black',
+  borderLeftColor: 'black',
+  borderRightColor: 'black',
+  borderBottomColor: 'black',
 }
 
 export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
@@ -98,6 +98,9 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
     this.setXY = this.setXY.bind(this);
     this.setScale = this.setScale.bind(this);
     this.setOpacity = this.setOpacity.bind(this);
+    if (Array.isArray(this.props.style)) {
+      this.style = StyleSheet.flatten(this.props.style);
+    }
   }
   style: ViewStyle = this.props.style || {};
   ref: RefObject<View> = React.createRef();

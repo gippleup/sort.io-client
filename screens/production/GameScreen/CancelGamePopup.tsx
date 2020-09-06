@@ -1,16 +1,22 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import BasicPopup from '../../../components/Generic/BasicPopup'
+import BasicPopup, { PopupButton } from '../../../components/Generic/BasicPopup'
 import { NotoSans } from '../../../components/Generic/StyledComponents'
 import { useNavigation, RouteProp, CommonActions } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import routes, { RootStackParamList } from '../../../router/routes'
+import useMultiGameSocket from '../../../hooks/useMultiGameSocket'
+import socketClientActions from '../MultiGame/action/creator'
+import usePlayData from '../../../hooks/usePlayData'
 
 type CancelGameNavigationProp = StackNavigationProp<RootStackParamList, 'Popup_CancelGame'>
 type CancelGameRouteProp = RouteProp<RootStackParamList, 'Popup_CancelGame'>
 
 export type CancelGameParams = {
   text: string;
+  title?: string;
+  mode: "multi" | "single"
+  roomId?: number;
 }
 
 type CancelGameProps = {
@@ -19,40 +25,60 @@ type CancelGameProps = {
 }
 
 const CancelGamePopup = (props: CancelGameProps) => {
-  const {text} = props.route.params;
+  const {text, title, mode, roomId} = props.route.params;
+  const playData = usePlayData();
   const navigation = props.navigation;
+  const socket = useMultiGameSocket();
+
+  const sendExitGame = () => {
+    if (mode === "multi") {
+      if (!playData.user.id || roomId === undefined) return;
+      const exitMessage = socketClientActions.exit({
+        userId: playData.user.id,
+        roomId: roomId,
+      })
+      socket.send(JSON.stringify(exitMessage));
+    }    
+  }
+
+  const exitGame = () => {
+    navigation.dispatch((state) => {
+      const filteredRoutes = state.routes.slice(0, state.routes.length - 2);
+      const result = CommonActions.reset({
+        ...state,
+        routes: filteredRoutes,
+        index: filteredRoutes.length - 1,
+      });
+      return result;
+    })
+
+    sendExitGame();
+  }
+
+  const buttons: PopupButton[] = [
+    {
+      text: "예",
+      onPress: exitGame,
+      style: {
+        backgroundColor: 'pink',
+      }
+    },
+    {
+      text: "아니요",
+      onPress: navigation.goBack,
+      style: {
+        backgroundColor: 'lightgrey',
+      }
+    },
+  ]
+
   return (
     <View style={{flex: 1}}>
       <BasicPopup
-        title="PAUSE"
+        title={title}
         buttonAlign="horizontal"
-        buttons={[
-          {
-            text: "예",
-            onPress: () => {
-              navigation.dispatch((state) => {
-                const filteredRoutes = state.routes.slice(0, state.routes.length - 2);
-                const result = CommonActions.reset({
-                  ...state,
-                  routes: filteredRoutes,
-                  index: filteredRoutes.length - 1,
-                });
-                return result;
-              })
-            },
-            style: {
-              backgroundColor: 'pink',
-            }
-          },
-          {
-            text: "아니요",
-            onPress: navigation.goBack,
-            style: {
-              backgroundColor: 'lightgrey',
-            }
-          },
-        ]}>
-        <NotoSans type="Black">{text}</NotoSans>
+        buttons={buttons}>
+        <NotoSans type="Bold">{text}</NotoSans>
       </BasicPopup>
     </View>
   )

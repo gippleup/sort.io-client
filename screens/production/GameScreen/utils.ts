@@ -1,3 +1,5 @@
+import { EventArg } from "@react-navigation/native";
+
 export type GameMode = 'single' | 'multi';
 export type GameSubType = 'challenge' | 'training';
 
@@ -57,22 +59,22 @@ export const generateOptionByLevel = (level: number) => {
   const levelIndex = getLevelIndex(level);
   const levelStr = getLevelString(level);
   const levelEnumNum = _getLevelEnumNum(level);
-  // const map = {
-  //   blockStackCount: levelIndex + 3,
-  //   colorCount: levelIndex + 2,
-  //   maxScore: levelIndex + 2,
-  //   stackLengthMax: 8,
-  //   stackLengthMin: Math.min(levelIndex + 2, 5),
-  //   shuffleCount: 100,
-  // }
   const map = {
-    blockStackCount: 16,
-    colorCount: 15,
-    maxScore: 15,
+    blockStackCount: levelIndex + 3,
+    colorCount: levelIndex + 2,
+    maxScore: levelIndex + 2,
     stackLengthMax: 8,
-    stackLengthMin: 5,
+    stackLengthMin: Math.min(levelIndex + 2, 5),
     shuffleCount: 100,
   }
+  // const map = {
+  //   blockStackCount: 21,
+  //   colorCount: 18,
+  //   maxScore: 20,
+  //   stackLengthMax: 8,
+  //   stackLengthMin: 5,
+  //   shuffleCount: 100,
+  // }
   return {
     map,
     time: 120,
@@ -94,3 +96,13 @@ export const findLastBoolean = (resultArr: (null | boolean)[]) => {
     value,
   }
 }
+
+export type BeforeRemoveEvent = EventArg<"beforeRemove", true, {
+  action: Readonly<{
+    type: string;
+    payload?: object | undefined;
+    source?: string | undefined;
+    target?: string | undefined;
+  }>
+}>
+

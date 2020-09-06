@@ -7,6 +7,7 @@ import {
   LayoutChangeEvent,
   Easing,
   Animated,
+  Dimensions,
 } from 'react-native';
 import styled from 'styled-components';
 import Constants from '../assets/Constants';

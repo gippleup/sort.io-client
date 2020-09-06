@@ -2,6 +2,7 @@ import React from 'react';
 import {Animated, Easing, TextInput} from 'react-native';
 import styled, {css} from 'styled-components';
 import utils from './utils';
+import { timer } from 'd3';
 
 const TimeTextCss = css`
   padding: 0;
@@ -27,7 +28,10 @@ type TimerProps = {
   onStart?: () => void;
   onFinish?: () => void;
   onAlert?: () => void;
+  onReady?: () => void;
   auto?: boolean;
+  roundTo?: number;
+  fps?: number;
 };
 
 class TimerBase extends React.Component<TimerProps, {}> {
@@ -54,67 +58,109 @@ class TimerBase extends React.Component<TimerProps, {}> {
     this.leftTime = props.duration;
     this.startTimer = this.startTimer.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
+    this.animateTimerTo = this.animateTimerTo.bind(this);
+    this.onUpdateTimer = this.onUpdateTimer.bind(this);
   }
 
-  private timerAnim = new Animated.Value(this.props.duration);
+  interval: null | NodeJS.Timeout = null;
+  private isIntReady = false;
+  private isDecimalReday = false;
   private integerRef = React.createRef<TextInput>();
   private decimalRef = React.createRef<TextInput>();
+  private onReadyDispatched = false;
+  private startedTimer = false;
 
   componentDidMount() {
-    const {timerAnim, props, integerRef, decimalRef} = this;
-
-    timerAnim.addListener((animState) => {
-      const {value} = animState;
-      this.leftTime = value;
-
-      const {integer, decimal} = utils.prettyTime(value, 3);
-      integerRef.current?.setNativeProps({text: integer});
-      decimalRef.current?.setNativeProps({text: '.' + decimal});
-
-      if (value === props.duration && props.onStart && !this.startTriggered) {
-        props.onStart();
-        this.startTriggered = true;
-      }
-
-      if (value < props.alertAt && props.onAlert && !this.alertTriggered) {
-        props.onAlert();
-        this.setState({
-          iconName: 'clock-alert',
-        });
-        this.alertTriggered = true;
-      }
-
-      if (value === 0 && props.onFinish && !this.finishTriggered) {
-        props.onFinish();
-        this.finishTriggered = true;
-      }
-    });
-    
-    timerAnim.setValue(props.duration);
+    const {props} = this;
     if (props.auto) {
       this.startTimer()
     }
   }
 
+  onUpdateTimer() {
+    const {leftTime: value, props} = this;
+    const {integerRef, decimalRef} = this;
+
+    const { integer, decimal } = utils.prettyTime(value, props.roundTo !== undefined ? props.roundTo : 3);
+    integerRef.current?.setNativeProps({ text: integer });
+    if (props.roundTo !== undefined && props.roundTo > 0) {
+      decimalRef.current?.setNativeProps({ text: '.' + decimal });
+    } else {
+      decimalRef.current?.setNativeProps({ text: '' });
+    }
+
+    if (value === props.duration && props.onStart && !this.startTriggered) {
+      props.onStart();
+      this.startTriggered = true;
+    }
+
+    if (value < props.alertAt && props.onAlert && !this.alertTriggered) {
+      props.onAlert();
+      this.setState({
+        iconName: 'clock-alert',
+      });
+      this.alertTriggered = true;
+    }
+
+    if (value === 0 && props.onFinish && !this.finishTriggered) {
+      props.onFinish();
+      this.finishTriggered = true;
+    }
+  }
+
   startTimer() {
-    const {timerAnim} = this;
-    Animated.timing(timerAnim, {
-      toValue: 0,
-      useNativeDriver: true,
-      easing: Easing.linear,
-      duration: this.leftTime * 1000,
-    }).start();
+    this.animateTimerTo(0);
+  }
+
+  setTimeTo(time: number) {
+    this.stopTimer();
+    this.leftTime = time;
+    this.onUpdateTimer();
+  }
+
+  animateTimerTo(time: number) {
+    const { props } = this;
+    const fps = props.fps || 60
+    this.stopTimer();
+    if (!this.startedTimer) {
+      this.startedTimer = true;
+      this.interval = setInterval(() => {
+        if (this.leftTime <= time && this.interval) {
+          clearInterval(this.interval);
+          this.leftTime = time;
+        }
+        this.onUpdateTimer();
+        this.leftTime -= 1 / fps;
+      }, 1000 / fps)
+    }
   }
 
   stopTimer() {
-    const {timerAnim} = this;
-    timerAnim.stopAnimation();
+    const {props} = this;
+    if (props.roundTo === 0 && this.interval) {
+      clearInterval(this.interval);
+      this.interval = null;
+      this.startedTimer = false;
+    }
   }
 
   componentWillUnmount() {
-    const {timerAnim} = this;
-    timerAnim.removeAllListeners();
-    timerAnim.stopAnimation();
+    if (this.interval !== null) {
+      clearInterval(this.interval);
+    }
+  }
+
+  checkIfTextReady() {
+    const {isDecimalReday, isIntReady, onReadyDispatched, props} = this;
+    let isReady = false;
+    if (isIntReady && isDecimalReday) {
+      isReady = true;
+      if (!onReadyDispatched && props.onReady) {
+        this.onReadyDispatched = true;
+        props.onReady();
+      } 
+    }
+    return isReady;
   }
 
   shouldComponentUpdate() {
@@ -129,6 +175,10 @@ class TimerBase extends React.Component<TimerProps, {}> {
       <>
         <Integer
           ref={integerRef}
+          onLayout={() => {
+            this.isIntReady = true;
+            this.checkIfTextReady();
+          }}
           style={{
             fontSize: props.integerSize,
             color: props.color,
@@ -137,6 +187,10 @@ class TimerBase extends React.Component<TimerProps, {}> {
         />
         <Decimal
           ref={decimalRef}
+          onLayout={() => {
+            this.isDecimalReday = true;
+            this.checkIfTextReady();
+          }}
           style={{
             fontSize: props.decimalSize,
             color: props.color,

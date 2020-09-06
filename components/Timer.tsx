@@ -25,7 +25,9 @@ type TimerProps = {
   onStart?: () => void;
   onFinish?: () => void;
   onAlert?: () => void;
+  onReady?: () => void;
   auto?: boolean;
+  roundTo?: number;
 };
 
 type TimerState = {

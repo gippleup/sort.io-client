@@ -1,3 +1,7 @@
+import { Dimensions } from "react-native";
+
+const ratio = Dimensions.get('screen').width / 360;
+
 export const decideMapScale = (mapLength: number) => {
   let mapScale = 1;
   if (mapLength <= 3) {
@@ -19,5 +23,5 @@ export const decideMapScale = (mapLength: number) => {
   } else if (mapLength <= 36) {
     mapScale = 0.36
   }
-  return mapScale;
+  return mapScale * ratio;
 }

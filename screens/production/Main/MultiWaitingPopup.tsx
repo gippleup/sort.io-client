@@ -1,14 +1,36 @@
 import React, { RefObject } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, BackHandler } from 'react-native'
 import Loading from '../../../components/Loading'
 import NativeRefBox from '../../../components/NativeRefBox'
 import { FullFlexCenter, Modal, LoadingAnimationContainer, LoadingText } from './MultiWaitingPopup/_StyledComponent'
+import useMultiGameSocket, { OnSendRoomParam } from '../../../hooks/useMultiGameSocket'
+import usePlayData from '../../../hooks/usePlayData'
+import socketClientActions from '../MultiGame/action/creator'
+import { useDispatch } from 'react-redux'
+import { applyGuestId } from '../../../redux/actions/playData/thunk'
+import { useNavigation, NavigationState, NavigationProp, RouteProp, CommonActions } from '@react-navigation/native'
+import { RootStackParamList } from '../../../router/routes'
+import { StackNavigationProp } from '@react-navigation/stack'
 
-const MultiWaitingPopup = () => {
+type MultiWaitingPopupNavigationProps = StackNavigationProp<RootStackParamList, "Popup_MultiWaiting">;
+type MultiWaitingPopupRouteProps = RouteProp<RootStackParamList, "Popup_MultiWaiting">;
+
+type MultiWaitingPopupProps = {
+  navigation: MultiWaitingPopupNavigationProps;
+  route: MultiWaitingPopupRouteProps;
+}
+
+const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
   let foundMatch = false;
   let text = 'Finding Match';
+  let interval: null | NodeJS.Timer = null
   const loadingTextRef = React.createRef<Text>();
   const modalRef = React.createRef<NativeRefBox>();
+  const loadingTextContainerRef = React.createRef<NativeRefBox>();
+  const socket = useMultiGameSocket();
+  const playdata = usePlayData();
+  const roomData = React.useRef<OnSendRoomParam | null>(null);
+  const navigation = useNavigation();
 
   const setRefText = (text: string) => {
     loadingTextRef.current?.setNativeProps({
@@ -16,50 +38,94 @@ const MultiWaitingPopup = () => {
     })
   }
 
-  const checkIfLoaded = () => {
+  const checkIfFoundMatch = () => {
     return foundMatch;
   }
 
   const onLastAnimationStarted = () => {
-    setRefText("Connecting!");
-    modalRef.current?.setStyle({
-      backgroundColor: 'black',
-      borderColor: 'white'
-    });
-    loadingTextRef.current?.setNativeProps({
+    if (interval !== null) {
+      clearInterval(interval);
+    }
+
+    setRefText("Found Match!");
+
+    modalRef.current?.animate({
       style: {
-        color: 'yellow',
-        fontSize: 25,
-      }
+        backgroundColor: 'black',
+        borderColor: 'white',
+      },
+      duration: 100,
+      easing: "easeInOutSine",
+    }).start();
+
+    loadingTextContainerRef.current?.animate({
+      style: {
+        scaleX: 1.3,
+        scaleY: 1.3,
+      },
+      duration: 300,
+      easing: "easeOutElastic",
+    }).start();
+
+    loadingTextRef.current?.setNativeProps({
+      color: 'yellow'
     })
   }
 
-  const onAnimationCompleted = () => {}
+  const onAnimationCompleted = () => {
+    if (roomData.current) {
+      props.navigation.replace("PD_MultiGame", roomData.current);
+    }
+  }
+
+  const updateLoadingText = () => {
+    if (text !== 'Finding Match...') {
+      text += '.';
+    } else {
+      text = 'Finding Match';
+    }
+    setRefText(text);
+  }
 
   React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      foundMatch = true;
-    }, 3000)
+    interval = setInterval(updateLoadingText, 800)
 
-    const updateLoadingText = () => {
-      if (!foundMatch) {
-        if (text !== 'Finding Match...') {
-          text += '.';
-        } else {
-          text = 'Finding Match';
-        }
+    const closeSocket = () => {
+      socket.close();
+      return null;
+    };
+
+    BackHandler.addEventListener("hardwareBackPress", closeSocket)
+
+    const openListener = socket.addListener("onOpen", () => {
+      if (!playdata.user.id) {
       } else {
-        text = 'Found Match!';
-        clearInterval(interval);
+        const enterMessage = socketClientActions.enter({userId: playdata.user.id})
+        socket.send(JSON.stringify(enterMessage));
       }
-      setRefText(text);
-    }
+    })
 
-    const interval = setInterval(updateLoadingText, 800)
+    const loadListener = socket.addListener("onSendRoom", (option: OnSendRoomParam) => {
+      foundMatch = true;
+      roomData.current = option;
+    })
+
+    const closeListener = socket.addListener("onClose", () => {
+      const userId = playdata.user.id || -1;
+      const roomId = roomData.current?.roomId || -1;
+      const disconnectMessage = socketClientActions.alertDisconnect({
+        userId,
+        roomId
+      })
+      socket.send(JSON.stringify(disconnectMessage))
+    })
 
     return () => {
-      clearTimeout(timeout);
-      clearInterval(interval);
+      if (interval !== null) { clearInterval(interval); }
+      BackHandler.removeEventListener("hardwareBackPress", closeSocket)
+      socket.removeListener(openListener);
+      socket.removeListener(loadListener);
+      socket.removeListener(closeListener)
     }
   }, [])
 
@@ -68,16 +134,18 @@ const MultiWaitingPopup = () => {
       <Modal ref={modalRef}>
         <LoadingAnimationContainer>
           <Loading
-            checkIfLoaded={checkIfLoaded}
+            checkIfLoaded={checkIfFoundMatch}
             onLastAnimationStarted={onLastAnimationStarted}
             onAnimationCompleted={onAnimationCompleted}
           />
         </LoadingAnimationContainer>
-        <LoadingText
-          ref={loadingTextRef}
-          editable={false}
-          value={text}
-        />
+        <NativeRefBox ref={loadingTextContainerRef}>
+          <LoadingText
+            ref={loadingTextRef}
+            editable={false}
+            value={text}
+          />
+        </NativeRefBox>
       </Modal>
     </FullFlexCenter>
   )

@@ -11,7 +11,7 @@ export const FullFlexCenter = styled(View)`
 
 export const Modal: typeof NativeRefBox = styled(NativeRefBox)`
   width: 200px;
-  height: 180px;
+  height: 260px;
   align-items: center;
   justify-content: center;
   background-color: slategrey;
@@ -21,6 +21,7 @@ export const Modal: typeof NativeRefBox = styled(NativeRefBox)`
 
 export const LoadingAnimationContainer: typeof View = styled(View)`
   width: 100px;
+  height: 140px;
   align-items: center;
   justify-content: flex-end;
   margin-bottom: 10px;

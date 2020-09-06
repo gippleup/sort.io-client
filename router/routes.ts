@@ -6,17 +6,17 @@ import ProfileTester from '../screens/dev/ProfileTester';
 import PurchaseBoxTester from '../screens/dev/PurchaseBoxTester';
 import RankViewerTester from '../screens/dev/RankViewerTester';
 import SettingsTester from '../screens/dev/SettingsTester';
-import GameScreen, { GameScreenParams } from '../screens/production/GameScreen';
+import GameScreen, { GameScreenParams } from '../screens/production/SingleGame';
 import Main from '../screens/production/Main';
 import SelectStage from '../screens/production/SelectStage';
 import Shop from '../screens/production/Shop';
+import MultiGame, { MultiGameParams } from '../screens/production/MutiGame';
 import TimerTester from '../screens/dev/TimerTester';
 import RefBoxTester from '../screens/dev/RefBoxTester';
 import RefBlockBoardTester from '../screens/dev/RefBlockBoardTester';
 import GoogleSignInTester from '../screens/dev/GoogleSignInTester';
 import CountryFlagIconTester from '../screens/dev/CountryFlagIconTester';
 import GameSceneTester from '../screens/dev/GameSceneTester';
-import MultiGameTester from '../screens/dev/MultiGameTester';
 import { StackHeaderProps, StackNavigationOptions } from '@react-navigation/stack';
 import GraphTester from '../screens/dev/GraphTester';
 import AsyncStorageController from '../screens/dev/AsyncStorageController';
@@ -134,11 +134,6 @@ const routes: Omit<Routes, "Developer"> = {
     devName: '국가 아이콘',
     component: CountryFlagIconTester,
   },
-  MultiGameTester: {
-    devName: '멀티게임',
-    component: MultiGameTester,
-    headerShown: false,
-  },
   GraphTester: {
     devName: '그래프',
     component: GraphTester,
@@ -172,6 +167,12 @@ const routes: Omit<Routes, "Developer"> = {
     type: 'production',
     devName: '상점 화면',
     component: Shop,
+    headerShown: false,
+  },
+  PD_MultiGame: {
+    type: 'production',
+    devName: '멀티 게임',
+    component: MultiGame,
     headerShown: false,
   },
   Popup_CancelGame: {
@@ -240,7 +241,6 @@ export type RootStackParamList = {
   SettingsTester: undefined;
   GoogleSignInTester: undefined;
   FlagIconTester: undefined;
-  MultiGameTester: undefined;
   Developer: undefined;
   GraphTester: undefined;
   NativeRefTester: undefined;
@@ -248,6 +248,7 @@ export type RootStackParamList = {
   PD_GameScene: GameScreenParams;
   PD_SelectStage: undefined;
   PD_Shop: undefined;
+  PD_MultiGame: MultiGameParams;
   Popup_CancelGame: CancelGameParams;
   Popup_NotEnoughTicket: undefined;
   Popup_RankGraph: undefined;

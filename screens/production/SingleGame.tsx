@@ -6,19 +6,10 @@ import {generateMap as generateMap_Local} from '../../algo/generateMap';
 import {generateMap as generateMap_Server} from '../../api/sortio';
 import GameScene from '../../components/GameScene';
 import { RootStackParamList } from '../../router/routes';
-import {GameMode, GameSubType, generateOptionByLevel} from './GameScreen/utils'
+import {GameMode, GameSubType, generateOptionByLevel, BeforeRemoveEvent} from './GameScreen/utils'
 import { StackNavigationEventMap } from '@react-navigation/stack/lib/typescript/src/types';
 
 export type StateEventCallback = EventListenerCallback<StackNavigationEventMap & EventMapCore<StackNavigationState>, "state">
-
-export type BeforeRemoveEvent = EventArg<"beforeRemove", true, {
-  action: Readonly<{
-    type: string;
-    payload?: object | undefined;
-    source?: string | undefined;
-    target?: string | undefined;
-  }>
-}>
 
 type GameScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PD_GameScene'>
 type GameScreenRouteProp = RouteProp<RootStackParamList, 'PD_GameScene'>
@@ -84,7 +75,9 @@ const GameScreen = (props: GameScreenProps) => {
           }
   
           navigation.navigate('Popup_CancelGame', {
+            title: "PAUSE",
             text: text,
+            mode: "single",
           });        
         })
       }
@@ -129,8 +122,7 @@ const GameScreen = (props: GameScreenProps) => {
       skin="spiky"
       map={map}
       title={option.levelStr}
-      // timeLimit={option.time}
-      timeLimit={1000}
+      timeLimit={option.time}
       maxScore={option.map.maxScore}
       mode={mode}
       onComplete={() => {
@@ -140,6 +132,7 @@ const GameScreen = (props: GameScreenProps) => {
         navigateToStageClearPopup("fail")
       }}
       fps={60}
+      timerRoundTo={3}
     />
   );
 }

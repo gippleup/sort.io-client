@@ -1,4 +1,9 @@
-import { SocketClientMessageTypes } from "./types";
+import { SocketClientMessageTypes } from "../../../../hooks/useMultiGameSocket/ClientMessage";
+
+type BasicParam = {
+  userId: number;
+  roomId: number;
+}
 
 type EnterParam = {
   userId: number
@@ -18,11 +23,7 @@ const dock = (param: DockParam) => ({
   payload: param
 })
 
-type AlertLoadedParam = {
-  userId: number, roomId: number
-}
-
-const alertLoaded = (param: AlertLoadedParam) => ({
+const alertLoaded = (param: BasicParam) => ({
   type: SocketClientMessageTypes.LOADED,
   payload: param
 })
@@ -36,39 +37,28 @@ const updateScore = (param: UpdateScoreParam) => ({
   payload: param
 })
 
-type AlertDisconnectParam = {
-  roomId: number, userId: number,
-}
-
-const alertDisconnect = (param: AlertDisconnectParam) => ({
+const alertDisconnect = (param: BasicParam) => ({
   type: SocketClientMessageTypes.ALERT_DISCONNECT,
   payload: param
 })
 
-type SuccessParam = {
-  roomId: number, userId: number,
-}
-
-const success = (param: SuccessParam) => ({
+const success = (param: BasicParam) => ({
   type: SocketClientMessageTypes.SUCCESS,
   payload: param,
 })
 
-type ExitParam = {
-  roomId: number, userId: number,
-}
-
-const exit = (param: ExitParam) => ({
+const exit = (param: BasicParam) => ({
   type: SocketClientMessageTypes.EXIT,
   payload: param,
 })
 
-type AlertReadyParam = {
-  roomId: number, userId: number,
-}
-
-const alertReady = (param: AlertReadyParam) => ({
+const alertReady = (param: BasicParam) => ({
   type: SocketClientMessageTypes.ALERT_READY,
+  payload: param,
+})
+
+const alertPrepared = (param: BasicParam) => ({
+  type: SocketClientMessageTypes.ALERT_PREPARED,
   payload: param,
 })
 
@@ -81,6 +71,7 @@ export const socketClientActions = {
   success,
   exit,
   alertReady,
+  alertPrepared,
 }
 
 export default socketClientActions;

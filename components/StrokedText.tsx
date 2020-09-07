@@ -15,7 +15,7 @@ type StrokedTextProps = {
   dyMultiplier: number;
 }
 
-const StrokedText = (props: StrokedTextProps) => {
+const StrokedText: React.FC<StrokedTextProps> = (props) => {
   return (
     <View style={{backgroundColor: props.test ? 'white' : 'transparent'}}>
       <Svg width={props.width} height={props.height}>
@@ -29,7 +29,7 @@ const StrokedText = (props: StrokedTextProps) => {
           strokeLinejoin="round"
           textAnchor="middle"
         >
-          {props.text}
+          {props.text || props.children}
         </Text>
         <Text
           fill={props.fillColor}

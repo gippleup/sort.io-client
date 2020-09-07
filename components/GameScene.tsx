@@ -188,9 +188,6 @@ class GameScene extends React.Component<GameSceneProps, {}>{
           skin={props.skin}
           onScoreChange={(score) => {
             opponentScoreCheckerRef.current?.setScore(score);
-            // if (score === props.maxScore && props.onComplete) {
-            //   props.onComplete();
-            // }
           }}
           onComplete={props.onComplete}
           scale={mapScale * 0.35}
@@ -302,9 +299,6 @@ class GameScene extends React.Component<GameSceneProps, {}>{
             skin={props.skin}
             onScoreChange={(score) => {
               scoreCheckerRef.current?.setScore(score);
-              // if (score === props.maxScore && props.onComplete) {
-              //   props.onComplete();
-              // }
             }}
             onDock={props.onDock}
             onUndock={props.onUndock}

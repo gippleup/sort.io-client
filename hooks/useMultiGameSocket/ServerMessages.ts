@@ -1,10 +1,12 @@
-import { MapDesc } from "../routes/Model/GameRoom"
+import { MapDesc } from "../../screens/production/MutiGame"
 
 export enum SocketServerMessageTypes {
   SYNC_TIMER = 'SYNC_TIMER',
   SEND_ROOM = 'SEND_ROOM',
   ALERT_DOCK = 'ALERT_DOCK',
   DELETE_ROOM = 'DELETE_ROOM',
+  ALERT_PREPARE = 'ALERT_PREPARE',
+  SYNC_PREPARE_TIMER = 'SYNC_PREPARE_TIMER'
 }
 
 export type SyncTimerMessage = {
@@ -36,7 +38,17 @@ export type AlertDockMessage = {
 
 export type DeleteRoom = {
   type: SocketServerMessageTypes.DELETE_ROOM;
-  payload: {};
+}
+
+export type AlertPrepare = {
+  type: SocketServerMessageTypes.ALERT_PREPARE;
+}
+
+export type SyncPrepareTimer = {
+  type: SocketServerMessageTypes.SYNC_PREPARE_TIMER;
+  payload: {
+    leftTime: number;
+  }
 }
 
 export type SocketServerMessages =
@@ -44,3 +56,5 @@ export type SocketServerMessages =
   | SendRoomMessage
   | AlertDockMessage
   | DeleteRoom
+  | AlertPrepare
+  | SyncPrepareTimer

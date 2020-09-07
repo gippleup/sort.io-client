@@ -1,7 +1,6 @@
 import React from 'react';
 import { configureSocket } from '../api/sortio';
-import usePlayData from './usePlayData';
-import { SocketServerMessages, SocketServerMessageTypes, AlertDockConstructor } from './useMultiGameSocket/ServerMessages';
+import { SocketServerMessages, SocketServerMessageTypes as MessageType, AlertDockConstructor } from './useMultiGameSocket/ServerMessages';
 import { MapDesc } from '../screens/production/MutiGame';
 
 export type OnSendRoomParam = { map: number[][], mapDesc: MapDesc, roomId: number };
@@ -15,6 +14,8 @@ type ListenerCallback = {
   onClose: (e: WebSocketCloseEvent) => any;
   onMessage: (e: WebSocketMessageEvent) => any;
   onDeleteRoom: () => any;
+  onAlertPrepare: () => any;
+  onSyncPrepareTimer: (leftTime: number) => any;
 }
 
 type ListenerManager = {
@@ -39,7 +40,13 @@ const listenerManager: ListenerManager = {
   onMessage: {},
   onOpen: {},
   onDeleteRoom: {},
+  onAlertPrepare: {},
+  onSyncPrepareTimer: {},
 };
+
+const forEachValue = (target: Object, cb: (value: any) => any) => {
+  Object.values(target).forEach((value) => cb(value))
+}
 
 const useMultiGameSocket = () => {
   const listenerCount = React.useRef(0);
@@ -65,8 +72,7 @@ const useMultiGameSocket = () => {
     },
     close: (e: WebSocketCloseEvent) => {
       if (socket) {
-        Object.values(listenerManager.onClose)
-          .forEach((callback) => callback(e))
+        forEachValue(listenerManager.onClose, (cb) => cb(e));
         socket.close();
         socket = null;
       }
@@ -75,35 +81,33 @@ const useMultiGameSocket = () => {
   }).current;
 
   socket.onopen = () => {
-    Object.values(listenerManager.onOpen)
-      .forEach((callback) => callback())
+    forEachValue(listenerManager.onOpen, (cb) => cb());
   }
 
   socket.onerror = (e) => {
-    Object.values(listenerManager.onError)
-      .forEach((callback) => callback(e))
+    forEachValue(listenerManager.onError, (cb) => cb(e));
   }
 
   socket.onmessage = (e) => {
-    Object.values(listenerManager.onMessage)
-      .forEach((callback) => callback(e))
+    forEachValue(listenerManager.onMessage, (cb) => cb(e))
 
     const parsedData: SocketServerMessages = JSON.parse(e.data);
-    if (parsedData.type === SocketServerMessageTypes.SEND_ROOM) {
-      const { map, mapDesc, roomId } = parsedData.payload;
-      Object.values(listenerManager.onSendRoom)
-        .forEach((callback) => callback({map, mapDesc, roomId}))
-    } else if (parsedData.type === SocketServerMessageTypes.ALERT_DOCK) {
+    if (parsedData.type === MessageType.SEND_ROOM) {
       const option = parsedData.payload;
-      Object.values(listenerManager.onAlertDock)
-        .forEach((callback) => callback(option))
-    } else if (parsedData.type === SocketServerMessageTypes.SYNC_TIMER) {
+      forEachValue(listenerManager.onSendRoom, (cb) => cb(option))
+    } else if (parsedData.type === MessageType.ALERT_DOCK) {
+      const option = parsedData.payload;
+      forEachValue(listenerManager.onAlertDock, (cb) => cb(option))
+    } else if (parsedData.type === MessageType.SYNC_TIMER) {
       const { leftTime } = parsedData.payload;
-      Object.values(listenerManager.onSyncTimer)
-        .forEach((callback) => callback(leftTime))
-    } else if (parsedData.type === SocketServerMessageTypes.DELETE_ROOM) {
-      Object.values(listenerManager.onDeleteRoom)
-        .forEach((callback) => callback())
+      forEachValue(listenerManager.onSyncTimer, (cb) => cb(leftTime))
+    } else if (parsedData.type === MessageType.DELETE_ROOM) {
+      forEachValue(listenerManager.onDeleteRoom, (cb) => cb())
+    } else if (parsedData.type === MessageType.ALERT_PREPARE) {
+      forEachValue(listenerManager.onAlertPrepare, (cb) => cb())
+    } else if (parsedData.type === MessageType.SYNC_PREPARE_TIMER) {
+      const { leftTime } = parsedData.payload
+      forEachValue(listenerManager.onSyncPrepareTimer, (cb) => cb(leftTime))
     }
   }
 

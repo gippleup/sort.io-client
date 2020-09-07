@@ -34,6 +34,7 @@ import ForFun from '../screens/dev/ForFun';
 import StageClearPopup, { StageClearPopupParams } from '../screens/production/GameScreen/StageClearPopup';
 import AnimatedNumberTester from '../screens/dev/AnimatedNumberTester';
 import MultigameWaitingPopup from '../screens/production/Main/MultiWaitingPopup';
+import PreparePopup, { PreparePopupParams } from '../screens/production/MultiGame/PreparePopup';
 
 type Routes = {
   [T in keyof RootStackParamList]: {
@@ -219,6 +220,11 @@ const routes: Omit<Routes, "Developer"> = {
     devName: '멀티 대기 팝업',
     component: MultigameWaitingPopup,
     options: CommonPopupOption,
+  },
+  Popup_Prepare: {
+    devName: '멀티 게임 준비 팝업',
+    component: PreparePopup,
+    options: CommonPopupOption,
   }
 };
 
@@ -258,6 +264,7 @@ export type RootStackParamList = {
   Popup_SinglePlayRank: undefined;
   Popup_StageClear: StageClearPopupParams;
   Popup_MultiWaiting: undefined;
+  Popup_Prepare: PreparePopupParams;
 }
 
 export default routes;

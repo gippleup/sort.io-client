@@ -85,9 +85,16 @@ export const MutiGame = (props: MultiGameProps) => {
       }
     })
     
+    const alertPrepareListener = socket.addListener("onAlertPrepare",
+    () => {
+      props.navigation.navigate("Popup_Prepare", {
+        roomId,
+      });
+    })
+
     const deleteRoomListener = socket.addListener("onDeleteRoom",
     () => {
-        // TODO: (상대가 나갔을 때) 상대가 방을 나갔다는 것을 표시해주고, 승리했다는 메세지를 보여준다.
+      // TODO: (상대가 나갔을 때) 상대가 방을 나갔다는 것을 표시해주고, 승리했다는 메세지를 보여준다.
     })
     
     const syncTimerListener = socket.addListener("onSyncTimer",
@@ -123,6 +130,7 @@ export const MutiGame = (props: MultiGameProps) => {
       socket.removeListener(alertDockListener);
       socket.removeListener(deleteRoomListener);
       socket.removeListener(syncTimerListener);
+      socket.removeListener(alertPrepareListener);
     }
   })
 

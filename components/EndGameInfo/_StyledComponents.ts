@@ -1,7 +1,8 @@
-import {View, Dimensions, TouchableOpacity} from 'react-native';
+import {View, Dimensions} from 'react-native';
 import styled, {css} from 'styled-components';
 import DynamicText from '../DynamicText';
 import AnimatedRateText from './AnimatedRateText';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export const GameInfoContainer: typeof View = styled(View)`
   width: 100%;
@@ -68,6 +69,7 @@ export const RoundRectangleButton:
     } else if (props.flex) {
       return css`
         flex: 1;
+        background-color: red;
       `;
     } else {
       return css`

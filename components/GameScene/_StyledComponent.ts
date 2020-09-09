@@ -1,6 +1,6 @@
 import NativeRefBlockBoard from '../NativeRefBlockBoard';
 import styled from "styled-components";
-import { View, Dimensions, Text } from "react-native";
+import { View, Dimensions, Text, ViewProps } from "react-native";
 
 export const GameSceneContainer = styled(View)`
   flex: 1;
@@ -47,14 +47,16 @@ export const MetaInfoContainer = styled(View)`
   margin: 20px;
 `;
 
-export const TimerContainer = styled(View)`
-  align-items: flex-end;
+type GameTypeProp = { gameType: "multi" | "single" };
+
+export const TimerContainer: React.ComponentClass<ViewProps & GameTypeProp> = styled(View)<GameTypeProp>`
+  align-items: ${(props) => props.gameType === "multi" ? "flex-end" : "center"};
   justify-content: center;
 `;
 
-export const ScoreCheckerContainer: typeof View = styled(View)`
+export const ScoreCheckerContainer: React.ComponentClass<ViewProps & GameTypeProp> = styled(View)<GameTypeProp>`
   align-items: center;
-  justify-content: flex-end;
+  justify-content: ${(props) => props.gameType === "multi" ? "flex-end" : "center"};
   margin-vertical: 5px;
   flex-direction: row;
 `;

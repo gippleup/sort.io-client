@@ -2,7 +2,7 @@ import { Dimensions } from "react-native";
 
 const Constants = {
   blockWidth: 66,
-  blockPadding: 15 * Dimensions.get('screen').height / 640,
+  blockPadding: 15,
   blockHeight: {
     top: 8,
     piece: 24,

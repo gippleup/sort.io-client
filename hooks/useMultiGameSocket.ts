@@ -16,6 +16,7 @@ type ListenerCallback = {
   onDeleteRoom: () => any;
   onAlertPrepare: () => any;
   onSyncPrepareTimer: (leftTime: number) => any;
+  onInformWinner: (winnerId: number) => any;
 }
 
 type ListenerManager = {
@@ -42,6 +43,7 @@ const listenerManager: ListenerManager = {
   onDeleteRoom: {},
   onAlertPrepare: {},
   onSyncPrepareTimer: {},
+  onInformWinner: {},
 };
 
 const forEachValue = (target: Object, cb: (value: any) => any) => {
@@ -70,9 +72,9 @@ const useMultiGameSocket = () => {
         socket.send(data);
       }
     },
-    close: (e: WebSocketCloseEvent) => {
+    close: () => {
       if (socket) {
-        forEachValue(listenerManager.onClose, (cb) => cb(e));
+        forEachValue(listenerManager.onClose, (cb) => cb());
         socket.close();
         socket = null;
       }
@@ -108,6 +110,9 @@ const useMultiGameSocket = () => {
     } else if (parsedData.type === MessageType.SYNC_PREPARE_TIMER) {
       const { leftTime } = parsedData.payload
       forEachValue(listenerManager.onSyncPrepareTimer, (cb) => cb(leftTime))
+    } else if (parsedData.type === MessageType.INFORM_WINNER) {
+      const { winner } = parsedData.payload;
+      forEachValue(listenerManager.onInformWinner, (cb) => cb(winner))
     }
   }
 

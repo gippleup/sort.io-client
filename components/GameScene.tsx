@@ -35,7 +35,7 @@ type GameSceneProps = {
   maxScore: number;
   map: BlockTypes[][];
   skin: skins;
-  onComplete?: () => void;
+  onComplete?: (winner: "opponent" | "me") => any;
   onTimeOut?: () => void;
   onDock?: (stackIndex: number) => void;
   onUndock?: (stackIndex: number) => void;
@@ -189,7 +189,11 @@ class GameScene extends React.Component<GameSceneProps, {}>{
           onScoreChange={(score) => {
             opponentScoreCheckerRef.current?.setScore(score);
           }}
-          onComplete={props.onComplete}
+          onComplete={() => {
+            if (props.onComplete) {
+              props.onComplete("opponent");
+            }
+          }}
           scale={mapScale * 0.35}
           onLayout={() => {
             boardReadyStatus.opponent = true
@@ -213,7 +217,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
       return <></>;
     }
     return (
-      <ScoreCheckerContainer>
+      <ScoreCheckerContainer gameType={props.mode}>
         <ProfileContainer />
         <ScoreChecker
           ref={opponentScoreCheckerRef}
@@ -265,7 +269,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
           {renderOpponentBoard()}
           <MetaInfoContainer>
             {renderStageTitle()}
-            <TimerContainer>
+            <TimerContainer gameType={props.mode}>
               <Timer
                 ref={timerRef}
                 iconSize={20}
@@ -280,7 +284,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
               />
             </TimerContainer>
             {renderOpponentScoreChecker()}
-            <ScoreCheckerContainer>
+            <ScoreCheckerContainer gameType={props.mode}>
               {renderProfile()}
               <ScoreChecker
                 ref={scoreCheckerRef}
@@ -302,7 +306,11 @@ class GameScene extends React.Component<GameSceneProps, {}>{
             }}
             onDock={props.onDock}
             onUndock={props.onUndock}
-            onComplete={props.onComplete}
+            onComplete={() => {
+              if (props.onComplete) {
+                props.onComplete("me");
+              }
+            }}
             scale={mapScale}
             onLayout={() => {
               boardReadyStatus.player = true;

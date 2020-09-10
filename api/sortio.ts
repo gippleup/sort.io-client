@@ -182,7 +182,7 @@ export const isServerAlive = () => {
   })
 }
 
-export type UserRankData = {
+export type UserSingleRankData = {
   userId: number;
   name: string;
   difficulty: number;
@@ -191,18 +191,39 @@ export type UserRankData = {
   rate: string;
 }
 
-export type RankData = {
-  targetUser: UserRankData;
-  beforeTargetUser: UserRankData[];
-  afterTargetUser: UserRankData[];
+export type UserMultiRankData = {
+  userId: number;
+  name: string;
+  userCreatedAt: string;
+  win: string;
+  draw: string;
+  lose: string;
+  total: string;
+  winningRate: string;
+  KBI: number;
+  rank: string;
+  rate: string;
+}
+
+export type RankData<T> = {
+  targetUser: T;
+  beforeTargetUser: T[];
+  afterTargetUser: T[];
   total: number;
 }
 
-export const getRank = (userId: number, padding: number = 2): Promise<RankData> => {
-  const url = `${API_BASE}/user/rank?userId=${userId}&padding=${padding}`;
+export const getSinglePlayRank = (userId: number, padding: number = 2): Promise<RankData<UserSingleRankData>> => {
+  const url = `${API_BASE}/singlePlay/rank?userId=${userId}&padding=${padding}`;
   return fetch(url)
-  .then((res) => res.json())
+   .then((res) => res.json())
   .catch(() => null)
+}
+
+export const getMultiPlayRank = (userId: number, padding: number = 2): Promise<RankData<UserMultiRankData>> => {
+  const url = `${API_BASE}/multiPlay/rank?userId=${userId}&padding=${padding}`;
+  return fetch(url)
+    .then((res) => res.json())
+    .catch(() => null)
 }
 
 export const configureSocket = () => {

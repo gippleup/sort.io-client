@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, ViewStyle, TextStyle} from 'react-native';
+import {View, Text, Image, ViewStyle, TextStyle, LayoutChangeEvent} from 'react-native';
 import {prettyPercent} from '../EndGameInfo/utils';
 import {FlexHorizontal} from '../Generic/StyledComponents';
 import {
@@ -24,6 +24,7 @@ type RankListEntryProps = {
   rankTextStyle?: TextStyle;
   rankRateStyle?: TextStyle;
   textStyle?: TextStyle;
+  onLayout?: (e: LayoutChangeEvent) => any;
 };
 
 const defaultProfile = require('../../assets/default-profile.png');
@@ -32,9 +33,9 @@ const RankListEntry = (props: RankListEntryProps) => {
   const {data, style} = props;
   const {rank, rate, username, profilePic} = data;
   const profile = profilePic || defaultProfile;
-  const prettyRate = `(${prettyPercent(rate)}%)`;
+  const prettyRate = `(상위 ${prettyPercent(rate)}%)`;
   return (
-    <EntryContainer style={style}>
+    <EntryContainer onLayout={props.onLayout} style={style}>
       <FlexHorizontal>
         <ProfilePic source={profile} />
         <UserInfoContainer>

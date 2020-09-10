@@ -2,7 +2,6 @@ import React from 'react';
 import {View, Text, ViewStyle, ScrollView, TextStyle, Animated, Easing} from 'react-native';
 import RankListEntry from './RankViewer/RankListEntry';
 import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
-import { style } from 'd3';
 
 export type RankViewerDataEntry = { username: string; userId?: number; rank: number; rate: number };
 export type RankViewerData = RankViewerDataEntry[];
@@ -51,10 +50,10 @@ class RankViewer extends React.Component<RankViewrProps> {
     const {props} = this;
     const {_scrollViewRef} = this;
     const blindColor =
-      props.blindColor ||
+      (props.blindColor ||
       props.contentContainerStyle?.backgroundColor ||
       props.style?.backgroundColor ||
-      'red' as string;
+      'red') as string;
     return (
       <View
         style={{
@@ -66,7 +65,12 @@ class RankViewer extends React.Component<RankViewrProps> {
         }}>
         <ScrollView
           ref={_scrollViewRef}
-          onLayout={(e) => this.blindWidth.setValue(e.nativeEvent.layout.width)}
+          onLayout={(e) => {
+            this.blindWidth.setValue(e.nativeEvent.layout.width)
+            if (e.nativeEvent.layout.height < (props.style?.maxHeight || 240)) {
+              this.bottomBlindOpacity.setValue(0)
+            }
+          }}
           onScroll={(e) => {
             const { height: contentHeight } = e.nativeEvent.contentSize;
             const { height: scrollViewHeight } = e.nativeEvent.layoutMeasurement;

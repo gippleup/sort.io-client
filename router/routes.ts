@@ -35,6 +35,7 @@ import StageClearPopup, { StageClearPopupParams } from '../screens/production/Ga
 import AnimatedNumberTester from '../screens/dev/AnimatedNumberTester';
 import MultigameWaitingPopup from '../screens/production/Main/MultiWaitingPopup';
 import PreparePopup, { PreparePopupParams } from '../screens/production/MultiGame/PreparePopup';
+import GameResultPopup, { GameResultParams } from '../screens/production/MultiGame/GameResultPopup';
 
 type Routes = {
   [T in keyof RootStackParamList]: {
@@ -225,6 +226,11 @@ const routes: Omit<Routes, "Developer"> = {
     devName: '멀티 게임 준비 팝업',
     component: PreparePopup,
     options: CommonPopupOption,
+  },
+  Popup_GameResult: {
+    devName: '게임 결과 팝업',
+    component: GameResultPopup,
+    options: CommonPopupOption,
   }
 };
 
@@ -265,6 +271,7 @@ export type RootStackParamList = {
   Popup_StageClear: StageClearPopupParams;
   Popup_MultiWaiting: undefined;
   Popup_Prepare: PreparePopupParams;
+  Popup_GameResult: GameResultParams;
 }
 
 export default routes;

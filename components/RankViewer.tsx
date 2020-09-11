@@ -139,9 +139,8 @@ class RankViewer extends React.Component<RankViewrProps> {
           <Defs>
             <LinearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
               <Stop offset="0" stopColor={blindColor} stopOpacity="1" />
-              <Stop offset="0.5" stopColor={blindColor} stopOpacity="1" />
-              <Stop offset="1.5" stopColor={blindColor} stopOpacity="0.2" />
-              <Stop offset="2" stopColor="rgba(0,0,0,0)" stopOpacity="0" />
+              <Stop offset="0.5" stopColor={blindColor} stopOpacity="0.5" />
+              <Stop offset="1" stopColor={blindColor} stopOpacity="0" />
             </LinearGradient>
           </Defs>
           <Rect width="100%" fill="url(#grad)" height="100%" />
@@ -158,9 +157,8 @@ class RankViewer extends React.Component<RankViewrProps> {
           <Defs>
             <LinearGradient id="grad" x1="0" y1="1" x2="0" y2="0">
               <Stop offset="0" stopColor={blindColor} stopOpacity="1" />
-              <Stop offset="0.5" stopColor={blindColor} stopOpacity="1" />
-              <Stop offset="1.5" stopColor={blindColor} stopOpacity="0.2" />
-              <Stop offset="2" stopColor="rgba(0,0,0,0)" stopOpacity="0" />
+              <Stop offset="0.5" stopColor={blindColor} stopOpacity="0.5" />
+              <Stop offset="1" stopColor={blindColor} stopOpacity="0" />
             </LinearGradient>
           </Defs>
           <Rect width="100%" fill="url(#grad)" height="100%" />

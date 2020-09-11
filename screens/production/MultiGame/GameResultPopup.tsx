@@ -1,18 +1,21 @@
 import React from 'react'
 import { View, Text, Dimensions, ViewStyle } from 'react-native'
 import StrokedText from '../../../components/StrokedText'
-import { FullFlexCenter } from '../Main/MultiWaitingPopup/_StyledComponent'
-import { RoundPaddingCenter, NotoSans, FlexHorizontal } from '../../../components/Generic/StyledComponents'
+import { RoundPaddingCenter, NotoSans, FlexHorizontal, FullFlexCenter } from '../../../components/Generic/StyledComponents'
 import chroma from 'chroma-js'
 import RankViewer, { RankViewerDataEntry, RankViewerData } from '../../../components/RankViewer'
 import usePlayData from '../../../hooks/usePlayData'
 import { RoundRectangleButton } from '../../../components/EndGameInfo/_StyledComponents'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { RouteProp } from '@react-navigation/native'
-import { RootStackParamList } from '../../../router/routes'
+import { RouteProp, useNavigation, CommonActions } from '@react-navigation/native'
+import routes, { RootStackParamList } from '../../../router/routes'
 import { getMultiPlayRank, UserMultiRankData, RankData } from '../../../api/sortio'
 import { convertToPlayCountText } from './GameResultPopup/util'
 import { prettyPercent } from '../../../components/EndGameInfo/utils'
+import NativeRefBox from '../../../components/NativeRefBox'
+import { BeforeRemoveEvent } from '../GameScreen/utils'
+import useMultiGameSocket from '../../../hooks/useMultiGameSocket'
+import { exit, requestRematch, requestOtherMatch } from '../../../hooks/useMultiGameSocket/action/creator'
 
 type GameResultNavigationProps = StackNavigationProp<RootStackParamList, "Popup_GameResult">
 type GameResultRouteProps = RouteProp<RootStackParamList, "Popup_GameResult">
@@ -27,9 +30,8 @@ type GameResultPopupProps = {
 }
 
 const GameResultPopup = (props: GameResultPopupProps) => {
-  const hasWon = props.route.params.hasWon;
-  const titleStrokeLightness = 0.3;
   const playData = usePlayData();
+  const navigation = useNavigation();
   const [data, setData] = React.useState<null | RankViewerData>(null);
   const [rawData, setRawData] = React.useState<null | RankData<UserMultiRankData>>()
   const titleRefBox = React.createRef<NativeRefBox>();
@@ -40,16 +42,12 @@ const GameResultPopup = (props: GameResultPopupProps) => {
   const titleStyle = hasWon ?
     {
       fillColor: "dodgerblue",
-      strokeColor: chroma('dodgerblue')
-        .set('hsl.l', titleStrokeLightness)
-        .hex(),
+      strokeColor: 'white',
       text: "WIN",
     } : 
     {
       fillColor: "red",
-      strokeColor: chroma('red')
-        .set('hsl.l', titleStrokeLightness)
-        .hex(),
+      strokeColor: 'black',
       text: "LOSE",
     }
 
@@ -57,37 +55,144 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     {
       backgroundColor: 'royalblue',
       borderWidth: 3,
-      borderColor: chroma('royalblue')
-        .set('hsl.l', 0.5)
-        .hex(),
+      borderColor: 'white',
     } :
     {
       backgroundColor: 'tomato',
       borderWidth: 3,
-      borderColor: chroma('tomato')
-        .set('hsl.l', 0.8)
-        .hex(),
+      borderColor: 'black',
     }
 
   const textColor = hasWon ? 'white' : 'black'
 
   const rankViewerRef = React.createRef<RankViewer>();
+  const userData = rawData?.targetUser;
+  const playCountText = userData ? convertToPlayCountText({
+    draw: userData.draw,
+    lose: userData.lose,
+    total: userData.total,
+    win: userData.win,
+  }) : '로딩중';
 
-  const renderContent = () => {
-    if (!data) {
-      return <NotoSans type="Black">데이터를 불러오고 있습니다</NotoSans>
+  const onHomePressed = () => {
+    socket.close();
+    // 소켓 연결 끊겼을 안 나간 사람을 승자로 처리.
+    navigation.dispatch((state) => {
+      const routes = state.routes.slice(0, state.routes.length - 2);
+      return CommonActions.reset({
+        ...state,
+        routes,
+        index: routes.length - 1,
+      });
+    })
+  };
+  const onRematchPressed = () => {
+    if (!playData.user.id) return;
+    socket.send(requestRematch({
+      roomId,
+      userId: playData.user.id,
+    }));
+    props.navigation.navigate("Popup_RematchWaiting")
+  };
+  const onAnotherMatchPressed = () => {
+    if (!playData.user.id) return;
+    socket.send(requestOtherMatch({
+      roomId,
+      userId: playData.user.id,
+    }));
+  };
+  
+  React.useEffect(() => {
+    titleRefBox.current?.setScale(3);
+    titleRefBox.current?.animate({
+      style: {
+        scaleX: 1,
+        scaleY: 1,
+      },
+      duration: 1000,
+      easing: "easeOutElastic"
+    }).start();
+
+    if (playData.user.id && !rawData) {
+      getMultiPlayRank(playData.user.id, 5)
+      .then((rankData) => {
+        if (!rankData) {
+          return setData(rankData);
+        }
+
+        setRawData(rankData);
+
+        const mapEntry = (entry: UserMultiRankData) => {
+          const mapped: RankViewerDataEntry = {
+            rank: Number(entry.rank),
+            rate: Number(entry.rate),
+            username: entry.name,
+            userId: entry.userId,
+          }
+          return mapped;
+        };
+        const beforeUser = rankData.beforeTargetUser.map(mapEntry);
+        const afterUser = rankData.afterTargetUser.map(mapEntry);
+        const user: RankViewerDataEntry = {
+          ...mapEntry(rankData.targetUser),
+          username: mapEntry(rankData.targetUser).username + ' (YOU)'
+        };
+        const mappedData: RankViewerData = beforeUser.concat(user).concat(afterUser);
+        setData(mappedData);
+      })
+      }
+
+    if (rankViewerRef.current && data) {
+      const $ = rankViewerRef.current
+      let position = 1;
+      for (let i = 0; i < data.length; i += 1) {
+        if (data[i].userId === playData.user.id) {
+          position = i;
+          break;
+        }
+      }
+      $._scrollViewRef.current?.scrollTo({
+        y: 26 * position - 20,
+        animated: true
+      });
     }
 
-    const userData = rawData?.targetUser;
-    const playCountText = userData ? convertToPlayCountText({
-      draw: userData.draw,
-      lose: userData.lose,
-      total: userData.total,
-      win: userData.win,
-    }) : '로딩중';
+    const removeBeforeRemoveListener = navigation
+      .addListener("beforeRemove", (e: BeforeRemoveEvent) => {
+        if (e.data.action.type === "GO_BACK") {
+          e.preventDefault();
+        }
+      })
 
+    return () => {
+      removeBeforeRemoveListener();
+    }
+  })
+
+  if (!data) {
     return (
-      <>
+      <View style={{ width: 300 }}>
+        <NotoSans type="Black">데이터를 불러오고 있습니다</NotoSans>
+      </View>
+    )
+  }
+
+  return (
+    <FullFlexCenter>
+      <NativeRefBox ref={titleRefBox} style={{marginBottom: 10, elevation: 100}}>
+        <StrokedText
+          dyMultiplier={0.33}
+          fillColor={titleStyle.fillColor}
+          fontFamily="NotoSansKR-Black"
+          fontSize={50}
+          height={60}
+          strokeColor={titleStyle.strokeColor}
+          strokeWidth={10}
+          text={titleStyle.text}
+          width={150}
+        />
+      </NativeRefBox>
+      <RoundPaddingCenter style={boardStyle}>
         <View style={{ paddingHorizontal: 10 }}>
           <FlexHorizontal style={{ justifyContent: 'space-between' }}>
             <NotoSans color={textColor} type="Bold">
@@ -111,7 +216,8 @@ const GameResultPopup = (props: GameResultPopupProps) => {
           style={{
             width: Dimensions.get('screen').width - 80,
             maxHeight: 240, maxWidth: 300,
-            marginVertical: 20
+            marginVertical: 20,
+            borderWidth: 0.5,
           }}
           blindColor={boardStyle.backgroundColor as string}
           entryStyle={(entry, i, isEnd) => {
@@ -149,81 +255,14 @@ const GameResultPopup = (props: GameResultPopupProps) => {
           }}
           data={data}
         />
-      </>
-    )
-  }
-  
-  React.useEffect(() => {
-    if (playData.user.id && !rawData) {
-      getMultiPlayRank(playData.user.id, 5)
-      .then((rankData) => {
-        if (!rankData) {
-          return setData(rankData);
-        }
-
-        setRawData(rankData);
-
-        const mapEntry = (entry: UserMultiRankData) => {
-          const mapped: RankViewerDataEntry = {
-            rank: Number(entry.rank),
-            rate: Number(entry.rate),
-            username: entry.name,
-            userId: entry.userId,
-          }
-          return mapped;
-        };
-        const beforeUser = rankData.beforeTargetUser.map(mapEntry);
-        const afterUser = rankData.afterTargetUser.map(mapEntry);
-        const user: RankViewerDataEntry = {
-          ...mapEntry(rankData.targetUser),
-          username: mapEntry(rankData.targetUser).username + ' (YOU)'
-        };
-        const mappedData: RankViewerData = beforeUser.concat(user).concat(afterUser);
-        setData(mappedData);
-      })
-      }
-
-    if (rankViewerRef.current && data) {
-        const $ = rankViewerRef.current
-        let position = 1;
-        for (let i = 0; i < data.length; i += 1) {
-          if (data[i].userId === playData.user.id) {
-            position = i;
-            break;
-          }
-        }
-        $._scrollViewRef.current?.scrollTo({
-          y: 26 * position - 20,
-          animated: true
-        });
-      }
-    })
-
-  return (
-    <FullFlexCenter>
-      <View style={{marginBottom: 10}}>
-        <StrokedText
-          dyMultiplier={0.33}
-          fillColor={titleStyle.fillColor}
-          fontFamily="NotoSansKR-Black"
-          fontSize={50}
-          height={60}
-          strokeColor={titleStyle.strokeColor}
-          strokeWidth={10}
-          text={titleStyle.text}
-          width={150}
-        />
-      </View>
-      <RoundPaddingCenter style={boardStyle}>
-        {renderContent()}
         <FlexHorizontal>
-          <RoundRectangleButton style={{marginRight: 10}} width={100}>
+          <RoundRectangleButton onPress={onHomePressed} style={{marginRight: 10}} width={100}>
             <View>
               <NotoSans type="Bold" size={buttonFontSize}>홈</NotoSans>
             </View>
           </RoundRectangleButton>
           <View style={{flex: 1}}>
-            <RoundRectangleButton>
+            <RoundRectangleButton onPress={onRematchPressed}>
               <View>
                 <NotoSans type="Bold" size={buttonFontSize}>재대결</NotoSans>
               </View>
@@ -231,7 +270,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
           </View>
         </FlexHorizontal>
         <View style={{marginTop: 10}}>
-          <RoundRectangleButton>
+          <RoundRectangleButton onPress={onAnotherMatchPressed}>
             <View>
               <NotoSans type="Bold" size={buttonFontSize}>한판 더 하기</NotoSans>
             </View>

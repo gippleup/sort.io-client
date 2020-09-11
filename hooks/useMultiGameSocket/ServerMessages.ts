@@ -8,6 +8,8 @@ export enum SocketServerMessageTypes {
   ALERT_PREPARE = 'ALERT_PREPARE',
   SYNC_PREPARE_TIMER = 'SYNC_PREPARE_TIMER',
   INFORM_WINNER = 'INFORM_WINNER',
+  REPLY_REMATCH = 'REPLY_REMATCH',
+  REPLY_OTHERMATCH = 'REPLY_OTHERMATCH' 
 }
 
 export type SyncTimerMessage = {
@@ -59,6 +61,13 @@ export type InformWinner = {
   }
 }
 
+export type ReplyRematch = {
+  type: SocketServerMessageTypes.REPLY_REMATCH,
+  payload: {
+    hasAccepted: boolean;
+  }
+}
+
 export type SocketServerMessages =
   SyncTimerMessage
   | SendRoomMessage
@@ -67,3 +76,4 @@ export type SocketServerMessages =
   | AlertPrepare
   | SyncPrepareTimer
   | InformWinner
+  | ReplyRematch

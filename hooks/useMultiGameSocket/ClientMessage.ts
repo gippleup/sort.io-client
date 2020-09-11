@@ -8,7 +8,11 @@ export enum SocketClientMessageTypes {
   ALERT_DISCONNECT = 'ALERT_DISCONNECT',
   SUCCESS = 'SUCCESS',
   ALERT_READY = 'ALERT_READY',
-  ALERT_PREPARED = 'ALERT_PREPARED'
+  ALERT_PREPARED = 'ALERT_PREPARED',
+  REQUEST_REMATCH = 'REQUEST_REMATCH',
+  CANCEL_REQUEST_REMATCH = 'CANCEL_REQUEST_REMATCH',
+  REQUEST_OTHERMATCH = 'REQUEST_OTHERMATCH',
+  CANCEL_REQUEST_OTHERMATCH = 'CANCEL_REQUEST_OTHERMATCH',
 }
 
 export type EnterMessage = {
@@ -85,6 +89,38 @@ export type AlertPrepared = {
   }
 }
 
+export type RequestRematch = {
+  type: SocketClientMessageTypes.REQUEST_REMATCH,
+  payload: {
+    roomId: number;
+    userId: number;
+  }
+}
+
+export type RequestOtherRematch = {
+  type: SocketClientMessageTypes.REQUEST_OTHERMATCH,
+  payload: {
+    roomId: number;
+    userId: number;
+  }
+}
+
+export type CancelRequestRematch = {
+  type: SocketClientMessageTypes.CANCEL_REQUEST_REMATCH,
+  payload: {
+    roomId: number;
+    userId: number;
+  }
+}
+
+export type CancelRequestOtherMatch = {
+  type: SocketClientMessageTypes.CANCEL_REQUEST_OTHERMATCH,
+  payload: {
+    roomId: number;
+    userId: number;
+  }
+}
+
 export type SocketClientMessages =
   EnterMessage
   | DockMessage
@@ -94,3 +130,7 @@ export type SocketClientMessages =
   | ExitMessage
   | ReadyMessage
   | AlertPrepared
+  | RequestRematch
+  | RequestOtherRematch
+  | CancelRequestRematch
+  | CancelRequestOtherMatch

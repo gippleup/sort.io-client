@@ -17,7 +17,7 @@ import {
 } from './SelectStage/_StyledComponents'
 import usePlayData from '../../hooks/usePlayData';
 import { getLevelString } from './GameScreen/utils';
-import { getRank, UserRankData } from '../../api/sortio';
+import { getSinglePlayRank, UserSingleRankData } from '../../api/sortio';
 import { prettyPercent } from '../../components/EndGameInfo/utils';
 
 const backgroundImage = require('../../assets/BackgroundPattern.png');
@@ -25,7 +25,7 @@ const backgroundImage = require('../../assets/BackgroundPattern.png');
 const SelectStage = () => {
   const navigation = useNavigation();
   const playData = usePlayData();
-  const [userRank, setUserRank] = React.useState<UserRankData | null>(null);
+  const [userRank, setUserRank] = React.useState<UserSingleRankData | null>(null);
   const lastSinglePlayData = playData.single[playData.single.length - 1];
   const lastPlayedDifficulty = lastSinglePlayData ? lastSinglePlayData.difficulty : 0;
   const lastPlayedDiffStr = getLevelString(lastPlayedDifficulty);
@@ -38,7 +38,7 @@ const SelectStage = () => {
 
   React.useEffect(() => {
     if (playData.user.id && !userRank) {
-      getRank(playData.user.id, 0)
+      getSinglePlayRank(playData.user.id, 5)
       .then((rankData) => {
         if (rankData) {
           setUserRank(rankData.targetUser)

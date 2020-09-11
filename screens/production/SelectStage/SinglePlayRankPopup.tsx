@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, ViewStyle, Dimensions } from 'react-native'
 import BasicPopup, { PopupButton } from '../../../components/Generic/BasicPopup'
 import RankViewer, { RankViewerDataEntry, RankViewerData } from '../../../components/RankViewer';
-import { getRank, UserRankData } from '../../../api/sortio';
+import { getSinglePlayRank, RankData, UserSingleRankData } from '../../../api/sortio';
 import usePlayData from '../../../hooks/usePlayData';
 import { NotoSans } from '../../../components/Generic/StyledComponents';
 import { useNavigation } from '@react-navigation/native';
@@ -27,6 +27,7 @@ const SinglePlayRankPopup = () => {
         <RankViewer
           ref={rankViewerRef}
           style={{width: Dimensions.get('screen').width - 80, maxHeight: 240, maxWidth: 300}}
+          blindColor="white"
           entryStyle={(entry, i, isEnd) => {
             const defaultContainerStyle: ViewStyle = {backgroundColor: 'transparent'}
             if (isEnd) {
@@ -62,13 +63,13 @@ const SinglePlayRankPopup = () => {
 
   React.useEffect(() => {
     if (playData.user.id && !data) {
-      getRank(playData.user.id, 10)
-      .then((rankData) => {
+      getSinglePlayRank(playData.user.id, 5)
+      .then((rankData: RankData<UserSingleRankData>) => {
         if (!rankData) {
           return setData(rankData);
         }
 
-        const mapEntry = (entry: UserRankData) => {
+        const mapEntry = (entry: UserSingleRankData) => {
           const mapped: RankViewerDataEntry = {
             rank: Number(entry.rank),
             rate: Number(entry.rate),

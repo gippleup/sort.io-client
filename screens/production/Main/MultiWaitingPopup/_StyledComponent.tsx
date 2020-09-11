@@ -3,12 +3,6 @@ import { View } from "react-native";
 import NativeRefBox from "../../../../components/NativeRefBox";
 import { TextInput } from "react-native-gesture-handler";
 
-export const FullFlexCenter = styled(View)`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-`;
-
 export const Modal: typeof NativeRefBox = styled(NativeRefBox)`
   width: 200px;
   height: 260px;

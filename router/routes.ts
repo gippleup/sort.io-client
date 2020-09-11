@@ -36,6 +36,7 @@ import AnimatedNumberTester from '../screens/dev/AnimatedNumberTester';
 import MultigameWaitingPopup from '../screens/production/Main/MultiWaitingPopup';
 import PreparePopup, { PreparePopupParams } from '../screens/production/MultiGame/PreparePopup';
 import GameResultPopup, { GameResultParams } from '../screens/production/MultiGame/GameResultPopup';
+import RematchWaitingPopup, { RematchWaitingPopupParams } from '../screens/production/MultiGame/RematchWaitingPopup';
 
 type Routes = {
   [T in keyof RootStackParamList]: {
@@ -231,6 +232,11 @@ const routes: Omit<Routes, "Developer"> = {
     devName: '게임 결과 팝업',
     component: GameResultPopup,
     options: CommonPopupOption,
+  },
+  Popup_RematchWaiting: {
+    devName: '재대결 응답 대기 팝업',
+    component: RematchWaitingPopup,
+    options: CommonPopupOption,
   }
 };
 
@@ -272,6 +278,7 @@ export type RootStackParamList = {
   Popup_MultiWaiting: undefined;
   Popup_Prepare: PreparePopupParams;
   Popup_GameResult: GameResultParams;
+  Popup_RematchWaiting: RematchWaitingPopupParams;
 }
 
 export default routes;

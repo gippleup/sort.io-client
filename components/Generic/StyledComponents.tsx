@@ -92,3 +92,9 @@ export const RoundPaddingCenter: typeof View = styled(View)`
   align-self: center;
   border-radius: 20px;
 `;
+
+export const FullFlexCenter: typeof View = styled(View)`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;

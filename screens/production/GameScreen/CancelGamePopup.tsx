@@ -6,7 +6,7 @@ import { useNavigation, RouteProp, CommonActions } from '@react-navigation/nativ
 import { StackNavigationProp } from '@react-navigation/stack'
 import routes, { RootStackParamList } from '../../../router/routes'
 import useMultiGameSocket from '../../../hooks/useMultiGameSocket'
-import socketClientActions from '../MultiGame/action/creator'
+import socketClientActions from '../../../hooks/useMultiGameSocket/action/creator'
 import usePlayData from '../../../hooks/usePlayData'
 
 type CancelGameNavigationProp = StackNavigationProp<RootStackParamList, 'Popup_CancelGame'>
@@ -16,7 +16,6 @@ export type CancelGameParams = {
   text: string;
   title?: string;
   mode: "multi" | "single"
-  roomId?: number;
 }
 
 type CancelGameProps = {
@@ -25,20 +24,21 @@ type CancelGameProps = {
 }
 
 const CancelGamePopup = (props: CancelGameProps) => {
-  const {text, title, mode, roomId} = props.route.params;
+  const {text, title, mode} = props.route.params;
   const playData = usePlayData();
   const navigation = props.navigation;
   const socket = useMultiGameSocket();
+  const roomId = socket.getRoomId();
 
   const sendExitGame = () => {
     if (mode === "multi") {
       if (!playData.user.id || roomId === undefined) return;
-      const exitMessage = socketClientActions.exit({
+      socket.send(socketClientActions.exit({
         userId: playData.user.id,
-        roomId: roomId,
-      })
-      socket.send(JSON.stringify(exitMessage));
-    }    
+        roomId,
+      }));
+      socket.close();
+    }
   }
 
   const exitGame = () => {

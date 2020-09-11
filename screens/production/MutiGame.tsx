@@ -1,15 +1,12 @@
-import React, { Component } from 'react'
-import { Text, View, Animated, Easing } from 'react-native'
+import React from 'react'
 import GameScene from '../../components/GameScene';
-import { BlockTypes } from '../../components/Block/Types';
-import { generateMap, MapOption, configureSocket } from '../../api/sortio';
+import { MapOption } from '../../api/sortio';
 import usePlayData from '../../hooks/usePlayData';
 import useMultiGameSocket from '../../hooks/useMultiGameSocket';
 import { AlertDockConstructor } from '../../hooks/useMultiGameSocket/ServerMessages';
-import socketClientActions from './MultiGame/action/creator';
+import socketClientActions from '../../hooks/useMultiGameSocket/action/creator';
 import { RouteProp, NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../router/routes';
-import { stack } from 'd3';
 import { BeforeRemoveEvent } from './GameScreen/utils';
 
 type MultiGameRouteProps = RouteProp<RootStackParamList, "PD_MultiGame">;
@@ -34,35 +31,31 @@ export const MutiGame = (props: MultiGameProps) => {
   const gameSceneRef = React.createRef<GameScene>();
   const playData = usePlayData();
   const navigation = useNavigation();
-  let stageFinished = false;
 
   const sendDockMessage = (stackIndex: number, action: 'DOCK' | 'UNDOCK') => {
     if (!playData.user.id) return;
-    const dockMessage = socketClientActions.dock({
+    socket.send(socketClientActions.dock({
       userId: playData.user.id,
       stackIndex: stackIndex,
       roomId: roomId,
       action,
-    })
-    socket.send(JSON.stringify(dockMessage));
+    }));
   }
 
   const sendSuccessMessage = () => {
     if (!playData.user.id) return;
-    const successMessage = socketClientActions.success({
+    socket.send(socketClientActions.success({
       userId: playData.user.id,
       roomId: roomId,
-    })
-    socket.send(JSON.stringify(successMessage));
+    }));
   }
 
   const sendReadyMessage = () => {
     if (!playData.user.id) return;
-    const readyMessage = socketClientActions.alertReady({
+    socket.send(socketClientActions.alertReady({
       roomId: roomId,
       userId: playData.user.id
-    })
-    socket.send(JSON.stringify(readyMessage));
+    }));
   }
 
   React.useEffect(() => {
@@ -94,13 +87,21 @@ export const MutiGame = (props: MultiGameProps) => {
 
     const deleteRoomListener = socket.addListener("onDeleteRoom",
     () => {
-      // TODO: (상대가 나갔을 때) 상대가 방을 나갔다는 것을 표시해주고, 승리했다는 메세지를 보여준다.
     })
     
     const syncTimerListener = socket.addListener("onSyncTimer",
     (leftTime: number) => {
       const $TimerBase = gameSceneRef.current?.timerRef.current?.timerBaseRef.current;
       $TimerBase?.setTimeTo(leftTime);
+    })
+
+    const informWinnerListener = socket.addListener("onInformWinner",
+    (winnerId: number) => {
+      const hasWon = playData.user.id === winnerId;
+      props.navigation.navigate("Popup_GameResult", {
+        hasWon,
+        roomId: roomId,
+      })
     })
 
     const blockGoBack = (e: BeforeRemoveEvent) => {
@@ -110,7 +111,6 @@ export const MutiGame = (props: MultiGameProps) => {
         return;
       }
       if (type === "GO_BACK") {
-        if (stageFinished) return;
         e.preventDefault();
         setTimeout(() => {
           navigation.navigate('Popup_CancelGame', {
@@ -131,6 +131,7 @@ export const MutiGame = (props: MultiGameProps) => {
       socket.removeListener(deleteRoomListener);
       socket.removeListener(syncTimerListener);
       socket.removeListener(alertPrepareListener);
+      socket.removeListener(informWinnerListener);
     }
   })
 
@@ -148,9 +149,10 @@ export const MutiGame = (props: MultiGameProps) => {
       timeLimit={60}
       isManualTimer
       maxScore={mapDesc.maxScore}
-      onComplete={() => {
-        stageFinished = true;
-        sendSuccessMessage();
+      onComplete={(winner) => {
+        if (winner === 'me') {
+          sendSuccessMessage();
+        }
       }}
       onDock={(stackIndex) => {
         if (!playData.user.id) return;

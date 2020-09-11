@@ -31,6 +31,7 @@ type MultiGameSocketListener = {
 }
 
 let socket: null | WebSocket = null;
+let roomId: number = -1;
 
 const listenerManager: ListenerManager = {
   onSendRoom: {},
@@ -80,6 +81,7 @@ const useMultiGameSocket = () => {
       }
     },
     readyState: socket.readyState,
+    getRoomId: () => roomId,
   }).current;
 
   socket.onopen = () => {
@@ -96,6 +98,7 @@ const useMultiGameSocket = () => {
     const parsedData: SocketServerMessages = JSON.parse(e.data);
     if (parsedData.type === MessageType.SEND_ROOM) {
       const option = parsedData.payload;
+      roomId = option.roomId;
       forEachValue(listenerManager.onSendRoom, (cb) => cb(option))
     } else if (parsedData.type === MessageType.ALERT_DOCK) {
       const option = parsedData.payload;
@@ -104,6 +107,7 @@ const useMultiGameSocket = () => {
       const { leftTime } = parsedData.payload;
       forEachValue(listenerManager.onSyncTimer, (cb) => cb(leftTime))
     } else if (parsedData.type === MessageType.DELETE_ROOM) {
+      roomId = -1;
       forEachValue(listenerManager.onDeleteRoom, (cb) => cb())
     } else if (parsedData.type === MessageType.ALERT_PREPARE) {
       forEachValue(listenerManager.onAlertPrepare, (cb) => cb())

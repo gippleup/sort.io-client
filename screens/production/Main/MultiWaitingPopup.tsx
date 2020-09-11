@@ -2,15 +2,16 @@ import React, { RefObject } from 'react'
 import { View, Text, BackHandler } from 'react-native'
 import Loading from '../../../components/Loading'
 import NativeRefBox from '../../../components/NativeRefBox'
-import { FullFlexCenter, Modal, LoadingAnimationContainer, LoadingText } from './MultiWaitingPopup/_StyledComponent'
+import { Modal, LoadingAnimationContainer, LoadingText } from './MultiWaitingPopup/_StyledComponent'
 import useMultiGameSocket, { OnSendRoomParam } from '../../../hooks/useMultiGameSocket'
 import usePlayData from '../../../hooks/usePlayData'
-import socketClientActions from '../MultiGame/action/creator'
+import socketClientActions from '../../../hooks/useMultiGameSocket/action/creator'
 import { useDispatch } from 'react-redux'
 import { applyGuestId } from '../../../redux/actions/playData/thunk'
 import { useNavigation, NavigationState, NavigationProp, RouteProp, CommonActions } from '@react-navigation/native'
 import { RootStackParamList } from '../../../router/routes'
 import { StackNavigationProp } from '@react-navigation/stack'
+import { FullFlexCenter } from '../../../components/Generic/StyledComponents'
 
 type MultiWaitingPopupNavigationProps = StackNavigationProp<RootStackParamList, "Popup_MultiWaiting">;
 type MultiWaitingPopupRouteProps = RouteProp<RootStackParamList, "Popup_MultiWaiting">;
@@ -30,7 +31,6 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
   const socket = useMultiGameSocket();
   const playdata = usePlayData();
   const roomData = React.useRef<OnSendRoomParam | null>(null);
-  const navigation = useNavigation();
 
   const setRefText = (text: string) => {
     loadingTextRef.current?.setNativeProps({
@@ -100,8 +100,9 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
     const openListener = socket.addListener("onOpen", () => {
       if (!playdata.user.id) {
       } else {
-        const enterMessage = socketClientActions.enter({userId: playdata.user.id})
-        socket.send(JSON.stringify(enterMessage));
+        socket.send(socketClientActions.enter({
+          userId: playdata.user.id
+        }));
       }
     })
 
@@ -113,11 +114,10 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
     const closeListener = socket.addListener("onClose", () => {
       const userId = playdata.user.id || -1;
       const roomId = roomData.current?.roomId || -1;
-      const disconnectMessage = socketClientActions.alertDisconnect({
+      socket.send(socketClientActions.alertDisconnect({
         userId,
         roomId
-      })
-      socket.send(JSON.stringify(disconnectMessage))
+      }))
     })
 
     return () => {

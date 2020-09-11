@@ -32,6 +32,10 @@ const GameResultPopup = (props: GameResultPopupProps) => {
   const playData = usePlayData();
   const [data, setData] = React.useState<null | RankViewerData>(null);
   const [rawData, setRawData] = React.useState<null | RankData<UserMultiRankData>>()
+  const titleRefBox = React.createRef<NativeRefBox>();
+  const socket = useMultiGameSocket();
+  const roomId = socket.getRoomId();
+  const {hasWon} = props.route.params;
   const buttonFontSize = 20;
   const titleStyle = hasWon ?
     {

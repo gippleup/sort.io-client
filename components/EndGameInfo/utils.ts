@@ -84,7 +84,7 @@ export const prettyStage = (stageNum: number) => {
 export const prettyPercent = (rate: number, roundOn: number = 2) => {
   const magnifiedRate = Math.round(rate * 100 * Math.pow(10, roundOn));
   const stringifiedRate = String(magnifiedRate);
-  const integer = stringifiedRate.slice(0, stringifiedRate.length - roundOn);
+  const integer = stringifiedRate.slice(0, stringifiedRate.length - roundOn) || 0;
   const decimal = stringifiedRate.slice(
     stringifiedRate.length - roundOn,
     stringifiedRate.length,

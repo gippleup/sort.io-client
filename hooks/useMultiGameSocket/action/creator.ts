@@ -6,7 +6,8 @@ type BasicParam = {
 }
 
 type EnterParam = {
-  userId: number
+  userId: number,
+  name: string,
 }
 
 export const enter = (param: EnterParam) => JSON.stringify({
@@ -77,8 +78,23 @@ export const cancelRequestRematch = (param: BasicParam) => JSON.stringify({
   payload: param,
 })
 
+export const declineRequestRematch = (param: BasicParam) => JSON.stringify({
+  type: SocketClientMessageTypes.DECLINE_REQUEST_REMATCH,
+  payload: param,
+})
+
+export const acceptRematch = (param: BasicParam) => JSON.stringify({
+  type: SocketClientMessageTypes.ACCEPT_REMATCH,
+  payload: param,
+})
+
 export const cancelRequestOtherMatch = (param: BasicParam) => JSON.stringify({
   type: SocketClientMessageTypes.CANCEL_REQUEST_REMATCH,
+  payload: param,
+})
+
+export const informReceivedMap = (param: BasicParam) => JSON.stringify({
+  type: SocketClientMessageTypes.INFORM_RECEIVED_MAP,
   payload: param,
 })
 
@@ -93,6 +109,8 @@ export const socketClientActions = {
   alertReady,
   alertPrepared,
   requestRematch,
+  acceptRematch,
+  informReceivedMap,
   requestOtherMatch,
   cancelRequestRematch,
   cancelRequestOtherMatch,

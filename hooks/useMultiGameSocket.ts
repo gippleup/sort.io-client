@@ -3,7 +3,11 @@ import { configureSocket } from '../api/sortio';
 import { SocketServerMessages, SocketServerMessageTypes as MessageType, AlertDockConstructor } from './useMultiGameSocket/ServerMessages';
 import { MapDesc } from '../screens/production/MutiGame';
 
-export type OnSendRoomParam = { map: number[][], mapDesc: MapDesc, roomId: number };
+export type OnSendRoomParam = {
+  map: number[][],
+  mapDesc: MapDesc,
+  roomId: number,
+};
 
 type ListenerCallback = {
   onSendRoom: (option: OnSendRoomParam) => any;
@@ -17,6 +21,11 @@ type ListenerCallback = {
   onAlertPrepare: () => any;
   onSyncPrepareTimer: (leftTime: number) => any;
   onInformWinner: (winnerId: number) => any;
+  onAskRematch: () => any;
+  onCancelRematchAsk: () => any;
+  onAlertRematchDeclined: () => any;
+  onInformRematchAccepted: () => any;
+  onInformPrepareRematch: () => any;
 }
 
 type ListenerManager = {
@@ -32,6 +41,9 @@ type MultiGameSocketListener = {
 
 let socket: null | WebSocket = null;
 let roomId: number = -1;
+let map: null | number[][] = null;
+let mapDesc: null | MapDesc = null;
+let players: {id: number; name: string}[] = [];
 
 const listenerManager: ListenerManager = {
   onSendRoom: {},
@@ -45,6 +57,11 @@ const listenerManager: ListenerManager = {
   onAlertPrepare: {},
   onSyncPrepareTimer: {},
   onInformWinner: {},
+  onAskRematch: {},
+  onCancelRematchAsk: {},
+  onAlertRematchDeclined: {},
+  onInformRematchAccepted: {},
+  onInformPrepareRematch: {},
 };
 
 const forEachValue = (target: Object, cb: (value: any) => any) => {
@@ -76,12 +93,23 @@ const useMultiGameSocket = () => {
     close: () => {
       if (socket) {
         forEachValue(listenerManager.onClose, (cb) => cb());
+        players = [];
+        roomId = -1;
         socket.close();
         socket = null;
       }
     },
     readyState: socket.readyState,
     getRoomId: () => roomId,
+    getPlayers: () => players,
+    getMap: () => map,
+    getMapDesc: () => mapDesc,
+    getRoomData: () => ({
+      roomId,
+      players,
+      map,
+      mapDesc,
+    })
   }).current;
 
   socket.onopen = () => {
@@ -94,11 +122,14 @@ const useMultiGameSocket = () => {
 
   socket.onmessage = (e) => {
     forEachValue(listenerManager.onMessage, (cb) => cb(e))
-
     const parsedData: SocketServerMessages = JSON.parse(e.data);
+    console.log(parsedData);
     if (parsedData.type === MessageType.SEND_ROOM) {
       const option = parsedData.payload;
       roomId = option.roomId;
+      map = option.map;
+      mapDesc = option.mapDesc;
+      players = option.playerData;
       forEachValue(listenerManager.onSendRoom, (cb) => cb(option))
     } else if (parsedData.type === MessageType.ALERT_DOCK) {
       const option = parsedData.payload;
@@ -108,6 +139,9 @@ const useMultiGameSocket = () => {
       forEachValue(listenerManager.onSyncTimer, (cb) => cb(leftTime))
     } else if (parsedData.type === MessageType.DELETE_ROOM) {
       roomId = -1;
+      players = [];
+      map = null;
+      mapDesc = null;
       forEachValue(listenerManager.onDeleteRoom, (cb) => cb())
     } else if (parsedData.type === MessageType.ALERT_PREPARE) {
       forEachValue(listenerManager.onAlertPrepare, (cb) => cb())
@@ -117,6 +151,16 @@ const useMultiGameSocket = () => {
     } else if (parsedData.type === MessageType.INFORM_WINNER) {
       const { winner } = parsedData.payload;
       forEachValue(listenerManager.onInformWinner, (cb) => cb(winner))
+    } else if (parsedData.type === MessageType.ASK_REMATCH) {
+      forEachValue(listenerManager.onAskRematch, (cb) => cb())
+    } else if (parsedData.type === MessageType.CANCEL_REMATCH_ASK) {
+      forEachValue(listenerManager.onCancelRematchAsk, (cb) => cb())
+    } else if (parsedData.type === MessageType.ALERT_REMATCH_DECLINED) {
+      forEachValue(listenerManager.onAlertRematchDeclined, (cb) => cb())
+    } else if (parsedData.type === MessageType.INFORM_REMATCH_ACCEPTED) {
+      forEachValue(listenerManager.onInformRematchAccepted, (cb) => cb())
+    } else if (parsedData.type === MessageType.INFORM_PREPARE_REMATCH) {
+      forEachValue(listenerManager.onInformPrepareRematch, (cb) => cb())
     }
   }
 

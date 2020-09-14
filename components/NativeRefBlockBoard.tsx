@@ -65,6 +65,7 @@ type RefBlockBoardProps = {
   onScoreChange?: (score: number) => void;
   onLayout?: (layout: LayoutChangeEvent) => void;
   fps?: number;
+  noAnimation?: boolean;
 };
 
 type RefBlockBoardState = {
@@ -170,6 +171,7 @@ export class RefBlockBoard extends Component<
   }
 
   undock(stackIndex: number) {
+    const { props } = this;
     const topPiecePos = this.getTopPiecePos(stackIndex);
     const targetStack = this.stacks[stackIndex];
     const pieceOnTop = targetStack.pieces.pop();
@@ -183,40 +185,56 @@ export class RefBlockBoard extends Component<
     let originStackWasCompleted = this.checkIfStackCompleted(targetStack);
 
     if (originStackWasCompleted && targetStack.capRef.current) {
-      targetStack.capRef.current.setStyle({
-        top: topPiecePos.y - Constants.blockHeight.top * this.scale
-      })
-      targetStack.capRef.current?.animate({
-        style: {
-          scaleX: 0,
-          scaleY: 0,
-          top: topPiecePos.y - 20 - Constants.blockHeight.top * this.scale,
-        },
-        duration: 100,
-        easing: "easeInOutSine",
-        fps: this.props.fps || 60,
-      }).start();
+      const targetStyle = {
+        scaleX: 0,
+        scaleY: 0,
+        top: topPiecePos.y - 20 - Constants.blockHeight.top * this.scale,
+      };
+
+      if (props.noAnimation) {
+        targetStack.capRef.current.setStyle(targetStyle)
+      } else {
+        targetStack.capRef.current.setStyle({
+          top: topPiecePos.y - Constants.blockHeight.top * this.scale
+        })
+        targetStack.capRef.current?.animate({
+          style: targetStyle,
+          duration: 100,
+          easing: "easeInOutSine",
+          fps: this.props.fps || 60,
+        }).start();
+      }
     }
 
     this.dockOrigin = targetStack;
     this.readyToDock = true;
-    pieceOnTop.ref.current.setStyle({
-      opacity: 1,
-      top: topPiecePos.y,
-    })
-    const pieceUndockAnim = pieceOnTop.ref.current?.animate({
-      style: {
-        top: topPiecePos.y - 20 * this.scale,
-      },
-      duration: 300,
-      easing: "easeOutBack",
-      fps: this.props.fps || 60,
-    })
 
-    pieceUndockAnim.start();
+    if (props.noAnimation) {
+      pieceOnTop.ref.current.setStyle({
+        opacity: 1,
+        top: topPiecePos.y - 20 * this.scale,
+      })
+    } else {
+      pieceOnTop.ref.current.setStyle({
+        opacity: 1,
+        top: topPiecePos.y,
+      })
+      
+      const pieceUndockAnim = pieceOnTop.ref.current?.animate({
+        style: {
+          top: topPiecePos.y - 20 * this.scale,
+        },
+        duration: 300,
+        easing: "easeOutBack",
+        fps: this.props.fps || 60,
+      })
+  
+      pieceUndockAnim.start();
+    }
   }
 
   dockToSelf(stackIndex: number) {
+    const {props} = this;
     const {stacks, getTopPiecePos} = this;
     const targetStack = stacks[stackIndex];
     const topPiecePos = getTopPiecePos(stackIndex);
@@ -231,45 +249,64 @@ export class RefBlockBoard extends Component<
 
     let animateCapY, animateCapScale;
     if (originStackWasCompleted && targetStack.capRef.current) {
-      animateCapY = targetStack.capRef.current.animate({
-        style: {
+      if (props.noAnimation) {
+        targetStack.capRef.current.setStyle({
           top: topPiecePos.y - Constants.blockHeight.top * this.scale,
+          scaleX: 1,
+          scaleY: 1,
+        });
+      } else {
+        animateCapY = targetStack.capRef.current.animate({
+          style: {
+            top: topPiecePos.y - Constants.blockHeight.top * this.scale,
+          },
+          duration: 300,
+          easing: "easeOutBounce",
+          fps: this.props.fps || 60,
+        })
+        animateCapScale = targetStack.capRef.current.animate({
+          style: {
+            scaleX: 1,
+            scaleY: 1,
+          },
+          duration: 300,
+          easing: "easeInOutSine",
+          fps: this.props.fps || 60,
+        });
+      }
+    }
+
+    this.readyToDock = false;
+    this.dockOrigin = null;
+
+    let pieceDockAnim;
+    if (props.noAnimation) {
+      pieceOnTop.ref.current.setStyle({
+        top: topPiecePos.y,
+      })
+    } else {
+      pieceDockAnim = pieceOnTop.ref.current?.animate({
+        style: {
+          top: topPiecePos.y,
         },
         duration: 300,
         easing: "easeOutBounce",
         fps: this.props.fps || 60,
       })
-      animateCapScale = targetStack.capRef.current.animate({
-        style: {
-          scaleX: 1,
-          scaleY: 1,
-        },
-        duration: 300,
-        easing: "easeInOutSine",
-        fps: this.props.fps || 60,
-      });
     }
-
-    this.readyToDock = false;
-    this.dockOrigin = null;
-    const pieceDockAnim = pieceOnTop.ref.current?.animate({
-      style: {
-        top: topPiecePos.y,
-      },
-      duration: 300,
-      easing: "easeOutBounce",
-      fps: this.props.fps || 60,
-    })
 
     if (animateCapY && animateCapScale) {
       animateCapY.start();
       animateCapScale.start();
     }
 
-    pieceDockAnim.start();
+    if (pieceDockAnim) {
+      pieceDockAnim.start();
+    }
   }
 
   alertUnableToDock(stackIndex: number) {
+    const {props} = this;
     const {stacks, getTopPiecePos} = this;
     const topPiecePos = getTopPiecePos(stackIndex);
     const targetStack = stacks[stackIndex];
@@ -281,29 +318,41 @@ export class RefBlockBoard extends Component<
     const targetStackCompleted = this.checkIfStackCompleted(targetStack);
     let animateCapScale;
     if (targetStackCompleted) {
-      targetStack.capRef.current?.setY(
-        topPiecePos.y - Constants.blockHeight.piece * this.scale - Constants.blockHeight.top * this.scale,
-      );
-      animateCapScale = targetStack.capRef.current?.animate({
-        style: {
+      if (props.noAnimation) {
+        targetStack.capRef.current?.setStyle({
           top: topPiecePos.y - Constants.blockHeight.top * this.scale,
+        })
+      } else {
+        targetStack.capRef.current?.setY(
+          topPiecePos.y - Constants.blockHeight.piece * this.scale - Constants.blockHeight.top * this.scale,
+        );
+        animateCapScale = targetStack.capRef.current?.animate({
+          style: {
+            top: topPiecePos.y - Constants.blockHeight.top * this.scale,
+          },
+          duration: 500,
+          easing: "easeOutBounce",
+          fps: this.props.fps || 60,
+        });
+        animateCapScale?.start();
+      }
+    }
+
+    if (props.noAnimation) {
+      pieceOnTop.ref.current?.setStyle({
+        top: topPiecePos.y
+      })
+    } else {
+      pieceOnTop.ref.current?.setY(topPiecePos.y - Constants.blockHeight.piece * this.scale);
+      pieceOnTop.ref.current?.animate({
+        style: {
+          top: topPiecePos.y
         },
-        duration: 500,
+        duration: 300,
         easing: "easeOutBounce",
         fps: this.props.fps || 60,
-      });
-      animateCapScale?.start();
+      }).start();
     }
-    pieceOnTop.ref.current?.setY(topPiecePos.y - Constants.blockHeight.piece * this.scale);
-    pieceOnTop.ref.current?.animate({
-      style: {
-        top: topPiecePos.y
-      },
-      duration: 300,
-      easing: "easeOutBounce",
-      fps: this.props.fps || 60,
-    }).start();
-    return;
   }
 
   dockToOther(stackIndex: number) {
@@ -347,18 +396,28 @@ export class RefBlockBoard extends Component<
       })
     };
 
-    readyForAppearAnim();
-    pieceOnTopOfOrigin.ref.current.animate({
-      style: {
+    if (props.noAnimation) {
+      pieceOnTopOfOrigin.ref.current.setStyle({
+        opacity: 1,
         scaleX: 1,
         scaleY: 1,
         left: topPiecePos.x,
         top: topPiecePos.y - Constants.blockHeight.piece * this.scale,
-      },
-      duration: 300,
-      easing: "easeOutBounce",
-      fps: props.fps || 60,
-    }).start();
+      })
+    } else {
+      readyForAppearAnim();
+      pieceOnTopOfOrigin.ref.current.animate({
+        style: {
+          scaleX: 1,
+          scaleY: 1,
+          left: topPiecePos.x,
+          top: topPiecePos.y - Constants.blockHeight.piece * this.scale,
+        },
+        duration: 300,
+        easing: "easeOutBounce",
+        fps: props.fps || 60,
+      }).start();
+    }
 
     if (targetStackCompleted && targetStack.capRef.current) {
       const readyForCapAnim = () => {
@@ -371,27 +430,38 @@ export class RefBlockBoard extends Component<
         })
       };
 
-      readyForCapAnim();
-      targetStack.capRef.current.animate({
-        style: {
+      if (props.noAnimation) {
+        targetStack.capRef.current.setStyle({
+          opacity: 1,
           scaleX: 1,
           scaleY: 1,
-        },
-        duration: 100,
-        easing: "easeInOutSine",
-        fps: props.fps || 60,
-      }).start(() => {
-        targetStack.capRef?.current?.animate({
+          top: topPiecePos.y -
+            Constants.blockHeight.piece * this.scale -
+            Constants.blockHeight.top * this.scale,
+        })
+      } else {
+        readyForCapAnim();
+        targetStack.capRef.current.animate({
           style: {
-            top: topPiecePos.y -
-              Constants.blockHeight.piece * this.scale -
-              Constants.blockHeight.top * this.scale,
+            scaleX: 1,
+            scaleY: 1,
           },
-          duration: 300,
-          easing: "easeOutBounce",
+          duration: 100,
+          easing: "easeInOutSine",
           fps: props.fps || 60,
-        }).start();
-      })
+        }).start(() => {
+          targetStack.capRef?.current?.animate({
+            style: {
+              top: topPiecePos.y -
+                Constants.blockHeight.piece * this.scale -
+                Constants.blockHeight.top * this.scale,
+            },
+            duration: 300,
+            easing: "easeOutBounce",
+            fps: props.fps || 60,
+          }).start();
+        })
+      }
     }
 
     const completeMap = this.getCompleteMap();

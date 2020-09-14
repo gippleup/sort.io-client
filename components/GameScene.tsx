@@ -44,6 +44,7 @@ type GameSceneProps = {
   mode: 'single' | 'multi';
   fps?: number;
   timerRoundTo?: number;
+  noAnimation?: boolean;
 };
 
 class GameScene extends React.Component<GameSceneProps, {}>{
@@ -200,6 +201,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
             this.onLayout();
           }}
           fps={props.fps}
+          noAnimation={props.noAnimation}
         />
       </OpponentGameContainer>
     )
@@ -317,6 +319,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
               this.onLayout();
             }}
             fps={props.fps}
+            noAnimation={props.noAnimation}
           />
         </BlockBoardContainer>
       </GameSceneContainer>

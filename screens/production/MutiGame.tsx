@@ -5,7 +5,7 @@ import usePlayData from '../../hooks/usePlayData';
 import useMultiGameSocket from '../../hooks/useMultiGameSocket';
 import { AlertDockConstructor } from '../../hooks/useMultiGameSocket/ServerMessages';
 import socketClientActions from '../../hooks/useMultiGameSocket/action/creator';
-import { RouteProp, NavigationProp, useNavigation } from '@react-navigation/native';
+import { RouteProp, NavigationProp, useNavigation, CommonActions } from '@react-navigation/native';
 import { RootStackParamList } from '../../router/routes';
 import { BeforeRemoveEvent } from './GameScreen/utils';
 
@@ -17,7 +17,6 @@ export type MapDesc = MapOption & { difficulty: number };
 export type MultiGameParams = {
   map: number[][];
   mapDesc: MapDesc;
-  roomId: number;
 }
 
 type MultiGameProps = {
@@ -26,8 +25,9 @@ type MultiGameProps = {
 }
 
 export const MutiGame = (props: MultiGameProps) => {
-  const {map, mapDesc, roomId} = props.route.params;
+  const {map, mapDesc} = props.route.params;
   const socket = useMultiGameSocket();
+  const roomId = socket.getRoomId();
   const gameSceneRef = React.createRef<GameScene>();
   const playData = usePlayData();
   const navigation = useNavigation();
@@ -80,9 +80,7 @@ export const MutiGame = (props: MultiGameProps) => {
     
     const alertPrepareListener = socket.addListener("onAlertPrepare",
     () => {
-      props.navigation.navigate("Popup_Prepare", {
-        roomId,
-      });
+      props.navigation.navigate("Popup_Prepare");
     })
 
     const deleteRoomListener = socket.addListener("onDeleteRoom",
@@ -98,18 +96,24 @@ export const MutiGame = (props: MultiGameProps) => {
     const informWinnerListener = socket.addListener("onInformWinner",
     (winnerId: number) => {
       const hasWon = playData.user.id === winnerId;
-      props.navigation.navigate("Popup_GameResult", {
-        hasWon,
-        roomId: roomId,
+      props.navigation.dispatch((state) => {
+        const routes: typeof state.routes = state.routes.concat([{
+          key: "Popup_GameResult" + Date.now(),
+          name: "Popup_GameResult",
+          params: {
+            hasWon,
+          },
+        }]);
+        return CommonActions.reset({
+          ...state,
+          routes,
+          index: routes.length - 1,
+        });
       })
     })
 
     const blockGoBack = (e: BeforeRemoveEvent) => {
       const { payload, type } = e.data.action;
-      if (type === "POP") {
-        e.preventDefault();
-        return;
-      }
       if (type === "GO_BACK") {
         e.preventDefault();
         setTimeout(() => {

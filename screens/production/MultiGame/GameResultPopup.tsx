@@ -74,17 +74,24 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     win: userData.win,
   }) : '로딩중';
 
-  const onHomePressed = () => {
-    socket.close();
-    // 소켓 연결 끊겼을 안 나간 사람을 승자로 처리.
+  const goHome = () => {
     navigation.dispatch((state) => {
-      const routes = state.routes.slice(0, state.routes.length - 2);
+      const routes: typeof state.routes = [{
+        key: "PD_Main" + Date.now(),
+        name: "PD_Main",
+      }];
       return CommonActions.reset({
         ...state,
         routes,
         index: routes.length - 1,
       });
     })
+  }
+
+  const onHomePressed = () => {
+    socket.close();
+    // 소켓 연결 끊겼을 안 나간 사람을 승자로 처리.
+    goHome();
   };
   const onRematchPressed = () => {
     if (!playData.user.id) return;
@@ -92,7 +99,20 @@ const GameResultPopup = (props: GameResultPopupProps) => {
       roomId,
       userId: playData.user.id,
     }));
-    props.navigation.navigate("Popup_RematchWaiting")
+    navigation.dispatch((state) => {
+      const routes: typeof state.routes = state.routes.concat([{
+        key: "Popup_RematchWaiting" + Date.now(),
+        name: "Popup_RematchWaiting",
+        params: {
+          beingInvited: false,
+        }
+      }]);
+      return CommonActions.reset({
+        ...state,
+        routes,
+        index: routes.length - 1,
+      });
+    })
   };
   const onAnotherMatchPressed = () => {
     if (!playData.user.id) return;
@@ -103,6 +123,23 @@ const GameResultPopup = (props: GameResultPopupProps) => {
   };
   
   React.useEffect(() => {
+    const askRematchListener = socket.addListener("onAskRematch", () => {
+      navigation.dispatch((state) => {
+        const routes: typeof state.routes = state.routes.concat([{
+          key: "Popup_RematchWaiting" + Date.now(),
+          name: "Popup_RematchWaiting",
+          params: {
+            beingInvited: true,
+          }
+        }]);
+        return CommonActions.reset({
+          ...state,
+          routes,
+          index: routes.length - 1,
+        });
+      })
+    })
+
     titleRefBox.current?.setScale(3);
     titleRefBox.current?.animate({
       style: {
@@ -165,15 +202,18 @@ const GameResultPopup = (props: GameResultPopupProps) => {
       })
 
     return () => {
+      socket.removeListener(askRematchListener);
       removeBeforeRemoveListener();
     }
   })
 
   if (!data) {
     return (
-      <View style={{ width: 300 }}>
-        <NotoSans type="Black">데이터를 불러오고 있습니다</NotoSans>
-      </View>
+      <FullFlexCenter>
+        <RoundPaddingCenter>
+          <NotoSans type="Black">데이터를 불러오고 있습니다</NotoSans>
+        </RoundPaddingCenter>
+      </FullFlexCenter>
     )
   }
 
@@ -215,9 +255,9 @@ const GameResultPopup = (props: GameResultPopupProps) => {
           ref={rankViewerRef}
           style={{
             width: Dimensions.get('screen').width - 80,
-            maxHeight: 240, maxWidth: 300,
+            maxHeight: 200, maxWidth: 300,
             marginVertical: 20,
-            borderWidth: 0.5,
+            borderWidth: 1,
           }}
           blindColor={boardStyle.backgroundColor as string}
           entryStyle={(entry, i, isEnd) => {

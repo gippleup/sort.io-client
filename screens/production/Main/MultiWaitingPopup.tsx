@@ -101,7 +101,8 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
       if (!playdata.user.id) {
       } else {
         socket.send(socketClientActions.enter({
-          userId: playdata.user.id
+          userId: playdata.user.id,
+          name: playdata.user.name,
         }));
       }
     })

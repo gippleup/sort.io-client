@@ -8,6 +8,7 @@ export type LoadingWaveProps = {
   particleCount?: number;
   particleRenderer?: (i: number) => JSX.Element;
   amplitude?: number;
+  isManual?: boolean;
 }
 
 export class LoadingWave extends Component<LoadingWaveProps> {
@@ -21,6 +22,7 @@ export class LoadingWave extends Component<LoadingWaveProps> {
 
   startWave() {
     const { waveAnim, props } = this;
+    waveAnim.stopAnimation();
     this.loop = Animated.loop(
       Animated.timing(waveAnim, {
         toValue: 1,
@@ -34,10 +36,13 @@ export class LoadingWave extends Component<LoadingWaveProps> {
 
   stopWave() {
     this.loop?.stop();
+    this.waveAnim.setValue(0);
   }
 
   componentDidMount() {
-    this.startWave();
+    if (!this.props.isManual) {
+      this.startWave();
+    }
   }
 
   componentWillUnmount() {

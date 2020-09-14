@@ -17,6 +17,7 @@ type RematchStatusPlayerAnimationState = {
 export class RematchStatusPlayerAnimation extends Component<RematchStatusPlayerAnimationProps, RematchStatusPlayerAnimationState> {
   commentBoxRef = React.createRef<NativeRefBox>();
   messageRef = React.createRef<NativeRefBox>();
+  waveRef = React.createRef<LoadingWave>();
   color = "limegreen";
   isPlayer = true;
 
@@ -35,6 +36,8 @@ export class RematchStatusPlayerAnimation extends Component<RematchStatusPlayerA
     this.think = this.think.bind(this);
     this.popMessage = this.popMessage.bind(this);
     this.popCommentBox = this.popCommentBox.bind(this);
+    this.startWave = this.startWave.bind(this);
+    this.stopWave = this.stopWave.bind(this);
   }
 
   askRematch() {
@@ -124,31 +127,47 @@ export class RematchStatusPlayerAnimation extends Component<RematchStatusPlayerA
     }).start(onComplete);
   }
 
+  startWave() {
+    this.waveRef.current?.startWave();
+  }
+
+  stopWave() {
+    this.waveRef.current?.stopWave();
+  }
+
   componentDidMount() {
     const {props} = this;
   }
 
   render() {
     const { color, isPlayer } = this;
-    const { commentBoxRef, messageRef } = this;
+    const { commentBoxRef, messageRef, waveRef } = this;
     const { props, state } = this;
     return (
       <View>
-        <NativeRefBox ref={commentBoxRef}>
-          <CommentBox mirror={!isPlayer} color={color} size={70} style={{ marginLeft: isPlayer ? 20 : -30 }}>
-            <NativeRefBox
-              ref={messageRef}
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              {state.message}
+        <LoadingWave
+          isManual
+          ref={waveRef}
+          particleCount={1}
+          halfDuration={1000}
+          particleRenderer={(i) => (
+            <NativeRefBox ref={commentBoxRef}>
+              <CommentBox mirror={!isPlayer} color={color} size={70} style={{ marginLeft: isPlayer ? 20 : -30 }}>
+                <NativeRefBox
+                  ref={messageRef}
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                >
+                  {state.message}
+                </NativeRefBox>
+              </CommentBox>
             </NativeRefBox>
-          </CommentBox>
-        </NativeRefBox>
+          )}        
+        />
         <Icon name="user" size={80} color={color} />
       </View>
     )

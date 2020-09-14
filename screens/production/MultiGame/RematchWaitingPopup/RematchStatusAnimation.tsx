@@ -16,20 +16,6 @@ export class RematchStatusAnimation extends Component<RematchStatusAnimationProp
     super(props);
   }
 
-  componentDidMount() {
-    const {props} = this;
-    const {playerRef, opponentRef} = this;
-    if (props.beingInvited) {
-      playerRef.current?.think();
-      opponentRef.current?.askRematch();
-      opponentRef.current?.popCommentBox();
-    } else {
-      playerRef.current?.askRematch();
-      playerRef.current?.popCommentBox();
-      opponentRef.current?.think();
-    }
-  }
-
   render() {
     const {playerRef, opponentRef} = this;
 
@@ -52,7 +38,7 @@ export class RematchStatusAnimation extends Component<RematchStatusAnimationProp
     }
 
     return (
-      <FlexHorizontal style={{ justifyContent: 'center', padding: 20, paddingBottom: 0 }}>
+      <FlexHorizontal style={{ justifyContent: 'center' }}>
         <RematchStatusPlayerAnimation ref={playerRef} type="player" />
         <FlexHorizontal style={{translateX: -5}}>
           <LoadingWave {...wavePropsToPass} />

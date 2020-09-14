@@ -1,8 +1,10 @@
 import React, { ForwardRefRenderFunction, RefObject } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Dimensions } from 'react-native'
 import Logger from '../../../../components/Logger';
 import { NotoSans } from '../../../../components/Generic/StyledComponents';
 import usePlayData from '../../../../hooks/usePlayData';
+import GradientBlindScrollView from '../../../../components/GradientBlindScrollView';
+import chroma from 'chroma-js';
 
 export type RematchMessage = {
   text: string,
@@ -12,17 +14,25 @@ export type RematchMessage = {
 const RematchLogger = React.forwardRef<Logger>((props, ref) => {
   const playData = usePlayData();
   const userId = playData.user.id;
+  const blindScrollRef = React.createRef<GradientBlindScrollView>();
 
   return (
-    <View
+    <GradientBlindScrollView
+      ref={blindScrollRef}
+      blindColor="white"
+      blindHeight={40}
       style={{
-        alignItems: 'center',
-        margin: 20,
-        marginTop: 0,
+        height: 90,
+        width: Dimensions.get('screen').width - 100,
+        maxWidth: 250,
+        paddingHorizontal: 10,
       }}
     >
       <Logger
         ref={ref}
+        onAddMessage={() => {
+          blindScrollRef.current?._scrollViewRef.current?.scrollToEnd();
+        }}
         messageRenderer={(data: RematchMessage, i) => {
           let color;
           if (data.ownerId === userId) {
@@ -34,18 +44,19 @@ const RematchLogger = React.forwardRef<Logger>((props, ref) => {
           }
 
           return (
-            <View key={i} style={{ alignItems: data.ownerId === -1 ? 'center' : 'flex-start' }}>
+            <View key={i} style={{ justifyContent: data.ownerId === -1 ? 'center' : 'flex-start' }}>
               <NotoSans
                 type="Black"
+                size={13}
                 color={color}
               >
-                {data.text}
+                ▶ {data.text}
               </NotoSans>
             </View>
           )
         }}
       />
-    </View>
+    </GradientBlindScrollView>
   )
 })
 

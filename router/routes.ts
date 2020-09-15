@@ -37,6 +37,7 @@ import MultigameWaitingPopup from '../screens/production/Main/MultiWaitingPopup'
 import PreparePopup, { PreparePopupParams } from '../screens/production/MultiGame/PreparePopup';
 import GameResultPopup, { GameResultParams } from '../screens/production/MultiGame/GameResultPopup';
 import RematchWaitingPopup, { RematchWaitingPopupParams } from '../screens/production/MultiGame/RematchWaitingPopup';
+import OpponentLeftPopup from '../screens/production/MultiGame/OpponentLeftPopup';
 
 type Routes = {
   [T in keyof RootStackParamList]: {
@@ -178,6 +179,11 @@ const routes: Omit<Routes, "Developer"> = {
     component: MultiGame,
     headerShown: false,
   },
+  Popup_OpponentLeft: {
+    devName: '상대방 나감 팝업',
+    component: OpponentLeftPopup,
+    options: CommonPopupOption,
+  },
   Popup_CancelGame: {
     devName: '게임 중단 팝업',
     component: CancelGamePopup,
@@ -267,6 +273,7 @@ export type RootStackParamList = {
   PD_SelectStage: undefined;
   PD_Shop: undefined;
   PD_MultiGame: MultiGameParams;
+  Popup_OpponentLeft: undefined;
   Popup_CancelGame: CancelGameParams;
   Popup_NotEnoughTicket: undefined;
   Popup_RankGraph: undefined;

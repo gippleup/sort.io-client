@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Dimensions, ViewStyle } from 'react-native'
+import { View, Text, Dimensions, ViewStyle, TextStyle } from 'react-native'
 import StrokedText from '../../../components/StrokedText'
 import { RoundPaddingCenter, NotoSans, FlexHorizontal, FullFlexCenter } from '../../../components/Generic/StyledComponents'
 import chroma from 'chroma-js'
@@ -21,12 +21,89 @@ type GameResultNavigationProps = StackNavigationProp<RootStackParamList, "Popup_
 type GameResultRouteProps = RouteProp<RootStackParamList, "Popup_GameResult">
 
 export type GameResultParams = {
-  hasWon: boolean;
+  result: 'win' | 'lose' | 'draw';
 }
 
 type GameResultPopupProps = {
   navigation: GameResultNavigationProps;
   route: GameResultRouteProps;
+}
+
+const titleStyle = {
+  win: {
+    fillColor: "dodgerblue",
+    strokeColor: 'white',
+    text: "WIN",
+  },
+  lose: {
+    fillColor: "red",
+    strokeColor: 'black',
+    text: "LOSE",
+  },
+  draw: {
+    fillColor: "lightgrey",
+    strokeColor: "grey",
+    text: "DRAW",
+  }
+}
+
+const boardStyle: { [index: string]: ViewStyle } = {
+  win: {
+    backgroundColor: 'royalblue',
+    borderWidth: 3,
+    borderColor: 'white',
+  },
+  lose: {
+    backgroundColor: 'tomato',
+    borderWidth: 3,
+    borderColor: 'black',
+  },
+  draw: {
+    backgroundColor: 'slategrey',
+    borderWidth: 3,
+    borderColor: 'lightgrey',
+  }
+}
+
+const textColor = {
+  win: "white",
+  lose: "black",
+  draw: "white",
+}
+
+const rankViewerHighlightStyle: {
+  [index in 'win' | 'lose' | 'draw']: {
+    containerStyle: ViewStyle,
+    textStyle: TextStyle
+  }
+} = {
+  win: {
+    containerStyle: {
+      backgroundColor: 'white',
+    },
+    textStyle: {
+      color:'black',
+      fontWeight: 'bold',
+    }
+  },
+  lose: {
+    containerStyle: {
+      backgroundColor: 'black',
+    },
+    textStyle: {
+      color: 'white',
+      fontWeight: 'bold',
+    }
+  },
+  draw: {
+    containerStyle: {
+      backgroundColor: 'white',
+    },
+    textStyle: {
+      color: 'black',
+      fontWeight: 'bold',
+    }
+  }
 }
 
 const GameResultPopup = (props: GameResultPopupProps) => {
@@ -37,33 +114,9 @@ const GameResultPopup = (props: GameResultPopupProps) => {
   const titleRefBox = React.createRef<NativeRefBox>();
   const socket = useMultiGameSocket();
   const roomId = socket.getRoomId();
-  const {hasWon} = props.route.params;
+  const {result} = props.route.params;
   const buttonFontSize = 20;
-  const titleStyle = hasWon ?
-    {
-      fillColor: "dodgerblue",
-      strokeColor: 'white',
-      text: "WIN",
-    } : 
-    {
-      fillColor: "red",
-      strokeColor: 'black',
-      text: "LOSE",
-    }
-
-  const boardStyle: ViewStyle = hasWon ? 
-    {
-      backgroundColor: 'royalblue',
-      borderWidth: 3,
-      borderColor: 'white',
-    } :
-    {
-      backgroundColor: 'tomato',
-      borderWidth: 3,
-      borderColor: 'black',
-    }
-
-  const textColor = hasWon ? 'white' : 'black'
+  let showingOpponentLeftPopup = false;
 
   const rankViewerRef = React.createRef<RankViewer>();
   const userData = rawData?.targetUser;
@@ -110,7 +163,42 @@ const GameResultPopup = (props: GameResultPopupProps) => {
   };
   
   React.useEffect(() => {
-    const allowInformRematchRequestListener = socket.addListener("onAllowInformRematchRequest", () => {
+    const informOpponentHasLeftListener = socket.addListener(
+      "onInformOpponentHasLeft", () => {
+        if (!showingOpponentLeftPopup) {
+          showingOpponentLeftPopup = true;
+          navigation.dispatch((state) => {
+            const routes: typeof state.routes = state.routes.concat([{
+              key: "Popup_OpponentLeft",
+              name: "Popup_OpponentLeft",
+            }]);
+  
+            return CommonActions.reset({
+              ...state,
+              routes,
+              index: routes.length - 1,
+            })
+          })
+
+          setTimeout(() => {
+            showingOpponentLeftPopup = false;
+            navigation.dispatch((state) => {
+              const routes: typeof state.routes = state.routes
+              .filter((route) => route.name !== "Popup_OpponentLeft");
+
+              return CommonActions.reset({
+                ...state,
+                routes,
+                index: routes.length - 1,
+              })
+            })
+          }, 2000)
+        }
+      }
+    )
+    
+    const allowInformRematchRequestListener = socket.addListener(
+      "onAllowInformRematchRequest", () => {
       navigation.dispatch((state) => {
         const routes: typeof state.routes = state.routes.concat([{
           key: "Popup_RematchWaiting" + Date.now(),
@@ -127,7 +215,8 @@ const GameResultPopup = (props: GameResultPopupProps) => {
       })
     })
 
-    const askRematchListener = socket.addListener("onAskRematch", () => {
+    const askRematchListener = socket.addListener(
+      "onAskRematch", () => {
       navigation.dispatch((state) => {
         const routes: typeof state.routes = state.routes.concat([{
           key: "Popup_RematchWaiting" + Date.now(),
@@ -167,8 +256,8 @@ const GameResultPopup = (props: GameResultPopupProps) => {
           const mapped: RankViewerDataEntry = {
             rank: Number(entry.rank),
             rate: Number(entry.rate),
-            username: entry.name,
-            userId: entry.userId,
+            name: entry.name,
+            id: entry.id,
           }
           return mapped;
         };
@@ -176,7 +265,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
         const afterUser = rankData.afterTargetUser.map(mapEntry);
         const user: RankViewerDataEntry = {
           ...mapEntry(rankData.targetUser),
-          username: mapEntry(rankData.targetUser).username + ' (YOU)'
+          name: mapEntry(rankData.targetUser).name + ' (YOU)'
         };
         const mappedData: RankViewerData = beforeUser.concat(user).concat(afterUser);
         setData(mappedData);
@@ -187,7 +276,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
       const $ = rankViewerRef.current
       let position = 1;
       for (let i = 0; i < data.length; i += 1) {
-        if (data[i].userId === playData.user.id) {
+        if (data[i].id === playData.user.id) {
           position = i;
           break;
         }
@@ -209,6 +298,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     return () => {
       socket.removeListener(askRematchListener);
       socket.removeListener(allowInformRematchRequestListener);
+      socket.removeListener(informOpponentHasLeftListener);
       removeBeforeRemoveListener();
     }
   })
@@ -228,31 +318,31 @@ const GameResultPopup = (props: GameResultPopupProps) => {
       <NativeRefBox ref={titleRefBox} style={{marginBottom: 10, elevation: 100}}>
         <StrokedText
           dyMultiplier={0.33}
-          fillColor={titleStyle.fillColor}
+          fillColor={titleStyle[result].fillColor}
           fontFamily="NotoSansKR-Black"
           fontSize={50}
           height={60}
-          strokeColor={titleStyle.strokeColor}
+          strokeColor={titleStyle[result].strokeColor}
           strokeWidth={10}
-          text={titleStyle.text}
-          width={150}
+          text={titleStyle[result].text}
+          width={200}
         />
       </NativeRefBox>
-      <RoundPaddingCenter style={boardStyle}>
+      <RoundPaddingCenter style={boardStyle[result]}>
         <View style={{ paddingHorizontal: 10 }}>
           <FlexHorizontal style={{ justifyContent: 'space-between' }}>
-            <NotoSans color={textColor} type="Bold">
+            <NotoSans color={textColor[result]} type="Bold">
               대전 기록
             </NotoSans>
-            <NotoSans color={textColor} type="Bold">
+            <NotoSans color={textColor[result]} type="Bold">
               {playCountText}
             </NotoSans>
           </FlexHorizontal>
           <FlexHorizontal style={{ justifyContent: 'space-between' }}>
-            <NotoSans color={textColor} size={30} type="Black">
+            <NotoSans color={textColor[result]} size={30} type="Black">
               승률
             </NotoSans>
-            <NotoSans color={textColor} size={30} type="Black">
+            <NotoSans color={textColor[result]} size={30} type="Black">
               {prettyPercent(Number(userData?.winningRate))}%
             </NotoSans>
           </FlexHorizontal>
@@ -265,18 +355,14 @@ const GameResultPopup = (props: GameResultPopupProps) => {
             marginVertical: 20,
             borderWidth: 1,
           }}
-          blindColor={boardStyle.backgroundColor as string}
+          blindColor={boardStyle[result].backgroundColor as string}
           entryStyle={(entry, i, isEnd) => {
             const defaultContainerStyle: ViewStyle = { backgroundColor: 'transparent' }
-            if (entry.userId === playData.user.id) {
+            if (entry.id === playData.user.id) {
+              const { containerStyle, textStyle } = rankViewerHighlightStyle[result];
               return {
-                containerStyle: {
-                  backgroundColor: hasWon ? 'white' : 'black',
-                },
-                textStyle: {
-                  color: hasWon ? 'black' : 'white',
-                  fontWeight: 'bold',
-                }
+                containerStyle: containerStyle,
+                textStyle: textStyle
               }
             }
 
@@ -287,7 +373,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
                   borderBottomColor: 'transparent'
                 },
                 textStyle: {
-                  color: textColor
+                  color: textColor[result]
                 }
               }
             }
@@ -295,7 +381,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
             return {
               containerStyle: defaultContainerStyle,
               textStyle: {
-                color: textColor
+                color: textColor[result]
               }
             }
           }}

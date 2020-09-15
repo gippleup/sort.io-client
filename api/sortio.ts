@@ -192,9 +192,9 @@ export type UserSingleRankData = {
 }
 
 export type UserMultiRankData = {
-  userId: number;
+  id: number;
   name: string;
-  userCreatedAt: string;
+  createdAt: string;
   win: string;
   draw: string;
   lose: string;

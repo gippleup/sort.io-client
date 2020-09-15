@@ -11,6 +11,7 @@ export type OnSendRoomParam = {
 
 type ListenerCallback = {
   onSendRoom: (option: OnSendRoomParam) => any;
+  onInformOpponentHasLeft: () => any;
   onAlertDock: (dockInfo: AlertDockConstructor) => any;
   onSyncTimer: (leftTime: number) => any;
   onOpen: () => any;
@@ -48,6 +49,7 @@ let players: {id: number; name: string}[] = [];
 
 const listenerManager: ListenerManager = {
   onSendRoom: {},
+  onInformOpponentHasLeft: {},
   onAlertDock: {},
   onSyncTimer: {},
   onClose: {},
@@ -133,6 +135,8 @@ const useMultiGameSocket = () => {
       mapDesc = option.mapDesc;
       players = option.playerData;
       forEachValue(listenerManager.onSendRoom, (cb) => cb(option))
+    } else if (parsedData.type === MessageType.INFORM_OPPONENT_HAS_LEFT) {
+      forEachValue(listenerManager.onInformOpponentHasLeft, (cb) => cb())
     } else if (parsedData.type === MessageType.ALERT_DOCK) {
       const option = parsedData.payload;
       forEachValue(listenerManager.onAlertDock, (cb) => cb(option))

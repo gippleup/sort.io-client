@@ -11,7 +11,7 @@ import {
 } from './_StyledComponents';
 
 type RankListEntryData = {
-  username: string;
+  name: string;
   rank: number;
   rate: number;
   profilePic?: string;
@@ -31,7 +31,7 @@ const defaultProfile = require('../../assets/default-profile.png');
 
 const RankListEntry = (props: RankListEntryProps) => {
   const {data, style} = props;
-  const {rank, rate, username, profilePic} = data;
+  const {rank, rate, name, profilePic} = data;
   const profile = profilePic || defaultProfile;
   const prettyRate = `(상위 ${prettyPercent(rate)}%)`;
   return (
@@ -42,7 +42,7 @@ const RankListEntry = (props: RankListEntryProps) => {
           <Text style={{
             ...props.textStyle,
             ...props.usernameStyle
-          }}>{username}</Text>
+          }}>{name}</Text>
           <FlexHorizontal>
             <RankText style={{
               ...props.textStyle,

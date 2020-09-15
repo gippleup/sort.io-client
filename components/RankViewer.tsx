@@ -4,7 +4,9 @@ import RankListEntry from './RankViewer/RankListEntry';
 import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
 import GradientBlindScrollView from './GradientBlindScrollView';
 
-export type RankViewerDataEntry = { username: string; userId?: number; rank: number; rate: number };
+export type RankViewerDataEntry = {
+  name: string; id?: number; rank: number; rate: number
+};
 export type RankViewerData = RankViewerDataEntry[];
 
 type RankViewrProps = {
@@ -23,7 +25,7 @@ type RankViewrProps = {
 };
 
 class RankViewer extends React.Component<RankViewrProps> {
-  _scrollViewRef = React.createRef<ScrollView>();
+  _blindScrollViewRef = React.createRef<GradientBlindScrollView>();
   topBlindOpacity = new Animated.Value(1);
   bottomBlindOpacity = new Animated.Value(1);
   blindWidth = new Animated.Value(0);
@@ -53,6 +55,7 @@ class RankViewer extends React.Component<RankViewrProps> {
         blindColor={blindColor}
         blindHeight={50}
         style={props.style}
+        ref={this._blindScrollViewRef}
       >
         {props.data.map((rankListEntryData, i) => {
           let style;

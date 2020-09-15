@@ -99,21 +99,8 @@ const GameResultPopup = (props: GameResultPopupProps) => {
       roomId,
       userId: playData.user.id,
     }));
-    navigation.dispatch((state) => {
-      const routes: typeof state.routes = state.routes.concat([{
-        key: "Popup_RematchWaiting" + Date.now(),
-        name: "Popup_RematchWaiting",
-        params: {
-          beingInvited: false,
-        }
-      }]);
-      return CommonActions.reset({
-        ...state,
-        routes,
-        index: routes.length - 1,
-      });
-    })
   };
+
   const onAnotherMatchPressed = () => {
     if (!playData.user.id) return;
     socket.send(requestOtherMatch({
@@ -123,6 +110,23 @@ const GameResultPopup = (props: GameResultPopupProps) => {
   };
   
   React.useEffect(() => {
+    const allowInformRematchRequestListener = socket.addListener("onAllowInformRematchRequest", () => {
+      navigation.dispatch((state) => {
+        const routes: typeof state.routes = state.routes.concat([{
+          key: "Popup_RematchWaiting" + Date.now(),
+          name: "Popup_RematchWaiting",
+          params: {
+            beingInvited: false,
+          }
+        }]);
+        return CommonActions.reset({
+          ...state,
+          routes,
+          index: routes.length - 1,
+        });
+      })
+    })
+
     const askRematchListener = socket.addListener("onAskRematch", () => {
       navigation.dispatch((state) => {
         const routes: typeof state.routes = state.routes.concat([{
@@ -188,10 +192,11 @@ const GameResultPopup = (props: GameResultPopupProps) => {
           break;
         }
       }
-      $._scrollViewRef.current?.scrollTo({
-        y: 26 * position - 20,
+      $._blindScrollViewRef.current?.
+      _scrollViewRef.current?.scrollTo({
+        y: 56 * position,
         animated: true
-      });
+      })
     }
 
     const removeBeforeRemoveListener = navigation
@@ -203,6 +208,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
 
     return () => {
       socket.removeListener(askRematchListener);
+      socket.removeListener(allowInformRematchRequestListener);
       removeBeforeRemoveListener();
     }
   })

@@ -15,95 +15,20 @@ import { prettyPercent } from '../../../components/EndGameInfo/utils'
 import NativeRefBox from '../../../components/NativeRefBox'
 import { BeforeRemoveEvent } from '../GameScreen/utils'
 import useMultiGameSocket from '../../../hooks/useMultiGameSocket'
-import { exit, requestRematch, requestOtherMatch } from '../../../hooks/useMultiGameSocket/action/creator'
+import socketClientActions, { exit, requestRematch, requestOtherMatch } from '../../../hooks/useMultiGameSocket/action/creator'
+import {boardStyle, rankViewerHighlightStyle, textColor, titleStyle} from './GameResultPopup/_styles'
 
 type GameResultNavigationProps = StackNavigationProp<RootStackParamList, "Popup_GameResult">
 type GameResultRouteProps = RouteProp<RootStackParamList, "Popup_GameResult">
 
 export type GameResultParams = {
   result: 'win' | 'lose' | 'draw';
+  opponentHasLeft: boolean;
 }
 
 type GameResultPopupProps = {
   navigation: GameResultNavigationProps;
   route: GameResultRouteProps;
-}
-
-const titleStyle = {
-  win: {
-    fillColor: "dodgerblue",
-    strokeColor: 'white',
-    text: "WIN",
-  },
-  lose: {
-    fillColor: "red",
-    strokeColor: 'black',
-    text: "LOSE",
-  },
-  draw: {
-    fillColor: "lightgrey",
-    strokeColor: "grey",
-    text: "DRAW",
-  }
-}
-
-const boardStyle: { [index: string]: ViewStyle } = {
-  win: {
-    backgroundColor: 'royalblue',
-    borderWidth: 3,
-    borderColor: 'white',
-  },
-  lose: {
-    backgroundColor: 'tomato',
-    borderWidth: 3,
-    borderColor: 'black',
-  },
-  draw: {
-    backgroundColor: 'slategrey',
-    borderWidth: 3,
-    borderColor: 'lightgrey',
-  }
-}
-
-const textColor = {
-  win: "white",
-  lose: "black",
-  draw: "white",
-}
-
-const rankViewerHighlightStyle: {
-  [index in 'win' | 'lose' | 'draw']: {
-    containerStyle: ViewStyle,
-    textStyle: TextStyle
-  }
-} = {
-  win: {
-    containerStyle: {
-      backgroundColor: 'white',
-    },
-    textStyle: {
-      color:'black',
-      fontWeight: 'bold',
-    }
-  },
-  lose: {
-    containerStyle: {
-      backgroundColor: 'black',
-    },
-    textStyle: {
-      color: 'white',
-      fontWeight: 'bold',
-    }
-  },
-  draw: {
-    containerStyle: {
-      backgroundColor: 'white',
-    },
-    textStyle: {
-      color: 'black',
-      fontWeight: 'bold',
-    }
-  }
 }
 
 const GameResultPopup = (props: GameResultPopupProps) => {
@@ -114,9 +39,9 @@ const GameResultPopup = (props: GameResultPopupProps) => {
   const titleRefBox = React.createRef<NativeRefBox>();
   const socket = useMultiGameSocket();
   const roomId = socket.getRoomId();
-  const {result} = props.route.params;
+  const {result, opponentHasLeft} = props.route.params;
   const buttonFontSize = 20;
-  let showingOpponentLeftPopup = false;
+  const containerRef = React.createRef<View>();
 
   const rankViewerRef = React.createRef<RankViewer>();
   const userData = rawData?.targetUser;
@@ -126,6 +51,28 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     total: userData.total,
     win: userData.win,
   }) : '로딩중';
+
+  const renderOpponentLeftMessage = () => {
+    if (opponentHasLeft) {
+      return (
+        <RoundPaddingCenter
+          style={{
+            marginTop: 15,
+            maxWidth: 300,
+            backgroundColor: 'white',
+            borderWidth: 1,
+            borderColor: 'tomato'
+          }}
+        >
+          <NotoSans size={14} type="Bold" color="tomato">
+            상대방이 나갔습니다.
+          </NotoSans>
+        </RoundPaddingCenter>
+      )
+    } else {
+      return <></>;
+    }
+  }
 
   const goHome = () => {
     navigation.dispatch((state) => {
@@ -152,6 +99,9 @@ const GameResultPopup = (props: GameResultPopupProps) => {
       roomId,
       userId: playData.user.id,
     }));
+    containerRef.current?.setNativeProps({
+      pointerEvents: "none",
+    })
   };
 
   const onAnotherMatchPressed = () => {
@@ -160,40 +110,44 @@ const GameResultPopup = (props: GameResultPopupProps) => {
       roomId,
       userId: playData.user.id,
     }));
+    containerRef.current?.setNativeProps({
+      pointerEvents: "none",
+    })
   };
   
   React.useEffect(() => {
+    const removeStackLengthListener = props.navigation.addListener("state", (e) => {
+      const { routes } = e.data.state;
+      const lastRoute = routes[routes.length - 1];
+      if (lastRoute.name === "Popup_GameResult") {
+        containerRef.current?.setNativeProps({
+          pointerEvents: "auto",
+        })
+      }
+    })
+
+    const closeListener = socket.addListener("onClose", () => {
+      const userId = playData.user.id || -1;
+      socket.send(socketClientActions.alertDisconnect({
+        userId,
+        roomId
+      }))
+    })
+
     const informOpponentHasLeftListener = socket.addListener(
       "onInformOpponentHasLeft", () => {
-        if (!showingOpponentLeftPopup) {
-          showingOpponentLeftPopup = true;
-          navigation.dispatch((state) => {
-            const routes: typeof state.routes = state.routes.concat([{
-              key: "Popup_OpponentLeft",
-              name: "Popup_OpponentLeft",
-            }]);
-  
-            return CommonActions.reset({
-              ...state,
-              routes,
-              index: routes.length - 1,
-            })
+        navigation.dispatch((state) => {
+          const routes: typeof state.routes = state.routes.concat([{
+            key: "Popup_OpponentLeft",
+            name: "Popup_OpponentLeft",
+          }]);
+
+          return CommonActions.reset({
+            ...state,
+            routes,
+            index: routes.length - 1,
           })
-
-          setTimeout(() => {
-            showingOpponentLeftPopup = false;
-            navigation.dispatch((state) => {
-              const routes: typeof state.routes = state.routes
-              .filter((route) => route.name !== "Popup_OpponentLeft");
-
-              return CommonActions.reset({
-                ...state,
-                routes,
-                index: routes.length - 1,
-              })
-            })
-          }, 2000)
-        }
+        })
       }
     )
     
@@ -299,7 +253,9 @@ const GameResultPopup = (props: GameResultPopupProps) => {
       socket.removeListener(askRematchListener);
       socket.removeListener(allowInformRematchRequestListener);
       socket.removeListener(informOpponentHasLeftListener);
+      socket.removeListener(closeListener);
       removeBeforeRemoveListener();
+      removeStackLengthListener();
     }
   })
 
@@ -314,7 +270,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
   }
 
   return (
-    <FullFlexCenter>
+    <FullFlexCenter ref={containerRef}>
       <NativeRefBox ref={titleRefBox} style={{marginBottom: 10, elevation: 100}}>
         <StrokedText
           dyMultiplier={0.33}
@@ -351,7 +307,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
           ref={rankViewerRef}
           style={{
             width: Dimensions.get('screen').width - 80,
-            maxHeight: 200, maxWidth: 300,
+            maxHeight: 160, maxWidth: 300,
             marginVertical: 20,
             borderWidth: 1,
           }}
@@ -409,6 +365,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
           </RoundRectangleButton>
         </View>
       </RoundPaddingCenter>
+      {renderOpponentLeftMessage()}
     </FullFlexCenter>
   )
 }

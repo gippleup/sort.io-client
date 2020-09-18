@@ -90,7 +90,7 @@ export const cardTransitions: CardTransitions = {
       // },
       cardStyle: {
         opacity: current.progress,
-        // backgroundColor: 'transparent'
+        backgroundColor: 'rgba(0,0,0,0.3)'
       }
     }
   }

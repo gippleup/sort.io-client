@@ -1,5 +1,5 @@
 import React, { RefObject } from 'react'
-import { View, Text, BackHandler } from 'react-native'
+import { View, Text, BackHandler, Dimensions } from 'react-native'
 import Loading from '../../../components/Loading'
 import NativeRefBox from '../../../components/NativeRefBox'
 import { Modal, LoadingAnimationContainer, LoadingText } from './MultiWaitingPopup/_StyledComponent'
@@ -12,6 +12,7 @@ import { useNavigation, NavigationState, NavigationProp, RouteProp, CommonAction
 import { RootStackParamList } from '../../../router/routes'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { FullFlexCenter } from '../../../components/Generic/StyledComponents'
+import { BeforeRemoveEvent } from '../GameScreen/utils'
 
 type MultiWaitingPopupNavigationProps = StackNavigationProp<RootStackParamList, "Popup_MultiWaiting">;
 type MultiWaitingPopupRouteProps = RouteProp<RootStackParamList, "Popup_MultiWaiting">;
@@ -21,9 +22,11 @@ type MultiWaitingPopupProps = {
   route: MultiWaitingPopupRouteProps;
 }
 
+const blockRemoveStack = (e: BeforeRemoveEvent) => e.preventDefault();
+
 const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
   let foundMatch = false;
-  let text = 'Finding Match';
+  let text = '상대를 찾고 있습니다';
   let interval: null | NodeJS.Timer = null
   const loadingTextRef = React.createRef<Text>();
   const modalRef = React.createRef<NativeRefBox>();
@@ -31,6 +34,11 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
   const socket = useMultiGameSocket();
   const playdata = usePlayData();
   const roomData = React.useRef<OnSendRoomParam | null>(null);
+
+  const closeSocket = () => {
+    socket.close();
+    return null;
+  };
 
   const setRefText = (text: string) => {
     loadingTextRef.current?.setNativeProps({
@@ -47,7 +55,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
       clearInterval(interval);
     }
 
-    setRefText("Found Match!");
+    setRefText("곧 시작합니다!");
 
     modalRef.current?.animate({
       style: {
@@ -74,27 +82,22 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
 
   const onAnimationCompleted = () => {
     if (roomData.current) {
+      props.navigation.removeListener("beforeRemove", blockRemoveStack);
       props.navigation.replace("PD_MultiGame", roomData.current);
     }
   }
 
   const updateLoadingText = () => {
-    if (text !== 'Finding Match...') {
+    if (text !== '상대를 찾고 있습니다...') {
       text += '.';
     } else {
-      text = 'Finding Match';
+      text = '상대를 찾고 있습니다';
     }
     setRefText(text);
   }
 
   React.useEffect(() => {
     interval = setInterval(updateLoadingText, 800)
-
-    const closeSocket = () => {
-      socket.close();
-      return null;
-    };
-
     BackHandler.addEventListener("hardwareBackPress", closeSocket)
 
     const openListener = socket.addListener("onOpen", () => {
@@ -110,6 +113,8 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
     const loadListener = socket.addListener("onSendRoom", (option: OnSendRoomParam) => {
       foundMatch = true;
       roomData.current = option;
+      BackHandler.removeEventListener("hardwareBackPress", closeSocket);
+      props.navigation.addListener("beforeRemove", blockRemoveStack);
     })
 
     const closeListener = socket.addListener("onClose", () => {
@@ -132,7 +137,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
 
   return (
     <FullFlexCenter style={{backgroundColor: "rgba(0,0,0,0.3)"}}>
-      <Modal ref={modalRef}>
+      <Modal style={{width: Dimensions.get('screen').width - 60, maxWidth: 300}} ref={modalRef}>
         <LoadingAnimationContainer>
           <Loading
             checkIfLoaded={checkIfFoundMatch}

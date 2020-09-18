@@ -10,6 +10,7 @@ import StrokedText from '../../../components/StrokedText';
 import ReadyTimer from '../../../components/ReadyTimer';
 import { BeforeRemoveEvent } from '../GameScreen/utils';
 import { FullFlexCenter } from '../../../components/Generic/StyledComponents';
+import chroma from 'chroma-js';
 
 type PreparePopupRouteProps = RouteProp<RootStackParamList, "Popup_Prepare">;
 type PreparePopupNavigationProps = StackNavigationProp<RootStackParamList, "Popup_Prepare">;
@@ -62,7 +63,7 @@ const PreparePopup = (props: PreparePopupProps) => {
   })
 
   return (
-    <FullFlexCenter style={{backgroundColor: "rgba(0,0,0,0.3)"}}>
+    <FullFlexCenter style={{backgroundColor: chroma('dodgerblue').alpha(0.3).hex()}}>
       <ReadyTimer
         ref={readyTimerRef}
         isManual

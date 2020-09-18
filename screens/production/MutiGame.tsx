@@ -34,6 +34,7 @@ export const MutiGame = (props: MultiGameProps) => {
   const containerRef = React.createRef<View>();
   const playData = usePlayData();
   const navigation = useNavigation();
+  let gameStarted = false;
 
   const sendDockMessage = (stackIndex: number, action: 'DOCK' | 'UNDOCK') => {
     if (!playData.user.id) return;
@@ -62,31 +63,57 @@ export const MutiGame = (props: MultiGameProps) => {
   }
 
   React.useEffect(() => {
+    const $TimerBase = gameSceneRef.current?.timerRef.current?.timerBaseRef.current;
+    $TimerBase?.setTimeTo(120);
+
     const errorListener = socket.addListener("onError", 
     (err: WebSocketErrorEvent) => {
-      console.log('에러남', err)
-    })
+      props.navigation.dispatch((state) => {
+        return CommonActions.reset({
+          ...state,
+          routes: [
+            {
+              name: "PD_Main",
+              key: "PD_Main" + Date.now(),
+            },
+            {
+              name: "Popup_OpponentLeft",
+              key: "Popup_OpponentLeft" + Date.now(),
+            }
+          ],
+          index: 1,
+        })
+      })
+    })    
 
-    const informOpponentHasLeftListener = socket.addListener(
-      "onInformOpponentHasLeft", () => {
-        props.navigation.dispatch((state) => {
-          const routes: typeof state.routes = state.routes.concat([{
-            // key: "Popup_OpponentLeft" + Date.now(),
-            // name: "Popup_OpponentLeft",
+    const informOpponentHasLeftListener = socket.addListener("onInformOpponentHasLeft",
+    () => {
+      props.navigation.dispatch((state) => {
+        const routes: typeof state.routes = state.routes
+          .filter((route) => {
+            const routesToStay = ["PD_Main", "PD_MultiGame"]
+            if (routesToStay.indexOf(route.name) !== -1) {
+              return true;
+            } else {
+              return false;
+            }
+          })
+          .concat([{
             key: "Popup_GameResult" + Date.now(),
             name: "Popup_GameResult",
             params: {
-              result: 'draw'
+              result: 'draw',
+              opponentHasLeft: true,
             }
           }]);
-          socket.removeListener(informOpponentHasLeftListener);
-          return CommonActions.reset({
-            ...state,
-            routes,
-            index: routes.length - 1,
-          });
-        })
+        socket.removeListener(informOpponentHasLeftListener);
+        return CommonActions.reset({
+          ...state,
+          routes,
+          index: routes.length - 1,
+        });
       })
+    })
 
     const alertDockListener = socket.addListener("onAlertDock",
     (data: AlertDockConstructor) => {
@@ -112,11 +139,22 @@ export const MutiGame = (props: MultiGameProps) => {
 
     const deleteRoomListener = socket.addListener("onDeleteRoom",
     () => {
+      // props.navigation.dispatch((state) => {
+      //   return CommonActions.reset({
+      //     ...state,
+      //     routes: [{
+      //       name: "PD_Main",
+      //       key: "PD_Main" + Date.now(),
+      //     }],
+      //     index: 0,
+      //   })
+      // })
     })
     
     const syncTimerListener = socket.addListener("onSyncTimer",
     (leftTime: number) => {
-      const $TimerBase = gameSceneRef.current?.timerRef.current?.timerBaseRef.current;
+      if (!gameStarted) gameStarted = true;
+      // const $TimerBase = gameSceneRef.current?.timerRef.current?.timerBaseRef.current;
       $TimerBase?.setTimeTo(leftTime);
     })
 
@@ -143,14 +181,16 @@ export const MutiGame = (props: MultiGameProps) => {
       const { payload, type } = e.data.action;
       if (type === "GO_BACK") {
         e.preventDefault();
-        setTimeout(() => {
-          navigation.navigate('Popup_CancelGame', {
-            title: '기권',
-            text: '지금 종료하면 패배 처리됩니다. \n기권하시겠습니까?',
-            mode: "multi",
-            roomId,
-          });
-        })
+        if (gameStarted) {
+          setTimeout(() => {
+            navigation.navigate('Popup_CancelGame', {
+              title: '기권',
+              text: '지금 종료하면 패배 처리됩니다. \n기권하시겠습니까?',
+              mode: "multi",
+              roomId,
+            });
+          })
+        }
       }
     }
 

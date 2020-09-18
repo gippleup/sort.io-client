@@ -7,7 +7,7 @@ import MainButton from '../../components/Main/MainButton'
 import PatternBackground from '../../components/GameScene/PatternBackground'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import styled from 'styled-components'
-import { useNavigation, RouteProp } from '@react-navigation/native'
+import { useNavigation, RouteProp, CommonActions } from '@react-navigation/native'
 import usePlayData from '../../hooks/usePlayData'
 import GoogleSignin from '../../components/GoogleSignin'
 import { FlexHorizontal, Space, NotoSans } from '../../components/Generic/StyledComponents'
@@ -36,7 +36,6 @@ const Main = (props: MainProps) => {
   const navigation = props.navigation;
   const playData = usePlayData();
   const dispatch = useDispatch();
-  const containerRef = React.createRef<View>();
 
   if (!playData.loaded) {
     dispatch(loadPlayData());
@@ -54,19 +53,15 @@ const Main = (props: MainProps) => {
 
   const onPressMulti = () => {
     navigation.navigate('Popup_MultiWaiting');
-    containerRef.current?.setNativeProps({
-      pointerEvents: "none",
-    })
   }
 
   React.useEffect(() => {
-    containerRef.current?.setNativeProps({
-      pointerEvents: "auto"
-    })
+    return () => {
+    }
   })
 
   return (
-    <View ref={containerRef} style={{flex: 1, backgroundColor: 'grey'}}>
+    <View style={{flex: 1, backgroundColor: 'grey'}}>
       <PatternBackground
         source={backgroundImage}
         width={Dimensions.get('screen').width}

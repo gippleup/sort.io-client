@@ -24,6 +24,18 @@ const OpponentLeftPopup = (props: OpponentLeftPopupProps) => {
         e.preventDefault();
       }
     })
+
+    setTimeout(() => {
+      props.navigation.dispatch((state) => {
+        const routes = state.routes.filter((route) => route.name !== "Popup_OpponentLeft");
+        return CommonActions.reset({
+          ...state,
+          routes,
+          index: routes.length - 1,
+        })
+      })
+    }, 2000)
+
     return () => {
       unsubscribeBeforeRemoveEvent();
     }

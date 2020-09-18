@@ -110,8 +110,19 @@ const GameResultPopup = (props: GameResultPopupProps) => {
       roomId,
       userId: playData.user.id,
     }));
-    containerRef.current?.setNativeProps({
-      pointerEvents: "none",
+    // containerRef.current?.setNativeProps({
+    //   pointerEvents: "none",
+    // })
+    navigation.dispatch((state) => {
+      const routes = state.routes.filter((route) => route.name === "PD_Main");
+      return CommonActions.reset({
+        ...state,
+        routes: routes.concat({
+          name: "Popup_MultiWaiting",
+          key: "Popup_MultiWaiting" + Date.now(),
+        }),
+        index: 1,
+      })
     })
   };
   
@@ -138,7 +149,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
       "onInformOpponentHasLeft", () => {
         navigation.dispatch((state) => {
           const routes: typeof state.routes = state.routes.concat([{
-            key: "Popup_OpponentLeft",
+            key: "Popup_OpponentLeft" + Date.now(),
             name: "Popup_OpponentLeft",
           }]);
 

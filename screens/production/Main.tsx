@@ -36,6 +36,7 @@ const Main = (props: MainProps) => {
   const navigation = props.navigation;
   const playData = usePlayData();
   const dispatch = useDispatch();
+  const containerRef = React.createRef<View>();
 
   if (!playData.loaded) {
     dispatch(loadPlayData());
@@ -49,8 +50,23 @@ const Main = (props: MainProps) => {
     dispatch(signOutWithGoogle());
   }
 
+  const onPressSingle = () => navigation.navigate('PD_SelectStage');
+
+  const onPressMulti = () => {
+    navigation.navigate('Popup_MultiWaiting');
+    containerRef.current?.setNativeProps({
+      pointerEvents: "none",
+    })
+  }
+
+  React.useEffect(() => {
+    containerRef.current?.setNativeProps({
+      pointerEvents: "auto"
+    })
+  })
+
   return (
-    <View style={{flex: 1, backgroundColor: 'grey'}}>
+    <View ref={containerRef} style={{flex: 1, backgroundColor: 'grey'}}>
       <PatternBackground
         source={backgroundImage}
         width={Dimensions.get('screen').width}
@@ -80,12 +96,12 @@ const Main = (props: MainProps) => {
         <MainButton
           preComponent={<ButtonIcon name="gamepad" color="tomato" />}
           text="싱글 플레이"
-          onPress={() => navigation.navigate('PD_SelectStage')}
+          onPress={onPressSingle}
         />
         <MainButton
           preComponent={<ButtonIcon name="users" color="mediumseagreen" />}
           text="멀티 플레이"
-          onPress={() => navigation.navigate('Popup_MultiWaiting')}
+          onPress={onPressMulti}
         />
         <MainButton
           preComponent={<ButtonIcon name="shopping-basket" color="cornflowerblue" />}

@@ -131,7 +131,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
   }, [])
 
   return (
-    <FullFlexCenter>
+    <FullFlexCenter style={{backgroundColor: "rgba(0,0,0,0.3)"}}>
       <Modal ref={modalRef}>
         <LoadingAnimationContainer>
           <Loading

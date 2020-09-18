@@ -62,7 +62,7 @@ const PreparePopup = (props: PreparePopupProps) => {
   })
 
   return (
-    <FullFlexCenter>
+    <FullFlexCenter style={{backgroundColor: "rgba(0,0,0,0.3)"}}>
       <ReadyTimer
         ref={readyTimerRef}
         isManual

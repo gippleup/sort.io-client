@@ -52,7 +52,7 @@ type Routes = {
 
 const CommonPopupOption: StackNavigationOptions = {
   cardStyle: {
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    backgroundColor: 'rgba(0,0,0,0.0)',
   },
   headerShown: false,
   cardStyleInterpolator: cardTransitions.forFade,

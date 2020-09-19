@@ -11,7 +11,7 @@ type CountryFlagIconProps = {
 }
 
 const CountryFlagIcon = (props: CountryFlagIconProps) => {
-  const [iconSvg, setIconSvg] = React.useState('');
+  const [iconSvg, setIconSvg] = React.useState<string | void>('');
   if (!iconSvg) {
     getCountryIconSvg(props.lat, props.lng)
     .then((svg) => setIconSvg(svg))

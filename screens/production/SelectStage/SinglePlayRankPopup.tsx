@@ -39,7 +39,7 @@ const SinglePlayRankPopup = () => {
               }
             }
 
-            if (entry.userId === playData.user.id) {
+            if (entry.id === playData.user.id) {
               return {
                 containerStyle: {
                   backgroundColor: 'dodgerblue',
@@ -73,8 +73,8 @@ const SinglePlayRankPopup = () => {
           const mapped: RankViewerDataEntry = {
             rank: Number(entry.rank),
             rate: Number(entry.rate),
-            username: entry.name,
-            userId: entry.userId,
+            name: entry.name,
+            id: entry.userId,
           }
           return mapped;
         };
@@ -82,7 +82,7 @@ const SinglePlayRankPopup = () => {
         const afterUser = rankData.afterTargetUser.map(mapEntry);
         const user: RankViewerDataEntry = {
           ...mapEntry(rankData.targetUser),
-          username: mapEntry(rankData.targetUser).username + ' (YOU)'
+          name: mapEntry(rankData.targetUser).name + ' (YOU)'
         };
         const mappedData: RankViewerData = beforeUser.concat(user).concat(afterUser);
         setData(mappedData);
@@ -93,13 +93,13 @@ const SinglePlayRankPopup = () => {
       const $ = rankViewerRef.current
       let position = 1;
       for (let i = 0; i < data.length; i += 1) {
-        if (data[i].userId === playData.user.id) {
+        if (data[i].id === playData.user.id) {
           position = i;
           break;
         }
       }
-      $._scrollViewRef.current?.scrollTo({
-        y: 26 * position - 20,
+      $._blindScrollViewRef.current?._scrollViewRef.current?.scrollTo({
+        y: 50 * position,
         animated: true
       });
     }

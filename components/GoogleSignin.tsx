@@ -39,7 +39,7 @@ type GoogleSignInProps = {
 }
 
 type GoogleSignInState = {
-  userInfo: null | any;
+  userInfo: null | User;
   isSignedIn: boolean;
   modalVisible: boolean;
 }

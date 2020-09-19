@@ -3,7 +3,18 @@ import { AppGetState } from "../../store";
 import { getLocalPlayData, PlayData, SortIoUser, SinglePlayData } from "../../../api/local";
 import { updatePlayData, updateUser, updateGold, updateTicket, updateSinglePlay, updateMultiPlay } from "./creator";
 import { Dispatch } from "redux";
-import { makeGuestId, getPlayDataByGoogleId, signUpWithGoogle, pushSinglePlayData, setGold, setTicket, saveSinglePlayToServer, SaveSinglePlayOption, SaveMultiPlayOption, saveMultiPlayToServer, isServerAlive } from "../../../api/sortio";
+import {
+  makeGuestId,
+  getPlayDataByGoogleId,
+  signUpWithGoogle,
+  setGold,
+  setTicket,
+  saveSinglePlayToServer,
+  SaveSinglePlayOption,
+  SaveMultiPlayOption,
+  saveMultiPlayToServer,
+  isServerAlive
+} from "../../../api/sortio";
 import { googleSignIn, googleSignOut } from "../../../api/googleOAuth";
 import NetInfo from '@react-native-community/netinfo'
 
@@ -75,6 +86,8 @@ export const signInWithGoogle = () => async (dispatch: GeneralThunkDispatch, get
   if (!curUser.id) throw new Error('어어 이게 왜 이러지');
 
   const googleUser = await googleSignIn();
+  console.log('이게 여기가 맞는지', googleUser);
+
   if (!googleUser) return;
 
   const googleId = Number(googleUser.user.id);
@@ -94,8 +107,7 @@ export const signInWithGoogle = () => async (dispatch: GeneralThunkDispatch, get
         isTemp: false,
       }
       dispatch(updateUser(mixedUser));
-      signUpWithGoogle(googleId, curUser.id);
-      pushSinglePlayData(curData);
+      signUpWithGoogle(googleId, curUser.id, googleUser.user.photo, googleUser.user.name);
     }
   } catch (e) {
     console.log(e);

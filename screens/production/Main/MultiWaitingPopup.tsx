@@ -6,13 +6,12 @@ import { Modal, LoadingAnimationContainer, LoadingText } from './MultiWaitingPop
 import useMultiGameSocket, { OnSendRoomParam } from '../../../hooks/useMultiGameSocket'
 import usePlayData from '../../../hooks/usePlayData'
 import socketClientActions from '../../../hooks/useMultiGameSocket/action/creator'
-import { useDispatch } from 'react-redux'
-import { applyGuestId } from '../../../redux/actions/playData/thunk'
-import { useNavigation, NavigationState, NavigationProp, RouteProp, CommonActions } from '@react-navigation/native'
+import { RouteProp } from '@react-navigation/native'
 import { RootStackParamList } from '../../../router/routes'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { FullFlexCenter } from '../../../components/Generic/StyledComponents'
 import { BeforeRemoveEvent } from '../GameScreen/utils'
+import { useGoogleUser } from '../../../hooks/useGoogleUser'
 
 type MultiWaitingPopupNavigationProps = StackNavigationProp<RootStackParamList, "Popup_MultiWaiting">;
 type MultiWaitingPopupRouteProps = RouteProp<RootStackParamList, "Popup_MultiWaiting">;

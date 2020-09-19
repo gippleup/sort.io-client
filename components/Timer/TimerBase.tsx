@@ -175,6 +175,7 @@ class TimerBase extends React.Component<TimerProps, {}> {
       <>
         <Integer
           ref={integerRef}
+          editable={false}
           onLayout={() => {
             this.isIntReady = true;
             this.checkIfTextReady();
@@ -187,6 +188,7 @@ class TimerBase extends React.Component<TimerProps, {}> {
         />
         <Decimal
           ref={decimalRef}
+          editable={false}
           onLayout={() => {
             this.isDecimalReday = true;
             this.checkIfTextReady();

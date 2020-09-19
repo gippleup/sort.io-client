@@ -114,13 +114,18 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     //   pointerEvents: "none",
     // })
     navigation.dispatch((state) => {
-      const routes = state.routes.filter((route) => route.name === "PD_Main");
       return CommonActions.reset({
         ...state,
-        routes: routes.concat({
-          name: "Popup_MultiWaiting",
-          key: "Popup_MultiWaiting" + Date.now(),
-        }),
+        routes: [
+          {
+            name: "PD_Main",
+            key: "PD_Main" + Date.now(),
+          },
+          {
+            name: "Popup_MultiWaiting",
+            key: "Popup_MultiWaiting" + Date.now(),
+          }
+        ],
         index: 1,
       })
     })

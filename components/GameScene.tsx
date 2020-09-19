@@ -23,8 +23,10 @@ import {
   ProfileContainer,
   ScoreCheckerContainer,
   StyledRefBoard,
-  TimerContainer
+  TimerContainer,
+  UserName
 } from './GameScene/_StyledComponent'
+import { FlexHorizontal } from './Generic/StyledComponents';
 
 const backgroundImage = require('../assets/BackgroundPattern.png');
 
@@ -45,6 +47,8 @@ type GameSceneProps = {
   fps?: number;
   timerRoundTo?: number;
   noAnimation?: boolean;
+  opponentProfile?: { name: string; photo: JSX.Element; }
+  playerProfile?: { name: string; photo: JSX.Element; }
 };
 
 class GameScene extends React.Component<GameSceneProps, {}>{
@@ -113,7 +117,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
     this.startTimerIfBothReady = this.startTimerIfBothReady.bind(this);
     this.renderOpponentBoard = this.renderOpponentBoard.bind(this);
     this.renderOpponentScoreChecker = this.renderOpponentScoreChecker.bind(this);
-    this.renderProfile = this.renderProfile.bind(this);
+    this.renderScoreChecker = this.renderScoreChecker.bind(this);
     this.renderStageTitle = this.renderStageTitle.bind(this);
     this.checkIfBoardReady = this.checkIfBoardReady.bind(this);
   }
@@ -220,26 +224,66 @@ class GameScene extends React.Component<GameSceneProps, {}>{
     }
     return (
       <ScoreCheckerContainer gameType={props.mode}>
-        <ProfileContainer />
-        <ScoreChecker
-          ref={opponentScoreCheckerRef}
-          skin={props.skin}
-          initialScore={initialScore}
-          maxScore={props.maxScore}
-          scale={scoreCheckerScale}
-          layout={scoreCheckerLayout}
-        />
+        <ProfileContainer>
+          {props.opponentProfile?.photo}
+        </ProfileContainer>
+        <View>
+          <FlexHorizontal>
+            <UserName backgroundColor="black" color="white">
+              {props.opponentProfile?.name}
+            </UserName>
+          </FlexHorizontal>
+          <ScoreChecker
+            ref={opponentScoreCheckerRef}
+            skin={props.skin}
+            initialScore={initialScore}
+            maxScore={props.maxScore}
+            scale={scoreCheckerScale}
+            layout={scoreCheckerLayout}
+          />
+        </View>
       </ScoreCheckerContainer>
     )
   }
 
-  renderProfile = () => {
-    const {props} = this;
-    if (props.mode === 'single') {
-      return <></>;
-    }
+  renderScoreChecker() {
+    const { props } = this;
+    const {
+      initialScore,
+      scoreCheckerScale,
+      scoreCheckerLayout,
+      scoreCheckerRef,
+    } = this;
+
+    const profile = (
+      <ProfileContainer>
+        {props.playerProfile?.photo}
+      </ProfileContainer>
+    )
+
+    const name = (
+      <FlexHorizontal>
+        <UserName backgroundColor="dodgerblue" color="white">
+          {props.playerProfile?.name}
+        </UserName>
+      </FlexHorizontal>
+    )
+
     return (
-      <ProfileContainer />
+      <ScoreCheckerContainer gameType={props.mode}>
+        {props.mode === "single" ? <></> : profile}
+        <View>
+          {props.mode === "single" ? <></> : name}
+          <ScoreChecker
+            ref={scoreCheckerRef}
+            skin={props.skin}
+            initialScore={initialScore}
+            maxScore={props.maxScore}
+            scale={scoreCheckerScale}
+            layout={scoreCheckerLayout}
+          />
+        </View>
+      </ScoreCheckerContainer>
     )
   }
 
@@ -247,13 +291,10 @@ class GameScene extends React.Component<GameSceneProps, {}>{
     const {
       renderOpponentBoard,
       renderOpponentScoreChecker,
-      renderProfile,
+      renderScoreChecker,
       renderStageTitle,
       props,
       scoreCheckerRef,
-      initialScore,
-      scoreCheckerScale,
-      scoreCheckerLayout,
       boardReadyStatus,
       startTimerIfBothReady,
       mapScale,
@@ -286,17 +327,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
               />
             </TimerContainer>
             {renderOpponentScoreChecker()}
-            <ScoreCheckerContainer gameType={props.mode}>
-              {renderProfile()}
-              <ScoreChecker
-                ref={scoreCheckerRef}
-                skin={props.skin}
-                initialScore={initialScore}
-                maxScore={props.maxScore}
-                scale={scoreCheckerScale}
-                layout={scoreCheckerLayout}
-              />
-            </ScoreCheckerContainer>
+            {renderScoreChecker()}
           </MetaInfoContainer>
         </GameInfoContainer>
         <BlockBoardContainer>

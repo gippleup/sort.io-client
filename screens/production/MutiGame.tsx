@@ -9,7 +9,10 @@ import { RouteProp, NavigationProp, useNavigation, CommonActions } from '@react-
 import { RootStackParamList } from '../../router/routes';
 import { BeforeRemoveEvent } from './GameScreen/utils';
 import { FullFlexCenter } from '../../components/Generic/StyledComponents';
-import { View } from 'react-native';
+import { View, Image, Text } from 'react-native';
+import CountryFlagIcon from '../../components/CountryFlagIcon';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { ProfileIconContainer } from './MultiGame/_StyledComponents';
 
 type MultiGameRouteProps = RouteProp<RootStackParamList, "PD_MultiGame">;
 type MultiGameNavigationProps = NavigationProp<RootStackParamList, "PD_MultiGame">;
@@ -29,11 +32,13 @@ type MultiGameProps = {
 export const MutiGame = (props: MultiGameProps) => {
   const {map, mapDesc} = props.route.params;
   const socket = useMultiGameSocket();
-  const roomId = socket.getRoomId();
   const gameSceneRef = React.createRef<GameScene>();
   const containerRef = React.createRef<View>();
   const playData = usePlayData();
+  const {players, roomId} = socket.getRoomData();
   const navigation = useNavigation();
+  const player = players.find((player) => player.id === playData.user.id);
+  const opponent = players.find((player) => player.id !== playData.user.id);
   let gameStarted = false;
 
   const sendDockMessage = (stackIndex: number, action: 'DOCK' | 'UNDOCK') => {
@@ -61,6 +66,13 @@ export const MutiGame = (props: MultiGameProps) => {
       userId: playData.user.id
     }));
   }
+
+  const PlayerProfile = player?.photo
+    ? <Image style={{width: '100%', height: '100%', borderRadius: 100}} source={{uri: player.photo}} />
+    : (<ProfileIconContainer style={{backgroundColor: 'dodgerblue'}}><Icon name="user" size={20} color="white"/></ProfileIconContainer>)
+  const OpponentProfile = opponent?.photo
+    ? <Image style={{width: '100%', height: '100%',  borderRadius: 100}} source={{ uri: opponent.photo }} />
+    : (<ProfileIconContainer style={{backgroundColor: 'black'}}><Icon name="user" size={20} color="white" /></ProfileIconContainer>)
 
   React.useEffect(() => {
     const $TimerBase = gameSceneRef.current?.timerRef.current?.timerBaseRef.current;
@@ -236,6 +248,15 @@ export const MutiGame = (props: MultiGameProps) => {
         }}
         onReady={sendReadyMessage}
         timerRoundTo={3}
+        opponentProfile={{
+          name: opponent? opponent.name : '상대',
+          photo: OpponentProfile
+        }}
+        playerProfile={{
+          name: player? player.name : '나',
+          photo: PlayerProfile
+        }}
+        noAnimation={false}
         // noAnimation 이걸 리덕스로 다뤄야 함. 메인에 버튼 하나 만들고 그걸로 리덕스 상태 변경하기
       />
     </View>

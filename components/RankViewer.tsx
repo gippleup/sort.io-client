@@ -5,7 +5,7 @@ import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
 import GradientBlindScrollView from './GradientBlindScrollView';
 
 export type RankViewerDataEntry = {
-  name: string; id?: number; rank: number; rate: number
+  name: string; id?: number; rank: number; rate: number; photo?: string;
 };
 export type RankViewerData = RankViewerDataEntry[];
 

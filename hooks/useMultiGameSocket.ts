@@ -45,7 +45,7 @@ let socket: null | WebSocket = null;
 let roomId: number = -1;
 let map: null | number[][] = null;
 let mapDesc: null | MapDesc = null;
-let players: {id: number; name: string}[] = [];
+let players: {id: number; name: string; photo: string}[] = [];
 
 const listenerManager: ListenerManager = {
   onSendRoom: {},

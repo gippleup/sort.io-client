@@ -228,6 +228,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
             rate: Number(entry.rate),
             name: entry.name,
             id: entry.id,
+            photo: entry.photo,
           }
           return mapped;
         };
@@ -327,6 +328,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
             marginVertical: 20,
             borderWidth: 1,
           }}
+          data={data}
           blindColor={boardStyle[result].backgroundColor as string}
           entryStyle={(entry, i, isEnd) => {
             const defaultContainerStyle: ViewStyle = { backgroundColor: 'transparent' }
@@ -357,7 +359,6 @@ const GameResultPopup = (props: GameResultPopupProps) => {
               }
             }
           }}
-          data={data}
         />
         <FlexHorizontal>
           <RoundRectangleButton onPress={onHomePressed} style={{marginRight: 10}} width={100}>

@@ -20,12 +20,14 @@ export const getCountryIconSvg = (lat: number, lng: number) => {
   .catch((err) => console.log(err))
 }
 
-export const signUpWithGoogle = (googleId: number, userId: number) => {
+export const signUpWithGoogle = (googleId: number, userId: number, photo: string | null, name: string | null) => {
   return fetch(`${API_BASE}/user/signup`, {
     ...POST_OPTION,
     body: JSON.stringify({
       googleId,
       userId,
+      photo,
+      name,
     })
   })
 }
@@ -189,6 +191,7 @@ export type UserSingleRankData = {
   createdAt: string;
   rank: string;
   rate: string;
+  photo: string;
 }
 
 export type UserMultiRankData = {
@@ -203,6 +206,7 @@ export type UserMultiRankData = {
   KBI: number;
   rank: string;
   rate: string;
+  photo: string;
 }
 
 export type RankData<T> = {

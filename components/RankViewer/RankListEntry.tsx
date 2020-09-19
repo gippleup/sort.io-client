@@ -14,7 +14,7 @@ type RankListEntryData = {
   name: string;
   rank: number;
   rate: number;
-  profilePic?: string;
+  photo?: string;
 };
 
 type RankListEntryProps = {
@@ -31,8 +31,9 @@ const defaultProfile = require('../../assets/default-profile.png');
 
 const RankListEntry = (props: RankListEntryProps) => {
   const {data, style} = props;
-  const {rank, rate, name, profilePic} = data;
-  const profile = profilePic || defaultProfile;
+  console.log(data);
+  const {rank, rate, name, photo} = data;
+  const profile = {uri: photo} || defaultProfile;
   const prettyRate = `(상위 ${prettyPercent(rate)}%)`;
   return (
     <EntryContainer onLayout={props.onLayout} style={style}>

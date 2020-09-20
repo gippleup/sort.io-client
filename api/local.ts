@@ -5,12 +5,14 @@ const publicKey = "GOTCHA";
 
 export type SortIoUser = {
   id: number | null;
-  name: string;
   isTemp: boolean;
-  gold: number;
+  name: string;
   ticket: number;
+  gold: number;
+  googleId?: number;
   items: string;
-  googleId: number | undefined;
+  createdAt?: string;
+  profileImg?: string;
 }
 
 export type SinglePlayData = {
@@ -33,8 +35,8 @@ export type MultiPlayData = {
 
 export type PlayData = {
   user: SortIoUser;
-  single: SinglePlayData[];
-  multi: MultiPlayData[];
+  singlePlay: SinglePlayData[];
+  multiPlay: MultiPlayData[];
 }
 
 const encrypt = (str: string) => {
@@ -52,7 +54,8 @@ export const getLocalPlayData = (): Promise<PlayData> => {
     AsyncStorage.getItem('playData')
       .then((data) => {
         if (data) {
-          const decryptedData = JSON.parse(decrypt(data)) as PlayData;
+          const decrypted = decrypt(data);
+          const decryptedData = JSON.parse(decrypted) as PlayData;
           resolve(decryptedData);
         } else {
           resolve(undefined);

@@ -13,8 +13,8 @@ import {
 } from "../actions/playData/types";
 
 const initialState: PlayData & {loaded: boolean} = {
-  multi: [],
-  single: [],
+  multiPlay: [],
+  singlePlay: [],
   user: {
     gold: 500,
     id: null,
@@ -23,6 +23,8 @@ const initialState: PlayData & {loaded: boolean} = {
     ticket: 3,
     googleId: undefined,
     items: "",
+    createdAt: undefined,
+    profileImg: undefined,
   },
   loaded: false,
 };
@@ -58,15 +60,15 @@ const reducer = (state = initialState, action: PlayDataActions) => {
 
   if (action.type === UPDATE_SINGLEPLAY) {
     const newData = action.payload;
-    newState.single = newData;
+    newState.singlePlay = newData;
   }
 
   if (action.type === UPDATE_MULTIPLAY) {
     const newData = action.payload;
-    newState.multi = newData;
+    newState.multiPlay = newData;
   }
 
-  if (state.loaded) {
+  if (newState.loaded) {
     setLocalPlayData(newState);
   }
 

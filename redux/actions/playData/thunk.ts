@@ -86,14 +86,13 @@ export const signInWithGoogle = () => async (dispatch: GeneralThunkDispatch, get
   if (!curUser.id) throw new Error('어어 이게 왜 이러지');
 
   const googleUser = await googleSignIn();
-  console.log('이게 여기가 맞는지', googleUser);
 
   if (!googleUser) return;
 
   const googleId = Number(googleUser.user.id);
   try {
     const savedServerData = await getPlayDataByGoogleId(googleId)
-      .then((data) => console.log(data))
+      .then((data) => data)
       .catch(() => {
         return null;
       });
@@ -107,7 +106,8 @@ export const signInWithGoogle = () => async (dispatch: GeneralThunkDispatch, get
         isTemp: false,
       }
       dispatch(updateUser(mixedUser));
-      signUpWithGoogle(googleId, curUser.id, googleUser.user.photo, googleUser.user.name);
+      const response = await signUpWithGoogle(googleId, curUser.id, googleUser.user.photo, googleUser.user.name)
+      // console.log(response);
     }
   } catch (e) {
     console.log(e);
@@ -194,10 +194,10 @@ export const saveSinglePlay = (difficulty: number) => async (dispatch: GeneralTh
   }
   if (isConnected && isServerOk && curUser.id) {
     const savedData = await saveSinglePlayToServer({userId: curUser.id, difficulty, createdAt});
-    const newData = curData.single.concat(savedData);
+    const newData = curData.singlePlay.concat(savedData);
     dispatch(updateSinglePlay(newData));
   } else {
-    const newData = curData.single.concat(generatedData);
+    const newData = curData.singlePlay.concat(generatedData);
     dispatch(updateSinglePlay(newData));
   }
 }
@@ -208,6 +208,6 @@ export const saveMultiPlay = (option: SaveMultiPlayOption) => async (dispatch: G
   if (!isConnected) return;
 
   const savedData = await saveMultiPlayToServer(option);
-  const newData = curData.multi.concat(savedData);
+  const newData = curData.multiPlay.concat(savedData);
   dispatch(updateMultiPlay(newData));
 }

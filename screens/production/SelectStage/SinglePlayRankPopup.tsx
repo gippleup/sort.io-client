@@ -30,15 +30,6 @@ const SinglePlayRankPopup = () => {
           blindColor="white"
           entryStyle={(entry, i, isEnd) => {
             const defaultContainerStyle: ViewStyle = {backgroundColor: 'transparent'}
-            if (isEnd) {
-              return {
-                containerStyle: {
-                  ...defaultContainerStyle,
-                  borderBottomColor: 'transparent'
-                }
-              }
-            }
-
             if (entry.id === playData.user.id) {
               return {
                 containerStyle: {
@@ -47,6 +38,15 @@ const SinglePlayRankPopup = () => {
                 textStyle: {
                   color: 'white',
                   fontWeight: 'bold'
+                }
+              }
+            }
+
+            if (isEnd) {
+              return {
+                containerStyle: {
+                  ...defaultContainerStyle,
+                  borderBottomColor: 'transparent'
                 }
               }
             }
@@ -75,6 +75,7 @@ const SinglePlayRankPopup = () => {
             rate: Number(entry.rate),
             name: entry.name,
             id: entry.userId,
+            photo: entry.photo,
           }
           return mapped;
         };

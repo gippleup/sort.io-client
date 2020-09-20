@@ -67,6 +67,16 @@ export const MutiGame = (props: MultiGameProps) => {
     }));
   }
 
+  const sendUpdateScoreMessage = (owner: "me" | "opponent", score: number) => {
+    if (owner === "me" && playData.user.id) {
+      socket.send(socketClientActions.updateScore({
+        roomId,
+        userId: playData.user.id,
+        score,
+      }))
+    }
+  }
+
   const PlayerProfile = player?.photo
     ? <Image style={{width: '100%', height: '100%', borderRadius: 100}} source={{uri: player.photo}} />
     : (<ProfileIconContainer style={{backgroundColor: 'dodgerblue'}}><Icon name="user" size={20} color="white"/></ProfileIconContainer>)
@@ -173,12 +183,15 @@ export const MutiGame = (props: MultiGameProps) => {
     const informWinnerListener = socket.addListener("onInformWinner",
     (winnerId: number) => {
       const hasWon = playData.user.id === winnerId;
+      const gameResult = winnerId === -1 
+        ? 'draw' 
+        : hasWon ? 'win' : 'lose';
       props.navigation.dispatch((state) => {
         const routes: typeof state.routes = state.routes.concat([{
           key: "Popup_GameResult" + Date.now(),
           name: "Popup_GameResult",
           params: {
-            result: hasWon ? 'win' : 'lose',
+            result: gameResult,
           },
         }]);
         return CommonActions.reset({
@@ -252,6 +265,7 @@ export const MutiGame = (props: MultiGameProps) => {
           name: opponent? opponent.name : '상대',
           photo: OpponentProfile
         }}
+        onScoreChange={sendUpdateScoreMessage}
         playerProfile={{
           name: player? player.name : '나',
           photo: PlayerProfile

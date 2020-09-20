@@ -42,6 +42,7 @@ type GameSceneProps = {
   onDock?: (stackIndex: number) => void;
   onUndock?: (stackIndex: number) => void;
   onReady?: () => any;
+  onScoreChange?: (owner: "opponent" | "me", score: number) => any;
   readyDuration?: number;
   mode: 'single' | 'multi';
   fps?: number;
@@ -193,6 +194,9 @@ class GameScene extends React.Component<GameSceneProps, {}>{
           skin={props.skin}
           onScoreChange={(score) => {
             opponentScoreCheckerRef.current?.setScore(score);
+            if (props.onScoreChange) {
+              props.onScoreChange("opponent", score);
+            }
           }}
           onComplete={() => {
             if (props.onComplete) {
@@ -300,6 +304,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
       mapScale,
       timerRef,
     } = this;
+
     return (
       <GameSceneContainer>
         <PatternBackground
@@ -336,6 +341,9 @@ class GameScene extends React.Component<GameSceneProps, {}>{
             skin={props.skin}
             onScoreChange={(score) => {
               scoreCheckerRef.current?.setScore(score);
+              if (props.onScoreChange) {
+                props.onScoreChange("me", score);
+              }
             }}
             onDock={props.onDock}
             onUndock={props.onUndock}

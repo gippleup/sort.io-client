@@ -18,7 +18,11 @@ const RankGraphPopup = () => {
   const [data, setData] = React.useState<SinglePlayData[] | null>(null);
   const navigation = useNavigation();
   if (!data) {
-    getLocalPlayData().then((data) => setData(data.single))
+    getLocalPlayData().then((data) => {
+      if (data) {
+        setData(data.singlePlay)
+      }
+    })
   }
 
   const renderGraph = () => {

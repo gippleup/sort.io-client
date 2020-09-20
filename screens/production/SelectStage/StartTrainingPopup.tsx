@@ -16,8 +16,9 @@ type StartTrainingProps = {
 const StartTrainingPopup = (props: StartTrainingProps) => {
   const playData = usePlayData();
   const navigation = useNavigation();
+  const {singlePlay} = playData;
   const dispatch = useDispatch();
-  const lastSinglePlayData = playData.single[playData.single.length - 1];
+  const lastSinglePlayData = singlePlay[singlePlay.length - 1];
   const lastPlayedDifficulty = lastSinglePlayData ? lastSinglePlayData.difficulty : 0;
   const diffToChallenge = lastPlayedDifficulty;
   const diffToChallengeStr = getLevelString(diffToChallenge);

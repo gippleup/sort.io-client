@@ -2,23 +2,27 @@ import styled from "styled-components";
 import { View } from "react-native";
 import NativeRefBox from "../../../../components/NativeRefBox";
 import { TextInput } from "react-native-gesture-handler";
+import chroma from "chroma-js";
 
 export const Modal: typeof NativeRefBox = styled(NativeRefBox)`
   width: 200px;
-  height: 300px;
+  height: 400px;
   align-items: center;
   justify-content: center;
-  background-color: slategrey;
+  background-color: dodgerblue;
   border-radius: 20px;
   border-width: 3px;
+  border-color: ${chroma("black").alpha(0.3).hex()};
 `
 
-export const LoadingAnimationContainer: typeof View = styled(View)`
+export const LoadingAnimationContainer: typeof NativeRefBox = styled(NativeRefBox)`
   width: 100px;
-  height: 140px;
+  /* height: 140px; */
   align-items: center;
   justify-content: flex-end;
-  margin-bottom: 10px;
+  /* background-color: red; */
+  flex: 1;
+  margin-bottom: 90px;
 `;
 
 export const LoadingText: typeof TextInput = styled(TextInput)`
@@ -26,5 +30,5 @@ export const LoadingText: typeof TextInput = styled(TextInput)`
   font-size: 20px;
   padding: 0px;
   color: ghostwhite;
-  margin-top: 10px;
+  margin-bottom: 5px;
 `;

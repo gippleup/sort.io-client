@@ -1,5 +1,5 @@
 import React, { RefObject } from 'react'
-import { View, Text, BackHandler, Dimensions } from 'react-native'
+import { View, Text, BackHandler, Dimensions, ToastAndroid, Animated, Easing } from 'react-native'
 import Loading from '../../../components/Loading'
 import NativeRefBox from '../../../components/NativeRefBox'
 import { Modal, LoadingAnimationContainer, LoadingText } from './MultiWaitingPopup/_StyledComponent'
@@ -11,7 +11,9 @@ import { RootStackParamList } from '../../../router/routes'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { FullFlexCenter } from '../../../components/Generic/StyledComponents'
 import { BeforeRemoveEvent } from '../GameScreen/utils'
-import { useGoogleUser } from '../../../hooks/useGoogleUser'
+import Svg, { Defs, Ellipse, RadialGradient, Rect, Stop, StopProps } from 'react-native-svg'
+import MaskedView from '@react-native-community/masked-view'
+import chroma from 'chroma-js'
 
 type MultiWaitingPopupNavigationProps = StackNavigationProp<RootStackParamList, "Popup_MultiWaiting">;
 type MultiWaitingPopupRouteProps = RouteProp<RootStackParamList, "Popup_MultiWaiting">;
@@ -21,7 +23,11 @@ type MultiWaitingPopupProps = {
   route: MultiWaitingPopupRouteProps;
 }
 
-const blockRemoveStack = (e: BeforeRemoveEvent) => e.preventDefault();
+const AnimatedStop = Animated.createAnimatedComponent(Stop);
+
+const blockRemoveStack = (e: BeforeRemoveEvent) => {
+  e.preventDefault();
+};
 
 const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
   let foundMatch = false;
@@ -33,6 +39,16 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
   const socket = useMultiGameSocket();
   const playdata = usePlayData();
   const roomData = React.useRef<OnSendRoomParam | null>(null);
+  const stopColorAnimation = new Animated.Value(0);
+  const animContainerRef = React.createRef<NativeRefBox>();
+  const innerStopOffset = stopColorAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 0],
+  });
+  const outerStopOffset = stopColorAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.2, 1],
+  });
 
   const closeSocket = () => {
     socket.close();
@@ -56,26 +72,33 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
 
     setRefText("곧 시작합니다!");
 
-    modalRef.current?.animate({
+    Animated.timing(stopColorAnimation, {
+      toValue: 1,
+      useNativeDriver: false,
+      duration: 300,
+      easing: Easing.out(Easing.ease),
+    }).start();
+
+    animContainerRef.current?.animate({
       style: {
-        backgroundColor: 'black',
-        borderColor: 'white',
+        marginBottom: 50,
       },
       duration: 100,
-      easing: "easeInOutSine",
+      easing: "easeOutSine"
     }).start();
 
     loadingTextContainerRef.current?.animate({
       style: {
         scaleX: 1.3,
         scaleY: 1.3,
+        marginBottom: 20,
       },
       duration: 300,
       easing: "easeOutElastic",
     }).start();
 
     loadingTextRef.current?.setNativeProps({
-      color: 'yellow'
+      color: 'white'
     })
   }
 
@@ -134,10 +157,43 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
     }
   }, [])
 
+  const mask = <View
+    style={{
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'white',
+      borderRadius: 15
+    }}
+  />
+
+  console.log();
+
   return (
     <FullFlexCenter style={{backgroundColor: "rgba(0,0,0,0.3)"}}>
       <Modal style={{width: Dimensions.get('screen').width - 60, maxWidth: 300}} ref={modalRef}>
-        <LoadingAnimationContainer>
+        <View style={{position: 'absolute', width: '100%', height: '100%'}}>
+          <MaskedView maskElement={mask}>
+            <Svg style={{width: '100%', height: '100%', borderRadius: 15}}>
+              <Rect x="0%" y="0%" width="100%" height="100%"  fill="url(#grad)" />
+              <Defs>
+                <RadialGradient
+                  id="grad"
+                  cx="50%"
+                  cy="50%"
+                  rx="500"
+                  ry="500"
+                  fx="50%"
+                  fy="50%"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <AnimatedStop offset={innerStopOffset} stopColor="dodgerblue" stopOpacity="1" />
+                  <AnimatedStop offset={outerStopOffset} stopColor="black" stopOpacity="0.9" />
+                </RadialGradient>
+              </Defs>
+            </Svg>
+          </MaskedView>
+        </View>
+        <LoadingAnimationContainer ref={animContainerRef}>
           <Loading
             checkIfLoaded={checkIfFoundMatch}
             onLastAnimationStarted={onLastAnimationStarted}

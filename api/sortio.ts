@@ -13,6 +13,25 @@ const POST_OPTION: Partial<RequestInit> = {
   },
 }
 
+type UserEntityProps = {
+  id: number;
+  name?: string;
+  createdAt?: string;
+  gold?: number;
+  items?: string;
+  isTemp?: boolean;
+  profileImg?: string;
+  ticket?: number;
+  gooogleId?: string;
+}
+
+export const _dangerouslyUpdateServerData = (option: UserEntityProps) => {
+  return fetch(`${API_BASE}/user/update`, {
+    ...POST_OPTION,
+    body: JSON.stringify(option),
+  })
+}
+
 export const getCountryIconSvg = (lat: number, lng: number) => {
   const url = `${API_BASE}/country/icon`
   return fetch(`${url}?lat=${lat}&lng=${lng}`)
@@ -30,6 +49,8 @@ export const signUpWithGoogle = (googleId: number, userId: number, photo: string
       name,
     })
   })
+    .then((res) => res.json())
+    .catch((err) => null);
 }
 
 export type MapOption = {
@@ -68,10 +89,14 @@ export const getPlayDataByUserId = (userId: number): Promise<PlayData> => {
   const url = `${API_BASE}/user/playdata?userId=${userId}`
   return fetch(url)
     .then((res) => {
-      return res.json();
+      if (res.status === 200) {
+        return res.json();
+      } else {
+        throw new Error('NO PLAY DATA FOUND ON SERVER');
+      }
     })
     .catch((err) => {
-      console.log(err);
+      console.warn(err);
       return null;
     })
 }
@@ -80,10 +105,14 @@ export const getPlayDataByGoogleId = (googleId: number): Promise<PlayData> => {
   const url = `${API_BASE}/user/playdata?googleId=${googleId}`
   return fetch(url)
     .then((res) => {
-      return res.json();
+      if (res.status === 200) {
+        return res.json();
+      } else {
+        throw new Error('NO PLAY DATA FOUND ON SERVER');
+      }
     })
     .catch((err) => {
-      console.log(err);
+      console.warn(err);
       return null;
     })
 }

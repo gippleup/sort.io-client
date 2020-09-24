@@ -1,4 +1,5 @@
 import chroma from 'chroma-js';
+import { extractRandomFromArray } from '../utils';
 
 type SpikeSkinColorTheme = {
   cap: string;
@@ -7,28 +8,6 @@ type SpikeSkinColorTheme = {
   bottomFill: string;
   feet: string;
 };
-
-
-const randomIndexFromArray = (array: any[]): number => {
-  const randomValidIndex = Math.floor(Math.random() * array.length);
-  return randomValidIndex;
-}
-
-const pickRandomFromArray = (array: any[]) => {
-  return array[randomIndexFromArray(array)];
-}
-
-const extractRandomFromArray = (array: any[]) => {
-  const randomIndex = randomIndexFromArray(array);
-  const pickedEle = array[randomIndex];
-  const front = array.slice(0, randomIndex);
-  const latter = array.slice(randomIndex + 1, array.length);
-  const extractedArray = front.concat(latter)
-  return {
-    pickedEle,
-    extractedArray,
-  };
-}
 
 const mainColor = chroma('red').hex();
 

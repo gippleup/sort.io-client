@@ -7,7 +7,7 @@ import colors from './ColorTheme';
 import SvgContainer from './SvgContainer';
 
 const BottomBase: React.FC<BasicBlockProps> = (props) => {
-  const {fill} = colors[props.type];
+  const fill = colors[props.type].top;
   const {scale = 1} = props;
   return (
     <SvgContainer

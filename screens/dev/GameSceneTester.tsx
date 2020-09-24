@@ -22,7 +22,7 @@ const GameSceneTester = () => {
   }
   return (
     <GameScene
-      skin="spiky"
+      skin="basic"
       map={map}
       title={'하드'}
       timeLimit={60}

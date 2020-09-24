@@ -8,15 +8,16 @@ import SvgContainer from './SvgContainer';
 
 const BottomBase: React.FC<BasicBlockProps> = (props) => {
   const {fill} = colors[props.type];
+  const {scale = 1} = props;
   return (
     <SvgContainer
       innerMarginTop={0}
-      scale={props.scale}
+      scale={scale}
       marginLeft={0}
       height={34}>
       <Svg
-        width={66 * props.scale}
-        height={34 * props.scale}
+        width={66 * scale}
+        height={34 * scale}
         viewBox="0 0 66 34"
         fill="none">
         <Path d="M1 1V33H65V1H49V9H17V1H1Z" fill={fill} stroke="black" />

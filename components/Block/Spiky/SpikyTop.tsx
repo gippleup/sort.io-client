@@ -8,15 +8,17 @@ import SvgContainer from '../SvgContainer';
 
 const SpikyTop = (props: BasicBlockProps) => {
   const {cap} = colorTheme[props.type];
+  const { scale = 1 } = props;
+
   return (
     <SvgContainer
       innerMarginTop={0}
       height={24}
       marginLeft={0}
-      scale={props.scale}>
+      scale={scale}>
       <Svg
-        width={78 * props.scale}
-        height={34 * props.scale}
+        width={78 * scale}
+        height={34 * scale}
         viewBox="0 0 78 34">
         <Path d="M1 1V9H17V17H49V9H65V1H1Z" fill={cap} stroke="black" />
       </Svg>

@@ -8,15 +8,17 @@ import SvgContainer from '../SvgContainer';
 
 const SpikyPiece = (props: BasicBlockProps) => {
   const {bodyFill, spike} = colorTheme[props.type];
+  const { scale = 1 } = props;
+
   return (
     <SvgContainer
       innerMarginTop={0}
       height={24}
       marginLeft={-6}
-      scale={props.scale}>
+      scale={scale}>
       <Svg
-        width={78 * props.scale}
-        height={34 * props.scale}
+        width={78 * scale}
+        height={34 * scale}
         viewBox="0 0 78 34">
         <Path
           d="M77 13L70.25 3.47372L70.25 22.5263L77 13Z"

@@ -1,8 +1,8 @@
 import React from 'react';
-import Svg, {Path} from 'react-native-svg';
-import {BasicBlockProps} from './Types';
+import Svg, {Ellipse, Path} from 'react-native-svg';
+import {BasicBlockProps} from '../Types';
 import colors from './ColorTheme';
-import SvgContainer from './SvgContainer';
+import SvgContainer from '../SvgContainer';
 
 const PieceBase: React.FC<BasicBlockProps> = (props) => {
   const fill = colors[props.type].piece;

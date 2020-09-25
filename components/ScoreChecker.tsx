@@ -1,6 +1,6 @@
 import React, {Fragment, RefObject} from 'react';
 import {View, Text, Easing} from 'react-native';
-import {skins} from './BlockStack/skinMap';
+import {skins} from './Block/skinMap';
 import styled from 'styled-components';
 import BlockFrame from './BlockStack/BlockFrame';
 import ScoreIcon from './ScoreChecker/ScoreIcon';

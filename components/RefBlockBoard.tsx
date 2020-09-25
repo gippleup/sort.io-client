@@ -12,13 +12,10 @@ import styled from 'styled-components';
 import Constants from '../assets/Constants';
 import BlockFrame from './BlockStack/BlockFrame';
 import Block from './Block';
-import BottomBase from './Block/BottomBase';
-import skinMap, {skins} from './BlockStack/skinMap';
+import {skins} from './Block/skinMap';
 import {BlockTypes} from './Block/Types';
 import RefBox from './RefBox';
-import PieceBase from './Block/PieceBase';
 import TouchAgent from './TouchAgent';
-import TopBase from './Block/TopBase';
 
 const LayoutContainer: typeof View | React.ComponentClass<{marginLeft: number; marginTop: number}> = styled(View)`
   position: absolute;
@@ -621,8 +618,8 @@ export class RefBlockBoard extends Component<
                     }}>
                     <Block
                       ref={capBlockRef}
-                      base={TopBase}
-                      shape={skinMap[props.skin].top}
+                      skin={props.skin}
+                      part="top"
                       type={
                         filteredStack[0] !== undefined ? filteredStack[0] : 50
                       }
@@ -648,8 +645,8 @@ export class RefBlockBoard extends Component<
                             Constants.blockHeight.piece * (k + 1) * scale,
                         }}>
                         <Block
-                          base={PieceBase}
-                          shape={skinMap[props.skin].piece}
+                          skin={props.skin}
+                          part="piece"
                           type={type}
                           scale={scale}
                         />
@@ -673,8 +670,8 @@ export class RefBlockBoard extends Component<
                     <Block
                       ref={bottomRef}
                       visible={true}
-                      base={BottomBase}
-                      shape={skinMap[props.skin].bottom}
+                      skin={props.skin}
+                      part="bottom"
                       type={
                         filteredStack[0] !== undefined ? filteredStack[0] : 50
                       }

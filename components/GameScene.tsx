@@ -2,13 +2,11 @@ import React from 'react';
 import {View, Text, Image, Dimensions} from 'react-native';
 import PatternBackground from './GameScene/PatternBackground';
 import Timer from './Timer';
-import styled from 'styled-components';
 import ScoreChecker from './ScoreChecker';
 // import RefBlockBoard from './RefBlockBoard';
 import NativeRefBlockBoard from './NativeRefBlockBoard';
 import {BlockTypes} from './Block/Types';
-import { skins } from './BlockStack/skinMap';
-import CountryFlagIcon from './CountryFlagIcon';
+import { skins } from './Block/skinMap';
 import Constants from '../assets/Constants';
 import { decideMapScale } from './GameScene/utils';
 import {
@@ -36,7 +34,8 @@ type GameSceneProps = {
   isManualTimer?: boolean;
   maxScore: number;
   map: BlockTypes[][];
-  skin: skins;
+  playerSkin?: skins;
+  opponentSkin?: skins;
   onComplete?: (winner: "opponent" | "me") => any;
   onTimeOut?: () => void;
   onDock?: (stackIndex: number) => void;
@@ -187,11 +186,11 @@ class GameScene extends React.Component<GameSceneProps, {}>{
     }
 
     return (
-      <OpponentGameContainer>
+      <OpponentGameContainer pointerEvents="none">
         <OpponentBoard
           ref={opponentBoardRef}
           initialMap={props.map}
-          skin={props.skin}
+          skin={props.opponentSkin || "basic"}
           onScoreChange={(score) => {
             opponentScoreCheckerRef.current?.setScore(score);
             if (props.onScoreChange) {
@@ -239,7 +238,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
           </FlexHorizontal>
           <ScoreChecker
             ref={opponentScoreCheckerRef}
-            skin={props.skin}
+            skin={props.opponentSkin || "basic"}
             initialScore={initialScore}
             maxScore={props.maxScore}
             scale={scoreCheckerScale}
@@ -280,7 +279,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
           {props.mode === "single" ? <></> : name}
           <ScoreChecker
             ref={scoreCheckerRef}
-            skin={props.skin}
+            skin={props.playerSkin || "basic"}
             initialScore={initialScore}
             maxScore={props.maxScore}
             scale={scoreCheckerScale}
@@ -338,7 +337,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
         <BlockBoardContainer>
           <StyledRefBoard
             initialMap={props.map}
-            skin={props.skin}
+            skin={props.playerSkin || "basic"}
             onScoreChange={(score) => {
               scoreCheckerRef.current?.setScore(score);
               if (props.onScoreChange) {

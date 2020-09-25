@@ -243,7 +243,8 @@ export const MutiGame = (props: MultiGameProps) => {
         mode={'multi'}
         title={'하드'}
         map={map}
-        skin="spiky"
+        playerSkin="basic"
+        opponentSkin="basic"
         timeLimit={60}
         isManualTimer
         maxScore={mapDesc.maxScore}

@@ -13,13 +13,10 @@ import styled from 'styled-components';
 import Constants from '../assets/Constants';
 import BlockFrame from './BlockStack/BlockFrame';
 import Block from './Block';
-import BottomBase from './Block/BottomBase';
-import skinMap, {skins} from './BlockStack/skinMap';
+import {skins} from './Block/skinMap';
 import {BlockTypes} from './Block/Types';
 import NativeRefBox from './NativeRefBox';
-import PieceBase from './Block/PieceBase';
 import TouchAgent from './TouchAgent';
-import TopBase from './Block/TopBase';
 
 const LayoutContainer: typeof View | React.ComponentClass<{marginLeft: number; marginTop: number}> = styled(View)`
   position: absolute;
@@ -637,11 +634,9 @@ export class RefBlockBoard extends Component<
                     }}>
                     <Block
                       ref={capBlockRef}
-                      base={TopBase}
-                      shape={skinMap[props.skin].top}
-                      type={
-                        filteredStack[0] !== undefined ? filteredStack[0] : 50
-                      }
+                      type={filteredStack[0] !== undefined ? filteredStack[0] : 50}
+                      skin={props.skin}
+                      part="top"
                       scale={scale}
                       visible={true}
                     />
@@ -664,9 +659,9 @@ export class RefBlockBoard extends Component<
                             Constants.blockHeight.piece * (k + 1) * scale,
                         }}>
                         <Block
-                          base={PieceBase}
-                          shape={skinMap[props.skin].piece}
                           type={type}
+                          skin={props.skin}
+                          part="piece"
                           scale={scale}
                         />
                       </AbsoluteRefBox>
@@ -689,11 +684,9 @@ export class RefBlockBoard extends Component<
                     <Block
                       ref={bottomRef}
                       visible={true}
-                      base={BottomBase}
-                      shape={skinMap[props.skin].bottom}
-                      type={
-                        filteredStack[0] !== undefined ? filteredStack[0] : 50
-                      }
+                      type={filteredStack[0] !== undefined ? filteredStack[0] : 50}
+                      skin={props.skin}
+                      part="bottom"
                       scale={scale}
                     />
                   </AbsoluteRefBox>

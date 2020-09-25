@@ -4,7 +4,7 @@ import model, {TBlockStack, BlockBoardReducerAction, BlockBoardReducerState} fro
 import BlockStack from './BlockStack';
 import styled from 'styled-components';
 import Constants from '../assets/Constants';
-import {skins} from './BlockStack/skinMap';
+import {skins} from './Block/skinMap';
 
 const Board: typeof View = styled(View)`
   background-color: royalblue;
@@ -86,7 +86,7 @@ class BlockBoard extends React.Component<BlockBoardProps, {}> {
   render() {
     const {props, state, putStacksToRow, dispatch} = this;
     const column = Math.floor(
-      props.style.width / (Constants.blockWidth + Constants.blockPadding),
+      Number(props.style.width) / (Constants.blockWidth + Constants.blockPadding),
     );
 
     const row = Math.ceil(state.blockStackCount / column);

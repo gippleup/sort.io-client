@@ -1,13 +1,12 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import Svg, {Path} from 'react-native-svg';
-import styled from 'styled-components';
-import {BasicBlockProps, BlockTypes} from './Types';
+import {BasicBlockProps, BlockTypes} from '../Types';
 import colors from './ColorTheme';
-import SvgContainer from './SvgContainer';
+import SvgContainer from '../SvgContainer';
 
 const TopBase: React.FC<BasicBlockProps> = (props) => {
-  const fill = colors[props.type].bottom;
+  const fill = colors[props.type].top;
   const { scale = 1 } = props;
 
   return (

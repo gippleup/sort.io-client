@@ -1,3 +1,4 @@
+import chroma from 'chroma-js';
 import React from 'react';
 import {View, Text} from 'react-native';
 import Constants from '../../assets/Constants';
@@ -8,7 +9,9 @@ type BlockFrameProps = {
 };
 
 const BlockFrame: React.FC<BlockFrameProps> = (props) => {
-  const bgColor = 'rgba(20, 20, 20, 0.5)';
+  const bgColor = chroma("black")
+    .alpha(0.2)
+    .hex();
   return (
     <View
       style={{
@@ -19,8 +22,11 @@ const BlockFrame: React.FC<BlockFrameProps> = (props) => {
             Constants.blockHeight.piece * props.pieceCount) *
           props.scale,
         backgroundColor: bgColor,
-        borderWidth: 0.5,
-        borderColor: 'rgba(255,255,255,0.2)'
+        borderWidth: 1,
+        borderColor: chroma("royalblue")
+          .alpha(0.8)
+          .set('hsl.l', 0.2)
+          .hex()
       }}
     />
   );

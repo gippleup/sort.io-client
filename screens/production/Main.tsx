@@ -51,9 +51,9 @@ const Main = (props: MainProps) => {
 
   const onPressSingle = () => navigation.navigate('PD_SelectStage');
 
-  const onPressMulti = () => {
-    navigation.navigate('Popup_MultiWaiting');
-  }
+  const onPressMulti = () => navigation.navigate('Popup_MultiWaiting');
+
+  const onPressShop = () => navigation.navigate("PD_Shop");
 
   React.useEffect(() => {
     return () => {
@@ -101,7 +101,7 @@ const Main = (props: MainProps) => {
         <MainButton
           preComponent={<ButtonIcon name="shopping-basket" color="cornflowerblue" />}
           text="상점"
-          onPress={() => { }}
+          onPress={onPressShop}
         />
         <MainButton
           preComponent={<ButtonIcon name="trophy" color="goldenrod" />}

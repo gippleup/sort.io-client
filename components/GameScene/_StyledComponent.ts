@@ -12,7 +12,7 @@ export const GameInfoContainer = styled(View)`
   flex-direction: row;
 `;
 
-export const OpponentGameContainer = styled(View)`
+export const OpponentGameContainer: typeof View = styled(View)`
   justify-content: center;
   align-items: center;
   width: ${(119 / 360) * Dimensions.get('screen').width}px;

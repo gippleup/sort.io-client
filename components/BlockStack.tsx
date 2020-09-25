@@ -1,12 +1,9 @@
 import React from 'react';
 import {View, Animated, Easing, ViewProps} from 'react-native';
 import {TBlock} from './BlockBoard/Model/model';
-import PieceBase from './Block/PieceBase';
-import BottomBase from './Block/BottomBase';
-import TopBase from './Block/TopBase';
 import styled from 'styled-components';
 import Block from './Block';
-import skinMap, {skins} from './BlockStack/skinMap';
+import skinMap, {skins} from './Block/skinMap';
 import BlockFrame from './BlockStack/BlockFrame';
 
 const StackContainer: typeof View = styled(View)`
@@ -145,8 +142,8 @@ class BlockStack extends React.Component<BlockStackProps, {}> {
     return (
       <Block
         type={this.tailBlock.type}
-        shape={skinMap[props.skin].top}
-        base={TopBase}
+        skin={props.skin}
+        part="top"
         scale={props.scale}
       />
     );
@@ -158,8 +155,8 @@ class BlockStack extends React.Component<BlockStackProps, {}> {
         <BlockContainer>
           <Block
             type={9}
-            shape={skinMap[props.skin].bottom}
-            base={BottomBase}
+            skin={props.skin}
+            part="bottom"
             scale={props.scale}
           />
         </BlockContainer>
@@ -185,8 +182,8 @@ class BlockStack extends React.Component<BlockStackProps, {}> {
           }}>
           <Block
             type={this.topBlock.type}
-            shape={skinMap[props.skin].piece}
-            base={PieceBase}
+            skin={props.skin}
+            part="piece"
             scale={props.scale}
           />
         </Animated.View>
@@ -197,15 +194,15 @@ class BlockStack extends React.Component<BlockStackProps, {}> {
             <Block
               key={i}
               type={block.type}
-              shape={skinMap[props.skin].piece}
-              base={PieceBase}
+              skin={props.skin}
+              part="piece"
               scale={props.scale}
             />
           ))}
         <Block
           type={this.tailBlock.type}
-          shape={skinMap[props.skin].bottom}
-          base={BottomBase}
+          skin={props.skin}
+          part="bottom"
           scale={props.scale}
         />
       </BlockContainer>

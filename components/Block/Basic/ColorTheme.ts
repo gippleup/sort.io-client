@@ -1,33 +1,12 @@
 import chroma from 'chroma-js';
-import { extractRandomFromArray } from './utils';
+import { extractRandomFromArray } from '../utils';
+import colorArr from '../Colors';
 
 type BasicSkinColorTheme = {
   top: string;
   piece: string;
   bottom: string;
 };
-
-const mainColor = chroma('red').hex();
-
-const colorArr = [];
-const blockTypeCount = 24; // This is the max allowance for color counts.
-const hue = chroma(mainColor).get('hsl.h');
-for (let i = 0; i < blockTypeCount; i += 1) {
-  const adjustedColor = chroma(mainColor)
-    .set('hsl.h', hue + 360 / blockTypeCount * i)
-    .set('hsl.l',
-      i % 4 === 0 ? 0.7
-        : i % 4 === 1 ? 0.3
-          : i % 4 === 2 ? 0.4
-            : i % 4 === 3 ? 0.4 : '')
-    .set('hsl.s',
-      i % 4 === 0 ? 1
-        : i % 4 === 1 ? 0.6
-          : i % 4 === 2 ? 0.6
-            : i % 4 === 3 ? 1 : '')
-    .hex()
-  colorArr.push(adjustedColor)
-}
 
 let index = colorArr.map((_, i) => i);
 

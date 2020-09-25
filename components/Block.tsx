@@ -1,20 +1,28 @@
 import React from 'react';
 import {View, Text, ViewStyle} from 'react-native';
-import Svg from 'react-native-svg';
 import styled from 'styled-components';
-import {BlockTypes, BasicBlockProps} from './Block/Types';
+import BlockBase from './Block/BlockBase';
+import {BlockTypes} from './Block/Types';
+import skinMap, { skins } from './Block/skinMap';
 
 const ShapeContainer: typeof View = styled(View)`
   position: absolute;
 `;
 
+const blockHeight = {
+  top: 8,
+  piece: 24,
+  bottom: 34,
+}
+
+const blockWidth = 66;
+
 type BlockProps = {
-  base: React.FC<BasicBlockProps>;
-  shape?: React.FC<BasicBlockProps>;
   type: BlockTypes;
+  skin: skins;
+  part: "top" | "piece" | "bottom";
   scale?: number;
   visible?: boolean;
-  style?: ViewStyle;
 };
 
 class Block extends React.Component<BlockProps, {type: BlockTypes}> {
@@ -37,10 +45,7 @@ class Block extends React.Component<BlockProps, {type: BlockTypes}> {
 
   renderShape(type: BlockTypes) {
     const {props} = this;
-    if (!props.shape) {
-      return <></>;
-    }
-    const Shape: React.FC<BasicBlockProps> = props.shape;
+    const Shape = skinMap[props.skin][props.part]
     return (
       <ShapeContainer>
         <Shape scale={props.scale} type={type} />
@@ -50,15 +55,15 @@ class Block extends React.Component<BlockProps, {type: BlockTypes}> {
 
   render() {
     const {props, state, renderShape} = this;
-    const Base = props.base;
     const initialVisiblity =
       props.visible === true || props.visible === undefined ? 'flex' : 'none';
 
     return (
       <View
         ref={this.containerRef}
-        style={[props.style, {display: initialVisiblity}]}>
-        <Base scale={props.scale} type={9} />
+        style={{display: initialVisiblity}}>
+        <BlockBase height={blockHeight[props.part]} width={blockWidth} scale={props.scale} />
+        {/* <Base scale={props.scale} type={9} /> */}
         {renderShape(state.type)}
       </View>
     );

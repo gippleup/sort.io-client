@@ -7,9 +7,9 @@ import { generateMap } from '../../api/sortio';
 const GameSceneTester = () => {
   const [map, setMap] = React.useState<null | BlockTypes[][]>(null);
   const option = {
-    blockStackCount: 10,
-    colorCount: 5,
-    maxScore: 8,
+    blockStackCount: 24,
+    colorCount: 23,
+    maxScore: 23,
     stackLengthMax: 8,
     stackLengthMin: 2,
     shuffleCount: 100,
@@ -22,7 +22,7 @@ const GameSceneTester = () => {
   }
   return (
     <GameScene
-      skin="basic"
+      playerSkin="basic"
       map={map}
       title={'하드'}
       timeLimit={60}

@@ -2,13 +2,6 @@ import React, { RefObject } from 'react'
 import { View, Text } from 'react-native'
 import Block from './Block';
 import NativeRefBox from './NativeRefBox';
-import TopBase from './Block/TopBase';
-import SpikyTop from './Block/Spiky/SpikyTop';
-import PieceBase from './Block/PieceBase';
-import SpikyPiece from './Block/Spiky/SpikyPiece';
-import BottomBase from './Block/BottomBase';
-import SpikyBottom from './Block/Spiky/SpikyBottom';
-import { NotoSans } from './Generic/StyledComponents';
 import StrokedText from './StrokedText';
 import chroma from 'chroma-js';
 
@@ -202,8 +195,8 @@ const Loading = (props: LoadingProps) => {
       <NativeRefBox ref={refBoxTopRef} style={{ opacity: 0 }}>
         <Block
           ref={topRef}
-          base={TopBase}
-          shape={SpikyTop}
+          skin="spiky"
+          part="top"
           scale={1}
           type={1}
         />
@@ -211,8 +204,8 @@ const Loading = (props: LoadingProps) => {
       <NativeRefBox ref={refBoxPieceRef}>
         <Block
           ref={pieceRef}
-          base={PieceBase}
-          shape={SpikyPiece}
+          skin="spiky"
+          part="piece"
           scale={1}
           type={1}
         />
@@ -220,8 +213,8 @@ const Loading = (props: LoadingProps) => {
       <NativeRefBox ref={refBoxBottomRef}>
         <Block
           ref={bottomRef}
-          base={BottomBase}
-          shape={SpikyBottom}
+          skin="spiky"
+          part="bottom"
           scale={1}
           type={1}
         />

@@ -5,13 +5,13 @@ import Svg, { G, Path } from 'react-native-svg'
 type Props = {
   width?: number;
   height?: number;
+  fill?: string;
+  stroke?: string;
 }
 
 type State = {
   mirror?: boolean;
   flip?: boolean;
-  fill?: string;
-  stroke?: string;
 }
 
 class Chat extends React.Component<Props, State> {

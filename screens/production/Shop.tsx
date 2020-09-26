@@ -1,7 +1,12 @@
 import React from 'react'
 import { View, Text, Dimensions } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Block from '../../components/Block';
+import { RoundRectangleButton } from '../../components/EndGameInfo/_StyledComponents';
 import PatternBackground from '../../components/GameScene/PatternBackground';
+import { FlexHorizontal, NotoSans } from '../../components/Generic/StyledComponents';
+import SlideSelector from '../../components/SlideSelector';
+import CatogorySelector, { CategoryFilter } from './Shop/CatogorySelector';
 
 const backgroundImage = require('../../assets/BackgroundPattern.png');
 
@@ -46,15 +51,24 @@ const items: Item[] = [
 
 ]
 
+const Background = (
+  <PatternBackground
+    source={backgroundImage}
+    width={Dimensions.get('screen').width}
+    height={Dimensions.get('screen').height}
+    scale={0.5}
+  />
+)
+
 const Shop = () => {
+  const [categoryFilter, setCategoryFilter] = React.useState<CategoryFilter>("skins");
+
   return (
-    <View>
-      <PatternBackground
-        source={backgroundImage}
-        width={Dimensions.get('screen').width}
-        height={Dimensions.get('screen').height}
-        scale={0.5}
-      />
+    <View style={{flex: 1}}>
+      {Background}
+      <View style={{position: 'absolute', bottom: 10, alignSelf: 'center'}}>
+        <CatogorySelector onChange={(category: CategoryFilter) => setCategoryFilter(category)} />
+      </View>
     </View>
   )
 }

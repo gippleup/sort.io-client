@@ -8,11 +8,8 @@ import socketClientActions from '../../hooks/useMultiGameSocket/action/creator';
 import { RouteProp, NavigationProp, useNavigation, CommonActions } from '@react-navigation/native';
 import { RootStackParamList } from '../../router/routes';
 import { BeforeRemoveEvent } from './GameScreen/utils';
-import { FullFlexCenter } from '../../components/Generic/StyledComponents';
 import { View, Image, Text } from 'react-native';
-import CountryFlagIcon from '../../components/CountryFlagIcon';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { ProfileIconContainer } from './MultiGame/_StyledComponents';
+import Profile from '../../components/Profile';
 
 type MultiGameRouteProps = RouteProp<RootStackParamList, "PD_MultiGame">;
 type MultiGameNavigationProps = NavigationProp<RootStackParamList, "PD_MultiGame">;
@@ -39,6 +36,8 @@ export const MutiGame = (props: MultiGameProps) => {
   const navigation = useNavigation();
   const player = players.find((player) => player.id === playData.user.id);
   const opponent = players.find((player) => player.id !== playData.user.id);
+  const playerProfileRef = React.createRef<Profile>();
+  const opponentProfileRef = React.createRef<Profile>();
   let gameStarted = false;
 
   const sendDockMessage = (stackIndex: number, action: 'DOCK' | 'UNDOCK') => {
@@ -77,16 +76,45 @@ export const MutiGame = (props: MultiGameProps) => {
     }
   }
 
-  const PlayerProfile = player?.photo
-    ? <Image style={{width: '100%', height: '100%', borderRadius: 100}} source={{uri: player.photo}} />
-    : (<ProfileIconContainer style={{backgroundColor: 'dodgerblue'}}><Icon name="user" size={20} color="white"/></ProfileIconContainer>)
-  const OpponentProfile = opponent?.photo
-    ? <Image style={{width: '100%', height: '100%',  borderRadius: 100}} source={{ uri: opponent.photo }} />
-    : (<ProfileIconContainer style={{backgroundColor: 'black'}}><Icon name="user" size={20} color="white" /></ProfileIconContainer>)
+  const PlayerProfile = (
+    <Profile
+      ref={playerProfileRef}
+      photoUri={player?.photo}
+      iconColor="dodgerblue"
+    />
+  )
+  
+  const OpponentProfile = (
+    <Profile
+      ref={opponentProfileRef}
+      photoUri={opponent?.photo}
+      iconColor="black"
+    />
+  )
+
+  // const PlayerProfile = player?.photo
+  //   ? <Image style={{width: '100%', height: '100%', borderRadius: 100}} source={{uri: player.photo}} />
+  //   : (<ProfileIconContainer style={{backgroundColor: 'dodgerblue'}}><Icon name="user" size={20} color="white"/></ProfileIconContainer>)
+  // const OpponentProfile = opponent?.photo
+  //   ? <Image style={{width: '100%', height: '100%',  borderRadius: 100}} source={{ uri: opponent.photo }} />
+  //   : (<ProfileIconContainer style={{backgroundColor: 'black'}}><Icon name="user" size={20} color="white" /></ProfileIconContainer>)
 
   React.useEffect(() => {
     const $TimerBase = gameSceneRef.current?.timerRef.current?.timerBaseRef.current;
     $TimerBase?.setTimeTo(120);
+    setInterval(() => {
+      playerProfileRef.current?.express(
+        <View
+          style={{
+            width: 40,
+            height: 40,
+            backgroundColor: 'blue',
+            borderRadius: 100
+          }}
+        />,
+        "topLeft"
+      )
+    }, 1000)
 
     const errorListener = socket.addListener("onError", 
     (err: WebSocketErrorEvent) => {

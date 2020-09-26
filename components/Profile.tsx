@@ -7,37 +7,29 @@ import Chat from './Profile/Chat';
 
 type ProfileProps = {
   photoUri?: string;
-  style?: ViewStyle;
+  size?: number;
   iconColor?: string;
+  chatBubbleSize?: number;
 }
 
 type ProfileState = {
   expression?: JSX.Element;
 }
 
-const styles = StyleSheet.create({
-  iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 100,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'white'
-  }
-})
-
 class Profile extends React.Component<ProfileProps, ProfileState> {
   boxRef = React.createRef<NativeRefBox>();
   chatBubbleRef = React.createRef<Chat>();
   timeout: NodeJS.Timeout | null = null;
   isAnimating = false;
+  size = this.props.size || 40;
+  chatBubbleSize = this.props.chatBubbleSize || 50;
+  bubbleOffsetDiff = Math.abs((this.chatBubbleSize - this.size) / 2);
 
   constructor(props: Readonly<ProfileProps>) {
     super(props);
     this.state = {
       expression: <></>
     }
-
     this.express = this.express.bind(this);
     this.renderPhoto = this.renderPhoto.bind(this);
   }
@@ -47,6 +39,9 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     direction: "topRight" | "topLeft" | "bottomRight" | "bottomLeft" = "topLeft",
     offset: number = 50,
   ) {
+    const {bubbleOffsetDiff, size, chatBubbleSize} = this;
+    const offsetForCenter = size > chatBubbleSize ? bubbleOffsetDiff : -bubbleOffsetDiff;
+
     if (this.timeout !== null) return;
     if (this.isAnimating) return;
     this.isAnimating = true;
@@ -66,20 +61,20 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     })
     const animationConfig = {
       topLeft: {
-        left: -offset,
-        top: -offset,
+        left: offsetForCenter-offset,
+        top: offsetForCenter-offset,
       },
       bottomLeft: {
-        left: -offset,
-        top: offset,
+        left: offsetForCenter-offset,
+        top: offsetForCenter+offset,
       },
       topRight: {
-        left: offset,
-        top: -offset,
+        left: offsetForCenter+offset,
+        top: offsetForCenter-offset,
       },
       bottomRight: {
-        left: offset,
-        top: offset,
+        left: offsetForCenter+offset,
+        top: offsetForCenter+offset,
       },
     }[direction];
 
@@ -88,8 +83,8 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     });
 
     this.boxRef.current?.setStyle({
-      left: 0,
-      top: 0,
+      left: offsetForCenter,
+      top: offsetForCenter,
       scaleX: 0,
       scaleY: 0,
     })
@@ -110,8 +105,8 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             opacity: 0,
             scaleX: 0,
             scaleY: 0,
-            left: 0,
-            top: 0,
+            left: offsetForCenter,
+            top: offsetForCenter,
           },
           duration: 300,
           easing: "easeInOutSine"
@@ -126,13 +121,14 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
   renderPhoto() {
     const {props} = this;
     const {photoUri} = props;
+    const {size} = this;
     if (props.photoUri) {
       return (
         <Image style={{width: '100%', height: '100%'}} source={{ uri: photoUri }}/>
       )
     } else {
       return (
-        <Icon name="user" size={20} color={props.iconColor || "black"} />
+        <Icon name="user" size={20 * (size / 40)} color={props.iconColor || "black"} />
       )
     }
   }
@@ -140,17 +136,26 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
   render() {
     const { props, state } = this;
     const { boxRef, chatBubbleRef } = this;
-    const { style, photoUri } = props;
+    const { photoUri } = props;
+    const { size, chatBubbleSize } = this;
     return (
       <View
         style={
           photoUri
           ? {
-              ...style,
               justifyContent: 'center',
               alignItems: 'center',
+              width: size,
+              height: size
             }
-          : styles.iconContainer
+            : {
+              width: size,
+              height: size,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'white',
+              borderRadius: 100,
+            }
         }
       >
         {this.renderPhoto()}
@@ -161,7 +166,13 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             opacity: 0,
           }}
         >
-          <Chat ref={chatBubbleRef} width={50} height={50}>
+          <Chat
+            ref={chatBubbleRef}
+            width={chatBubbleSize}
+            height={chatBubbleSize}
+            fill="ivory"
+            stroke="rgba(0,0,0,0.3)"
+          >
             {state.expression}
           </Chat>
         </NativeRefBox>

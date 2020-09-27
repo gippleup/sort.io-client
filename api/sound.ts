@@ -1,0 +1,26 @@
+import Sound from 'react-native-sound';
+Sound.setCategory('Playback');
+
+const loadedSound: Sound[] = [];
+
+export const getSound = (filename: string) => {
+  const sound = new Sound(filename, Sound.MAIN_BUNDLE, (err) => {
+    if (err) {
+      console.log('failed to load the sound', err);
+      return;
+    }
+  })
+
+  loadedSound.push(sound);
+  return sound;
+}
+
+export const setVolumes = (volume: number) => {
+  const adjustedToNormal = Math.max(Math.min(volume, 1), 0);
+  return new Promise((resolve) => {
+    loadedSound.forEach((sound) => {
+      sound.setVolume(adjustedToNormal)
+    })
+    resolve('ok');
+  })
+}

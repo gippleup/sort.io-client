@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import { depositGold, saveSinglePlay } from '../../../redux/actions/playData/thunk';
 import { GameSubType, GameMode, findLastBoolean, getLevelString } from './utils';
 import Svg, { Text } from 'react-native-svg';
+import { getSoundEffect } from '../../../components/Block/Sounds';
 
 type StageClearPopupNavigationProp = StackNavigationProp<RootStackParamList, 'Popup_StageClear'>
 type StageClearPopupRouteProp = RouteProp<RootStackParamList, 'Popup_StageClear'>
@@ -116,6 +117,18 @@ const StageClearPopup = (props: StageClearPopupProps) => {
             return (
               <AnimatedCheckbox
                 key={i}
+                onAnimationStart={() => {
+                  if (i === results.length - 1) {
+                    if (hasWin) {
+                      getSoundEffect().success[(successiveWin + 1) as 1 | 2 | 3].play();
+                      if (successiveWin === 2) {
+                        getSoundEffect().success[4].play();
+                      }
+                    } else {
+                      getSoundEffect().fail.play();
+                    }
+                  }
+                }}
                 blank={result === null ? true : false}
                 checked={result === true}
                 animated={round === i}

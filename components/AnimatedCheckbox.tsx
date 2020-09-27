@@ -11,6 +11,7 @@ type AnimatedCheckboxProps = {
   checked?: boolean;
   blank?: boolean;
   animated?: boolean;
+  onAnimationStart?: () => any;
   onAnimationFinished?: () => any;
 }
 
@@ -63,6 +64,9 @@ const AnimatedCheckbox = (props: AnimatedCheckboxProps) => {
 
   React.useEffect(() => {
     if (!props.animated) return;
+    if (props.onAnimationStart) {
+      props.onAnimationStart();
+    }
     Animated.sequence([
       Animated.delay(props.delay || 0),
       Animated.timing(boxPathWidth, {

@@ -25,6 +25,7 @@ import {
   UserName
 } from './GameScene/_StyledComponent'
 import { FlexHorizontal } from './Generic/StyledComponents';
+import { getSoundEffect } from './Block/Sounds';
 
 const backgroundImage = require('../assets/BackgroundPattern.png');
 
@@ -207,6 +208,11 @@ class GameScene extends React.Component<GameSceneProps, {}>{
             boardReadyStatus.opponent = true
             this.onLayout();
           }}
+          onDock={() => {
+            const sound = getSoundEffect(props.playerSkin || "basic").dock;
+            sound.setVolume(0.3);
+            sound.play();
+          }}
           fps={props.fps}
           noAnimation={props.noAnimation}
         />
@@ -344,7 +350,14 @@ class GameScene extends React.Component<GameSceneProps, {}>{
                 props.onScoreChange("me", score);
               }
             }}
-            onDock={props.onDock}
+            onDock={(stackIndex) => {
+              if (props.onDock) {
+                props.onDock(stackIndex);
+              }
+              const sound = getSoundEffect(props.playerSkin || "basic").dock;
+              sound.setVolume(1);
+              sound.play();
+            }}
             onUndock={props.onUndock}
             onComplete={() => {
               if (props.onComplete) {

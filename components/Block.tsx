@@ -62,8 +62,11 @@ class Block extends React.Component<BlockProps, {type: BlockTypes}> {
       <View
         ref={this.containerRef}
         style={{display: initialVisiblity}}>
-        <BlockBase height={blockHeight[props.part]} width={blockWidth} scale={props.scale} />
-        {/* <Base scale={props.scale} type={9} /> */}
+        <BlockBase
+          height={blockHeight[props.part]}
+          width={blockWidth}
+          scale={props.scale}
+        />
         {renderShape(state.type)}
       </View>
     );

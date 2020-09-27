@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { depositGold, saveSinglePlay } from '../../../redux/actions/playData/thunk';
 import { GameSubType, GameMode, findLastBoolean, getLevelString } from './utils';
 import Svg, { Text } from 'react-native-svg';
-import { getSoundEffect } from '../../../components/Block/Sounds';
+import { getSoundEffect } from '../../../assets/Sounds';
 
 type StageClearPopupNavigationProp = StackNavigationProp<RootStackParamList, 'Popup_StageClear'>
 type StageClearPopupRouteProp = RouteProp<RootStackParamList, 'Popup_StageClear'>

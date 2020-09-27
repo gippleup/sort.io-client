@@ -1,7 +1,7 @@
 import Sound from "react-native-sound";
-import { getSound, setVolumes } from "../../api/sound";
-import { skins } from "./skinMap";
-import { pickRandomFromArray } from "./utils";
+import { getSound, setVolumes } from "../api/sound";
+import { skins } from "../components/Block/skinMap";
+import { pickRandomFromArray } from "../components/Block/utils";
 
 const soundMap = {
   basic: {

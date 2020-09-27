@@ -25,7 +25,7 @@ import {
   UserName
 } from './GameScene/_StyledComponent'
 import { FlexHorizontal } from './Generic/StyledComponents';
-import { getSoundEffect } from './Block/Sounds';
+import { getSoundEffect } from '../assets/Sounds';
 
 const backgroundImage = require('../assets/BackgroundPattern.png');
 

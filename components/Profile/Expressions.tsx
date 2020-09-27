@@ -132,4 +132,6 @@ const expressions = {
   ),
 }
 
+export type SupportedExpression = keyof typeof expressions;
+
 export default expressions;

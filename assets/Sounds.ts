@@ -31,6 +31,8 @@ const soundMap = {
     additive: getSound('success_additive.wav'),
   },
   fail: getSound('fail.wav'),
+  win: getSound('win.wav'),
+  lose: getSound('lose.wav'),
 }
 
 export function getSoundEffect(skinName: skins = "basic") {
@@ -43,5 +45,7 @@ export function getSoundEffect(skinName: skins = "basic") {
       4: soundMap.success.additive,
     },
     fail: soundMap.fail,
+    win: soundMap.win,
+    lose: soundMap.lose,
   }
 }

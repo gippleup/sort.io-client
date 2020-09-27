@@ -17,6 +17,7 @@ import { BeforeRemoveEvent } from '../GameScreen/utils'
 import useMultiGameSocket from '../../../hooks/useMultiGameSocket'
 import socketClientActions, { exit, requestRematch, requestOtherMatch } from '../../../hooks/useMultiGameSocket/action/creator'
 import {boardStyle, rankViewerHighlightStyle, textColor, titleStyle} from './GameResultPopup/_styles'
+import { getSoundEffect } from '../../../assets/Sounds'
 
 type GameResultNavigationProps = StackNavigationProp<RootStackParamList, "Popup_GameResult">
 type GameResultRouteProps = RouteProp<RootStackParamList, "Popup_GameResult">
@@ -132,6 +133,12 @@ const GameResultPopup = (props: GameResultPopupProps) => {
   };
   
   React.useEffect(() => {
+    if (result === "win") {
+      getSoundEffect().win.play();
+    } else {
+      getSoundEffect().lose.play();
+    }
+
     const removeStackLengthListener = props.navigation.addListener("state", (e) => {
       const { routes } = e.data.state;
       const lastRoute = routes[routes.length - 1];

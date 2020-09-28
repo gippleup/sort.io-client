@@ -1,9 +1,10 @@
 import { BlockTypes } from "../components/Block/Types"
 import {SortIoUser, PlayData, SinglePlayData, MultiPlayData} from './local'
+import BuildConfig from 'react-native-config';
 
-const dev = true;
+const {BUILD_ENV} = BuildConfig;
 
-const API_BASE = dev ? 'http://localhost:3000' : 'http://54.180.142.19:3000'
+const API_BASE = BUILD_ENV === "DEV" ? 'http://localhost:3000' : 'http://54.180.142.19:3000'
 
 const POST_OPTION: Partial<RequestInit> = {
   method: 'POST',

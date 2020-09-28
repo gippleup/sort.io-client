@@ -11,4 +11,11 @@ declare module "react-native-crypto-js" {
   export default CryptoJS;
 }
 
-declare module "react-native-config"
+declare module "react-native-config" {
+  interface Env {
+    BUILD_ENV: "DEV" | "RELEASE";
+  }
+
+  const BuildConfig: Env;
+  export default BuildConfig;
+}

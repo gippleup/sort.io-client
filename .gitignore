@@ -64,3 +64,6 @@ trace.html
 
 # Shell Scripts
 *.sh
+
+# Environment Variables
+.env

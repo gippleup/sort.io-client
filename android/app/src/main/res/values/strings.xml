@@ -2,4 +2,7 @@
     <string name="app_name">sortIo</string>
     <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">DO_NOT_ASK_JAVASCRIPT</string>
     <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
+    <string moduleConfig="true" name="CodePushDeploymentKey">ds2DNX4eZMuOl_s-KYj1Il14uEh05F4mBxL5p</string>
+    <!-- Staging: ds2DNX4eZMuOl_s-KYj1Il14uEh05F4mBxL5p -->
+    <!-- Production: cbmxmmlepH1bAc4jZHYFH-qFccjch9GSkWBgD -->
 </resources>

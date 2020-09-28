@@ -14,6 +14,8 @@ declare module "react-native-crypto-js" {
 declare module "react-native-config" {
   interface Env {
     BUILD_ENV: "DEV" | "RELEASE";
+    API_BASE_ONLINE: string;
+    API_BASE_LOCAL: string;
   }
 
   const BuildConfig: Env;

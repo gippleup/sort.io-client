@@ -60,90 +60,110 @@ const CommonPopupOption: StackNavigationOptions = {
 
 const routes: Omit<Routes, "Developer"> = {
   AnimatedNumberTester: {
+    type: "dev",
     devName: '숫자 애니메이팅 테스터',
     component: AnimatedNumberTester,
     headerShown: false,
   },
   ForFun: {
+    type: "dev",
     devName: '애니메이팅 꿀잼',
     component: ForFun,
     headerShown: false,
   },
   NativeRefTester: {
+    type: "dev",
     devName: '네이티브 레프 테스터',
     component: NativeRefTester,
     headerShown: false,
   },
   RefBoxTester: {
+    type: "dev",
     devName: '레프 박스 테스터',
     component: RefBoxTester,
     headerShown: false,
   },
   RefBlockBoardTester: {
+    type: "dev",
     devName: '레프 블록보드 테스터',
     component: RefBlockBoardTester,
   },
   BlockBoardTester: {
+    type: "dev",
     devName: '블록보드 테스터',
     component: BlockBoardTester,
     headerShown: false,
   },
   ParticleTester: {
+    type: "dev",
     devName: '파티클 테스터',
     component: ParticleTester,
     headerShown: false,
   },
   TimerTester: {
-    devName: '타이머 테스터',
+    type: "dev",
     component: TimerTester,
+    devName: '타이머 테스터',
   },
   ScoreCheckerTester: {
+    type: "dev",
     devName: '점수 기록기 테스터',
     component: ScoreCheckerTester,
   },
   GameSceneTester: {
+    type: "dev",
     devName: '게임씬 테스터',
     component: GameSceneTester,
     headerShown: false,
   },
   EndGameInfoTester: {
+    type: "dev",
     devName: '종료 팝업 테스터',
     component: EndGameInfoTester,
   },
   ItemBoxTester: {
+    type: "dev",
     devName: '샵 아이템 박스 테스터',
     component: ItemBoxTester,
   },
   ProfileTester: {
+    type: "dev",
     devName: '프로필 테스터',
     component: ProfileTester,
   },
   PurchaseBoxTester: {
+    type: "dev",
     devName: '구매창 테스터',
     component: PurchaseBoxTester,
   },
   RankViewerTester: {
+    type: "dev",
     devName: '랭크 보기 테스터',
     component: RankViewerTester,
   },
   SettingsTester: {
+    type: "dev",
     devName: '설정창 테스터',
     component: SettingsTester,
   },
   GoogleSignInTester: {
+    type: "dev",
     devName: '구글 로그인',
     component: GoogleSignInTester,
   },
   FlagIconTester: {
+    type: "dev",
     devName: '국가 아이콘',
     component: CountryFlagIconTester,
   },
   GraphTester: {
+    type: "dev",
     devName: '그래프',
     component: GraphTester,
     headerShown: false,
   },
   AsyncStorageController: {
+    type: "dev",
     devName: '로컬 데이터 관리',
     component: AsyncStorageController,
     headerShown: false,
@@ -180,66 +200,79 @@ const routes: Omit<Routes, "Developer"> = {
     headerShown: false,
   },
   Popup_OpponentLeft: {
-    devName: '상대방 나감 팝업',
+    type: 'production',
     component: OpponentLeftPopup,
+    devName: '상대방 나감 팝업',
     options: CommonPopupOption,
   },
   Popup_CancelGame: {
+    type: 'production',
     devName: '게임 중단 팝업',
     component: CancelGamePopup,
     options: CommonPopupOption
   },
   Popup_NotEnoughTicket: {
+    type: 'production',
     devName: '티켓 부족 팝업',
     component: NotEnoughTicketPopup,
     options: CommonPopupOption
   },
   Popup_RankGraph: {
+    type: 'production',
     devName: '랭크 그래프 팝업',
     component: RankGraphPopup,
     options: CommonPopupOption
   },
   Popup_StartChallenge: {
+    type: 'production',
     devName: '챌린지 게임 팝업',
     component: StartChallengePopup,
     options: CommonPopupOption
   },
   Popup_StartTraining: {
-    devName: '연습 게임 팝업',
+    type: 'production',
     component: StartTrainingPopup,
+    devName: '연습 게임 팝업',
     options: CommonPopupOption
   },
   Popup_TicketPurchase: {
+    type: 'production',
     devName: '티켓 구매 팝업',
     component: TicketPurchasePopup,
     options: CommonPopupOption
   },
   Popup_SinglePlayRank: {
+    type: 'production',
     devName: '싱글 게임 랭크 팝업',
     component: SinglePlayRankPopup,
     options: CommonPopupOption
   },
   Popup_StageClear: {
-    devName: '스테이지 클리어 팝업',
+    type: 'production',
     component: StageClearPopup,
+    devName: '스테이지 클리어 팝업',
     options: CommonPopupOption
   },
   Popup_MultiWaiting: {
-    devName: '멀티 대기 팝업',
+    type: 'production',
     component: MultigameWaitingPopup,
+    devName: '멀티 대기 팝업',
     options: CommonPopupOption,
   },
   Popup_Prepare: {
+    type: 'production',
     devName: '멀티 게임 준비 팝업',
     component: PreparePopup,
     options: CommonPopupOption,
   },
   Popup_GameResult: {
+    type: 'production',
     devName: '게임 결과 팝업',
     component: GameResultPopup,
     options: CommonPopupOption,
   },
   Popup_RematchWaiting: {
+    type: 'production',
     devName: '재대결 응답 대기 팝업',
     component: RematchWaitingPopup,
     options: CommonPopupOption,

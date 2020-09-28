@@ -18,20 +18,50 @@ import {Provider as ReduxProvider} from 'react-redux';
 import store from './redux/store';
 import {cardTransitionSpecs, cardTransitions} from './router/cardTransition';
 import {enableScreens} from 'react-native-screens';
+import BuildConfig from 'react-native-config';
+
+const { BUILD_ENV } = BuildConfig;
 
 enableScreens();
-
 const Stack = createStackNavigator<RootStackParamList>();
 
+const buildVariable: {[T in typeof BUILD_ENV]: {
+  initialRouteName: keyof typeof routes | "Developer"
+}} = {
+  DEV: {
+    initialRouteName: "Developer",
+  },
+  RELEASE: {
+    initialRouteName: "PD_Main",
+  }
+}
+
 const App: () => React.ReactNode = () => {
+  const { initialRouteName } = buildVariable[BUILD_ENV];
+  const renderDevloperScreen = () => {
+    if (BUILD_ENV === "DEV") {
+      return <Stack.Screen name="Developer" component={Developer} />
+    } else {
+      return <></>;
+    }
+  }
+
+  const filteredRoute = Object.entries(routes).filter(([routeName, routerOption]) => {
+    if (routerOption.type === "dev" && BUILD_ENV === "RELEASE") {
+      return false;
+    } else {
+      return true;
+    }
+  })
+
   return (
     <>
       <StatusBar barStyle="dark-content" hidden />
       <ReduxProvider store={store}>
         <NavigationContainer>
-          <Stack.Navigator mode="modal" initialRouteName="Developer">
-            <Stack.Screen name="Developer" component={Developer} />
-            {Object.entries(routes).map(([routeName, routerOption]) => {
+          <Stack.Navigator mode="modal" initialRouteName={initialRouteName}>
+            {renderDevloperScreen()}
+            {filteredRoute.map(([routeName, routerOption]) => {
               return (
                 <Stack.Screen
                   key={routeName}

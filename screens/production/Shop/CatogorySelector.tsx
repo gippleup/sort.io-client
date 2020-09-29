@@ -5,8 +5,8 @@ import SlideSelector from '../../../components/SlideSelector'
 
 const categoryFilter = {
   all: 0,
-  skins: 1,
-  expressions: 2,
+  skin: 1,
+  expression: 2,
   etc: 3,
 }
 
@@ -15,8 +15,8 @@ export type CategoryFilter = keyof typeof categoryFilter;
 const translation = {
   kor: {
     all: '전체',
-    skins: '스킨',
-    expressions: '감정표현',
+    skin: '스킨',
+    expression: '감정표현',
     etc: '기타',
   }
 }

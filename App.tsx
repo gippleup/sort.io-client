@@ -19,6 +19,7 @@ import store from './redux/store';
 import {cardTransitionSpecs, cardTransitions} from './router/cardTransition';
 import {enableScreens} from 'react-native-screens';
 import BuildConfig from 'react-native-config';
+import CodePush, { CodePushOptions } from 'react-native-code-push';
 
 const { BUILD_ENV } = BuildConfig;
 
@@ -36,7 +37,7 @@ const buildVariable: {[T in typeof BUILD_ENV]: {
   }
 }
 
-const App: () => React.ReactNode = () => {
+let App: () => React.ReactNode = () => {
   const { initialRouteName } = buildVariable[BUILD_ENV];
   const renderDevloperScreen = () => {
     if (BUILD_ENV === "DEV") {
@@ -82,5 +83,13 @@ const App: () => React.ReactNode = () => {
     </>
   );
 };
+
+const codePushOptions: CodePushOptions = {
+  checkFrequency: CodePush.CheckFrequency.ON_APP_START,
+  installMode: CodePush.InstallMode.ON_NEXT_RESTART,
+}
+
+
+App = CodePush(codePushOptions)(App)
 
 export default App;

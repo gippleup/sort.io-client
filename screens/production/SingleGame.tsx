@@ -118,8 +118,8 @@ const GameScreen = (props: GameScreenProps) => {
 
   return (
     <GameScene
-    ref={gameSceneRef}
-      skin="spiky"
+      ref={gameSceneRef}
+      playerSkin="basic"
       map={map}
       title={option.levelStr}
       timeLimit={option.time}

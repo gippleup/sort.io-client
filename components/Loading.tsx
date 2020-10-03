@@ -195,7 +195,7 @@ const Loading = (props: LoadingProps) => {
       <NativeRefBox ref={refBoxTopRef} style={{ opacity: 0 }}>
         <Block
           ref={topRef}
-          skin="spiky"
+          skin="roundupward"
           part="top"
           scale={1}
           type={1}
@@ -204,7 +204,7 @@ const Loading = (props: LoadingProps) => {
       <NativeRefBox ref={refBoxPieceRef}>
         <Block
           ref={pieceRef}
-          skin="spiky"
+          skin="roundupward"
           part="piece"
           scale={1}
           type={1}
@@ -213,7 +213,7 @@ const Loading = (props: LoadingProps) => {
       <NativeRefBox ref={refBoxBottomRef}>
         <Block
           ref={bottomRef}
-          skin="spiky"
+          skin="roundupward"
           part="bottom"
           scale={1}
           type={1}

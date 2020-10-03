@@ -13,7 +13,7 @@ const ScoreCheckerTester = () => {
           [1, 1],
         ]}
         scale={0.5}
-        skin="spiky"
+        skin="baby"
         intervalHeight={3}
       />
     </View>

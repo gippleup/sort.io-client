@@ -25,7 +25,7 @@ const RefBlockBoardTester = () => {
     <View>
       <MyBoard
         onComplete={() => console.log('잘됨')}
-        skin="spiky"
+        skin="baby"
         initialMap={exStackMap}
       />
     </View>

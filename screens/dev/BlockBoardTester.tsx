@@ -37,7 +37,7 @@ const BlockBoardTester = () => {
       />
       <BlockBoard
         style={{width: 340, borderWidth: 1}}
-        skin="spiky"
+        skin="batcap"
         stackMap={exStackMap}
       />
     </BlockBoardContainer>

@@ -9,8 +9,8 @@ type BlockFrameProps = {
 };
 
 const BlockFrame: React.FC<BlockFrameProps> = (props) => {
-  const bgColor = chroma("black")
-    .alpha(0.2)
+  const bgColor = chroma("white")
+    .alpha(0.5)
     .hex();
   return (
     <View

@@ -3,27 +3,63 @@ import { getSound, setVolumes } from "../api/sound";
 import { skins } from "../components/Block/skinMap";
 import { pickRandomFromArray } from "../components/Block/utils";
 
-const soundMap = {
-  basic: {
-    dock: {
-      1: getSound('wood_on_wood_1.mp3'),
-      2: getSound('wood_on_wood_2.mp3'),
-      3: getSound('wood_on_wood_3.mp3'),
-      4: getSound('wood_on_wood_4.mp3'),
-      5: getSound('wood_on_wood_5.mp3'),
-      6: getSound('wood_on_wood_6.mp3'),
-    }
-  },
-  spiky: {
-    dock: {
-      1: getSound('wood_on_wood_1.mp3'),
-      2: getSound('wood_on_wood_2.mp3'),
-      3: getSound('wood_on_wood_3.mp3'),
-      4: getSound('wood_on_wood_4.mp3'),
-      5: getSound('wood_on_wood_5.mp3'),
-      6: getSound('wood_on_wood_6.mp3'),
-    }
-  },
+const defaultSound = {
+  dock: {
+    1: getSound('wood_on_wood_1.mp3'),
+    2: getSound('wood_on_wood_2.mp3'),
+    3: getSound('wood_on_wood_3.mp3'),
+    4: getSound('wood_on_wood_4.mp3'),
+    5: getSound('wood_on_wood_5.mp3'),
+    6: getSound('wood_on_wood_6.mp3'),
+  }
+}
+
+const soundMap: {
+  [T in skins]: {
+    dock: {[index: number]: Sound};
+  }
+} & {
+  success: {
+    first: Sound;
+    double: Sound;
+    triple: Sound;
+    additive: Sound;
+  };
+  fail: {};
+  win: {};
+  lose: {};
+} = {
+  basic: defaultSound,
+  // spiky: defaultSound,
+  // maguni: defaultSound,
+  // babyblock: defaultSound,
+  // bird: defaultSound,
+  // plain: defaultSound,
+  holder: defaultSound,
+  batcap: defaultSound,
+  pinblock: defaultSound,
+  eggpan: defaultSound,
+  elegantline: defaultSound,
+  elegantbat: defaultSound,
+  mountain: defaultSound,
+  upward: defaultSound,
+  baby: defaultSound,
+  bearing: defaultSound,
+  bow: defaultSound,
+  castle: defaultSound,
+  chubby: defaultSound,
+  fat: defaultSound,
+  horizon: defaultSound,
+  invader: defaultSound,
+  kiddo: defaultSound,
+  lazyboy: defaultSound,
+  overweight: defaultSound,
+  pot: defaultSound,
+  roundbasic: defaultSound,
+  roundupward: defaultSound,
+  sleepyworm: defaultSound,
+  volcano: defaultSound,
+  wave: defaultSound,
   success: {
     first: getSound('success_1.wav'),
     double: getSound('success_2.wav'),

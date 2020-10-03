@@ -38,6 +38,7 @@ import PreparePopup, { PreparePopupParams } from '../screens/production/MultiGam
 import GameResultPopup, { GameResultParams } from '../screens/production/MultiGame/GameResultPopup';
 import RematchWaitingPopup, { RematchWaitingPopupParams } from '../screens/production/MultiGame/RematchWaitingPopup';
 import OpponentLeftPopup from '../screens/production/MultiGame/OpponentLeftPopup';
+import ColorTester from '../screens/dev/ColorTester';
 
 type Routes = {
   [T in keyof RootStackParamList]: {
@@ -160,6 +161,12 @@ const routes: Omit<Routes, "Developer"> = {
     type: "dev",
     devName: '그래프',
     component: GraphTester,
+    headerShown: false,
+  },
+  ColorTester: {
+    type: "dev",
+    devName: '컬러 테스터',
+    component: ColorTester,
     headerShown: false,
   },
   AsyncStorageController: {
@@ -288,6 +295,7 @@ export type RootStackParamList = {
   RefBlockBoardTester: undefined;
   BlockBoardTester: undefined;
   TimerTester: undefined;
+  ColorTester: undefined;
   ScoreCheckerTester: undefined;
   GameSceneTester: undefined;
   EndGameInfoTester: undefined;

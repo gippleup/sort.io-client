@@ -389,7 +389,8 @@ export class RefBlockBoard extends Component<
       pieceOnTopOfOrigin.ref.current?.setStyle({
         opacity: 1,
         top: topPiecePos.y - Constants.blockHeight.piece * this.scale - 20 * this.scale,
-        left: topPiecePos.x
+        left: topPiecePos.x,
+        zIndex: targetStack.pieces.length,
       })
     };
 
@@ -615,10 +616,10 @@ export class RefBlockBoard extends Component<
               this.stacks[stackIndex] = stackModel;
               return (
                 <Fragment key={'fragment' + i + j}>
+                  {/* This is Block Bottom */}
                   <AbsoluteRefBox
-                    ref={capRef}
-                    key={'cap' + i + j}
-                    // eslint-disable-next-line react-native/no-inline-styles
+                    // ref={bottomRef}
+                    key={'bottom' + i + j}
                     style={{
                       left:
                         marginHorizontal +
@@ -627,18 +628,15 @@ export class RefBlockBoard extends Component<
                         marginVertical +
                         i * (blockHeight + marginVertical * 2) +
                         blockHeight -
-                        Constants.blockHeight.bottom * scale -
-                        Constants.blockHeight.piece * curStack.length * scale -
-                        Constants.blockHeight.top * scale,
-                      opacity: completed ? 1 : 0,
+                        Constants.blockHeight.bottom * scale,
                     }}>
                     <Block
-                      ref={capBlockRef}
+                      ref={bottomRef}
+                      visible={true}
                       type={filteredStack[0] !== undefined ? filteredStack[0] : 50}
                       skin={props.skin}
-                      part="top"
+                      part="bottom"
                       scale={scale}
-                      visible={true}
                     />
                   </AbsoluteRefBox>
                   {/* This is Block Piece */}
@@ -667,10 +665,10 @@ export class RefBlockBoard extends Component<
                       </AbsoluteRefBox>
                     );
                   })}
-                  {/* This is Block Bottom */}
                   <AbsoluteRefBox
-                    // ref={bottomRef}
-                    key={'bottom' + i + j}
+                    ref={capRef}
+                    key={'cap' + i + j}
+                    // eslint-disable-next-line react-native/no-inline-styles
                     style={{
                       left:
                         marginHorizontal +
@@ -679,15 +677,18 @@ export class RefBlockBoard extends Component<
                         marginVertical +
                         i * (blockHeight + marginVertical * 2) +
                         blockHeight -
-                        Constants.blockHeight.bottom * scale,
+                        Constants.blockHeight.bottom * scale -
+                        Constants.blockHeight.piece * curStack.length * scale -
+                        Constants.blockHeight.top * scale,
+                      opacity: completed ? 1 : 0,
                     }}>
                     <Block
-                      ref={bottomRef}
-                      visible={true}
+                      ref={capBlockRef}
                       type={filteredStack[0] !== undefined ? filteredStack[0] : 50}
                       skin={props.skin}
-                      part="bottom"
+                      part="top"
                       scale={scale}
+                      visible={true}
                     />
                   </AbsoluteRefBox>
                 </Fragment>
@@ -712,6 +713,7 @@ export class RefBlockBoard extends Component<
                 return (
                   <Cell key={'agentRowCell' + i + j} scale={scale} style={{marginHorizontal}}>
                     <TouchAgent
+                      style={{zIndex: 100}}
                       onTouchStart={() => {
                         if (!this.readyToDock) {
                           if (props.onUndock) props.onUndock(stackIndex)

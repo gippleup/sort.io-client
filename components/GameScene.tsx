@@ -312,12 +312,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
 
     return (
       <GameSceneContainer>
-        <PatternBackground
-          source={backgroundImage}
-          width={Dimensions.get('screen').width}
-          height={Dimensions.get('screen').height}
-          scale={0.5}
-        />
+        <PatternBackground source={backgroundImage}/>
         <GameInfoContainer>
           {renderOpponentBoard()}
           <MetaInfoContainer>

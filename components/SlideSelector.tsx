@@ -18,6 +18,7 @@ type SlideSelectorProps<T> = {
   size?: number;
   arrowColor?: string;
   initialCursor?: number;
+  style?: ViewStyle;
 }
 
 const SlideSelector: React.FC<SlideSelectorProps<any>> = (props) => {
@@ -64,7 +65,7 @@ const SlideSelector: React.FC<SlideSelectorProps<any>> = (props) => {
   }, [cursor])
 
   return (
-    <ArrowSelectorContainer isHorizontal={isHorizontal}>
+    <ArrowSelectorContainer style={props.style} isHorizontal={isHorizontal}>
       <Arrow
         isHorizontal={isHorizontal}
         direction={"prev"}

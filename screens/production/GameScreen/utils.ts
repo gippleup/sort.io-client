@@ -56,7 +56,7 @@ export const getLevelString = (level: number) => {
 }
 
 export const generateOptionByLevel = (level: number) => {
-  const levelIndex = getLevelIndex(level);
+  const levelIndex = Math.min(getLevelIndex(level), 18);
   const levelStr = getLevelString(level);
   const levelEnumNum = _getLevelEnumNum(level);
   const map = {

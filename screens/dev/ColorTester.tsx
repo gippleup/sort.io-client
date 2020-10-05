@@ -4,7 +4,8 @@ import Block from '../../components/Block'
 import { skins } from '../../components/Block/skinMap'
 
 const ColorTester = () => {
-  const skin: skins = "horizon"
+  const skin: skins = "basic"
+  const length = 17;
   return (
     <View>
       <Block
@@ -13,7 +14,7 @@ const ColorTester = () => {
         type={0}
         scale={1}
       />
-      {Array(24).fill(1).map((_, i) => {
+      {Array(length).fill(1).map((_, i) => {
         return (
           <Block
             key={i}
@@ -27,7 +28,7 @@ const ColorTester = () => {
       <Block
         skin={skin}
         part="bottom"
-        type={23}
+        type={length}
         scale={1}
       />
     </View>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {View, Text} from 'react-native';
 import styled, {css} from 'styled-components';
 import routes from './routes';
@@ -53,6 +53,9 @@ const Developer = () => {
   return (
     <DeveloperContainer>
       {Object.entries(routes).map(([routeName, options]) => {
+        if (options.invisibleOnDev) {
+          return <Fragment key={options.devName}></Fragment>
+        }
         return (
           <DevNavButton
             type={options.type}

@@ -17,6 +17,8 @@ import {skins} from './Block/skinMap';
 import {BlockTypes} from './Block/Types';
 import NativeRefBox from './NativeRefBox';
 import TouchAgent from './TouchAgent';
+import BlockBase from './Block/BlockBase';
+import chroma from 'chroma-js';
 
 const LayoutContainer: typeof View | React.ComponentClass<{marginLeft: number; marginTop: number}> = styled(View)`
   position: absolute;
@@ -513,6 +515,8 @@ export class RefBlockBoard extends Component<
   }
 
   render() {
+    const LazyBlock = React.lazy(() => import('./Block'))
+
     const {props, catchLayout, state} = this;
     if (!state.layout) {
       return <View onLayout={catchLayout} style={this.props.style} />;
@@ -630,14 +634,24 @@ export class RefBlockBoard extends Component<
                         blockHeight -
                         Constants.blockHeight.bottom * scale,
                     }}>
-                    <Block
-                      ref={bottomRef}
-                      visible={true}
-                      type={filteredStack[0] !== undefined ? filteredStack[0] : 50}
-                      skin={props.skin}
-                      part="bottom"
-                      scale={scale}
-                    />
+                    <React.Suspense fallback={(
+                      <BlockBase
+                        height={34}
+                        width={66}
+                        scale={props.scale}
+                        color="rgba(255,255,255,0.4)"
+                        borderWidth={0.5}
+                      />
+                    )}>
+                      <LazyBlock
+                        ref={bottomRef}
+                        visible={true}
+                        type={filteredStack[0] !== undefined ? filteredStack[0] : 50}
+                        skin={props.skin}
+                        part="bottom"
+                        scale={scale}
+                      />
+                    </React.Suspense>
                   </AbsoluteRefBox>
                   {/* This is Block Piece */}
                   {filteredStack.map((type, k) => {
@@ -656,12 +670,22 @@ export class RefBlockBoard extends Component<
                             Constants.blockHeight.bottom * scale -
                             Constants.blockHeight.piece * (k + 1) * scale,
                         }}>
-                        <Block
-                          type={type}
-                          skin={props.skin}
-                          part="piece"
-                          scale={scale}
-                        />
+                        <React.Suspense fallback={(
+                          <BlockBase
+                            height={24}
+                            width={66}
+                            scale={props.scale}
+                            color="rgba(255,255,255,0.2)"
+                            borderWidth={0.5}
+                          />
+                        )}>
+                          <LazyBlock
+                            type={type}
+                            skin={props.skin}
+                            part="piece"
+                            scale={scale}
+                          />
+                        </React.Suspense>
                       </AbsoluteRefBox>
                     );
                   })}
@@ -682,14 +706,24 @@ export class RefBlockBoard extends Component<
                         Constants.blockHeight.top * scale,
                       opacity: completed ? 1 : 0,
                     }}>
-                    <Block
-                      ref={capBlockRef}
-                      type={filteredStack[0] !== undefined ? filteredStack[0] : 50}
-                      skin={props.skin}
-                      part="top"
-                      scale={scale}
-                      visible={true}
-                    />
+                    <React.Suspense fallback={(
+                      <BlockBase
+                        width={66}
+                        height={8}
+                        scale={props.scale}
+                        color="rgba(255,255,255,0.4)"
+                        borderWidth={0.5}
+                      />
+                    )}>
+                      <LazyBlock
+                        ref={capBlockRef}
+                        type={filteredStack[0] !== undefined ? filteredStack[0] : 50}
+                        skin={props.skin}
+                        part="top"
+                        scale={scale}
+                        visible={true}
+                      />
+                    </React.Suspense>
                   </AbsoluteRefBox>
                 </Fragment>
               );

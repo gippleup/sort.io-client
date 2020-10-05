@@ -45,6 +45,18 @@ const Shop = () => {
   const {language: lan} = global;
   const navigation = useNavigation();
   const [categoryFilter, setCategoryFilter] = React.useState<CategoryFilter>("skin");
+  const [rendered, setRendered] = React.useState(false);
+
+  const onCategoryChange = (category: CategoryFilter) => {
+    setCategoryFilter(category);
+  }
+
+  React.useEffect(() => {
+    if (!rendered) {
+      setRendered(true)
+    }
+  })
+
   return (
     <View
       style={{
@@ -52,7 +64,7 @@ const Shop = () => {
       }}>
       <View
         style={{
-          height: Dimensions.get('screen').height - 150,
+          flex: 1,
           width: '100%',
         }}
       >
@@ -70,27 +82,30 @@ const Shop = () => {
         >
           <FlexHorizontal>
             <TouchableOpacity onPress={navigation.goBack}>
-              {getIcon("fontAwesome", "arrow-left", {color: "white", size: 30})}
+              {getIcon("fontAwesome", "arrow-left", {color: "white", size: 20})}
             </TouchableOpacity>
             <Space width={10} />
-            <NotoSans type="Black" color="white" size={40}>{translation[lan].category[categoryFilter]}</NotoSans>
+            <NotoSans type="Black" color="white" size={20}>{translation[lan].category[categoryFilter]}</NotoSans>
           </FlexHorizontal>
           <MoneyIndicator style={{height: 50, backgroundColor: 'rgba(0,0,0,0.5)'}} value={playdata.user.gold} />
         </View>
         <View style={{flex: 1}}>
-          <ItemList style={{paddingVertical: 10}} categoryFilter={categoryFilter} data={items} />
+          {!rendered
+            ? <></>
+            : <ItemList style={{ paddingVertical: 10 }} categoryFilter={categoryFilter} data={items} />
+          }
         </View>
       </View>
       <View
         style={{
           backgroundColor: 'black',
+          height: 100,
           width: '100%',
           alignItems: 'center',
           justifyContent: 'center',
-          flex: 1,
           borderTopWidth: 1,
         }}>
-        <CatogorySelector onChange={(category: CategoryFilter) => setCategoryFilter(category)} />
+        <CatogorySelector onChange={onCategoryChange} />
       </View>
     </View>
   )

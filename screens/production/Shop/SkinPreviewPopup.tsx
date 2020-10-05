@@ -13,7 +13,8 @@ import { RootStackParamList } from '../../../router/routes'
 
 const MyBoard: typeof RefBlockBoard = styled(RefBlockBoard)`
   background-color: royalblue;
-  width: 340px;
+  width: ${Dimensions.get('screen').width - 100}px;
+  max-width: 260px;
   height: 180px;
   border-width: 2px;
   border-color: white;
@@ -53,9 +54,9 @@ const SkinPreviewPopup = (props: SkinPreviewPopupProps) => {
         skin={skin}
         scale={0.5}
         initialMap={generateMap({
-          blockStackCount: 7,
-          colorCount: 6,
-          maxScore: 6,
+          blockStackCount: 5,
+          colorCount: 4,
+          maxScore: 4,
           stackLengthMax: 8,
           stackLengthMin: 5,
           shuffleCount: 100,

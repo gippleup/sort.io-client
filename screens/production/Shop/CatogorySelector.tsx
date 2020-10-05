@@ -1,7 +1,9 @@
 import React from 'react'
-import { View, Text, Dimensions } from 'react-native'
+import { View, Text, Dimensions, ViewStyle } from 'react-native'
 import { NotoSans } from '../../../components/Generic/StyledComponents'
 import SlideSelector from '../../../components/SlideSelector'
+import useGlobal from '../../../hooks/useGlobal'
+import translation from '../../../Language/translation'
 
 const categoryFilter = {
   all: 0,
@@ -12,33 +14,29 @@ const categoryFilter = {
 
 export type CategoryFilter = keyof typeof categoryFilter;
 
-const translation = {
-  kor: {
-    all: '전체',
-    skin: '스킨',
-    expression: '감정표현',
-    etc: '기타',
-  }
-}
-
 type CategorySelectorProps = {
   onChange?: (category: CategoryFilter) => any;
+  style?: ViewStyle;
 }
 
 const CatogorySelector = (props: CategorySelectorProps) => {
   const {onChange} = props;
-  const lan = "kor";
+  const global = useGlobal();
+  const {language: lan} = global;
+  const idleColor = 'grey';
+  const activeColor = 'dodgerblue';
   return (
     <SlideSelector
       direction="horizontal"
       interval={10}
+      style={props.style}
       size={Dimensions.get('screen').width - 150}
       data={Object.keys(categoryFilter)}
       initialCursor={1}
       entryRenderer={(str: CategoryFilter, selected) => {
         return (
-          <View style={{ padding: 20, backgroundColor: selected ? 'black' : 'white', borderRadius: 10 }}>
-            <NotoSans color={selected ? 'white' : 'black'} type="Bold">{translation[lan][str]}</NotoSans>
+          <View style={{ padding: 20, backgroundColor: selected ? activeColor : idleColor, borderRadius: 10 }}>
+            <NotoSans color={selected ? 'white' : 'black'} type="Bold">{translation[lan].category[str]}</NotoSans>
           </View>
         )
       }}

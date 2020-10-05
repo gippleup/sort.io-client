@@ -6,8 +6,9 @@
     "isolatedModules": true,
     "jsx": "react",
     "lib": [
-      "es6"
+      "es6",
     ],
+    "module": "ESNext",
     "moduleResolution": "node",
     "noEmit": true,
     "strict": true,

@@ -56,12 +56,7 @@ const SelectStage = () => {
 
   return (
     <View style={{flex: 1}}>
-      <PatternBackground
-        source={backgroundImage}
-        width={Dimensions.get('screen').width}
-        height={Dimensions.get('screen').height}
-        scale={0.5}
-      />
+      <PatternBackground source={backgroundImage}/>
       <View style={{flex: 1}}>
         <SelectStageHeader />
         <View style={{justifyContent: 'space-between', flex: 1, paddingBottom: 50}}>

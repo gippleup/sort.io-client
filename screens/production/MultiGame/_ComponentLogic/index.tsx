@@ -1,14 +1,10 @@
-import { CommonActions, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View } from "react-native";
 import GameScene from "../../../../components/GameScene";
 import Profile from "../../../../components/Profile";
-import expressions, { SupportedExpression } from "../../../../components/Profile/Expressions";
 import useMultiGameSocket from "../../../../hooks/useMultiGameSocket";
-import socketClientActions from "../../../../hooks/useMultiGameSocket/action/creator";
-import { AlertDockConstructor } from "../../../../hooks/useMultiGameSocket/ServerMessages";
 import usePlayData from "../../../../hooks/usePlayData";
-import { BeforeRemoveEvent } from "../../GameScreen/utils";
 import { MultiGameProps } from "../../MutiGame";
 import multiGameNavigationLogic from "./_navigationLogic";
 import multiGameProfileLogic from "./_profileLogic";

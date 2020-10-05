@@ -137,7 +137,7 @@ class GradientBlindScrollView extends React.Component<GradientBlindScrollViewPro
             opacity: this.bottomBlindOpacity,
             width: this.blindWidth,
             position: 'absolute',
-            bottom: 0,
+            bottom: -1,
           }}>
           <Svg
             style={{

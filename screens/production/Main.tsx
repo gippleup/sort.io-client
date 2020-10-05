@@ -62,12 +62,7 @@ const Main = (props: MainProps) => {
 
   return (
     <View style={{flex: 1, backgroundColor: 'grey'}}>
-      <PatternBackground
-        source={backgroundImage}
-        width={Dimensions.get('screen').width}
-        height={Dimensions.get('screen').height}
-        scale={0.5}
-      />
+      <PatternBackground source={backgroundImage}/>
       <View style={{position: 'absolute', left: 10, top: 10}}>
         <FlexHorizontal>
           <VolumeControl/>

@@ -32,7 +32,7 @@ const Loading = (props: LoadingProps) => {
 
   const setPieceColorRandom = () => {
     const getRandomTypeOtherThan1 = () => {
-      return 10 + Math.ceil(Math.random() * 10);
+      return 1 + Math.ceil(Math.random() * 16);
     }
     setBlockType(pieceRef, getRandomTypeOtherThan1())
   }

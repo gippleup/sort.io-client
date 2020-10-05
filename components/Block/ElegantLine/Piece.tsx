@@ -3,6 +3,7 @@ import Svg, {Ellipse, Path} from 'react-native-svg';
 import {BasicBlockProps} from '../Types';
 import colors from '../CommonColorTheme';
 import SvgContainer from '../SvgContainer';
+import { GradientFill } from '../GradientFill';
 
 const PieceBase: React.FC<BasicBlockProps> = (props) => {
   const fill = colors[props.type].piece;
@@ -18,9 +19,10 @@ const PieceBase: React.FC<BasicBlockProps> = (props) => {
         height={34 * scale}
         viewBox="0 0 66 34"
         fill="none">
+        {GradientFill(fill)}
         <Path
           d="M1 1C1 1 17 9 33 9C49 9 65 1 65 1V25C65 25 49 33 33 33C17 33 1 25 1 25L1 1Z"
-          fill={fill}
+          fill="url(#grad)"
           stroke="black"
         />
       </Svg>

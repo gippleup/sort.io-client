@@ -1,10 +1,10 @@
 import React from 'react';
 import {View} from 'react-native';
 import Svg, {Path} from 'react-native-svg';
-import styled from 'styled-components';
 import {BasicBlockProps} from '../Types';
 import colors from '../CommonColorTheme';
 import SvgContainer from '../SvgContainer';
+import { GradientFill } from '../GradientFill';
 
 const BottomBase: React.FC<BasicBlockProps> = (props) => {
   const fill = colors[props.type].bottom;
@@ -20,7 +20,8 @@ const BottomBase: React.FC<BasicBlockProps> = (props) => {
         height={34 * scale}
         viewBox="0 0 66 34"
         fill="none">
-        <Path d="M1 1V33H65V1L49 9H17L1 1Z" fill={fill} stroke="black" />
+        {GradientFill(fill)}
+        <Path d="M1 1V33H65V1L49 9H17L1 1Z" fill="url(#grad)" stroke="black" />
       </Svg>
     </SvgContainer>
   );

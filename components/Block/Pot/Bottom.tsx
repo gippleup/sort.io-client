@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import {BasicBlockProps} from '../Types';
 import colors from '../CommonColorTheme';
 import SvgContainer from '../SvgContainer';
+import { GradientFill } from '../GradientFill';
 
 const BottomBase: React.FC<BasicBlockProps> = (props) => {
   const fill = colors[props.type].bottom;
@@ -20,7 +21,12 @@ const BottomBase: React.FC<BasicBlockProps> = (props) => {
         height={34 * scale}
         viewBox="0 0 66 34"
         fill="none">
-        <Path d="M1 33H65L49 9V1H17V9L1 33Z" fill={fill} stroke="black" />
+        {GradientFill(fill)}
+        <Path
+          d="M1 33H65L49 9V1H17V9L1 33Z"
+          fill="url(#grad)"
+          stroke="black"
+        />
       </Svg>
     </SvgContainer>
   );

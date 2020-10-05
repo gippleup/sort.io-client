@@ -14,7 +14,7 @@ const TopBase: React.FC<BasicBlockProps> = (props) => {
       height={8}
       innerMarginTop={0}
       marginLeft={0}
-      marginTop={2}
+      marginTop={0}
       scale={scale}>
       <Svg
         width={66 * scale}

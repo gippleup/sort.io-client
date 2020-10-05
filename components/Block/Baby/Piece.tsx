@@ -12,7 +12,7 @@ const PieceBase: React.FC<BasicBlockProps> = (props) => {
       height={24}
       scale={scale}
       marginLeft={0}
-      marginTop={6}
+      marginTop={5}
       innerMarginTop={0}>
       <Svg
         width={66 * scale}

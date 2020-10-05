@@ -21,7 +21,7 @@ const colorTheme = colorArr.reduce((
   const l = chromaColor.get('hsl.l');
   const randomIndex = extractRandomFromArray(index);
   index = randomIndex.extractedArray;
-  acc[i] = {
+  acc[randomIndex.pickedEle] = {
     top: chroma(color)
       .set('hsl.l', l - 0.1)
       .hex(),
@@ -34,6 +34,12 @@ const colorTheme = colorArr.reduce((
   };
   return acc;
 }, {})
+
+colorTheme[49] = {
+  top: 'grey',
+  piece: 'darkgrey',
+  bottom: 'grey',
+};
 
 colorTheme[50] = {
   top: 'grey',

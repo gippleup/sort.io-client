@@ -1,61 +1,35 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { Fragment } from 'react'
 import { View, Text, Dimensions } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import styled from 'styled-components';
-import Block from '../../components/Block';
-import { skins } from '../../components/Block/skinMap';
-import { RoundRectangleButton } from '../../components/EndGameInfo/_StyledComponents';
+import { getIcon } from '../../api/icon';
+import skinMap, { skins } from '../../components/Block/skinMap';
 import PatternBackground from '../../components/GameScene/PatternBackground';
 import { FlexHorizontal, NotoSans, Space } from '../../components/Generic/StyledComponents';
-import GradientBlindScrollView from '../../components/GradientBlindScrollView';
-import { Currency, Item, ItemCategory } from '../../components/ItemBox';
+import { Currency, Item, ItemCategory } from '../../components/ItemList/ItemBox';
 import ItemList from '../../components/ItemList';
-import NativeRefBox from '../../components/NativeRefBox';
-import expressions from '../../components/Profile/Expressions';
-import SlideSelector from '../../components/SlideSelector';
+import MoneyIndicator from '../../components/Main/MoneyIndicator';
+import expressions, { SupportedExpression } from '../../components/Profile/Expressions';
+import useGlobal from '../../hooks/useGlobal';
+import usePlayData from '../../hooks/usePlayData';
+import translation from '../../Language/translation';
 import CatogorySelector, { CategoryFilter } from './Shop/CatogorySelector';
 
-const backgroundImage = require('../../assets/BackgroundPattern.png');
-
-const Background = (
-  <PatternBackground
-    source={backgroundImage}
-    width={Dimensions.get('screen').width}
-    height={Dimensions.get('screen').height}
-    scale={0.5}
-  />
-)
-
-
 const items: Item[] = [
-  {
-    category: "skin",
-    name: "spiky",
-    title: "스파이키 스킨",
-    price: 1300,
-    currency: "gold",
-    hasOwned: false,
-  },
-  {
-    category: "skin",
-    name: "basic",
-    title: "베이직 스킨",
-    price: 1300,
-    currency: "gold",
-    hasOwned: false,
-  },
-  {
-    category: "skin",
-    name: "spiky",
-    title: "스파이키 스킨",
-    price: 1300,
-    currency: "gold",
-    hasOwned: false,
-  },
+  ...Object.keys(skinMap).map((key) => {
+    return {
+      category: "skin" as ItemCategory,
+      name: key as skins,
+      title: translation.ko.skin[key as skins].title,
+      price: 1300,
+      currency: "gold" as Currency,
+      hasOwned: false,
+    }
+  }),
   ...Object.keys(expressions).map((key) => {
     return {
       category: "expression" as ItemCategory,
-      name: key,
+      name: key as SupportedExpression,
       title: key,
       price: 300,
       currency: "gold" as Currency,
@@ -66,13 +40,56 @@ const items: Item[] = [
 
 
 const Shop = () => {
+  const playdata = usePlayData();
+  const global = useGlobal();
+  const {language: lan} = global;
+  const navigation = useNavigation();
   const [categoryFilter, setCategoryFilter] = React.useState<CategoryFilter>("skin");
-  console.log(categoryFilter);
   return (
-    <View style={{flex: 1}}>
-      {Background}
-      <ItemList categoryFilter={categoryFilter} data={items} />
-      <View style={{position: 'absolute', bottom: 10, alignSelf: 'center'}}>
+    <View
+      style={{
+        flex: 1
+      }}>
+      <View
+        style={{
+          height: Dimensions.get('screen').height - 150,
+          width: '100%',
+        }}
+      >
+        <PatternBackground source={require('../../assets/BackgroundPattern.png')} />
+        <View
+          style={{
+            backgroundColor: 'dodgerblue',
+            paddingHorizontal: 20,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingVertical: 10,
+            borderBottomWidth: 1,
+          }}
+        >
+          <FlexHorizontal>
+            <TouchableOpacity onPress={navigation.goBack}>
+              {getIcon("fontAwesome", "arrow-left", {color: "white", size: 30})}
+            </TouchableOpacity>
+            <Space width={10} />
+            <NotoSans type="Black" color="white" size={40}>{translation[lan].category[categoryFilter]}</NotoSans>
+          </FlexHorizontal>
+          <MoneyIndicator style={{height: 50, backgroundColor: 'rgba(0,0,0,0.5)'}} value={playdata.user.gold} />
+        </View>
+        <View style={{flex: 1}}>
+          <ItemList style={{paddingVertical: 10}} categoryFilter={categoryFilter} data={items} />
+        </View>
+      </View>
+      <View
+        style={{
+          backgroundColor: 'black',
+          width: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flex: 1,
+          borderTopWidth: 1,
+        }}>
         <CatogorySelector onChange={(category: CategoryFilter) => setCategoryFilter(category)} />
       </View>
     </View>

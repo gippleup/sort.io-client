@@ -1,11 +1,11 @@
 import React from 'react'
-import { View, Text, TextInput } from 'react-native'
+import { View, Text, TextInput, ViewStyle } from 'react-native'
 import { FlexHorizontal } from '../Generic/StyledComponents'
 import MoneyIcon from './MoneyIcon'
 import styled from 'styled-components'
 import AnimatedNumber from '../AnimatedNumber'
 
-const IndicatorShell = styled(View)`
+const IndicatorShell: typeof View = styled(View)`
   align-items: center;
   justify-content: center;
   background-color: rgba(0,0,0,0.2);
@@ -26,11 +26,12 @@ const MoneyText: typeof AnimatedNumber = styled(AnimatedNumber)`
 
 type MoneyIndicatorProps = {
   value: number;
+  style?: ViewStyle;
 }
 
 const MoneyIndicator = (props: MoneyIndicatorProps) => {
   return (
-    <IndicatorShell>
+    <IndicatorShell style={props.style}>
       <View style={{marginLeft: 8}}>
         <MoneyIcon size={15} />
       </View>

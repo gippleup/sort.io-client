@@ -26,6 +26,7 @@ import {
 } from './GameScene/_StyledComponent'
 import { FlexHorizontal } from './Generic/StyledComponents';
 import { getSoundEffect } from '../assets/Sounds';
+import { Easings } from './NativeRefBox/easings';
 
 const backgroundImage = require('../assets/BackgroundPattern.png');
 
@@ -50,7 +51,12 @@ type GameSceneProps = {
   noAnimation?: boolean;
   opponentProfile?: { name: string; photo: JSX.Element; }
   playerProfile?: { name: string; photo: JSX.Element; }
+  playerDockEasing?: Easings;
+  opponentDockEasing?: Easings;
+  playerDockEasingDuraton?: number;
+  opponentDockEasingDuration?: number;
 };
+
 
 class GameScene extends React.Component<GameSceneProps, {}>{
   timerRef = React.createRef<Timer>();
@@ -215,6 +221,8 @@ class GameScene extends React.Component<GameSceneProps, {}>{
           }}
           fps={props.fps}
           noAnimation={props.noAnimation}
+          dockEasing={props.opponentDockEasing}
+          dockEasingDuration={props.opponentDockEasingDuration}
         />
       </OpponentGameContainer>
     )
@@ -366,6 +374,8 @@ class GameScene extends React.Component<GameSceneProps, {}>{
             }}
             fps={props.fps}
             noAnimation={props.noAnimation}
+            dockEasing={props.playerDockEasing}
+            dockEasingDuration={props.playerDockEasingDuraton}
           />
         </BlockBoardContainer>
       </GameSceneContainer>

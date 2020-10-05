@@ -19,6 +19,7 @@ import NativeRefBox from './NativeRefBox';
 import TouchAgent from './TouchAgent';
 import BlockBase from './Block/BlockBase';
 import chroma from 'chroma-js';
+import { Easings } from './NativeRefBox/easings';
 
 const LayoutContainer: typeof View | React.ComponentClass<{marginLeft: number; marginTop: number}> = styled(View)`
   position: absolute;
@@ -65,11 +66,16 @@ type RefBlockBoardProps = {
   onLayout?: (layout: LayoutChangeEvent) => void;
   fps?: number;
   noAnimation?: boolean;
+  dockEasing?: Easings;
+  dockEasingDuration?: number;
 };
 
 type RefBlockBoardState = {
   layout: null | LayoutRectangle;
 };
+
+const defaultDockEasing: Easings = "easeInOutSine";
+const defaultDockEasingDuration = 100;
 
 export class RefBlockBoard extends Component<
   RefBlockBoardProps,
@@ -259,8 +265,8 @@ export class RefBlockBoard extends Component<
           style: {
             top: topPiecePos.y - Constants.blockHeight.top * this.scale,
           },
-          duration: 300,
-          easing: "easeOutBounce",
+          duration: this.props.dockEasingDuration || defaultDockEasingDuration,
+          easing: this.props.dockEasing || defaultDockEasing,
           fps: this.props.fps || 60,
         })
         animateCapScale = targetStack.capRef.current.animate({
@@ -288,8 +294,8 @@ export class RefBlockBoard extends Component<
         style: {
           top: topPiecePos.y,
         },
-        duration: 300,
-        easing: "easeOutBounce",
+        duration: this.props.dockEasingDuration || defaultDockEasingDuration,
+        easing: this.props.dockEasing || defaultDockEasing,
         fps: this.props.fps || 60,
       })
     }
@@ -329,8 +335,8 @@ export class RefBlockBoard extends Component<
           style: {
             top: topPiecePos.y - Constants.blockHeight.top * this.scale,
           },
-          duration: 500,
-          easing: "easeOutBounce",
+          duration: this.props.dockEasingDuration || defaultDockEasingDuration,
+          easing: this.props.dockEasing || defaultDockEasing,
           fps: this.props.fps || 60,
         });
         animateCapScale?.start();
@@ -347,8 +353,8 @@ export class RefBlockBoard extends Component<
         style: {
           top: topPiecePos.y
         },
-        duration: 300,
-        easing: "easeOutBounce",
+        duration: this.props.dockEasingDuration || defaultDockEasingDuration,
+        easing: this.props.dockEasing || defaultDockEasing,
         fps: this.props.fps || 60,
       }).start();
     }
@@ -413,8 +419,8 @@ export class RefBlockBoard extends Component<
           left: topPiecePos.x,
           top: topPiecePos.y - Constants.blockHeight.piece * this.scale,
         },
-        duration: 300,
-        easing: "easeOutBounce",
+        duration: this.props.dockEasingDuration || defaultDockEasingDuration,
+        easing: this.props.dockEasing || defaultDockEasing,
         fps: props.fps || 60,
       }).start();
     }
@@ -456,8 +462,8 @@ export class RefBlockBoard extends Component<
                 Constants.blockHeight.piece * this.scale -
                 Constants.blockHeight.top * this.scale,
             },
-            duration: 300,
-            easing: "easeOutBounce",
+            duration: this.props.dockEasingDuration || defaultDockEasingDuration,
+            easing: this.props.dockEasing || defaultDockEasing,
             fps: props.fps || 60,
           }).start();
         })

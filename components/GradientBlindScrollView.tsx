@@ -9,6 +9,7 @@ type GradientBlindScrollViewProps = {
   style?: ViewStyle;
   blindColor?: string;
   blindHeight?: number;
+  blindTransitionHeight?: number;
 };
 
 class GradientBlindScrollView extends React.Component<GradientBlindScrollViewProps> {
@@ -18,6 +19,7 @@ class GradientBlindScrollView extends React.Component<GradientBlindScrollViewPro
   blindWidth = new Animated.Value(0);
   constructor(props: Readonly<GradientBlindScrollViewProps>) {
     super(props);
+    this.setBlindOpacity = this.setBlindOpacity.bind(this);
   }
 
   componentDidMount() {
@@ -37,6 +39,7 @@ class GradientBlindScrollView extends React.Component<GradientBlindScrollViewPro
       (props.blindColor ||
         props.style?.backgroundColor ||
         'red') as string;
+    const {blindTransitionHeight = 60} = props;
     return (
       <View
         style={{
@@ -67,7 +70,7 @@ class GradientBlindScrollView extends React.Component<GradientBlindScrollViewPro
             const { y: scrollOffsetY } = e.nativeEvent.contentOffset;
             const scrollEnd = contentHeight - scrollViewHeight;
 
-            const bottomBlindTransitionStartPoint = scrollEnd - 60;
+            const bottomBlindTransitionStartPoint = scrollEnd - blindTransitionHeight;
             const bottomBlindInvisiblePoint = scrollEnd;
             {
               const transitionPxLength = bottomBlindInvisiblePoint - bottomBlindTransitionStartPoint;
@@ -79,11 +82,11 @@ class GradientBlindScrollView extends React.Component<GradientBlindScrollViewPro
             }
 
 
-            const topBlindTransitionEndPoint = 30;
+            const topBlindTransitionEndPoint = blindTransitionHeight;
             const topBlindVisiblePoint = 0;
             {
               const transitionPxLength = topBlindTransitionEndPoint - topBlindVisiblePoint;
-              const relativeScrollPositionToStartPoint = 30 - scrollOffsetY;
+              const relativeScrollPositionToStartPoint = blindTransitionHeight - scrollOffsetY;
               const blindOpacity = relativeScrollPositionToStartPoint < 0
                 ? 1
                 : Math.min((transitionPxLength - relativeScrollPositionToStartPoint) / transitionPxLength, 1);
@@ -105,43 +108,54 @@ class GradientBlindScrollView extends React.Component<GradientBlindScrollViewPro
           }}>
           {props.children}
         </ScrollView>
-        <AnimatedSvg
+        <Animated.View
           style={{
+            width: this.blindWidth,
+            opacity: this.topBlindOpacity,
             position: 'absolute',
-            opacity: this.topBlindOpacity
           }}
-          width={this.blindWidth}
-          height={props.blindHeight || 50}
-          pointerEvents="none"
         >
-          <Defs>
-            <LinearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor={blindColor} stopOpacity="1" />
-              <Stop offset="0.5" stopColor={blindColor} stopOpacity="0.5" />
-              <Stop offset="1" stopColor={blindColor} stopOpacity="0" />
-            </LinearGradient>
-          </Defs>
-          <Rect width="100%" fill="url(#grad)" height="100%" />
-        </AnimatedSvg>
-        <AnimatedSvg
+          <Svg
+            style={{
+              width: '100%',
+            }}
+            height={props.blindHeight || 50}
+            pointerEvents="none"
+          >
+            <Defs>
+              <LinearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+                <Stop offset="0" stopColor={blindColor} stopOpacity="1" />
+                <Stop offset="0.5" stopColor={blindColor} stopOpacity="0.5" />
+                <Stop offset="1" stopColor={blindColor} stopOpacity="0" />
+              </LinearGradient>
+            </Defs>
+            <Rect width="100%" fill="url(#grad)" height="100%" />
+          </Svg>
+        </Animated.View>
+        <Animated.View
           style={{
+            opacity: this.bottomBlindOpacity,
+            width: this.blindWidth,
             position: 'absolute',
             bottom: 0,
-            opacity: this.bottomBlindOpacity,
-          }}
-          width={this.blindWidth}
-          height={props.blindHeight || 50}
-          pointerEvents="none"
-        >
-          <Defs>
-            <LinearGradient id="grad" x1="0" y1="1" x2="0" y2="0">
-              <Stop offset="0" stopColor={blindColor} stopOpacity="1" />
-              <Stop offset="0.5" stopColor={blindColor} stopOpacity="0.5" />
-              <Stop offset="1" stopColor={blindColor} stopOpacity="0" />
-            </LinearGradient>
-          </Defs>
-          <Rect width="100%" fill="url(#grad)" height="100%" />
-        </AnimatedSvg>
+          }}>
+          <Svg
+            style={{
+              width: '100%',
+            }}
+            height={props.blindHeight || 50}
+            pointerEvents="none"
+          >
+            <Defs>
+              <LinearGradient id="grad" x1="0" y1="1" x2="0" y2="0">
+                <Stop offset="0" stopColor={blindColor} stopOpacity="1" />
+                <Stop offset="0.5" stopColor={blindColor} stopOpacity="0.5" />
+                <Stop offset="1" stopColor={blindColor} stopOpacity="0" />
+              </LinearGradient>
+            </Defs>
+            <Rect width="100%" fill="url(#grad)" height="100%" />
+          </Svg>
+        </Animated.View>
       </View>
     );
   }

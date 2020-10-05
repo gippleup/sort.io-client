@@ -47,7 +47,7 @@ const ItemBox: React.FC<Item> = (props) => {
       text = '';
     }
     return (
-      <NotoSans type="Regular">
+      <NotoSans size={10} type="Regular">
         {text || '여기 상품 설명 채워야 됨'}
       </NotoSans>
     )

@@ -28,7 +28,8 @@ export const ItemProfileContainer: typeof View = styled(View)`
 export const ItemDescriptionConatiner: typeof View = styled(View)`
   position: relative;
   align-items: flex-start;
-  padding-vertical: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   justify-content: space-between;
   height: 100%;
   flex: 1;
@@ -36,16 +37,19 @@ export const ItemDescriptionConatiner: typeof View = styled(View)`
 
 
 export const ItemDescriptionBubble: typeof View = styled(View)`
-  padding: 10px;
-  padding-horizontal: 15px;
+  padding: 5px;
+  padding-left: 8px;
+  padding-right: 8px;
   background-color: ${chroma('white').alpha(0.8).hex()};
-  border-radius: 20px;
+  border-radius: 10px;
 `;
 
 export const PriceTagContainer: typeof FlexHorizontal = styled(FlexHorizontal)`
   background-color: rgba(0,0,0,0.2);
-  padding-vertical: 5px;
-  padding-horizontal: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 8px;
+  padding-right: 8px;
   border-radius: 20px;
 `;
 
@@ -54,9 +58,10 @@ export const PreviewButton: typeof TouchableOpacity = styled(TouchableOpacity)`
   background-color: darkblue;
   border-radius: 20px;
   padding: 5px;
-  padding-horizontal: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   width: 100%;
-  height: 50px;
+  height: 40px;
   justify-content: center;
   align-items: center;
 `;
@@ -66,7 +71,8 @@ export const PurchaseButton: typeof TouchableOpacity = styled(TouchableOpacity)`
   background-color: black;
   border-radius: 20px;
   padding: 5px;
-  padding-horizontal: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   height: 50px;
   justify-content: center;
   align-items: center;

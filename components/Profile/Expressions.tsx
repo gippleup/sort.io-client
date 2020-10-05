@@ -34,22 +34,22 @@ const expressions = {
     </IconContainer>
   ),
   wink: (
-    <IconContainer size={40} color="yellow">
+    <IconContainer size={50} color="yellow">
       {getIcon("entypo", "emoji-flirt", {color: "black"})}
     </IconContainer>
   ),
   smile: (
-    <IconContainer size={40} color="yellow">
+    <IconContainer size={50} color="yellow">
       {getIcon("entypo", "emoji-happy", { color: "black" })}
     </IconContainer>
   ),
   neutral: (
-    <IconContainer size={40} color="yellow">
+    <IconContainer size={50} color="yellow">
       {getIcon("entypo", "emoji-neutral", { color: "black" })}
     </IconContainer>
   ),
   sad: (
-    <IconContainer size={40} color="yellow">
+    <IconContainer size={50} color="yellow">
       {getIcon("entypo", "emoji-sad", { color: "black" })}
     </IconContainer>
   ),
@@ -74,34 +74,34 @@ const expressions = {
     </IconContainer>
   ),
   grinBeamSweat: (
-    <IconContainer color="yellow" size={40}>
+    <IconContainer color="yellow" size={50}>
       {getIcon("fontAwesome5", "grin-beam-sweat", { color: "dodgerblue", size: 40 })}
     </IconContainer>
   ),
   grinSquitTears: (
-    <IconContainer color="yellow" size={40}>
+    <IconContainer color="yellow" size={50}>
       {getIcon("fontAwesome5", "grin-squint-tears", { color: "dodgerblue", size: 40 })}
     </IconContainer>
   ),
   grinSquint: (
-    <IconContainer color="yellow" size={40}>
+    <IconContainer color="yellow" size={50}>
       {getIcon("fontAwesome5", "grin-squint", { color: "dodgerblue", size: 40 })}
     </IconContainer>
   ),
   grinTears: (
-    <IconContainer color="yellow" size={40}>
-      <View style={{position: 'absolute', left: -5, width: 50}}>
+    <IconContainer color="yellow" size={50}>
+      <View style={{position: 'absolute', width: 50}}>
         {getIcon("fontAwesome5", "grin-tears", { color: "dodgerblue", size: 40 })}
       </View>
     </IconContainer>
   ),
   grinTongueSquint: (
-    <IconContainer color="yellow" size={40}>
+    <IconContainer color="yellow" size={50}>
       {getIcon("fontAwesome5", "grin-tongue-squint", { color: "dodgerblue", size: 40 })}
     </IconContainer>
   ),
   grinWink: (
-    <IconContainer color="yellow" size={40}>
+    <IconContainer color="yellow" size={50}>
       {getIcon("fontAwesome5", "grin-wink", { color: "dodgerblue", size: 40 })}
     </IconContainer>
   ),
@@ -126,7 +126,7 @@ const expressions = {
     </IconContainer>
   ),
   tired: (
-    <IconContainer color="yellow" size={40}>
+    <IconContainer color="yellow" size={50}>
       {getIcon("fontAwesome5", "tired", { color: "black", size: 40 })}
     </IconContainer>
   ),

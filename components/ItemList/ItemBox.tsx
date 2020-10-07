@@ -5,7 +5,7 @@ import { View, Text } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import useGlobal from '../../hooks/useGlobal';
 import TranslationPack from '../../Language/translation';
-import { skins } from '../Block/skinMap';
+import { SupportedSkin } from '../Block/skinMap';
 import { FlexHorizontal, NotoSans, RoundPaddingCenter, Space } from '../Generic/StyledComponents';
 import MoneyIcon from '../Main/MoneyIcon';
 import expressions, { SupportedExpression } from '../Profile/Expressions';
@@ -17,7 +17,7 @@ export type ItemCategory = "skin" | "expression" | "etc";
 
 export type Item = {
   category: ItemCategory;
-  name: skins | SupportedExpression;
+  name: SupportedSkin | SupportedExpression;
   title: string;
   price: number;
   currency: Currency;
@@ -40,7 +40,7 @@ const ItemBox: React.FC<Item> = (props) => {
   const ItemDescription = () => {
     let text;
     if (category === "skin") {
-      text = TranslationPack[lan].skin[name as skins].description
+      text = TranslationPack[lan].skin[name as SupportedSkin].description
     } else if (category === "expression") {
       text = TranslationPack[lan].expression[name as SupportedExpression].description
     } else {
@@ -55,7 +55,7 @@ const ItemBox: React.FC<Item> = (props) => {
 
   const renderProductProfile = () => {
     if (category === "skin") {
-      return <ScoreIcon skin={name as skins} scale={1} type={49} />
+      return <ScoreIcon skin={name as SupportedSkin} scale={1} type={49} />
     } else if (category === "expression") {
       return expressions[name as SupportedExpression]
     }

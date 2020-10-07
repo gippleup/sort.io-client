@@ -1,6 +1,6 @@
 import Sound from "react-native-sound";
 import { getSound, setVolumes } from "../api/sound";
-import { skins } from "../components/Block/skinMap";
+import { SupportedSkin } from "../components/Block/skinMap";
 import { pickRandomFromArray } from "../components/Block/utils";
 
 const defaultSound = {
@@ -15,7 +15,7 @@ const defaultSound = {
 }
 
 const soundMap: {
-  [T in skins]: {
+  [T in SupportedSkin]: {
     dock: {[index: number]: Sound};
   }
 } & {
@@ -71,7 +71,7 @@ const soundMap: {
   lose: getSound('lose.wav'),
 }
 
-export function getSoundEffect(skinName: skins = "basic") {
+export function getSoundEffect(skinName: SupportedSkin = "basic") {
   return {
     dock: pickRandomFromArray<Sound>(Object.values(soundMap[skinName].dock)),
     success: {

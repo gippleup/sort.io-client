@@ -4,9 +4,10 @@ import React from 'react'
 import { View, Text, Dimensions } from 'react-native'
 import styled from 'styled-components'
 import generateMap from '../../../algo/generateMap'
-import { skins } from '../../../components/Block/skinMap'
+import { SupportedSkin } from '../../../components/Block/skinMap'
 import { BlockTypes } from '../../../components/Block/Types'
 import PatternBackground from '../../../components/GameScene/PatternBackground'
+import { NotoSans, RoundPaddingCenter } from '../../../components/Generic/StyledComponents'
 import RefBlockBoard from '../../../components/NativeRefBlockBoard'
 import { RootStackParamList } from '../../../router/routes'
 
@@ -24,7 +25,7 @@ const MyBoard: typeof RefBlockBoard = styled(RefBlockBoard)`
 
 
 export type SkinPreviewPopupParams = {
-  skin: skins;
+  skin: SupportedSkin;
 }
 
 type SkinPreviewPopupProps = {
@@ -62,6 +63,13 @@ const SkinPreviewPopup = (props: SkinPreviewPopupProps) => {
           shuffleCount: 100,
         }).question}
       />
+      <RoundPaddingCenter>
+        <View>
+          <NotoSans type="Bold">
+            돌아가기
+          </NotoSans>
+        </View>
+      </RoundPaddingCenter>
     </View>
   )
 }

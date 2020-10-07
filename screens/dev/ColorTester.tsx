@@ -1,10 +1,10 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import Block from '../../components/Block'
-import { skins } from '../../components/Block/skinMap'
+import { SupportedSkin } from '../../components/Block/skinMap'
 
 const ColorTester = () => {
-  const skin: skins = "basic"
+  const skin: SupportedSkin = "basic"
   const length = 17;
   return (
     <View>

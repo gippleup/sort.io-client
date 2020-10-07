@@ -1,11 +1,11 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import BlockBase from '../Block/BlockBase';
-import {skins} from '../Block/skinMap';
+import {SupportedSkin} from '../Block/skinMap';
 import {BlockTypes} from '../Block/Types';
 
 type ScoreIconProps = {
-  skin: skins;
+  skin: SupportedSkin;
   scale: number;
   type: BlockTypes;
 };

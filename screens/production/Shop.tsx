@@ -3,7 +3,7 @@ import React, { Fragment } from 'react'
 import { View, Text, Dimensions } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { getIcon } from '../../api/icon';
-import skinMap, { skins } from '../../components/Block/skinMap';
+import skinMap, { SupportedSkin } from '../../components/Block/skinMap';
 import PatternBackground from '../../components/GameScene/PatternBackground';
 import { FlexHorizontal, NotoSans, Space } from '../../components/Generic/StyledComponents';
 import { Currency, Item, ItemCategory } from '../../components/ItemList/ItemBox';
@@ -19,8 +19,8 @@ const items: Item[] = [
   ...Object.keys(skinMap).map((key) => {
     return {
       category: "skin" as ItemCategory,
-      name: key as skins,
-      title: translation.ko.skin[key as skins].title,
+      name: key as SupportedSkin,
+      title: translation.ko.skin[key as SupportedSkin].title,
       price: 1300,
       currency: "gold" as Currency,
       hasOwned: false,

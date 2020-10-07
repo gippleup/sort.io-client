@@ -1,6 +1,6 @@
 import { BasicBlockProps } from './Types';
 
-export type skins = 
+export type SupportedSkin = 
 'basic'
 | 'holder'
 | 'batcap'
@@ -33,7 +33,7 @@ export type skins =
 // | 'babyblock'
 // | 'bird';
 
-const skinMap: {[T in skins]: {
+const skinMap: {[T in SupportedSkin]: {
   [T in "top" | "piece" | "bottom"]: React.FC<BasicBlockProps>;
 }} = {
   basic: {

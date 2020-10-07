@@ -1,4 +1,4 @@
-import { skins } from "../components/Block/skinMap";
+import { SupportedSkin } from "../components/Block/skinMap";
 import expressions from "../components/Profile/Expressions";
 import { SupportedLanguage } from "../redux/actions/global/types";
 
@@ -10,7 +10,7 @@ export type CategoryTranslation = {
 }
 
 export type SkinTranslation = {
-  [T in skins]: {
+  [T in SupportedSkin]: {
     title: string;
     description: string;
   }

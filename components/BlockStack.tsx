@@ -3,7 +3,7 @@ import {View, Animated, Easing, ViewProps} from 'react-native';
 import {TBlock} from './BlockBoard/Model/model';
 import styled from 'styled-components';
 import Block from './Block';
-import skinMap, {skins} from './Block/skinMap';
+import skinMap, {SupportedSkin} from './Block/skinMap';
 import BlockFrame from './BlockStack/BlockFrame';
 
 const StackContainer: typeof View = styled(View)`
@@ -30,7 +30,7 @@ type BlockStackProps = {
   onTouchStart?: () => void;
   curState: 'neutral' | 'docked' | 'undocked';
   prevState: 'neutral' | 'docked' | 'undocked';
-  skin: skins;
+  skin: SupportedSkin;
   scale: number;
 };
 

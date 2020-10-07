@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import Constants from '../assets/Constants';
 import BlockFrame from './BlockStack/BlockFrame';
 import Block from './Block';
-import {skins} from './Block/skinMap';
+import {SupportedSkin} from './Block/skinMap';
 import {BlockTypes} from './Block/Types';
 import NativeRefBox from './NativeRefBox';
 import TouchAgent from './TouchAgent';
@@ -58,7 +58,7 @@ type RefBlockBoardProps = {
   style?: ViewStyle;
   initialMap: BlockTypes[][];
   scale?: number;
-  skin: skins;
+  skin: SupportedSkin;
   onDock?: (stackIndex: number) => void;
   onUndock?: (stackIndex: number) => void;
   onComplete?: () => void;

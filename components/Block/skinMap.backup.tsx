@@ -2,7 +2,7 @@ import React from 'react';
 import BlockBase from './BlockBase';
 import { BasicBlockProps } from './Types';
 
-export type skins = 
+export type SupportedSkin = 
 'basic'
 | 'holder'
 | 'batcap'
@@ -55,7 +55,7 @@ const SuspenseBlock = (Block: React.LazyExoticComponent<React.FC<BasicBlockProps
   )
 }
 
-const skinMap: {[T in skins]: {
+const skinMap: {[T in SupportedSkin]: {
   [T in "top" | "piece" | "bottom"]: React.FC<BasicBlockProps>;
 }} = {
   basic: {

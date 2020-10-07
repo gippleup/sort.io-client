@@ -4,7 +4,7 @@ import model, {TBlockStack, BlockBoardReducerAction, BlockBoardReducerState} fro
 import BlockStack from './BlockStack';
 import styled from 'styled-components';
 import Constants from '../assets/Constants';
-import {skins} from './Block/skinMap';
+import {SupportedSkin} from './Block/skinMap';
 
 const Board: typeof View = styled(View)`
   background-color: royalblue;
@@ -24,7 +24,7 @@ const Row: typeof View = styled(View)`
 type BlockBoardProps = {
   stackMap: number[][];
   style: ViewStyle;
-  skin: skins;
+  skin: SupportedSkin;
   onScoreChange?: (curScore: number) => void;
 };
 

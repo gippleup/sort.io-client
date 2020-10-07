@@ -1,6 +1,6 @@
 import React, {Fragment, RefObject} from 'react';
 import {View, Text, Easing} from 'react-native';
-import {skins} from './Block/skinMap';
+import {SupportedSkin} from './Block/skinMap';
 import styled from 'styled-components';
 import BlockFrame from './BlockStack/BlockFrame';
 import ScoreIcon from './ScoreChecker/ScoreIcon';
@@ -16,7 +16,7 @@ const Row: typeof View = styled(View)`
 type ScoreCheckerProps = {
   maxScore: number;
   initialScore: number;
-  skin: skins;
+  skin: SupportedSkin;
   layout: number[][];
   scale: number;
   intervalWidth?: number;

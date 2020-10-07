@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import Constants from '../assets/Constants';
 import BlockFrame from './BlockStack/BlockFrame';
 import Block from './Block';
-import {skins} from './Block/skinMap';
+import {SupportedSkin} from './Block/skinMap';
 import {BlockTypes} from './Block/Types';
 import RefBox from './RefBox';
 import TouchAgent from './TouchAgent';
@@ -54,7 +54,7 @@ type RefBlockBoardProps = {
   style?: ViewStyle;
   initialMap: BlockTypes[][];
   scale?: number;
-  skin: skins;
+  skin: SupportedSkin;
   onComplete?: () => void;
   onScoreChange?: (score: number) => void;
   onLayout?: (layout: LayoutChangeEvent) => void;

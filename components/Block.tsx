@@ -3,7 +3,7 @@ import {View, Text, ViewStyle} from 'react-native';
 import styled from 'styled-components';
 import BlockBase from './Block/BlockBase';
 import {BlockTypes} from './Block/Types';
-import skinMap, { skins } from './Block/skinMap';
+import skinMap, { SupportedSkin } from './Block/skinMap';
 
 const ShapeContainer: typeof View = styled(View)`
   position: absolute;
@@ -19,7 +19,7 @@ const blockWidth = 66;
 
 type BlockProps = {
   type: BlockTypes;
-  skin: skins;
+  skin: SupportedSkin;
   part: "top" | "piece" | "bottom";
   scale?: number;
   visible?: boolean;

@@ -6,7 +6,7 @@ import ScoreChecker from './ScoreChecker';
 // import RefBlockBoard from './RefBlockBoard';
 import NativeRefBlockBoard from './NativeRefBlockBoard';
 import {BlockTypes} from './Block/Types';
-import { skins } from './Block/skinMap';
+import { SupportedSkin } from './Block/skinMap';
 import Constants from '../assets/Constants';
 import { decideMapScale } from './GameScene/utils';
 import {
@@ -36,8 +36,8 @@ type GameSceneProps = {
   isManualTimer?: boolean;
   maxScore: number;
   map: BlockTypes[][];
-  playerSkin?: skins;
-  opponentSkin?: skins;
+  playerSkin?: SupportedSkin;
+  opponentSkin?: SupportedSkin;
   onComplete?: (winner: "opponent" | "me") => any;
   onTimeOut?: () => void;
   onDock?: (stackIndex: number) => void;

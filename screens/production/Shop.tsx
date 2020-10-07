@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import React, { Fragment } from 'react'
 import { View, Text, Dimensions } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -20,7 +20,6 @@ const items: Item[] = [
     return {
       category: "skin" as ItemCategory,
       name: key as SupportedSkin,
-      title: translation.ko.skin[key as SupportedSkin].title,
       price: 1300,
       currency: "gold" as Currency,
       hasOwned: false,
@@ -30,7 +29,6 @@ const items: Item[] = [
     return {
       category: "expression" as ItemCategory,
       name: key as SupportedExpression,
-      title: key,
       price: 300,
       currency: "gold" as Currency,
       hasOwned: false,
@@ -49,6 +47,17 @@ const Shop = () => {
 
   const onCategoryChange = (category: CategoryFilter) => {
     setCategoryFilter(category);
+  }
+  
+  const onPressGoback = () => {
+    navigation.dispatch((state) => {
+      const routes = state.routes.filter((route) => route.name !== "PD_Shop")
+      return CommonActions.reset({
+        ...state,
+        routes,
+        index: routes.length - 1,
+      })
+    })
   }
 
   React.useEffect(() => {
@@ -81,7 +90,7 @@ const Shop = () => {
           }}
         >
           <FlexHorizontal>
-            <TouchableOpacity onPress={navigation.goBack}>
+            <TouchableOpacity onPress={onPressGoback}>
               {getIcon("fontAwesome", "arrow-left", {color: "white", size: 20})}
             </TouchableOpacity>
             <Space width={10} />

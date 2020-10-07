@@ -1,13 +1,13 @@
-import { NavigationProp, RouteProp } from '@react-navigation/native'
+import { CommonActions, NavigationProp, RouteProp, useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import React from 'react'
-import { View, Text, Dimensions } from 'react-native'
+import { View, Text, Dimensions, TouchableOpacity } from 'react-native'
 import styled from 'styled-components'
 import generateMap from '../../../algo/generateMap'
 import { SupportedSkin } from '../../../components/Block/skinMap'
 import { BlockTypes } from '../../../components/Block/Types'
 import PatternBackground from '../../../components/GameScene/PatternBackground'
-import { NotoSans, RoundPaddingCenter } from '../../../components/Generic/StyledComponents'
+import { NotoSans, RoundPaddingCenter, Space } from '../../../components/Generic/StyledComponents'
 import RefBlockBoard from '../../../components/NativeRefBlockBoard'
 import { RootStackParamList } from '../../../router/routes'
 
@@ -40,6 +40,18 @@ const defaultParam: SkinPreviewPopupParams = {
 const SkinPreviewPopup = (props: SkinPreviewPopupProps) => {
   const { params = defaultParam } = props.route;
   const { skin } = params;
+  const navigation = useNavigation();
+  const onPressClose = () => {
+    navigation.dispatch((state) => {
+      const routes = state.routes.filter((route) => route.name !== "Popup_SkinPreview")
+      return CommonActions.reset({
+        ...state,
+        routes,
+        index: routes.length - 1,
+      })
+    })
+  }
+
   return (
     <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
       <View
@@ -63,13 +75,14 @@ const SkinPreviewPopup = (props: SkinPreviewPopupProps) => {
           shuffleCount: 100,
         }).question}
       />
-      <RoundPaddingCenter>
-        <View>
-          <NotoSans type="Bold">
+      <Space height={10} />
+      <TouchableOpacity onPress={onPressClose}>
+        <RoundPaddingCenter>
+          <NotoSans size={20} type="Black">
             돌아가기
           </NotoSans>
-        </View>
-      </RoundPaddingCenter>
+        </RoundPaddingCenter>
+      </TouchableOpacity>
     </View>
   )
 }

@@ -13,7 +13,6 @@ const TreeViewer = (props: TreeViewerProps) => {
   const {data} = props;
   const children = typeof data === "object" && data ? Object.entries(data) : data;
   const hasChild = Array.isArray(children) && children.length;
-
   const Tree = () => {
     if (hasChild) {
       return (
@@ -22,9 +21,10 @@ const TreeViewer = (props: TreeViewerProps) => {
             const treeRef = React.useRef<NativeRefBox>(null);
             const keyRef = React.useRef<NativeRefBox>(null);
             const plusRef = React.useRef<NativeRefBox>(null);
-
+            const hasNoData = data === undefined;
             let opened = true;
             const onPressKey = () => {
+              if (hasNoData) return;
               if (opened) {
                 opened = false;
                 treeRef.current?.animate({
@@ -47,6 +47,7 @@ const TreeViewer = (props: TreeViewerProps) => {
                     height: 20,
                     scaleX: 1,
                     scaleY: 1,
+                    marginRight: 5,
                   },
                   duration: 1000,
                   easing: "easeOutElastic",
@@ -73,6 +74,7 @@ const TreeViewer = (props: TreeViewerProps) => {
                     height: 0,
                     scaleX: 0,
                     scaleY: 0,
+                    marginRight: 0,
                   },
                   duration: 300,
                   easing: "easeInOutSine",
@@ -84,7 +86,14 @@ const TreeViewer = (props: TreeViewerProps) => {
               <FlexHorizontal key={i} style={{alignItems: 'flex-start'}}>
                 <FlexHorizontal>
                   <TouchableOpacity onPress={onPressKey}>
-                    <NativeRefBox ref={keyRef} style={{backgroundColor: 'black', padding: 5, borderRadius: 5}}>
+                    <NativeRefBox
+                      ref={keyRef}
+                      style={{
+                        backgroundColor: hasNoData ? 'grey' : 'black',
+                        padding: 5,
+                        borderRadius: 5,
+                      }}
+                    >
                       <NotoSans color="white" type="Black" size={12}>
                         {name}
                       </NotoSans>

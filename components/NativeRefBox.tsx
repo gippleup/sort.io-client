@@ -1,5 +1,5 @@
 import React, { Component, RefObject } from 'react'
-import { Text, View, ViewStyle, StyleSheet } from 'react-native'
+import { Text, View, ViewStyle, StyleSheet, LayoutChangeEvent } from 'react-native'
 import * as easingFunc from './NativeRefBox/easings';
 import chroma, { Color, Scale } from 'chroma-js';
 
@@ -40,7 +40,9 @@ type AnimatibleKeys = Extract<keyof ViewStyle,
   "margin" |
   "translateX" |
   "translateY" |
-  "rotation"
+  "rotation" |
+  "width" |
+  "height"
 >;
 
 type AnimatibleStyle = Pick<ViewStyle, AnimatibleKeys>;
@@ -50,6 +52,8 @@ type NativeRefBoxProps = {
 }
 
 const defaultValue: Record<AnimatibleKeys, number | string> = {
+  width: 0,
+  height: 0,
   borderBottomEndRadius: 0,
   borderBottomLeftRadius: 0,
   borderBottomRightRadius: 0,
@@ -102,7 +106,14 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
       this.style = StyleSheet.flatten(this.props.style);
     }
   }
+  private _capturedInitialLayout = false;
   style: ViewStyle = this.props.style || {};
+  original = {
+    width: 0,
+    height: 0,
+    x: 0,
+    y: 0,
+  }
   ref: RefObject<View> = React.createRef();
   animations: NodeJS.Timeout[] = [];
   setStyle(style: ViewStyle) {
@@ -237,8 +248,19 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
 
   render() {
     const {props, ref} = this;
+    const captureLayout = (e: LayoutChangeEvent) => {
+      if (!this._capturedInitialLayout) {
+        this._capturedInitialLayout = true;
+        this.original = e.nativeEvent.layout;
+        this.style = {
+          ...this.style,
+          ...e.nativeEvent.layout
+        };
+      }
+    }
+
     return (
-      <View ref={ref} style={props.style}>
+      <View ref={ref} onLayout={captureLayout} style={props.style}>
         {props.children}
       </View>
     )

@@ -40,7 +40,7 @@ export const getCountryIconSvg = (lat: number, lng: number) => {
   .catch((err) => console.log(err))
 }
 
-export const signUpWithGoogle = (googleId: number, userId: number, photo: string | null, name: string | null) => {
+export const signUpWithGoogle = (googleId: string, userId: number, photo: string | null, name: string | null) => {
   return fetch(`${API_BASE}/user/signup`, {
     ...POST_OPTION,
     body: JSON.stringify({
@@ -102,14 +102,14 @@ export const getPlayDataByUserId = (userId: number): Promise<PlayData> => {
     })
 }
 
-export const getPlayDataByGoogleId = (googleId: number): Promise<PlayData> => {
+export const getPlayDataByGoogleId = (googleId: string): Promise<PlayData | null> => {
   const url = `${API_BASE}/user/playdata?googleId=${googleId}`
   return fetch(url)
     .then((res) => {
       if (res.status === 200) {
         return res.json();
       } else {
-        throw new Error('NO PLAY DATA FOUND ON SERVER');
+        return null;
       }
     })
     .catch((err) => {
@@ -118,32 +118,63 @@ export const getPlayDataByGoogleId = (googleId: number): Promise<PlayData> => {
     })
 }
 
-export const setGold = (userId: number, newAmount: number): Promise<string> => {
+export const useGold = (userId: number, amount: number): Promise<SortIoUser | null> => {
   const url = `${API_BASE}/user/gold`;
   return fetch(url, {
     ...POST_OPTION,
     body: JSON.stringify({
+      type: "USE",
       userId,
-      newAmount
+      amount,
     }),
   })
-    .then((res) => res.text())
-    .catch((err) => 'fail')
+    .then((res) => res.json())
+    .catch((err) => null)
+}
+
+export const saveGold = (userId: number, amount: number): Promise<SortIoUser | null> => {
+  const url = `${API_BASE}/user/gold`;
+  return fetch(url, {
+    ...POST_OPTION,
+    body: JSON.stringify({
+      type: "SAVE",
+      userId,
+      amount,
+    }),
+  })
+    .then((res) => res.json())
+    .catch((err) => null)
 }
 
 
-export const setTicket = (userId: number, newAmount: number): Promise<string> => {
+export const useTicket = (userId: number, amount: number): Promise<SortIoUser | null> => {
   const url = `${API_BASE}/user/ticket`;
   return fetch(url, {
     ...POST_OPTION,
     body: JSON.stringify({
+      type: "USE",
       userId,
-      newAmount
+      amount
     }),
   })
-    .then((res) => res.text())
+    .then((res) => res.json())
     .catch((err) => 'fail')
 }
+
+export const saveTicket = (userId: number, amount: number): Promise<SortIoUser | null> => {
+  const url = `${API_BASE}/user/ticket`;
+  return fetch(url, {
+    ...POST_OPTION,
+    body: JSON.stringify({
+      type: "SAVE",
+      userId,
+      amount
+    }),
+  })
+    .then((res) => res.json())
+    .catch((err) => 'fail')
+}
+
 
 export type SaveSinglePlayOption = {
   userId: number,

@@ -1,29 +1,41 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import CryptoJS from 'react-native-crypto-js'
+import { SupportedSkin } from '../components/Block/skinMap';
+import { SupportedExpression } from '../components/Profile/Expressions';
 
 const publicKey = "GOTCHA";
 
 export type SortIoUser = {
-  id: number | null;
+  id: number;
   isTemp: boolean;
   name: string;
   ticket: number;
   gold: number;
-  googleId?: number;
-  items: string;
+  googleId?: string;
+  items: {
+    skin: {
+      [T in SupportedSkin]?: boolean;
+    };
+    expression: {
+      [T in SupportedExpression]?: boolean;
+    };
+    etc: {
+      
+    }
+  };
   createdAt?: string;
   profileImg?: string;
 }
 
 export type SinglePlayData = {
-  id: null | number;
-  userId: null | number; //로컬로 플레이해서 userId가 없는 경우는 추후에 연결됐을 때 싹 필터링해서 업데이트하자.
+  id: number;
+  userId: number; //로컬로 플레이해서 userId가 없는 경우는 추후에 연결됐을 때 싹 필터링해서 업데이트하자.
   createdAt: string;
   difficulty: number;
 }
 
 export type MultiPlayData = {
-  id: null | number;
+  id: number;
   user1: number;
   user2: number;
   winner: number;
@@ -67,8 +79,29 @@ export const getLocalPlayData = (): Promise<PlayData> => {
   })
 }
 
-
 export const setLocalPlayData = (data: PlayData) => {
   const encrypted = encrypt(JSON.stringify(data));
   return AsyncStorage.setItem('playData', encrypted);
+}
+
+export const setLocalData = (key: string, data: string): Promise<void> => {
+  const encrypted = encrypt(data);
+  return AsyncStorage.setItem(key, encrypted);
+}
+
+export const getLocalData = (key: string): Promise<string | undefined> => {
+  return new Promise((resolve, reject) => {
+    AsyncStorage.getItem(key)
+      .then((data) => {
+        if (data) {
+          const decrypted = decrypt(data);
+          resolve(decrypted);
+        } else {
+          resolve(undefined);
+        }
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
 }

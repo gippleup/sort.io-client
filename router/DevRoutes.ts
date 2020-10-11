@@ -14,6 +14,7 @@ import ParticleTester from "../screens/dev/ParticleTester";
 import ProfileTester from "../screens/dev/ProfileTester";
 import PurchaseBoxTester from "../screens/dev/PurchaseBoxTester";
 import RankViewerTester from "../screens/dev/RankViewerTester";
+import ReduxTester from "../screens/dev/ReduxTester";
 import RefBlockBoardTester from "../screens/dev/RefBlockBoardTester";
 import RefBoxTester from "../screens/dev/RefBoxTester";
 import ScoreCheckerTester from "../screens/dev/ScoreCheckerTester";
@@ -22,6 +23,11 @@ import TimerTester from "../screens/dev/TimerTester";
 import { Routes } from "./types";
 
 export const devRoutes: Routes<Omit<devParams, "Developer">> = {
+  ReduxTester: {
+    type: "dev",
+    devName: "리덕스 테스터",
+    component: ReduxTester,
+  },
   AnimatedNumberTester: {
     type: "dev",
     devName: '숫자 애니메이팅 테스터',
@@ -140,6 +146,7 @@ export const devRoutes: Routes<Omit<devParams, "Developer">> = {
 }
 
 export type devParams = {
+  ReduxTester: undefined;
   AnimatedNumberTester: undefined;
   ForFun: undefined;
   ParticleTester: undefined;

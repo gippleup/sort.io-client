@@ -22,14 +22,14 @@ const ReduxActionButton = (props: ReduxActionButtonProps) => {
     )
   }
   return (
-    <FlexHorizontal style={{marginBottom: 5, alignItems: 'flex-start'}}>
+    <View style={{marginBottom: 5, alignItems: 'flex-start'}}>
       <TouchableOpacity onPress={onPress}>
         <NotoSans size={18} color="white" style={{ padding: 5, backgroundColor: 'green', borderRadius: 5 }} type="Black">
           {text}
         </NotoSans>
       </TouchableOpacity>
       <Description />
-    </FlexHorizontal>
+    </View>
   )
 }
 

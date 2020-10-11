@@ -1,28 +1,34 @@
 import { ThunkDispatch } from "redux-thunk";
-import { AppGetState } from "../../store";
+import { AppGetState, GeneralThunkDispatch } from "../../store";
 import { getLocalPlayData, PlayData, SortIoUser, SinglePlayData } from "../../../api/local";
 import { updatePlayData, updateUser, updateGold, updateTicket, updateSinglePlay, updateMultiPlay } from "./creator";
 import { Dispatch } from "redux";
-import {
-  makeGuestId,
-  getPlayDataByGoogleId,
-  signUpWithGoogle,
-  setGold,
-  setTicket,
-  saveSinglePlayToServer,
-  SaveSinglePlayOption,
-  SaveMultiPlayOption,
-  saveMultiPlayToServer,
-  isServerAlive
-} from "../../../api/sortio";
+import * as SortIoAPI from "../../../api/sortio";
 import { googleSignIn, googleSignOut } from "../../../api/googleOAuth";
 import NetInfo from '@react-native-community/netinfo'
+import { Alert } from "react-native";
 
 const price = {
   ticket: 150,
 }
 
-type GeneralThunkDispatch = ThunkDispatch<any, any, any>;
+const checkConnection = () => {
+  return new Promise(async (resolve, reject) => {
+    const isConnected = await NetInfo.fetch().then((state) => state.isConnected);
+    const isServerOk = await SortIoAPI.isServerAlive();
+  
+    if (!isConnected) {
+      reject(new Error("인터넷 연결 상태 불량"))
+      return Alert.alert("인터넷 연결 상태를 확인해주세요");
+    }
+    if (!isServerOk) {
+      reject(new Error("서버 상태 불량"))
+      return Alert.alert("서버가 맛탱이가 갔거나 업데이트 중입니다. 죄송합니다...");
+    }
+
+    resolve(true);
+  })
+}
 
 const _getCurDataCurUser = (getState: AppGetState) => {
   return {
@@ -52,26 +58,24 @@ export const loadPlayData = () => (dispatch: GeneralThunkDispatch, getState: App
 
 export const applyGuestId = () => (dispatch: Dispatch, getState: AppGetState) => {
   const curUser = getState().playData.user;
-  if (!curUser.id) {
-    makeGuestId().then((user) => {
-      const mixedUser: SortIoUser = {
-        ...curUser,
-        id: user.id,
-        name: user.name,
-      }
-      dispatch(updateUser(mixedUser))
-    })
-  }
+  SortIoAPI.makeGuestId().then((user) => {
+    const mixedUser: SortIoUser = {
+      ...curUser,
+      id: user.id,
+      name: user.name,
+    }
+    dispatch(updateUser(mixedUser))
+  })
 }
 
 export const signInWithGoogle = () => async (dispatch: GeneralThunkDispatch, getState: AppGetState) => {
-  const internetConnected = await NetInfo.fetch().then((state) => state.isConnected);
-  if (!internetConnected) return;
+  const isConnectionOk = await checkConnection();
+  if (!isConnectionOk) return;
 
   let {curData, curUser} = _getCurDataCurUser(getState)
 
   if (!curUser.id) {
-    await makeGuestId().then((user) => {
+    await SortIoAPI.makeGuestId().then((user) => {
       const mixedUser: SortIoUser = {
         ...curUser,
         id: user.id,
@@ -89,13 +93,14 @@ export const signInWithGoogle = () => async (dispatch: GeneralThunkDispatch, get
 
   if (!googleUser) return;
 
-  const googleId = Number(googleUser.user.id);
+  const googleId = googleUser.user.id;
   try {
-    const savedServerData = await getPlayDataByGoogleId(googleId)
+    const savedServerData = await SortIoAPI.getPlayDataByGoogleId(googleId)
       .then((data) => data)
       .catch(() => {
         return null;
       });
+
     if (savedServerData) {
       dispatch(updatePlayData(savedServerData));
     } else {
@@ -106,7 +111,7 @@ export const signInWithGoogle = () => async (dispatch: GeneralThunkDispatch, get
         isTemp: false,
       }
       dispatch(updateUser(mixedUser));
-      const response = await signUpWithGoogle(googleId, curUser.id, googleUser.user.photo, googleUser.user.name)
+      const response = await SortIoAPI.signUpWithGoogle(googleId, curUser.id, googleUser.user.photo, googleUser.user.name)
       // console.log(response);
     }
   } catch (e) {
@@ -124,90 +129,84 @@ export const signOutWithGoogle = () => async (dispatch: GeneralThunkDispatch, ge
 
   try {
     await googleSignOut()
-    const pureUser: SortIoUser = {
-      ...curUser,
-      googleId: undefined,
-      isTemp: true,
-      name: `guest${curUser.id}`
-    };
-    dispatch(updateUser(pureUser))
+    dispatch(applyGuestId())
   } catch (err) {
     throw err;
   }
 }
 
 export const useGold = (amount: number) => async (dispatch: GeneralThunkDispatch, getState: AppGetState) => {
+  const isConnectionOk = await checkConnection();
+  if (!isConnectionOk) return;
+
   const { curUser } = _getCurDataCurUser(getState);
-  const isConnected = await NetInfo.fetch().then((state) => state.isConnected);
-  const newAmount = curUser.gold - amount
-  dispatch(updateGold(newAmount));
-  if (isConnected && curUser.id) {
-    setGold(curUser.id, newAmount);
+  if (curUser.id) {
+    const updated = await SortIoAPI.useGold(curUser.id, amount);
+    const newAmount = updated?.gold || curUser.gold;
+    dispatch(updateGold(newAmount));
   }
 }
 
 export const depositGold = (amount: number) => async (dispatch: GeneralThunkDispatch, getState: AppGetState) => {
+  const isConnectionOk = await checkConnection();
+  if (!isConnectionOk) return;
   const { curUser } = _getCurDataCurUser(getState);
-  const isConnected = await NetInfo.fetch().then((state) => state.isConnected);
-  const newAmount = curUser.gold + amount
-  dispatch(updateGold(newAmount));
-  if (isConnected && curUser.id) {
-    setGold(curUser.id, newAmount);
+  if (curUser.id) {
+    const updated = await SortIoAPI.saveGold(curUser.id, amount);
+    const newAmount = updated?.gold || curUser.gold ;
+    dispatch(updateGold(newAmount));
   }
 }
 
 export const useTicket = (amount: number) => async (dispatch: GeneralThunkDispatch, getState: AppGetState) => {
+  const isConnectionOk = await checkConnection();
+  if (!isConnectionOk) return;
+
   const { curUser } = _getCurDataCurUser(getState);
-  const isConnected = await NetInfo.fetch().then((state) => state.isConnected);
-  const newAmount = curUser.ticket - amount
-  dispatch(updateTicket(newAmount));
-  if (isConnected && curUser.id) {
-    setTicket(curUser.id, newAmount);
+  if (curUser.id) {
+    const updated = await SortIoAPI.useTicket(curUser.id, amount);
+    const newAmount = updated?.ticket || curUser.ticket;
+    dispatch(updateTicket(newAmount));
   }
 }
 
 export const depositTicket = (amount: number) => async (dispatch: GeneralThunkDispatch, getState: AppGetState) => {
+  const isConnectionOk = await checkConnection();
+  if (!isConnectionOk) return;
+
   const { curUser } = _getCurDataCurUser(getState);
-  const isConnected = await NetInfo.fetch().then((state) => state.isConnected);
-  const newAmount = curUser.ticket + amount
-  dispatch(updateTicket(newAmount));
-  if (isConnected && curUser.id) {
-    setTicket(curUser.id, newAmount);
+  if (curUser.id) {
+    const updated = await SortIoAPI.saveTicket(curUser.id, amount);
+    const newAmount = updated?.ticket || curUser.ticket;
+    dispatch(updateTicket(newAmount));
   }
 }
 
 export const purchaseTicket = (amount: number) => async (dispatch: GeneralThunkDispatch, getState: AppGetState) => {
-  dispatch(depositTicket(amount));
+  const isConnectionOk = await checkConnection();
+  if (!isConnectionOk) return;
+  
   dispatch(useGold(amount * price.ticket));
+  dispatch(depositTicket(amount));
 }
 
 export const saveSinglePlay = (difficulty: number) => async (dispatch: GeneralThunkDispatch, getState: AppGetState) => {
+  const isConnectionOk = await checkConnection();
+  if (!isConnectionOk) return;
+
   const {curData, curUser} = _getCurDataCurUser(getState);
-  const isConnected = await NetInfo.fetch().then((state) => state.isConnected);
-  const isServerOk = await isServerAlive();
   const createdAt = new Date(Date.now()).toISOString();
-  const generatedData: SinglePlayData = {
-    userId: curUser.id,
-    difficulty,
-    createdAt,
-    id: null,
-  }
-  if (isConnected && isServerOk && curUser.id) {
-    const savedData = await saveSinglePlayToServer({userId: curUser.id, difficulty, createdAt});
-    const newData = curData.singlePlay.concat(savedData);
-    dispatch(updateSinglePlay(newData));
-  } else {
-    const newData = curData.singlePlay.concat(generatedData);
-    dispatch(updateSinglePlay(newData));
-  }
+  const savedData = await SortIoAPI.saveSinglePlayToServer({ userId: curUser.id, difficulty, createdAt });
+  const newData = curData.singlePlay.concat(savedData);
+  dispatch(updateSinglePlay(newData));
 }
 
-export const saveMultiPlay = (option: SaveMultiPlayOption) => async (dispatch: GeneralThunkDispatch, getState: AppGetState) => {
-  const { curData, curUser } = _getCurDataCurUser(getState);
-  const isConnected = await NetInfo.fetch().then((state) => state.isConnected);
-  if (!isConnected) return;
+export const saveMultiPlay = (option: SortIoAPI.SaveMultiPlayOption) => async (dispatch: GeneralThunkDispatch, getState: AppGetState) => {
+  const isConnectionOk = await checkConnection();
+  if (!isConnectionOk) return;
 
-  const savedData = await saveMultiPlayToServer(option);
+  const { curData, curUser } = _getCurDataCurUser(getState);
+  const savedData = await SortIoAPI.saveMultiPlayToServer(option);
   const newData = curData.multiPlay.concat(savedData);
   dispatch(updateMultiPlay(newData));
 }

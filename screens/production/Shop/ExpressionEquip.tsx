@@ -143,7 +143,15 @@ const ExpressionEquip = (props: ExpressionEquipProps) => {
           alignItems: 'center',
         }}
       >
-        <View style={{padding: 10, backgroundColor: 'goldenrod', borderRadius: 300}}>
+        <View
+          style={{
+            padding: 10,
+            backgroundColor: 'goldenrod',
+            borderRadius: 300,
+            borderWidth: 3,
+            borderColor: chroma('goldenrod').darken().darken().hex(),
+          }}
+        >
           <ExpressionEquipWheel
             size={Math.min(
               Dimensions.get('screen').height

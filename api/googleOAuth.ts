@@ -31,3 +31,8 @@ export const googleSignOut = async () => {
     console.log(error);
   }
 }
+
+export const getLoggedUser = async () => {
+  const user = await GoogleSignin.getCurrentUser()
+  return user;
+}

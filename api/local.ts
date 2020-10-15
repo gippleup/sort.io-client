@@ -12,17 +12,6 @@ export type SortIoUser = {
   ticket: number;
   gold: number;
   googleId?: string;
-  items: {
-    skin: {
-      [T in SupportedSkin]?: boolean;
-    };
-    expression: {
-      [T in SupportedExpression]?: boolean;
-    };
-    etc: {
-      
-    }
-  };
   createdAt?: string;
   profileImg?: string;
 }

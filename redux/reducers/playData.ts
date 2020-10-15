@@ -2,6 +2,8 @@ import {
   PlayData,
   setLocalPlayData,
 } from "../../api/local";
+import { SupportedSkin } from "../../components/Block/skinMap";
+import { SupportedExpression } from "../../components/Profile/Expressions";
 import { PlayDataActions } from "../actions/playData/creator";
 import {
   UPDATE_PLAYDATA,
@@ -17,12 +19,11 @@ const initialState: PlayData & {loaded: boolean} = {
   singlePlay: [],
   user: {
     gold: 500,
-    id: null,
+    id: -1,
     isTemp: true,
     name: 'tempOfflineLogin',
     ticket: 3,
     googleId: undefined,
-    items: "",
     createdAt: undefined,
     profileImg: undefined,
   },

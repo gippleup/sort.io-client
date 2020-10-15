@@ -1,10 +1,12 @@
 import {combineReducers} from 'redux';
-import globalReducer from './global';
-import playDataReducer from './playData';
+import global from './global';
+import playData from './playData';
+import items from './items';
 
 const rootReducer = combineReducers({
-  global: globalReducer,
-  playData: playDataReducer,
+  global,
+  playData,
+  items,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

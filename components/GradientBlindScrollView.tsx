@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
 type GradientBlindScrollViewProps = {
+  contentContainerStyle?: ViewStyle;
   style?: ViewStyle;
   blindColor?: string;
   blindHeight?: number;
@@ -13,6 +14,7 @@ type GradientBlindScrollViewProps = {
 };
 
 class GradientBlindScrollView extends React.Component<GradientBlindScrollViewProps> {
+  _viewRef = React.createRef<View>();
   _scrollViewRef = React.createRef<ScrollView>();
   topBlindOpacity = new Animated.Value(1);
   bottomBlindOpacity = new Animated.Value(1);
@@ -54,7 +56,9 @@ class GradientBlindScrollView extends React.Component<GradientBlindScrollViewPro
           marginStart: props.style?.marginStart,
           marginTop: props.style?.marginTop,
           marginVertical: props.style?.marginVertical,
-        }}>
+        }}
+        ref={this._viewRef}
+      >
         <ScrollView
           ref={_scrollViewRef}
           scrollEnabled
@@ -94,6 +98,7 @@ class GradientBlindScrollView extends React.Component<GradientBlindScrollViewPro
             }
 
           }}
+          contentContainerStyle={props.contentContainerStyle}
           style={{
             ...props.style,
             margin: 0,

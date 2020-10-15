@@ -1,5 +1,5 @@
 import React, { Component, RefObject } from 'react'
-import { Text, View, ViewStyle, StyleSheet, LayoutChangeEvent } from 'react-native'
+import { Text, View, ViewStyle, StyleSheet, LayoutChangeEvent, ViewProps } from 'react-native'
 import * as easingFunc from './NativeRefBox/easings';
 import chroma, { Color, Scale } from 'chroma-js';
 
@@ -47,8 +47,8 @@ type AnimatibleKeys = Extract<keyof ViewStyle,
 
 type AnimatibleStyle = Pick<ViewStyle, AnimatibleKeys>;
 
-type NativeRefBoxProps = {
-  style?: ViewStyle;
+type NativeRefBoxProps = Omit<ViewProps, "style"> & {
+  style: ViewStyle;
 }
 
 const defaultValue: Record<AnimatibleKeys, number | string> = {
@@ -249,18 +249,25 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
   render() {
     const {props, ref} = this;
     const captureLayout = (e: LayoutChangeEvent) => {
+      this._capturedInitialLayout = true;
+      this.original = e.nativeEvent.layout;
+      this.style = {
+        ...this.style,
+        ...e.nativeEvent.layout
+      };
+    }
+
+    const onLayout = (e: LayoutChangeEvent) => {
       if (!this._capturedInitialLayout) {
-        this._capturedInitialLayout = true;
-        this.original = e.nativeEvent.layout;
-        this.style = {
-          ...this.style,
-          ...e.nativeEvent.layout
-        };
+        captureLayout(e);
+      }
+      if (props.onLayout) {
+        props.onLayout(e);
       }
     }
 
     return (
-      <View ref={ref} onLayout={captureLayout} style={props.style}>
+      <View {...props} ref={ref} onLayout={onLayout} style={props.style}>
         {props.children}
       </View>
     )

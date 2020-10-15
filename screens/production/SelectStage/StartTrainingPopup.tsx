@@ -49,6 +49,7 @@ const StartTrainingPopup = (props: StartTrainingProps) => {
             <NotoSans size={13} type="Light">예) 1승: 10골드 + 10골드(0 + 1) = 20골드</NotoSans>
             <NotoSans size={13} type="Light">예) 2연승: 10골드 + 10골드(0 + 1 + 2) = 40골드</NotoSans>
             <NotoSans size={13} type="Light">예) 3연승: 10골드 + 10골드(0 + 1 + 2 + 3) = 70골드</NotoSans>
+            <NotoSans size={15} type="Black">{'\n'}3연승 시 획득 골드 총합: 130골드</NotoSans>
           </View>
         </AskPopupContentContainer>
       )}

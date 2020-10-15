@@ -51,6 +51,7 @@ const StartChallengePopup = () => {
             <NotoSans size={13} type="Light">예) 1승: 10골드 + 10골드(0 + 1) * 2 = 30골드</NotoSans>
             <NotoSans size={13} type="Light">예) 2연승: 10골드 + 10골드(0 + 1 + 2) * 2 = 70골드</NotoSans>
             <NotoSans size={13} type="Light">예) 3연승: 10골드 + 10골드(0 + 1 + 2 + 3) * 2 = 130골드</NotoSans>
+            <NotoSans size={15} type="Black">{'\n'}3연승 시 획득 골드 총합: 230골드</NotoSans>
           </View>
         </AskPopupContentContainer>
       )}

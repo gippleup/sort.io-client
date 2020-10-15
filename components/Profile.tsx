@@ -21,7 +21,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
   chatBubbleRef = React.createRef<Chat>();
   timeout: NodeJS.Timeout | null = null;
   isAnimating = false;
-  size = this.props.size || 40;
+  size = 40;
   chatBubbleSize = this.props.chatBubbleSize || 50;
   bubbleOffsetDiff = Math.abs((this.chatBubbleSize - this.size) / 2);
 
@@ -30,6 +30,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     this.state = {
       expression: <></>
     }
+    this.size = this.props.size || 40;
     this.express = this.express.bind(this);
     this.renderPhoto = this.renderPhoto.bind(this);
   }
@@ -122,13 +123,23 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     const {props} = this;
     const {photoUri} = props;
     const {size} = this;
+    const sizeConsideringBackground = 20 * (size / 40);
     if (props.photoUri) {
       return (
-        <Image style={{width: '100%', height: '100%'}} source={{ uri: photoUri }}/>
+        <Image
+          style={props.size 
+          ? {width: size, height: size} 
+          : {width: '100%', height: '100%'}}
+          source={{ uri: photoUri }}
+        />
       )
     } else {
       return (
-        <Icon name="user" size={20 * (size / 40)} color={props.iconColor || "black"} />
+        <Icon
+          name="user"
+          size={sizeConsideringBackground}
+          color={props.iconColor || "black"}
+        />
       )
     }
   }
@@ -154,7 +165,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: 'white',
-              borderRadius: 100,
+              borderRadius: 200,
             }
         }
       >

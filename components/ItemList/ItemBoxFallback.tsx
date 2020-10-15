@@ -12,9 +12,6 @@ import expressions, { SupportedExpression } from '../Profile/Expressions';
 import ScoreIcon from '../ScoreChecker/ScoreIcon';
 import { ItemBoxContainer, ItemDescriptionBubble, ItemDescriptionConatiner, ItemProfileContainer, PreviewButton, PriceTagContainer, PurchaseButton } from './ItemBox/_StyledComponent';
 
-export type Currency = "gold" | "cube";
-export type ItemCategory = "skin" | "expression" | "etc";
-
 const ItemBox: React.FC<{}> = () => {
   const renderProductProfile = () => (
     <View

@@ -24,6 +24,20 @@ export type Item = {
   price: number;
   currency: Currency;
   hasOwned: boolean;
+  isInUse?: boolean;
+}
+
+
+const mainButtonText = {
+  hasPurchased: "적용하기",
+  hasApplied: "사용중",
+  notPurchased: "구매하기"
+}
+
+const mainButtonColor = {
+  hasPurchased: "lightseagreen",
+  hasApplied: "crimson",
+  notPurchased: "black"
 }
 
 const ItemBox: React.FC<Item> = (props) => {
@@ -33,6 +47,7 @@ const ItemBox: React.FC<Item> = (props) => {
     hasOwned,
     name,
     price,
+    isInUse,
   } = props;
   const global = useGlobal();
   const {language: lan} = global;
@@ -58,9 +73,9 @@ const ItemBox: React.FC<Item> = (props) => {
 
   const renderProductProfile = () => {
     if (category === "skin") {
-      return <ScoreIcon skin={name as SupportedSkin} scale={1} type={49} />
+      return <ScoreIcon skin={name as SupportedSkin} scale={1} type={hasOwned ? isInUse ? 2 : 8 : 49} />
     } else if (category === "expression") {
-      return expressions[name as SupportedExpression]
+      return expressions[name as SupportedExpression](hasOwned);
     }
   }
 
@@ -103,9 +118,21 @@ const ItemBox: React.FC<Item> = (props) => {
       description,
       hasOwned,
       price,
+      isInUse,
     })
   }
 
+  const buttonText = hasOwned
+    ? isInUse
+      ? mainButtonText.hasApplied
+      : mainButtonText.hasPurchased
+    : mainButtonText.notPurchased
+
+  const buttonColor = hasOwned
+    ? isInUse
+      ? mainButtonColor.hasApplied
+      : mainButtonColor.hasPurchased
+    : mainButtonColor.notPurchased
   return (
     <ItemBoxContainer>
       <View>
@@ -126,8 +153,8 @@ const ItemBox: React.FC<Item> = (props) => {
           </ItemDescriptionBubble>
         </View>
         <View style={{width: '100%', paddingBottom: 5}}>
-          <PurchaseButton onPress={onPressPurchase}>
-            <NotoSans color="white" size={18} type="Black">구매하기</NotoSans>
+          <PurchaseButton style={{ backgroundColor: buttonColor }} onPress={onPressPurchase}>
+            <NotoSans color="white" size={18} type="Black">{buttonText}</NotoSans>
           </PurchaseButton>
         </View>
       </ItemDescriptionConatiner>

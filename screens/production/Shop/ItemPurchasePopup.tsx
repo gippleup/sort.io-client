@@ -1,8 +1,9 @@
 import { CommonActions, RouteProp, useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import React from 'react'
-import { View, Text, Dimensions } from 'react-native'
+import { View, Text, Dimensions, Alert } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { SupportedSkin } from '../../../components/Block/skinMap'
 import { FlexHorizontal, NotoSans, RoundPaddingCenter, Space } from '../../../components/Generic/StyledComponents'
@@ -12,6 +13,8 @@ import expressions, { SupportedExpression } from '../../../components/Profile/Ex
 import ScoreIcon from '../../../components/ScoreChecker/ScoreIcon'
 import useGlobal from '../../../hooks/useGlobal'
 import TranslationPack from '../../../Language/translation'
+import { setExpression, setSkin } from '../../../redux/actions/global/creator'
+import { purchaseItem } from '../../../redux/actions/playData/thunk'
 import { RootStackParamList } from '../../../router/routes'
 
 export type ItemPurchasePopupParams = {
@@ -21,6 +24,7 @@ export type ItemPurchasePopupParams = {
   description: string;
   hasOwned: boolean;
   price: number;
+  isInUse?: boolean;
 };
 
 const Popup: typeof View = styled(View)`
@@ -77,9 +81,24 @@ type ItemPurchasePopupProps = {
 
 const ItemPurchasePopup = (props: ItemPurchasePopupProps) => {
   const global = useGlobal();
+  const dispatch = useDispatch();
   const {language} = global;
   const navigation = useNavigation();
-  const {category, item, hasOwned, description, price, title} = props.route.params;
+  const {
+    category,
+    item,
+    hasOwned,
+    description,
+    price,
+    title,
+    isInUse,
+  } = props.route.params;
+
+  const status = hasOwned 
+  ? isInUse
+    ? "inUse"
+    : "notInUse"
+  : "notOwned"
 
   const onPressClose = () => {
     navigation.dispatch((state) => {
@@ -92,15 +111,33 @@ const ItemPurchasePopup = (props: ItemPurchasePopupProps) => {
     })
   }
 
+  const onPressMainButton = () => {
+    if (status === "notOwned") {
+      dispatch(purchaseItem({
+        category,
+        name: item,
+      }))
+    } else if (status === "inUse") {
+    } else if (status === "notInUse") {
+      if (category === "skin") {
+        console.log(item);
+        dispatch(setSkin(item as SupportedSkin))
+      } else if (category === "expression") {
+        navigation.navigate("ExpressionEquip")
+      }
+    }
+    onPressClose();
+  }
+
   const ItemProfile = () => {
     if (category === "skin") {
       return (
-        <ScoreIcon scale={1.5} type={1} skin={item as SupportedSkin} />
+        <ScoreIcon scale={1.5} type={8} skin={item as SupportedSkin} />
       )
     } else if (category === "expression") {
       return (
         <View style={{transform: [{scale: 2}]}}>
-          {expressions[item as SupportedExpression]}
+          {expressions[item as SupportedExpression](true)}
         </View>
       )
     }
@@ -111,7 +148,7 @@ const ItemPurchasePopup = (props: ItemPurchasePopupProps) => {
   const MainButton = () => {
     const text = hasOwned ? "적용하기" : "구매하기"
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={onPressMainButton}>
         <RoundPaddingCenter style={{borderWidth: 3}}>
           <NotoSans size={20} type="Bold">
             {text}

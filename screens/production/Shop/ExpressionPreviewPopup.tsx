@@ -49,7 +49,7 @@ const ExpressionPreviewPopup = (props: ExpressionPreviewPopupProps) => {
   React.useEffect(() => {
     const interval = setInterval(() => {
       profileRef.current?.express(
-        expressions[name],
+        expressions[name](true),
         "bottomLeft",
         50
       )

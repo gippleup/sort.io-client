@@ -18,6 +18,9 @@ import Shop from "../screens/production/Shop";
 import GameScreen, { GameScreenParams } from "../screens/production/SingleGame";
 import SkinPreviewPopup, { SkinPreviewPopupParams } from "../screens/production/Shop/SkinPreviewPopup";
 import { Routes, CommonPopupOption } from "./types";
+import ItemPurchasePopup, { ItemPurchasePopupParams } from "../screens/production/Shop/ItemPurchasePopup";
+import ExpressionPreviewPopup, { ExpressionPreviewPopupParams } from "../screens/production/Shop/ExpressionPreviewPopup";
+import ExpressionEquipPopup, { ExpressionEquipParams } from "../screens/production/Shop/ExpressionEquip";
 
 export const pdRoutes: Routes<pdParams> = {
   PD_Main: {
@@ -148,6 +151,24 @@ export const pdRoutes: Routes<pdParams> = {
     component: SkinPreviewPopup,
     options: CommonPopupOption,
   },
+  Popup_ItemPurchase: {
+    type: 'production',
+    devName: '아이템 구매 팝업',
+    component: ItemPurchasePopup,
+    options: CommonPopupOption,
+  },
+  Popup_ExpressionPreview: {
+    type: 'production',
+    devName: '표현 프리뷰 팝업',
+    component: ExpressionPreviewPopup,
+    options: CommonPopupOption,
+  },
+  ExpressionEquip: {
+    type: "production",
+    devName: "표현 장착 화면",
+    component: ExpressionEquipPopup,
+    headerShown: false,
+  }
 }
 
 export type pdParams = {
@@ -170,4 +191,7 @@ export type pdParams = {
   Popup_GameResult: GameResultParams;
   Popup_RematchWaiting: RematchWaitingPopupParams;
   Popup_SkinPreview: SkinPreviewPopupParams;
+  Popup_ItemPurchase: ItemPurchasePopupParams;
+  Popup_ExpressionPreview: ExpressionPreviewPopupParams;
+  ExpressionEquip: ExpressionEquipParams;
 }

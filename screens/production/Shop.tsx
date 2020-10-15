@@ -3,47 +3,33 @@ import React, { Fragment } from 'react'
 import { View, Text, Dimensions } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { getIcon } from '../../api/icon';
-import skinMap, { SupportedSkin } from '../../components/Block/skinMap';
 import PatternBackground from '../../components/GameScene/PatternBackground';
 import { FlexHorizontal, NotoSans, Space } from '../../components/Generic/StyledComponents';
-import { Currency, Item, ItemCategory } from '../../components/ItemList/ItemBox';
 import ItemList from '../../components/ItemList';
 import MoneyIndicator from '../../components/Main/MoneyIndicator';
-import expressions, { SupportedExpression } from '../../components/Profile/Expressions';
-import useGlobal from '../../hooks/useGlobal';
-import usePlayData from '../../hooks/usePlayData';
 import translation from '../../Language/translation';
 import CatogorySelector, { CategoryFilter } from './Shop/CatogorySelector';
-
-const items: Item[] = [
-  ...Object.keys(skinMap).map((key) => {
-    return {
-      category: "skin" as ItemCategory,
-      name: key as SupportedSkin,
-      price: 1300,
-      currency: "gold" as Currency,
-      hasOwned: false,
-    }
-  }),
-  ...Object.keys(expressions).map((key) => {
-    return {
-      category: "expression" as ItemCategory,
-      name: key as SupportedExpression,
-      price: 300,
-      currency: "gold" as Currency,
-      hasOwned: false,
-    }
-  })
-]
-
+import { getItemList } from '../../api/sortio';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateItemList } from '../../redux/actions/items/cretor';
+import { AppState } from '../../redux/store';
+import { fetchItemList } from '../../redux/actions/items/thunk';
+import { checkUsageOfItems } from '../../redux/actions/items/utils';
 
 const Shop = () => {
-  const playdata = usePlayData();
-  const global = useGlobal();
+  const {playData, global, items} = useSelector((state: AppState) => state)
+  const dispatch = useDispatch();
   const {language: lan} = global;
   const navigation = useNavigation();
   const [categoryFilter, setCategoryFilter] = React.useState<CategoryFilter>("skin");
-  const [rendered, setRendered] = React.useState(false);
+  const loadedInitialList = React.useRef(false);
+  const hasItems = Array.isArray(items) ? items.length > 0 : items;
+  if (!hasItems && !loadedInitialList.current) {
+    loadedInitialList.current = true;
+    dispatch(fetchItemList());
+  }
+
+  const listCheckedUsage = checkUsageOfItems(items, global);
 
   const onCategoryChange = (category: CategoryFilter) => {
     setCategoryFilter(category);
@@ -59,12 +45,6 @@ const Shop = () => {
       })
     })
   }
-
-  React.useEffect(() => {
-    if (!rendered) {
-      setRendered(true)
-    }
-  })
 
   return (
     <View
@@ -96,12 +76,18 @@ const Shop = () => {
             <Space width={10} />
             <NotoSans type="Black" color="white" size={20}>{translation[lan].category[categoryFilter]}</NotoSans>
           </FlexHorizontal>
-          <MoneyIndicator style={{height: 50, backgroundColor: 'rgba(0,0,0,0.5)'}} value={playdata.user.gold} />
+          <MoneyIndicator style={{height: 50, backgroundColor: 'rgba(0,0,0,0.5)'}} value={playData.user.gold} />
         </View>
         <View style={{flex: 1}}>
-          {!rendered
+          {!hasItems
             ? <></>
-            : <ItemList style={{ paddingVertical: 10 }} categoryFilter={categoryFilter} data={items} />
+            : (
+              <ItemList
+                style={{ paddingVertical: 10 }}
+                categoryFilter={categoryFilter}
+                data={listCheckedUsage}
+              />
+            )
           }
         </View>
       </View>

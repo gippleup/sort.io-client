@@ -82,7 +82,7 @@ const ItemBox: React.FC<Item> = (props) => {
   const ItemTag = () => (
     <FlexHorizontal>
       <Space width={10} />
-      <NotoSans color="white" type="Black" size={20}>{title}</NotoSans>
+      <NotoSans color="white" type="Black" size={15}>{title}</NotoSans>
       <Space width={10} />
       <PriceTag value={price} />
     </FlexHorizontal>
@@ -136,7 +136,7 @@ const ItemBox: React.FC<Item> = (props) => {
   return (
     <ItemBoxContainer>
       <View>
-        <ItemProfileContainer>
+        <ItemProfileContainer style={{backgroundColor: chroma(buttonColor).alpha(0.3).hex()}}>
           {renderProductProfile()}
         </ItemProfileContainer>
         <Space height={10} />

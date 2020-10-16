@@ -118,9 +118,11 @@ const ItemPurchasePopup = (props: ItemPurchasePopupProps) => {
         name: item,
       }))
     } else if (status === "inUse") {
+      if (category === "expression") {
+        navigation.navigate("ExpressionEquip")
+      }
     } else if (status === "notInUse") {
       if (category === "skin") {
-        console.log(item);
         dispatch(setSkin(item as SupportedSkin))
       } else if (category === "expression") {
         navigation.navigate("ExpressionEquip")

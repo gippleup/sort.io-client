@@ -12,7 +12,7 @@ export const setSkin = (skin: SupportedSkin) => ({
   payload: skin,
 })
 
-type ExpressionDirection = 
+export type ExpressionDirection = 
   "top"
   | "bottom"
   | "center"

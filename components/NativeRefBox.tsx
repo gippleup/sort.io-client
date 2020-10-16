@@ -48,7 +48,7 @@ type AnimatibleKeys = Extract<keyof ViewStyle,
 type AnimatibleStyle = Pick<ViewStyle, AnimatibleKeys>;
 
 type NativeRefBoxProps = Omit<ViewProps, "style"> & {
-  style: ViewStyle;
+  style?: ViewStyle;
 }
 
 const defaultValue: Record<AnimatibleKeys, number | string> = {

@@ -1,11 +1,11 @@
 import { CommonActions, RouteProp, useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import chroma from 'chroma-js'
+import chroma, { gl } from 'chroma-js'
 import React from 'react'
 import { View, Text, Dimensions, GestureResponderEvent } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import Svg, { Circle, G, Path } from 'react-native-svg'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import ExpressionEquipWheel from '../../../components/ExpressionEquipWheel'
 import PatternBackground from '../../../components/GameScene/PatternBackground'
@@ -15,6 +15,7 @@ import NativeRefBox from '../../../components/NativeRefBox'
 import Profile from '../../../components/Profile'
 import expressions, { SupportedExpression } from '../../../components/Profile/Expressions'
 import usePlayData from '../../../hooks/usePlayData'
+import { ExpressionDirection, setExpression } from '../../../redux/actions/global/creator'
 import { AppState } from '../../../redux/store'
 import { RootStackParamList } from '../../../router/routes'
 
@@ -44,19 +45,21 @@ const ExpressionEquip = (props: ExpressionEquipProps) => {
   const {global, items, playData} = state;
   const {user} = playData;
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const ownedExpressions = items
     .filter((item) => item.category === "expression" && item.hasOwned)
     .map((item) => ({...item, ref: React.useRef<NativeRefBox>(null)}));
 
-  const isSelecting = React.useRef(false);
+  const selectedExpression = React.useRef<SupportedExpression | ''>('');
+  const wheelRef = React.useRef<ExpressionEquipWheel>(null);
 
   const expressionContainerSize = 80;
   const marginBetweenContainer = 15;
   const expressionListTitleHeight = 50.28;
-  const guideTextHeight = 22.85;
+  const guideTextHeight = 47;
   const sizeConsideringMargin = expressionContainerSize + marginBetweenContainer;
   const scrollViewWidth = Dimensions.get('screen').width;
-  const scrollViewHeight = Dimensions.get('screen').height * (4 / 10) - expressionListTitleHeight;
+  const scrollViewHeight = Dimensions.get('window').height * (4 / 10) - expressionListTitleHeight;
   const expectedColumn = Math.floor(
     (scrollViewWidth - marginBetweenContainer)
     / (sizeConsideringMargin)
@@ -77,6 +80,24 @@ const ExpressionEquip = (props: ExpressionEquipProps) => {
         index: routes.length - 1,
       })
     })    
+  }
+
+  const onPressWheel = (direction: ExpressionDirection) => {
+    console.log('??')
+    if(selectedExpression.current) {
+      wheelRef.current?.deindicateDropArea();
+      ownedExpressions.forEach((expression) => {
+        if (expression.name === selectedExpression.current) {
+          expression.ref.current?.setStyle({backgroundColor: 'rgba(0,0,0,0.3)'})
+        }
+      })
+      wheelRef.current?.emphasizePiece(direction, () => {
+        if (selectedExpression.current) {
+          dispatch(setExpression(selectedExpression.current, direction));
+          selectedExpression.current = '';
+        }
+      });
+    }
   }
 
   return (
@@ -104,18 +125,37 @@ const ExpressionEquip = (props: ExpressionEquipProps) => {
             const {name, ref} = expression;
 
             const onTouchContainer = () => {
-              isSelecting.current = true;
-              ownedExpressions.forEach((expression) => {
-                expression.ref.current?.stopAnimation();
-                expression.ref.current?.setStyle({ backgroundColor: 'rgba(0,0,0,0.5)' });
-              })              
-              ref.current?.animate({
-                style: {
-                  backgroundColor: 'dodgerblue',
-                },
-                duration: 100,
-                easing: "easeInOutSine",
-              }).start();
+              const selectedOther = selectedExpression.current !== name;
+              const selectedSelf = selectedExpression.current === name;
+              if (selectedOther) {
+                ownedExpressions.forEach((expression) => {
+                  if (expression.name === selectedExpression.current) {
+                    expression.ref.current?.stopAnimation();
+                    expression.ref.current?.setStyle({ backgroundColor: 'rgba(0,0,0,0.5)' });
+                  }
+                })                
+                selectedExpression.current = name as SupportedExpression;
+                ref.current?.animate({
+                  style: {
+                    backgroundColor: 'dodgerblue',
+                  },
+                  duration: 100,
+                  easing: "easeInOutSine",
+                }).start();
+                wheelRef.current?.indicateDropArea();
+              }
+
+              if (selectedSelf) {
+                wheelRef.current?.deindicateDropArea();
+                selectedExpression.current = '';
+                ref.current?.animate({
+                  style: {
+                    backgroundColor: 'rgba(0,0,0,0.5)'
+                  },
+                  duration: 100,
+                  easing: "easeInOutSine",
+                }).start();
+              }
             }
 
             return (
@@ -127,7 +167,8 @@ const ExpressionEquip = (props: ExpressionEquipProps) => {
                 key={i}
                 ref={ref}
                 onStartShouldSetResponder={() => true}
-                onResponderRelease={onTouchContainer}
+                onTouchEnd={onTouchContainer}
+                // onResponderRelease={}
               >
                 {expressions[name as SupportedExpression](true)}
               </ExpressionContainer>
@@ -153,15 +194,10 @@ const ExpressionEquip = (props: ExpressionEquipProps) => {
           }}
         >
           <ExpressionEquipWheel
-            size={Math.min(
-              Dimensions.get('screen').height
-                * (6 / 10)
-                - expressionListTitleHeight
-                - guideTextHeight
-                - 120,
-              Dimensions.get('screen').width
-                - 100
-            )}
+            ref={wheelRef}
+            {...global.expressions}
+            onPress={onPressWheel}
+            size={(Dimensions.get('window').height * (6 / 10) - guideTextHeight - 20) * 7 / 10}
           />
         </View>
         <Space height={20} />

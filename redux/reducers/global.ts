@@ -1,6 +1,6 @@
 import { SupportedSkin } from '../../components/Block/skinMap';
 import { SupportedExpression } from '../../components/Profile/Expressions';
-import { GlobalReducerActions } from '../actions/global/creator';
+import { ExpressionDirection, GlobalReducerActions } from '../actions/global/creator';
 import {
   SupportedLanguage,
   GlobalReducerActionTypes,
@@ -10,11 +10,11 @@ type GlobalReducerState = {
   language: SupportedLanguage;
   skin: SupportedSkin;
   expressions: {
-    top: SupportedExpression;
-    bottom: SupportedExpression;
-    left: SupportedExpression;
-    right: SupportedExpression;
-    center: SupportedExpression;
+    top: SupportedExpression | '';
+    bottom: SupportedExpression | '';
+    left: SupportedExpression | '';
+    right: SupportedExpression | '';
+    center: SupportedExpression | '';
   }
 };
 
@@ -37,12 +37,17 @@ const reducer = (state = initialState, action: GlobalReducerActions) => {
   }
 
   if (action.type === GlobalReducerActionTypes.SET_SKIN) {
-    console.log(action);
     newState.skin = action.payload;
   }
 
   if (action.type === GlobalReducerActionTypes.SET_EXPRESSION) {
     const {direction, name} = action.payload;
+    Object.entries(newState.expressions)
+      .map(([key, value]) => {
+        if (value === name) {
+          newState.expressions[key as ExpressionDirection] = '';
+        }
+      })
     newState.expressions[direction] = name;
   }
 

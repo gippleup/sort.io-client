@@ -1,3 +1,4 @@
+import { SupportedSkin } from "../../../components/Block/skinMap";
 import { SocketClientMessageTypes } from "../ClientMessage";
 
 type BasicParam = {
@@ -6,8 +7,9 @@ type BasicParam = {
 }
 
 type EnterParam = {
-  userId: number,
-  name: string,
+  userId: number;
+  name: string;
+  skin: SupportedSkin;
 }
 
 export const enter = (param: EnterParam) => JSON.stringify({

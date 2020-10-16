@@ -8,6 +8,7 @@ import GameScene from '../../components/GameScene';
 import { RootStackParamList } from '../../router/routes';
 import {GameMode, GameSubType, generateOptionByLevel, BeforeRemoveEvent} from './GameScreen/utils'
 import { StackNavigationEventMap } from '@react-navigation/stack/lib/typescript/src/types';
+import useGlobal from '../../hooks/useGlobal';
 
 export type StateEventCallback = EventListenerCallback<StackNavigationEventMap & EventMapCore<StackNavigationState>, "state">
 
@@ -33,6 +34,7 @@ const GameScreen = (props: GameScreenProps) => {
   const option = generateOptionByLevel(props.route.params.level);
   const navigation = props.navigation;
   const gameSceneRef = React.createRef<GameScene>();
+  const global = useGlobal();
   const {mode, leftTrial, level, subType, successiveWin, results} = props.route.params;
   let stageFinished = false;
 
@@ -119,7 +121,7 @@ const GameScreen = (props: GameScreenProps) => {
   return (
     <GameScene
       ref={gameSceneRef}
-      playerSkin="basic"
+      playerSkin={global.skin}
       map={map}
       title={option.levelStr}
       timeLimit={option.time}

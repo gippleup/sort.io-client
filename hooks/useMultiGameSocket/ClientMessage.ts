@@ -1,3 +1,5 @@
+import { SupportedSkin } from "../../components/Block/skinMap"
+
 export enum SocketClientMessageTypes {
   ENTER = 'ENTER',
   DOCK = 'DOCK',
@@ -23,6 +25,7 @@ export type EnterMessage = {
   payload: {
     userId: number;
     name: string;
+    skin: SupportedSkin;
   }
 }
 

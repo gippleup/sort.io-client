@@ -1,13 +1,10 @@
 import React from 'react';
 import { configureSocket } from '../api/sortio';
-import { SocketServerMessages, SocketServerMessageTypes as MessageType, AlertDockConstructor } from './useMultiGameSocket/ServerMessages';
+import { SocketServerMessages, SocketServerMessageTypes as MessageType, AlertDockConstructor, SendRoomMessage } from './useMultiGameSocket/ServerMessages';
 import { MapDesc } from '../screens/production/MutiGame';
+import { SupportedSkin } from '../components/Block/skinMap';
 
-export type OnSendRoomParam = {
-  map: number[][],
-  mapDesc: MapDesc,
-  roomId: number,
-};
+export type OnSendRoomParam = SendRoomMessage["payload"];
 
 type ListenerCallback = {
   onSendRoom: (option: OnSendRoomParam) => any;
@@ -45,7 +42,12 @@ let socket: null | WebSocket = null;
 let roomId: number = -1;
 let map: null | number[][] = null;
 let mapDesc: null | MapDesc = null;
-let players: {id: number; name: string; photo: string}[] = [];
+let players: {
+  id: number;
+  name: string;
+  photo: string;
+  skin: string;
+}[] = [];
 
 const listenerManager: ListenerManager = {
   onSendRoom: {},

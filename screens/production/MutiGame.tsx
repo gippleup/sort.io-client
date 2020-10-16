@@ -5,16 +5,15 @@ import { RouteProp, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../router/routes';
 import { View } from 'react-native';
 import { MultiGameLogic } from './MultiGame/_ComponentLogic';
+import { OnSendRoomParam } from '../../hooks/useMultiGameSocket';
+import { SupportedSkin } from '../../components/Block/skinMap';
 
 type MultiGameRouteProps = RouteProp<RootStackParamList, "PD_MultiGame">;
 type MultiGameNavigationProps = NavigationProp<RootStackParamList, "PD_MultiGame">;
 
 export type MapDesc = MapOption & { difficulty: number };
 
-export type MultiGameParams = {
-  map: number[][];
-  mapDesc: MapDesc;
-}
+export type MultiGameParams = OnSendRoomParam;
 
 export type MultiGameProps = {
   route: MultiGameRouteProps;
@@ -48,10 +47,10 @@ export const MutiGame = (props: MultiGameProps) => {
       <GameScene
         ref={gameSceneRef}
         mode={'multi'}
-        title={'하드'}
+        title={'멀티게임'}
         map={map}
-        playerSkin="basic"
-        opponentSkin="basic"
+        playerSkin={playerProfile.skin as SupportedSkin || "basic"}
+        opponentSkin={opponentProfile.skin as SupportedSkin || "basic"}
         timeLimit={60}
         isManualTimer
         maxScore={mapDesc.maxScore}

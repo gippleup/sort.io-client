@@ -34,6 +34,7 @@ export type SendRoomMessage = {
       name: string;
       id: number;
       photo: string;
+      skin: string;
     }[];
   }
 }

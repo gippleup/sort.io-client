@@ -1,7 +1,7 @@
 import React, { RefObject } from "react"
 import Profile from "../../../../components/Profile"
 import expressions, { SupportedExpression } from "../../../../components/Profile/Expressions"
-import useMultiGameSocket from "../../../../hooks/useMultiGameSocket"
+import useMultiGameSocket, { OnSendRoomParam } from "../../../../hooks/useMultiGameSocket"
 import usePlayData from "../../../../hooks/usePlayData"
 
 type MultiGameProfileLogicParams = {
@@ -34,21 +34,23 @@ const multiGameProfileLogic = (param: MultiGameProfileLogicParams) => {
   )
 
   const playerExpress = (expression: SupportedExpression) => {
-    playerProfileRef.current?.express(expressions[expression], "topLeft", 40)
+    playerProfileRef.current?.express(expressions[expression](true), "topLeft", 40)
   }
 
   const opponentExpress = (expression: SupportedExpression) => {
-    opponentProfileRef.current?.express(expressions[expression], "topLeft", 40)
+    opponentProfileRef.current?.express(expressions[expression](true), "topLeft", 40)
   }
 
   const playerProfile = {
     name: player ? player.name : '나',
-    photo: PlayerProfile
+    photo: PlayerProfile,
+    skin: player?.skin,
   }
 
   const opponentProfile = {
     name: opponent ? opponent.name : '상대',
-    photo: OpponentProfile
+    photo: OpponentProfile,
+    skin: opponent?.skin,
   }
 
   return {

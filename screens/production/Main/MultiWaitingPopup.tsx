@@ -14,6 +14,7 @@ import { BeforeRemoveEvent } from '../GameScreen/utils'
 import Svg, { Defs, Ellipse, RadialGradient, Rect, Stop, StopProps } from 'react-native-svg'
 import MaskedView from '@react-native-community/masked-view'
 import chroma from 'chroma-js'
+import useGlobal from '../../../hooks/useGlobal'
 
 type MultiWaitingPopupNavigationProps = StackNavigationProp<RootStackParamList, "Popup_MultiWaiting">;
 type MultiWaitingPopupRouteProps = RouteProp<RootStackParamList, "Popup_MultiWaiting">;
@@ -32,7 +33,8 @@ const blockRemoveStack = (e: BeforeRemoveEvent) => {
 const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
   let foundMatch = false;
   let text = '상대를 찾고 있습니다';
-  let interval: null | NodeJS.Timer = null
+  let interval: null | NodeJS.Timer = null;
+  const global = useGlobal();
   const loadingTextRef = React.createRef<Text>();
   const modalRef = React.createRef<NativeRefBox>();
   const loadingTextContainerRef = React.createRef<NativeRefBox>();
@@ -128,6 +130,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
         socket.send(socketClientActions.enter({
           userId: playdata.user.id,
           name: playdata.user.name,
+          skin: global.skin,
         }));
       }
     })
@@ -166,8 +169,6 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
     }}
   />
 
-  console.log();
-
   return (
     <FullFlexCenter style={{backgroundColor: "rgba(0,0,0,0.3)"}}>
       <Modal style={{width: Dimensions.get('screen').width - 60, maxWidth: 300}} ref={modalRef}>
@@ -198,6 +199,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
             checkIfLoaded={checkIfFoundMatch}
             onLastAnimationStarted={onLastAnimationStarted}
             onAnimationCompleted={onAnimationCompleted}
+            skin={global.skin}
           />
         </LoadingAnimationContainer>
         <NativeRefBox ref={loadingTextContainerRef}>

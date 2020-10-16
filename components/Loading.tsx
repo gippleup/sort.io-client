@@ -4,15 +4,22 @@ import Block from './Block';
 import NativeRefBox from './NativeRefBox';
 import StrokedText from './StrokedText';
 import chroma from 'chroma-js';
+import { SupportedSkin } from './Block/skinMap';
 
 type LoadingProps = {
   checkIfLoaded: () => boolean;
   onAnimationCompleted?: () => any;
   onLastAnimationStarted?: () => any;
+  skin?: SupportedSkin;
 }
 
 const Loading = (props: LoadingProps) => {
-  const { checkIfLoaded, onAnimationCompleted, onLastAnimationStarted } = props;
+  const {
+    checkIfLoaded,
+    onAnimationCompleted,
+    onLastAnimationStarted,
+    skin = "basic",
+  } = props;
   const topRef = React.createRef<Block>();
   const pieceRef = React.createRef<Block>();
   const bottomRef = React.createRef<Block>();
@@ -195,7 +202,7 @@ const Loading = (props: LoadingProps) => {
       <NativeRefBox ref={refBoxTopRef} style={{ opacity: 0 }}>
         <Block
           ref={topRef}
-          skin="roundupward"
+          skin={skin}
           part="top"
           scale={1}
           type={1}
@@ -204,7 +211,7 @@ const Loading = (props: LoadingProps) => {
       <NativeRefBox ref={refBoxPieceRef}>
         <Block
           ref={pieceRef}
-          skin="roundupward"
+          skin={skin}
           part="piece"
           scale={1}
           type={1}
@@ -213,7 +220,7 @@ const Loading = (props: LoadingProps) => {
       <NativeRefBox ref={refBoxBottomRef}>
         <Block
           ref={bottomRef}
-          skin="roundupward"
+          skin={skin}
           part="bottom"
           scale={1}
           type={1}

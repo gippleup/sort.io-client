@@ -28,6 +28,7 @@ type TimerProps = {
   onReady?: () => void;
   auto?: boolean;
   roundTo?: number;
+  fps?: number;
 };
 
 type TimerState = {

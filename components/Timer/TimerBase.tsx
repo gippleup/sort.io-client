@@ -77,6 +77,29 @@ class TimerBase extends React.Component<TimerProps, {}> {
     }
   }
 
+  startTimer() {
+    this.animateTimerTo(0);
+  }
+
+  animateTimerTo(time: number) {
+    const { props } = this;
+    const fps = props.fps || 60
+    this.stopTimer();
+    if (!this.startedTimer) {
+      this.startedTimer = true;
+      this.interval = setInterval(() => {
+        if (this.leftTime <= time && this.interval) {
+          clearInterval(this.interval);
+          this.leftTime = time;
+        }
+        if (this.leftTime > 0) {
+          this.leftTime -= 1 / fps;
+        }
+        setTimeout(this.onUpdateTimer, 0)
+      }, 1000 / fps)
+    }
+  }
+
   onUpdateTimer() {
     const {leftTime: value, props} = this;
     const {integerRef, decimalRef} = this;
@@ -108,31 +131,10 @@ class TimerBase extends React.Component<TimerProps, {}> {
     }
   }
 
-  startTimer() {
-    this.animateTimerTo(0);
-  }
-
   setTimeTo(time: number) {
     this.stopTimer();
     this.leftTime = time;
     this.onUpdateTimer();
-  }
-
-  animateTimerTo(time: number) {
-    const { props } = this;
-    const fps = props.fps || 60
-    this.stopTimer();
-    if (!this.startedTimer) {
-      this.startedTimer = true;
-      this.interval = setInterval(() => {
-        if (this.leftTime <= time && this.interval) {
-          clearInterval(this.interval);
-          this.leftTime = time;
-        }
-        this.onUpdateTimer();
-        this.leftTime -= 1 / fps;
-      }, 1000 / fps)
-    }
   }
 
   stopTimer() {

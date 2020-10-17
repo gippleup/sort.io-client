@@ -1,10 +1,15 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View } from "react-native";
+import { useSelector } from "react-redux";
 import GameScene from "../../../../components/GameScene";
 import Profile from "../../../../components/Profile";
+import useGlobal from "../../../../hooks/useGlobal";
 import useMultiGameSocket from "../../../../hooks/useMultiGameSocket";
+import socketClientActions from "../../../../hooks/useMultiGameSocket/action/creator";
 import usePlayData from "../../../../hooks/usePlayData";
+import { ExpressionDirection } from "../../../../redux/actions/global/creator";
+import { RootState } from "../../../../redux/reducers";
 import { MultiGameProps } from "../../MutiGame";
 import multiGameNavigationLogic from "./_navigationLogic";
 import multiGameProfileLogic from "./_profileLogic";
@@ -13,34 +18,13 @@ import multiGameSocketLogic from "./_socketLogic";
 export const MultiGameLogic = (props: MultiGameProps) => {
   const { map, mapDesc } = props.route.params;
   const socket = useMultiGameSocket();
-  const playData = usePlayData();
+  const {global, items, playData} = useSelector((state: RootState) => state);
   const navigation = useNavigation();
   const gameSceneRef = React.useRef<GameScene>(null);
   const containerRef = React.useRef<View>(null);
   const playerProfileRef = React.useRef<Profile>(null);
   const opponentProfileRef = React.useRef<Profile>(null);
   const gameStarted = React.useRef<boolean>(false);
-
-  const {
-    alertDockListener,
-    alertPrepareListener,
-    deleteRoomListener,
-    errorListener,
-    informOpponentHasLeftListener,
-    informWinnerListener,
-    sendDockMessage,
-    sendReadyMessage,
-    sendSuccessMessage,
-    sendUpdateScoreMessage,
-    syncTimerListener,
-  } = multiGameSocketLogic({
-    containerRef,
-    gameSceneRef,
-    playData,
-    props,
-    socket,
-    gameStarted,
-  })
 
   const {
     opponentExpress,
@@ -55,12 +39,43 @@ export const MultiGameLogic = (props: MultiGameProps) => {
   })
 
   const {
+    alertDockListener,
+    alertPrepareListener,
+    deleteRoomListener,
+    errorListener,
+    informOpponentHasLeftListener,
+    informWinnerListener,
+    sendDockMessage,
+    sendReadyMessage,
+    sendSuccessMessage,
+    sendUpdateScoreMessage,
+    sendExpressEmotionMessage,
+    syncTimerListener,
+    sendExpressionDataListenr,
+  } = multiGameSocketLogic({
+    containerRef,
+    gameSceneRef,
+    playData,
+    props,
+    socket,
+    gameStarted,
+    opponentExpress,
+    playerExpress,
+  })
+
+  const {
     blockGoBack,
   } = multiGameNavigationLogic({
     gameStarted,
     navigation,
     socket,
   })
+
+  const onPressExpression = (direction: ExpressionDirection) => {
+    const expression = global.expressions[direction];
+    if (!expression) return;
+    sendExpressEmotionMessage(expression);
+  }
 
   const onReady = () => {
     sendReadyMessage();
@@ -99,6 +114,7 @@ export const MultiGameLogic = (props: MultiGameProps) => {
       socket.removeListener(syncTimerListener);
       socket.removeListener(alertPrepareListener);
       socket.removeListener(informWinnerListener);
+      socket.removeListener(sendExpressionDataListenr);
     }
   }
 
@@ -115,5 +131,8 @@ export const MultiGameLogic = (props: MultiGameProps) => {
     opponentProfile,
     playerProfile,
     useEffectCallback,
+    socket,
+    onPressExpression,
+    global,
   }
 }

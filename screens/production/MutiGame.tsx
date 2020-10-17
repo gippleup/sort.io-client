@@ -1,12 +1,16 @@
 import React from 'react'
 import GameScene from '../../components/GameScene';
 import { MapOption } from '../../api/sortio';
-import { RouteProp, NavigationProp } from '@react-navigation/native';
+import { RouteProp, NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../router/routes';
 import { View } from 'react-native';
 import { MultiGameLogic } from './MultiGame/_ComponentLogic';
 import { OnSendRoomParam } from '../../hooks/useMultiGameSocket';
 import { SupportedSkin } from '../../components/Block/skinMap';
+import { ExpressionDirection } from '../../redux/actions/global/creator';
+import useGlobal from '../../hooks/useGlobal';
+import socketClientActions from '../../hooks/useMultiGameSocket/action/creator';
+import usePlayData from '../../hooks/usePlayData';
 
 type MultiGameRouteProps = RouteProp<RootStackParamList, "PD_MultiGame">;
 type MultiGameNavigationProps = NavigationProp<RootStackParamList, "PD_MultiGame">;
@@ -34,6 +38,8 @@ export const MutiGame = (props: MultiGameProps) => {
     opponentProfile,
     playerProfile,
     useEffectCallback,
+    onPressExpression,
+    global,
   } = MultiGameLogic(props);
 
   React.useEffect(useEffectCallback)
@@ -58,11 +64,13 @@ export const MutiGame = (props: MultiGameProps) => {
         onDock={onDock}
         onUndock={onUndock}
         onReady={onReady}
-        timerRoundTo={3}
+        timerRoundTo={0}
         opponentProfile={opponentProfile}
         onScoreChange={onScoreChange}
         playerProfile={playerProfile}
         noAnimation={false}
+        onPressExpression={onPressExpression}
+        expressions={global.expressions}
         // noAnimation 이걸 리덕스로 다뤄야 함. 메인에 버튼 하나 만들고 그걸로 리덕스 상태 변경하기
       />
     </View>

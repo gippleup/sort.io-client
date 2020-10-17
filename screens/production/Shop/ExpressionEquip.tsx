@@ -83,7 +83,6 @@ const ExpressionEquip = (props: ExpressionEquipProps) => {
   }
 
   const onPressWheel = (direction: ExpressionDirection) => {
-    console.log('??')
     if(selectedExpression.current) {
       wheelRef.current?.deindicateDropArea();
       ownedExpressions.forEach((expression) => {
@@ -184,22 +183,12 @@ const ExpressionEquip = (props: ExpressionEquipProps) => {
           alignItems: 'center',
         }}
       >
-        <View
-          style={{
-            padding: 10,
-            backgroundColor: 'goldenrod',
-            borderRadius: 300,
-            borderWidth: 3,
-            borderColor: chroma('goldenrod').darken().darken().hex(),
-          }}
-        >
-          <ExpressionEquipWheel
-            ref={wheelRef}
-            {...global.expressions}
-            onPress={onPressWheel}
-            size={(Dimensions.get('window').height * (6 / 10) - guideTextHeight - 20) * 7 / 10}
-          />
-        </View>
+        <ExpressionEquipWheel
+          ref={wheelRef}
+          {...global.expressions}
+          onPress={onPressWheel}
+          size={(Dimensions.get('window').height * (6 / 10) - guideTextHeight - 20) * 7 / 10}
+        />
         <Space height={20} />
         <TouchableOpacity onPress={onPressComplete}>
           <NotoSans

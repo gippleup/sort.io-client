@@ -2,6 +2,7 @@ import { CommonActions } from "@react-navigation/native";
 import { MutableRefObject, RefObject } from "react";
 import { View } from "react-native";
 import GameScene from "../../../../components/GameScene";
+import { SupportedExpression } from "../../../../components/Profile/Expressions";
 import useMultiGameSocket from "../../../../hooks/useMultiGameSocket";
 import socketClientActions from "../../../../hooks/useMultiGameSocket/action/creator";
 import { AlertDockConstructor } from "../../../../hooks/useMultiGameSocket/ServerMessages";
@@ -15,6 +16,8 @@ type MultiGameSocketLogicParams = {
   gameSceneRef: RefObject<GameScene>,
   containerRef: RefObject<View>,
   gameStarted: MutableRefObject<boolean>,
+  opponentExpress: (expression: SupportedExpression) => any;
+  playerExpress: (expression: SupportedExpression) => any;
 }
 
 const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
@@ -25,13 +28,16 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
     containerRef,
     gameSceneRef,
     gameStarted,
+    opponentExpress,
+    playerExpress,
   } = param;
   const { roomId } = socket.getRoomData();
+  const {id: userId} = playData.user;
 
   const sendDockMessage = (stackIndex: number, action: 'DOCK' | 'UNDOCK') => {
     if (!playData.user.id) return;
     socket.send(socketClientActions.dock({
-      userId: playData.user.id,
+      userId,
       stackIndex: stackIndex,
       roomId: roomId,
       action,
@@ -41,7 +47,7 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
   const sendSuccessMessage = () => {
     if (!playData.user.id) return;
     socket.send(socketClientActions.success({
-      userId: playData.user.id,
+      userId,
       roomId: roomId,
     }));
   }
@@ -50,7 +56,7 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
     if (!playData.user.id) return;
     socket.send(socketClientActions.alertReady({
       roomId: roomId,
-      userId: playData.user.id
+      userId
     }));
   }
 
@@ -58,10 +64,18 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
     if (owner === "me" && playData.user.id) {
       socket.send(socketClientActions.updateScore({
         roomId,
-        userId: playData.user.id,
+        userId,
         score,
       }))
     }
+  }
+  
+  const sendExpressEmotionMessage = (expression: SupportedExpression) => {
+    socket.send(socketClientActions.expressEmotion({
+      expression,
+      roomId,
+      userId,
+    }))
   }
 
 
@@ -181,11 +195,22 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
       $TimerBase?.setTimeTo(leftTime);
     })
 
+  const sendExpressionDataListenr = socket.addListener("onSendExpressionData", 
+    (data: {userId: number, expression: string}) => {
+      const {expression, userId} = data;
+      if (userId === playData.user.id) {
+        playerExpress(expression as SupportedExpression);
+      } else {
+        opponentExpress(expression as SupportedExpression);
+      }
+    })
+
   return {
     sendDockMessage,
     sendSuccessMessage,
     sendReadyMessage,
     sendUpdateScoreMessage,
+    sendExpressEmotionMessage,
     errorListener,
     informOpponentHasLeftListener,
     alertDockListener,
@@ -193,6 +218,7 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
     deleteRoomListener,
     informWinnerListener,
     syncTimerListener,
+    sendExpressionDataListenr,
   }
 }
 

@@ -1,4 +1,5 @@
 import { SupportedSkin } from "../../components/Block/skinMap"
+import { SupportedExpression } from "../../components/Profile/Expressions"
 
 export enum SocketClientMessageTypes {
   ENTER = 'ENTER',
@@ -18,6 +19,7 @@ export enum SocketClientMessageTypes {
   REQUEST_OTHERMATCH = 'REQUEST_OTHERMATCH',
   CANCEL_REQUEST_OTHERMATCH = 'CANCEL_REQUEST_OTHERMATCH',
   INFORM_RECEIVED_MAP = 'INFORM_RECEIVED_MAP',
+  EXPRESS_EMOTION = 'EXPRESS_EMOTION',
 }
 
 export type EnterMessage = {
@@ -114,6 +116,11 @@ export type CancelRequestOtherMatch = {
   payload: BasicParam
 }
 
+export type ExpressEmotion = {
+  type: SocketClientMessageTypes.EXPRESS_EMOTION;
+  payload: BasicParam & {expression: SupportedExpression};
+}
+
 export type SocketClientMessages =
   EnterMessage
   | DockMessage
@@ -131,3 +138,4 @@ export type SocketClientMessages =
   | CancelRequestRematch
   | CancelRequestOtherMatch
   | DeclineRequestRematch
+  | ExpressEmotion

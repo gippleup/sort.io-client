@@ -25,6 +25,7 @@ type ListenerCallback = {
   onInformRematchAccepted: () => any;
   onInformPrepareRematch: () => any;
   onAllowInformRematchRequest: () => any;
+  onSendExpressionData: (info: {userId: number, expression: string}) => any;
 }
 
 type ListenerManager = {
@@ -68,6 +69,7 @@ const listenerManager: ListenerManager = {
   onInformRematchAccepted: {},
   onInformPrepareRematch: {},
   onAllowInformRematchRequest: {},
+  onSendExpressionData: {},
 };
 
 const forEachValue = (target: Object, cb: (value: any) => any) => {
@@ -171,6 +173,9 @@ const useMultiGameSocket = () => {
       forEachValue(listenerManager.onInformPrepareRematch, (cb) => cb())
     } else if (parsedData.type === MessageType.ALLOW_INFORM_REMATCH_REQUEST) {
       forEachValue(listenerManager.onAllowInformRematchRequest, (cb) => cb())
+    } else if (parsedData.type === MessageType.SEND_EXPRESSION_DATA) {
+      const {expression, userId} = parsedData.payload;
+      forEachValue(listenerManager.onSendExpressionData, (cb) => cb({userId, expression}))
     }
   }
 

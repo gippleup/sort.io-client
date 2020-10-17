@@ -1,4 +1,5 @@
 import { SupportedSkin } from "../../../components/Block/skinMap";
+import { SupportedExpression } from "../../../components/Profile/Expressions";
 import { SocketClientMessageTypes } from "../ClientMessage";
 
 type BasicParam = {
@@ -100,6 +101,11 @@ export const informReceivedMap = (param: BasicParam) => JSON.stringify({
   payload: param,
 })
 
+export const expressEmotion = (param: BasicParam & {expression: SupportedExpression}) => JSON.stringify({
+  type: SocketClientMessageTypes.EXPRESS_EMOTION,
+  payload: param,
+})
+
 export const socketClientActions = {
   enter,
   dock,
@@ -116,6 +122,7 @@ export const socketClientActions = {
   requestOtherMatch,
   cancelRequestRematch,
   cancelRequestOtherMatch,
+  expressEmotion,
 }
 
 export default socketClientActions;

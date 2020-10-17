@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, Image, ImageStyle, ViewStyle, StyleSheet } from 'react-native'
 import Animated from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import ExpressionEquipWheel from './ExpressionEquipWheel';
 import NativeRefBox from './NativeRefBox';
 import Chat from './Profile/Chat';
 
@@ -10,6 +11,8 @@ type ProfileProps = {
   size?: number;
   iconColor?: string;
   chatBubbleSize?: number;
+  backgroundColor?: string;
+  onTouchStart?: () => any;
 }
 
 type ProfileState = {
@@ -17,22 +20,25 @@ type ProfileState = {
 }
 
 class Profile extends React.Component<ProfileProps, ProfileState> {
-  boxRef = React.createRef<NativeRefBox>();
+  chatBoxRef = React.createRef<NativeRefBox>();
   chatBubbleRef = React.createRef<Chat>();
   timeout: NodeJS.Timeout | null = null;
   isAnimating = false;
   size = 40;
-  chatBubbleSize = this.props.chatBubbleSize || 50;
+  chatBubbleSize = 50;
   bubbleOffsetDiff = Math.abs((this.chatBubbleSize - this.size) / 2);
+  bubbleSizeRatio = 1;
 
   constructor(props: Readonly<ProfileProps>) {
     super(props);
     this.state = {
       expression: <></>
     }
-    this.size = this.props.size || 40;
+    this.size = props.size || 40;
     this.express = this.express.bind(this);
     this.renderPhoto = this.renderPhoto.bind(this);
+    this.chatBubbleSize = props.chatBubbleSize || 50;
+    this.bubbleSizeRatio = (this.chatBubbleSize / 50);
   }
 
   express(
@@ -83,25 +89,25 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
       expression
     });
 
-    this.boxRef.current?.setStyle({
+    this.chatBoxRef.current?.setStyle({
       left: offsetForCenter,
       top: offsetForCenter,
       scaleX: 0,
       scaleY: 0,
     })
 
-    this.boxRef.current?.animate({
+    this.chatBoxRef.current?.animate({
       style: {
         opacity: 1,
-        scaleX: 1,
-        scaleY: 1,
+        scaleX: this.bubbleSizeRatio,
+        scaleY: this.bubbleSizeRatio,
         ...animationConfig,
       },
       duration: 1000,
       easing: "easeOutElastic"
     }).start(() => {
       this.timeout = setTimeout(() => {
-        this.boxRef.current?.animate({
+        this.chatBoxRef.current?.animate({
           style: {
             opacity: 0,
             scaleX: 0,
@@ -146,8 +152,8 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
 
   render() {
     const { props, state } = this;
-    const { boxRef, chatBubbleRef } = this;
-    const { photoUri } = props;
+    const { chatBoxRef, chatBubbleRef } = this;
+    const { photoUri, backgroundColor = "white" } = props;
     const { size, chatBubbleSize } = this;
     return (
       <View
@@ -164,14 +170,15 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
               height: size,
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'white',
+              backgroundColor: backgroundColor,
               borderRadius: 200,
             }
         }
+        onTouchStart={props.onTouchStart}
       >
         {this.renderPhoto()}
         <NativeRefBox
-          ref={boxRef}
+          ref={chatBoxRef}
           style={{
             position: 'absolute',
             opacity: 0,
@@ -179,10 +186,10 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         >
           <Chat
             ref={chatBubbleRef}
-            width={chatBubbleSize}
-            height={chatBubbleSize}
+            width={50}
+            height={50}
             fill="ivory"
-            stroke="rgba(0,0,0,0.3)"
+            stroke="white"
           >
             {state.expression}
           </Chat>

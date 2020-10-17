@@ -33,7 +33,7 @@ export const LevelInfo = styled(Text)`
   font-weight: bold;
 `;
 
-export const ProfileContainer = styled(View)`
+export const ProfileContainer: typeof View = styled(View)`
   width: 36px;
   height: 36px;
   align-items: center;

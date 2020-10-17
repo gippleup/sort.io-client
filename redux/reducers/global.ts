@@ -6,15 +6,11 @@ import {
   GlobalReducerActionTypes,
 } from '../actions/global/types';
 
-type GlobalReducerState = {
+export type GlobalReducerState = {
   language: SupportedLanguage;
   skin: SupportedSkin;
   expressions: {
-    top: SupportedExpression | '';
-    bottom: SupportedExpression | '';
-    left: SupportedExpression | '';
-    right: SupportedExpression | '';
-    center: SupportedExpression | '';
+    [T in ExpressionDirection]?: SupportedExpression;
   }
 };
 
@@ -45,7 +41,7 @@ const reducer = (state = initialState, action: GlobalReducerActions) => {
     Object.entries(newState.expressions)
       .map(([key, value]) => {
         if (value === name) {
-          newState.expressions[key as ExpressionDirection] = '';
+          newState.expressions[key as ExpressionDirection] = undefined;
         }
       })
     newState.expressions[direction] = name;

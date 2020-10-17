@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, Text, Image, Dimensions} from 'react-native';
+import React, { RefObject } from 'react';
+import {View, Text, Image, Dimensions, GestureResponderEvent} from 'react-native';
 import PatternBackground from './GameScene/PatternBackground';
 import Timer from './Timer';
 import ScoreChecker from './ScoreChecker';
@@ -27,8 +27,14 @@ import {
 import { FlexHorizontal } from './Generic/StyledComponents';
 import { getSoundEffect } from '../assets/Sounds';
 import { Easings } from './NativeRefBox/easings';
+import NativeRefBox from './NativeRefBox';
+import ExpressionEquipWheel from './ExpressionEquipWheel';
+import { ExpressionDirection } from '../redux/actions/global/creator';
+import { SupportedExpression } from './Profile/Expressions';
 
 const backgroundImage = require('../assets/BackgroundPattern.png');
+
+const expectedWheelSize = (size: number) => (216.76190185546875 / 200) * size;
 
 type GameSceneProps = {
   title: string;
@@ -55,6 +61,14 @@ type GameSceneProps = {
   opponentDockEasing?: Easings;
   playerDockEasingDuraton?: number;
   opponentDockEasingDuration?: number;
+  onTouchPlayerProfile?: (e: GestureResponderEvent) => any;
+  onTouchOpponentProfile?: (e: GestureResponderEvent) => any;
+  timerFps?: number;
+  expressionWheelSize?: number;
+  expressions?: {
+    [T in ExpressionDirection]?: SupportedExpression;
+  }
+  onPressExpression?: (direction: ExpressionDirection) => any;
 };
 
 
@@ -67,6 +81,10 @@ class GameScene extends React.Component<GameSceneProps, {}>{
     player: false,
   };
   opponentBoardRef = React.createRef<NativeRefBlockBoard>();
+  expressionWheelContainerRef = React.createRef<NativeRefBox>();
+  playerProfileRef = React.createRef<View>();
+  opponentProfileRef = React.createRef<View>();
+  playerProfileCenter: null | {x: number; y: number} = null;
   mapScale = 1;
   scoreCheckerMax = {
     single: {
@@ -84,12 +102,14 @@ class GameScene extends React.Component<GameSceneProps, {}>{
   initialScore = 0;
   scoreCheckerLayout = [[]];
   onReadyDispatched = false;
+  expressionWheelSize = 200;
 
   constructor(props: Readonly<GameSceneProps>) {
     super(props);
     this.mapScale = decideMapScale(props.map.length);
     this.checkerMaxWidth = this.scoreCheckerMax[props.mode].width;
     this.checkerMaxHeight = this.scoreCheckerMax[props.mode].height;
+    this.expressionWheelSize = props.expressionWheelSize || 200;
 
     if (props.maxScore <= 8) {
       this.scoreCheckerScale = 0.45;
@@ -127,6 +147,8 @@ class GameScene extends React.Component<GameSceneProps, {}>{
     this.renderScoreChecker = this.renderScoreChecker.bind(this);
     this.renderStageTitle = this.renderStageTitle.bind(this);
     this.checkIfBoardReady = this.checkIfBoardReady.bind(this);
+    this.showExpressionWheel = this.showExpressionWheel.bind(this);
+    this.hideExpressionWheel = this.hideExpressionWheel.bind(this);
   }
 
   checkIfBoardReady = () => {
@@ -241,7 +263,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
     }
     return (
       <ScoreCheckerContainer gameType={props.mode}>
-        <ProfileContainer>
+        <ProfileContainer ref={this.opponentProfileRef} onTouchStart={props.onTouchOpponentProfile}>
           {props.opponentProfile?.photo}
         </ProfileContainer>
         <View>
@@ -263,6 +285,39 @@ class GameScene extends React.Component<GameSceneProps, {}>{
     )
   }
 
+  showExpressionWheel(x: number, y: number) {
+    const actualWheelSize = expectedWheelSize(this.expressionWheelSize) / 2;
+    this.expressionWheelContainerRef.current?.setStyle({
+      display: "flex",
+      left: x - actualWheelSize,
+      top: y - actualWheelSize,
+    })
+    this.expressionWheelContainerRef.current?.animate({
+      style: {
+        scaleX: 1,
+        scaleY: 1,
+      },
+      duration: 1000,
+      easing: "easeOutElastic",
+    }).start();
+  }
+
+  hideExpressionWheel(callback?: () => any) {
+    this.expressionWheelContainerRef.current?.animate({
+      style: {
+        scaleX: 0,
+        scaleY: 0,
+      },
+      duration: 300,
+      easing: "easeInOutSine",
+    }).start(() => {
+      this.expressionWheelContainerRef.current?.setStyle({display: "none"})
+      if (callback) {
+        callback();
+      }
+    })
+  }
+
   renderScoreChecker() {
     const { props } = this;
     const {
@@ -272,8 +327,25 @@ class GameScene extends React.Component<GameSceneProps, {}>{
       scoreCheckerRef,
     } = this;
 
+    const onTouchStart = (e: GestureResponderEvent) => {
+      if (props.onTouchPlayerProfile) {
+        props.onTouchPlayerProfile(e);
+      }
+      if (!this.playerProfileCenter) {
+        this.playerProfileRef.current?.measure((x, y, width, height, pageX, pageY) => {
+          this.playerProfileCenter = {
+            x: pageX + width / 2,
+            y: pageY + height / 2,
+          }
+          this.showExpressionWheel(this.playerProfileCenter.x, this.playerProfileCenter.y);
+        })
+      } else {
+        this.showExpressionWheel(this.playerProfileCenter.x, this.playerProfileCenter.y);
+      }
+    }
+
     const profile = (
-      <ProfileContainer>
+      <ProfileContainer ref={this.playerProfileRef} onTouchStart={onTouchStart}>
         {props.playerProfile?.photo}
       </ProfileContainer>
     )
@@ -316,6 +388,8 @@ class GameScene extends React.Component<GameSceneProps, {}>{
       startTimerIfBothReady,
       mapScale,
       timerRef,
+      expressionWheelSize,
+      expressionWheelContainerRef,
     } = this;
 
     return (
@@ -337,6 +411,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
                 onFinish={props.onTimeOut}
                 auto={false}
                 roundTo={props.timerRoundTo}
+                fps={props.timerFps}
               />
             </TimerContainer>
             {renderOpponentScoreChecker()}
@@ -360,8 +435,14 @@ class GameScene extends React.Component<GameSceneProps, {}>{
               const sound = getSoundEffect(props.playerSkin || "basic").dock;
               sound.setVolume(1);
               sound.play();
+              this.hideExpressionWheel();
             }}
-            onUndock={props.onUndock}
+            onUndock={(stackIndex) => {
+              if (props.onUndock) {
+                props.onUndock(stackIndex);
+              }
+              this.hideExpressionWheel();
+            }}
             onComplete={() => {
               if (props.onComplete) {
                 props.onComplete("me");
@@ -378,6 +459,27 @@ class GameScene extends React.Component<GameSceneProps, {}>{
             dockEasingDuration={props.playerDockEasingDuraton}
           />
         </BlockBoardContainer>
+        <NativeRefBox
+          ref={expressionWheelContainerRef}
+          style={{
+            display: 'none',
+            position: 'absolute',
+            scaleX: 0,
+            scaleY: 0,
+          }}
+        >
+          <ExpressionEquipWheel
+            {...props.expressions}
+            onPress={(direction) => {
+              this.hideExpressionWheel(() => {
+                if (props.onPressExpression) {
+                  props.onPressExpression(direction);
+                }
+              });
+            }}
+            size={expressionWheelSize}
+          />
+        </NativeRefBox>
       </GameSceneContainer>
     );
   }

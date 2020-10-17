@@ -19,6 +19,7 @@ type SlideSelectorProps<T> = {
   arrowColor?: string;
   initialCursor?: number;
   style?: ViewStyle;
+  tolerateSpan?: number;
 }
 
 const SlideSelector: React.FC<SlideSelectorProps<any>> = (props) => {
@@ -32,6 +33,7 @@ const SlideSelector: React.FC<SlideSelectorProps<any>> = (props) => {
     size = 100,
     arrowColor,
     initialCursor = 0,
+    tolerateSpan = 1000,
   } = props;
   const isHorizontal = direction === "horizontal";
   const [cursor, setCursor] = React.useState(initialCursor);
@@ -51,9 +53,11 @@ const SlideSelector: React.FC<SlideSelectorProps<any>> = (props) => {
   }
 
   React.useEffect(() => {
-    if (onChange) {
-      onChange(data[cursor]);
-    }
+    const timer = setTimeout(() => {
+      if (onChange) {
+        onChange(data[cursor]);
+      }
+    }, tolerateSpan)
 
     measureEntryPosition((layout) => {
       const targetDimension = isHorizontal ? "x" : "y";
@@ -62,6 +66,10 @@ const SlideSelector: React.FC<SlideSelectorProps<any>> = (props) => {
       });
       // scrollRef.current?.scrollToEnd();
     })
+
+    return () => {
+      clearTimeout(timer);
+    }
   }, [cursor])
 
   return (

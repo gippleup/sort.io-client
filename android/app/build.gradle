@@ -217,6 +217,8 @@ dependencies {
         exclude group:'com.facebook.flipper'
     }
 
+    implementation 'androidx.multidex:multidex:2.0.1'
+
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
         debugImplementation files(hermesPath + "hermes-debug.aar")

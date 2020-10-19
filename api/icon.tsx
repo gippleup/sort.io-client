@@ -6,7 +6,8 @@ const iconSet = {
   antDesign: require('react-native-vector-icons/AntDesign'),
   entypo: require('react-native-vector-icons/Entypo'),
   fontAwesome: require('react-native-vector-icons/FontAwesome'),
-  fontAwesome5: require('react-native-vector-icons/FontAwesome5')
+  fontAwesome5: require('react-native-vector-icons/FontAwesome5'),
+  materialCommunityIcons: require('react-native-vector-icons/MaterialCommunityIcons'),
 }
 
 type IconOption = {

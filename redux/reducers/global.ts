@@ -11,7 +11,8 @@ export type GlobalReducerState = {
   skin: SupportedSkin;
   expressions: {
     [T in ExpressionDirection]?: SupportedExpression;
-  }
+  },
+  animationEnabled: boolean;
 };
 
 const initialState: GlobalReducerState = {
@@ -23,7 +24,8 @@ const initialState: GlobalReducerState = {
     right: "meh",
     left: "heart",
     center: "sad",
-  }
+  },
+  animationEnabled: false,
 };
 
 const reducer = (state = initialState, action: GlobalReducerActions) => {
@@ -45,6 +47,10 @@ const reducer = (state = initialState, action: GlobalReducerActions) => {
         }
       })
     newState.expressions[direction] = name;
+  }
+
+  if (action.type === GlobalReducerActionTypes.TOGGLE_ANIMATION) {
+    newState.animationEnabled = !newState.animationEnabled;
   }
 
   return newState;

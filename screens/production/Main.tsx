@@ -9,12 +9,13 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import styled from 'styled-components'
 import { useNavigation, RouteProp, CommonActions } from '@react-navigation/native'
 import usePlayData from '../../hooks/usePlayData'
-import GoogleSignin from '../../components/GoogleSignin'
-import { FlexHorizontal, Space, NotoSans } from '../../components/Generic/StyledComponents'
+import { FlexHorizontal, Space, NotoSans, Line } from '../../components/Generic/StyledComponents'
 import { useDispatch } from 'react-redux'
 import { loadPlayData, signInWithGoogle, signOutWithGoogle } from '../../redux/actions/playData/thunk'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../router/routes'
+import AnimationController from '../../components/AnimationController'
+import GoogleSigninController from '../../components/GoogleSigninController'
 
 const backgroundImage = require('../../assets/BackgroundPattern.png');
 
@@ -41,35 +42,20 @@ const Main = (props: MainProps) => {
     dispatch(loadPlayData());
   }
 
-  const onSignIn = () => {
-    dispatch(signInWithGoogle());
-  }
-
-  const onSignOut = () => {
-    dispatch(signOutWithGoogle());
-  }
-
   const onPressSingle = () => navigation.navigate('PD_SelectStage');
 
   const onPressMulti = () => navigation.navigate('Popup_MultiWaiting');
 
   const onPressShop = () => navigation.navigate("PD_Shop");
 
-  React.useEffect(() => {
-    return () => {
-    }
-  })
-
   return (
     <View style={{flex: 1, backgroundColor: 'grey'}}>
       <PatternBackground source={backgroundImage}/>
       <View style={{position: 'absolute', left: 10, top: 10}}>
         <FlexHorizontal>
-          <VolumeControl/>
-          <Space width={5} />
-          <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)', padding: 5, borderRadius: 50}}>
-            <GoogleSignin onSignOut={onSignOut} onSignIn={onSignIn} size={40} />
-          </View>
+          <AnimationController/>
+          <Line width={0.5} height='80%' marginHorizontal={10} color="rgba(255,255,255,0.5)" />
+          <GoogleSigninController/>
         </FlexHorizontal>
       </View>
       <View style={{ position: 'absolute', right: 10, top: 10 }}>

@@ -27,6 +27,10 @@ export const setExpression = (expression: SupportedExpression, direction: Expres
   },
 })
 
+export const toggleAnimation = () => ({
+  type: GlobalReducerActionTypes.TOGGLE_ANIMATION,
+})
+
 
 export type GlobalReducerActions = {
   type: GlobalReducerActionTypes.SET_EXPRESSION,
@@ -40,4 +44,6 @@ export type GlobalReducerActions = {
 } | {
   type: GlobalReducerActionTypes.SET_SKIN,
   payload: SupportedSkin,
+} | {
+  type: GlobalReducerActionTypes.TOGGLE_ANIMATION,
 }

@@ -135,6 +135,9 @@ const GameScreen = (props: GameScreenProps) => {
       }}
       fps={60}
       timerRoundTo={3}
+      playerDockEasingDuraton={300}
+      playerDockEasing="easeOutBounce"
+      noAnimation={!global.animationEnabled}
     />
   );
 }

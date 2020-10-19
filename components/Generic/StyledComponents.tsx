@@ -1,4 +1,4 @@
-import {View, Text, ColorValue, TextProps} from 'react-native';
+import {View, Text, ColorValue, TextProps, ViewProps} from 'react-native';
 import styled from 'styled-components';
 
 export const FlexHorizontal: typeof View = styled(View)`
@@ -97,4 +97,21 @@ export const FullFlexCenter: typeof View = styled(View)`
   flex: 1;
   align-items: center;
   justify-content: center;
+`;
+
+type LineProps = ViewProps & {
+  width?: number;
+  height?: number | string;
+  color?: string;
+  marginVertical?: number;
+  marginHorizontal?: number;
+};
+export const Line: React.FC<LineProps> = styled(View)<LineProps>`
+  margin-top: ${(props) => props.marginVertical || 0}px;
+  margin-bottom: ${(props) => props.marginVertical || 0}px;
+  margin-left: ${(props) => props.marginHorizontal || 0}px;
+  margin-right: ${(props) => props.marginHorizontal || 0}px;
+  width: ${(props) => props.width || '1px'}px;
+  height: ${(props) => props.height || '100%'};
+  background-color: ${(props) => props.color || 'black'};
 `;

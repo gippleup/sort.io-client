@@ -32,19 +32,19 @@ GoogleSigninModule.configure({
   forceCodeForRefreshToken: true,
 })
 
-type GoogleSignInProps = {
+type CustomGoogleSignInProps = {
   onSignIn?: (user: User) => any;
   onSignOut?: () => any;
   size?: number;
 }
 
-type GoogleSignInState = {
+type CustomGoogleSignInState = {
   userInfo: null | User;
   isSignedIn: boolean;
   modalVisible: boolean;
 }
 
-export class GoogleSignin extends Component<GoogleSignInProps, GoogleSignInState> {
+class CustomGoogleSignin extends Component<CustomGoogleSignInProps, CustomGoogleSignInState> {
   constructor(props: any) {
     super(props)
     this.state = {
@@ -153,4 +153,4 @@ export class GoogleSignin extends Component<GoogleSignInProps, GoogleSignInState
   }
 }
 
-export default GoogleSignin
+export default CustomGoogleSignin

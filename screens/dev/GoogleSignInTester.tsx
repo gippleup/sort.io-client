@@ -1,11 +1,11 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import GoogleSignin from '../../components/GoogleSignin'
+import CustomGoogleSignin from '../../components/CustomGoogleSignin'
 
 const GoogleSignInTester = () => {
   return (
     <View>
-      <GoogleSignin/>
+      <CustomGoogleSignin/>
     </View>
   )
 }

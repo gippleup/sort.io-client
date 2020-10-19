@@ -169,8 +169,10 @@ export const useGold: GeneralThunkAction<number> = (amount) => async (dispatch, 
   const { curUser } = _getCurDataCurUser(getState);
   if (curUser.id) {
     const updated = await SortIoAPI.useGold(curUser.id, amount);
-    const newAmount = updated?.gold || curUser.gold;
-    dispatch(updateGold(newAmount));
+    if (updated) {
+      const newAmount = updated.gold;
+      dispatch(updateGold(newAmount));
+    }
   }
 }
 
@@ -180,8 +182,10 @@ export const depositGold: GeneralThunkAction<number> = (amount) => async (dispat
   const { curUser } = _getCurDataCurUser(getState);
   if (curUser.id) {
     const updated = await SortIoAPI.saveGold(curUser.id, amount);
-    const newAmount = updated?.gold || curUser.gold ;
-    dispatch(updateGold(newAmount));
+    if (updated) {
+      const newAmount = updated.gold;
+      dispatch(updateGold(newAmount));
+    }
   }
 }
 
@@ -192,8 +196,10 @@ export const useTicket: GeneralThunkAction<number> = (amount) => async (dispatch
   const { curUser } = _getCurDataCurUser(getState);
   if (curUser.id) {
     const updated = await SortIoAPI.useTicket(curUser.id, amount);
-    const newAmount = updated?.ticket || curUser.ticket;
-    dispatch(updateTicket(newAmount));
+    if (updated) {
+      const newAmount = updated.ticket;
+      dispatch(updateTicket(newAmount));
+    }
   }
 }
 
@@ -204,8 +210,10 @@ export const depositTicket: GeneralThunkAction<number> = (amount) => async (disp
   const { curUser } = _getCurDataCurUser(getState);
   if (curUser.id) {
     const updated = await SortIoAPI.saveTicket(curUser.id, amount);
-    const newAmount = updated?.ticket || curUser.ticket;
-    dispatch(updateTicket(newAmount));
+    if (updated) {
+      const newAmount = updated.ticket;
+      dispatch(updateTicket(newAmount));
+    }
   }
 }
 

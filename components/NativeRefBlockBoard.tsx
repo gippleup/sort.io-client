@@ -205,7 +205,7 @@ export class RefBlockBoard extends Component<
         targetStack.capRef.current?.animate({
           style: targetStyle,
           duration: 100,
-          easing: "easeInOutSine",
+          easing: "easeOutSine",
           fps: this.props.fps || 60,
         }).start();
       }
@@ -229,8 +229,8 @@ export class RefBlockBoard extends Component<
         style: {
           top: topPiecePos.y - 20 * this.scale,
         },
-        duration: 300,
-        easing: "easeOutBack",
+        duration: 100,
+        easing: "easeOutSine",
         fps: this.props.fps || 60,
       })
   

@@ -8,6 +8,7 @@ const iconSet = {
   fontAwesome: require('react-native-vector-icons/FontAwesome'),
   fontAwesome5: require('react-native-vector-icons/FontAwesome5'),
   materialCommunityIcons: require('react-native-vector-icons/MaterialCommunityIcons'),
+  simpleLineIcons: require('react-native-vector-icons/SimpleLineIcons'),
 }
 
 type IconOption = {

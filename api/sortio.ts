@@ -229,7 +229,7 @@ export const saveMultiPlayToServer = (option: SaveMultiPlayOption): Promise<Mult
   .catch((err) => null)
 }
 
-export const isServerAlive = () => {
+export const isServerAlive = (): Promise<boolean> => {
   const url = `${API_BASE}`;
   return new Promise((resolve) => {
     fetch(url)
@@ -247,7 +247,7 @@ export const isServerAlive = () => {
 }
 
 export type UserSingleRankData = {
-  userId: number;
+  id: number;
   name: string;
   difficulty: number;
   createdAt: string;

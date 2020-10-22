@@ -56,6 +56,7 @@ class GradientBlindScrollView extends React.Component<GradientBlindScrollViewPro
           marginStart: props.style?.marginStart,
           marginTop: props.style?.marginTop,
           marginVertical: props.style?.marginVertical,
+          flex: props.style?.flex,
         }}
         ref={this._viewRef}
       >
@@ -68,6 +69,7 @@ class GradientBlindScrollView extends React.Component<GradientBlindScrollViewPro
               this.bottomBlindOpacity.setValue(0)
             }
           }}
+          showsVerticalScrollIndicator={false}
           onScroll={(e) => {
             const { height: contentHeight } = e.nativeEvent.contentSize;
             const { height: scrollViewHeight } = e.nativeEvent.layoutMeasurement;
@@ -110,6 +112,7 @@ class GradientBlindScrollView extends React.Component<GradientBlindScrollViewPro
             marginStart: 0,
             marginTop: 0,
             marginVertical: 0,
+            flex: undefined,
           }}>
           {props.children}
         </ScrollView>

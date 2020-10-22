@@ -39,19 +39,31 @@ const RankListEntry = (props: RankListEntryProps) => {
       <FlexHorizontal>
         <ProfilePic source={profile} />
         <UserInfoContainer>
-          <Text style={{
+          <Text
+            style={{
             ...props.textStyle,
             ...props.usernameStyle
-          }}>{name}</Text>
+            }}
+          >
+            {name}
+          </Text>
           <FlexHorizontal>
-            <RankText style={{
+            <RankText
+              style={{
               ...props.textStyle,
               ...props.rankTextStyle
-            }}>{rank + '위'}</RankText>
-            <RankRateText style={{
+              }}
+            >
+              {rank + '위'}
+            </RankText>
+            <RankRateText
+              style={{
               ...props.textStyle,
               ...props.rankRateStyle
-            }}>{prettyRate}</RankRateText>
+              }}
+            >
+              {prettyRate}
+            </RankRateText>
           </FlexHorizontal>
         </UserInfoContainer>
       </FlexHorizontal>

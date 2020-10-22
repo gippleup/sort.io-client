@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { FlexHorizontal } from '../../components/Generic/StyledComponents'
 import { TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler'
 
-const MainButtonText = styled(Text)`
+const MainButtonText: typeof Text = styled(Text)`
   font-family: NotoSansKR-Bold;
   font-size: 20px;
   color: slateblue;
@@ -32,15 +32,16 @@ type MainButtonProps = {
   text: string;
   preComponent?: React.ReactNode;
   postComponent?: React.ReactNode;
+  impossible?: boolean;
 }
 
 const MainButton = (props: MainButtonProps) => {
   return (
-    <MainButtonContainer underlayColor="blue" onPress={props.onPress}>
+    <MainButtonContainer underlayColor="blue" onPress={props.impossible ? () => {} : props.onPress}>
       <FlexHorizontal>
-        <MainButtonShell style={props.style}>
+        <MainButtonShell style={[props.style, {backgroundColor: props.impossible ? "grey" : "white"}]}>
           {props.preComponent}
-          <MainButtonText>
+          <MainButtonText style={{color: props.impossible ? "silver" : "slateblue"}}>
             {props.text}
           </MainButtonText>
           {props.postComponent}

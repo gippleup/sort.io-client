@@ -33,7 +33,7 @@ const buildVariable: {[T in typeof BUILD_ENV]: {
     initialRouteName: "Developer",
   },
   RELEASE: {
-    initialRouteName: "PD_Main",
+    initialRouteName: "Main",
   }
 }
 

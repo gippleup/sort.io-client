@@ -54,23 +54,23 @@ const LeaderBoard = () => {
   });
   
   const leftBoardScale = swipeProgress.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 0.5],
+    inputRange: [0, 0.5, 1],
+    outputRange: [1, 0.8, 1],
   })
 
   const leftBoardRoateY = swipeProgress.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '100deg'],
+    inputRange: [0, 0.5, 1],
+    outputRange: ['0deg', '30deg', '0deg'],
   })
   
   const rightBoardScale = swipeProgress.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.5, 1],
+    inputRange: [0, 0.5, 1],
+    outputRange: [1, 0.8, 1],
   })
 
   const rightBoardRoateY = swipeProgress.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['-100deg', '0deg'],
+    inputRange: [0, 0.5, 1],
+    outputRange: ['0deg', '-30deg', '0deg'],
   })
 
   const goback = () => {

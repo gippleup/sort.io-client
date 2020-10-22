@@ -1,3 +1,4 @@
+import React from 'react';
 import RNFetchBlob from 'react-native-fetch-blob';
 
 export const getBase64ImageData = (url: string) => {
@@ -32,4 +33,16 @@ export const convertRemoteImageUrlToLocal = (url: string) => {
         resolve(imagePath);
       })
   })
+}
+
+export const lazify = <P>(lazyComponent: Promise<JSX.Element>) => {
+  return React.lazy<React.ComponentType<P>>(
+    () => new Promise<{default: React.ComponentType<P>}>((resolve, reject) => {
+      lazyComponent.then((element) => {
+        resolve({
+          default: () => element,
+        });
+      })
+    })
+  )
 }

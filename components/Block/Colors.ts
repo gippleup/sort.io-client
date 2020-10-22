@@ -12,8 +12,8 @@ for (let i = 0; i < blockTypeCount; i += 1) {
     .set('hsl.h', h + 360 / blockTypeCount * i)
     .set('hsl.l',
       i % 4 === 0 ? l
-      : i % 4 === 1 ? l - 0.1
-        : i % 4 === 2 ? l + 0.1
+      : i % 4 === 1 ? l - 0.2
+        : i % 4 === 2 ? l
           : i % 4 === 3 ? l + 0.2 : '')
     // .set('hsl.s',
     //   i % 4 === 0 ? s

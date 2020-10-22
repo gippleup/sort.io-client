@@ -25,9 +25,9 @@ const soundMap: {
     triple: Sound;
     additive: Sound;
   };
-  fail: {};
-  win: {};
-  lose: {};
+  fail: Sound;
+  win: Sound;
+  lose: Sound;
 } = {
   basic: defaultSound,
   // spiky: defaultSound,

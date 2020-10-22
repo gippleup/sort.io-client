@@ -64,7 +64,7 @@ const SinglePlayRankPopup = () => {
         "6": "토",
       });
 
-      const percentage = (1 - Number(rate)) * 100;
+      const percentage = Number(rate);
 
       return (
         <RecordContainer>

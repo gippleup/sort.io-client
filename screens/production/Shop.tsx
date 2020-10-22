@@ -76,9 +76,10 @@ const Shop = () => {
         >
           <FlexHorizontal>
             <TouchableOpacity onPress={onPressGoback}>
-              {getIcon("fontAwesome", "arrow-left", {color: "white", size: 20})}
+              <View style={{padding: 15}}>
+                {getIcon("fontAwesome", "arrow-left", {color: "white", size: 20})}
+              </View>
             </TouchableOpacity>
-            <Space width={10} />
             <NotoSans type="Black" color="white" size={20}>{translation[lan].category[categoryFilter]}</NotoSans>
           </FlexHorizontal>
           <MoneyIndicator style={{height: 50, backgroundColor: 'rgba(0,0,0,0.5)'}} value={playData.user.gold} />

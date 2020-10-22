@@ -41,16 +41,20 @@ const CancelGamePopup = (props: CancelGameProps) => {
     }
   }
 
-  const exitGame = () => {
+  const goToMain = () => {
     navigation.dispatch((state) => {
+      const routes = state.routes.filter((route) => route.name === "Main");
       const result = CommonActions.reset({
         ...state,
-        routes: [{name: "Main", key: "Main" + Date.now()}],
+        routes,
         index: 0,
       });
       return result;
     })
+  }
 
+  const exitGame = () => {
+    goToMain();
     sendExitGame();
   }
 

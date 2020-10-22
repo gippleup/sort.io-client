@@ -89,14 +89,15 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
               name: "Main",
               key: "Main" + Date.now(),
             },
-            {
-              name: "Popup_OpponentLeft",
-              key: "Popup_OpponentLeft" + Date.now(),
-            }
+            // {
+            //   name: "Popup_OpponentLeft",
+            //   key: "Popup_OpponentLeft" + Date.now(),
+            // }
           ],
           index: 1,
         })
       })
+      socket.close();
     })
 
   const informOpponentHasLeftListener = socket.addListener("onInformOpponentHasLeft",

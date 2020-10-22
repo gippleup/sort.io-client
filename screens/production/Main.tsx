@@ -11,7 +11,7 @@ import { useNavigation, RouteProp, CommonActions } from '@react-navigation/nativ
 import usePlayData from '../../hooks/usePlayData'
 import { FlexHorizontal, Space, NotoSans, Line } from '../../components/Generic/StyledComponents'
 import { useDispatch } from 'react-redux'
-import { loadPlayData, signInWithGoogle, signOutWithGoogle } from '../../redux/actions/playData/thunk'
+import { fetchPlayData, loadPlayData, signInWithGoogle, signOutWithGoogle } from '../../redux/actions/playData/thunk'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../router/routes'
 import AnimationController from '../../components/AnimationController'
@@ -46,6 +46,8 @@ const Main = (props: MainProps) => {
     dispatch(loadPlayData());
   }
 
+  const getUpToDatePlayData = () => dispatch(fetchPlayData());
+
   const onPressSingle = () => navigation.navigate('SelectStage');
   const onPressMulti = () => navigation.navigate('Popup_MultiWaiting');
   const onPressShop = () => navigation.navigate("Shop");
@@ -76,6 +78,8 @@ const Main = (props: MainProps) => {
       )
     }
 
+    if (!playData.user) return <></>;
+
     return (
       <Fragment>
         <NotoSans type="Bold" color="yellow">Welcome! </NotoSans>
@@ -88,9 +92,16 @@ const Main = (props: MainProps) => {
     isServerAlive().then(() => {
       setServerStatus("alive");
     })
+    const unsubscribeFocus = navigation.addListener("focus", getUpToDatePlayData);
+
+    return () => {
+      unsubscribeFocus();
+    }
   })
 
   const isConnectionOk = netInfo.isConnected && serverStatus === "alive";
+
+  const gold = playData.loaded && playData.user ? playData.user.gold : 0;
 
   return (
     <View style={{flex: 1, backgroundColor: 'grey'}}>
@@ -103,7 +114,7 @@ const Main = (props: MainProps) => {
         </FlexHorizontal>
       </View>
       <View style={{ position: 'absolute', right: 10, top: 10 }}>
-        <MoneyIndicator value={playData.loaded ? playData?.user.gold : 0} />
+        <MoneyIndicator value={gold} />
       </View>
       <View style={{alignItems: 'center', marginTop: 120, marginBottom: 40}}>
         <Logo fontSize={60} strokeWidth={2} color="white" strokeColor="rgba(0,0,0,0.2)" />

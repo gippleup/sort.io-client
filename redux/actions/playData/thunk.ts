@@ -269,11 +269,12 @@ export const purchaseItem: GeneralThunkAction<ItemDef> = (itemDef) => async (dis
 }
 
 
-export const refetchUserData: GeneralThunkAction<void> = () => async(dispatch, getState) => {
+export const fetchPlayData: GeneralThunkAction<void> = () => async(dispatch, getState) => {
   const isConnectionOk = await checkConnection();
   if (!isConnectionOk) return;
 
   const {curUser} = _getCurDataCurUser(getState);
   if (typeof curUser.id !== "number") return;
-  
+  const updatedUser = await SortIoAPI.getPlayDataByUserId(curUser.id);
+  dispatch(updatePlayData(updatedUser));
 }

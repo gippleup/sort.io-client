@@ -35,11 +35,11 @@ const GoogleSigninController = () => {
         <CustomGoogleSignin onSignOut={onSignOut} onSignIn={onSignIn} size={40} />
       </IconContainer>
       <FlexHorizontal>
-        <NotoSans type="Thin">
+        <NotoSans size={12} type="Thin">
           Logged
         </NotoSans>
         <Space width={5} />
-        <NotoSans type="Medium">
+        <NotoSans size={12} type="Medium">
           {user.googleId ? 'IN' : 'OUT'}
         </NotoSans>
       </FlexHorizontal>

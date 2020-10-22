@@ -81,11 +81,11 @@ const AnimationController = () => {
         </IconContainer>
       </TouchableOpacity>
       <FlexHorizontal>
-        <NotoSans type="Thin">
+        <NotoSans size={12} type="Thin">
           Anim
         </NotoSans>
         <Space width={5} />
-        <NotoSans type="Medium">
+        <NotoSans size={12} type="Medium">
           {animationEnabled ? 'ON' : 'OFF'}
         </NotoSans>
       </FlexHorizontal>

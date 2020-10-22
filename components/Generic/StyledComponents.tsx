@@ -1,4 +1,4 @@
-import {View, Text, ColorValue, TextProps, ViewProps} from 'react-native';
+import {View, Text, ColorValue, TextProps, ViewProps, Dimensions} from 'react-native';
 import styled from 'styled-components';
 
 export const FlexHorizontal: typeof View = styled(View)`
@@ -100,7 +100,7 @@ export const FullFlexCenter: typeof View = styled(View)`
 `;
 
 type LineProps = ViewProps & {
-  width?: number;
+  width?: number | string;
   height?: number | string;
   color?: string;
   marginVertical?: number;
@@ -111,7 +111,17 @@ export const Line: React.FC<LineProps> = styled(View)<LineProps>`
   margin-bottom: ${(props) => props.marginVertical || 0}px;
   margin-left: ${(props) => props.marginHorizontal || 0}px;
   margin-right: ${(props) => props.marginHorizontal || 0}px;
-  width: ${(props) => props.width || '1px'}px;
-  height: ${(props) => props.height || '100%'};
+  width: ${(props) => (typeof props.width === 'number' ? props.width + 'px' : props.width) || '1px'};
+  height: ${(props) => (typeof props.height === 'number' ? props.height + 'px' : props.height) || '100%'};
   background-color: ${(props) => props.color || 'black'};
+`;
+
+export const WindowSizeView: typeof View = styled(View)`
+  width: ${Dimensions.get('window').width}px;
+  height: ${Dimensions.get('window').height}px;
+`;
+
+export const ScreenSizeView: typeof View = styled(View)`
+  width: ${Dimensions.get('screen').width}px;
+  height: ${Dimensions.get('screen').height}px;
 `;

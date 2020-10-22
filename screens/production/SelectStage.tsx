@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Dimensions } from 'react-native'
 import PatternBackground from '../../components/GameScene/PatternBackground'
 import SelectStageHeader from './SelectStage/SelectStageHeader';
-import { FlexHorizontal, Space } from '../../components/Generic/StyledComponents';
+import { FlexHorizontal, NotoSans, Space } from '../../components/Generic/StyledComponents';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -19,6 +19,7 @@ import usePlayData from '../../hooks/usePlayData';
 import { getLevelString } from './GameScreen/utils';
 import { getSinglePlayRank, UserSingleRankData } from '../../api/sortio';
 import { prettyPercent } from '../../components/EndGameInfo/utils';
+import { getIcon } from '../../api/icon';
 
 const backgroundImage = require('../../assets/BackgroundPattern.png');
 
@@ -26,7 +27,6 @@ const SelectStage = () => {
   const navigation = useNavigation();
   const playData = usePlayData();
   const {singlePlay} = playData;
-  const [userRank, setUserRank] = React.useState<UserSingleRankData | null>(null);
   const lastSinglePlayData = singlePlay[singlePlay.length - 1];
   const lastPlayedDifficulty = lastSinglePlayData ? lastSinglePlayData.difficulty : 0;
   const lastPlayedDiffStr = getLevelString(lastPlayedDifficulty);
@@ -34,25 +34,8 @@ const SelectStage = () => {
   const onPressChallenge = () => navigation.navigate('Popup_StartChallenge');
   const onPressTraining = () => navigation.navigate('Popup_StartTraining');
   const onPressCurrentRankGraphIcon = () => navigation.navigate('Popup_RankGraph');
-  const onPressSinglePlayRankGraphIcon = () => navigation.navigate('Popup_SinglePlayRank');
+  const onPressSinglePlayRank = () => navigation.navigate('Popup_SinglePlayRank');
   const onPressTicketPurchase = () => navigation.navigate('Popup_TicketPurchase');
-
-  React.useEffect(() => {
-    if (playData.user.id && !userRank) {
-      getSinglePlayRank(playData.user.id, 5)
-      .then((rankData) => {
-        if (rankData) {
-          setUserRank(rankData.targetUser)
-        }
-      })
-    }
-
-    return () => {
-      if (userRank) {
-        setUserRank(null);
-      }
-    }
-  })
 
   return (
     <View style={{flex: 1}}>
@@ -76,24 +59,33 @@ const SelectStage = () => {
                 </GraphButton>
               </FlexHorizontal>
             </RecordEntryContainer>
+            <Space height={20}/>
             <RecordEntryContainer>
-              <RecordTitle>싱글 플레이 순위</RecordTitle>
-              <FlexHorizontal>
-                <TouchableOpacity>
-                  <CustomTextContainer dark>
-                    <CustomText>{userRank ? userRank.rank : '-'}위</CustomText>
-                    <Space width={5} />
-                    <CustomText extrasmall>(상위 {userRank ? prettyPercent(Number(userRank.rate)) : '-'}%)</CustomText>
-                  </CustomTextContainer>
-                </TouchableOpacity>
-                <GraphButton onPress={onPressSinglePlayRankGraphIcon}>
-                  <PaddedSLIcon name="trophy" />
-                </GraphButton>
-              </FlexHorizontal>
+              <TouchableOpacity onPress={onPressSinglePlayRank}>
+                <NotoSans
+                  style={{
+                    padding: 20,
+                    paddingHorizontal: 40,
+                    backgroundColor: 'white',
+                    borderRadius: 50,
+                    borderWidth: 3,
+                  }}
+                  size={20}
+                  type="Bold"
+                  color="goldenrod"
+                >
+                  {getIcon('simpleLineIcons', 'trophy', {
+                    color: 'goldenrod',
+                    size: 20,
+                  })}
+                  <Space width={10} />
+                  싱글 플레이 성적
+                </NotoSans>
+              </TouchableOpacity>
             </RecordEntryContainer>
           </Division>
           <Division>
-            <View style={{width: Dimensions.get('screen').width - 100}}>
+            <View style={{width: Dimensions.get('window').width - 100}}>
               <FlexHorizontal style={{alignSelf:'flex-end'}}>
                 <TicketIcon small/>
                 <CustomTextContainer dark fit>

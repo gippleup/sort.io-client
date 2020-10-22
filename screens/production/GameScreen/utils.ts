@@ -48,6 +48,7 @@ export const getLevelIndex = (level: number) => {
 }
 
 export const getLevelString = (level: number) => {
+  if (level < 0) return GameLevel[0]
   const levelEnumNum = _getLevelEnumNum(level);
   const levelEnumStr = GameLevel[levelEnumNum];
   const subLevel = level - levelEnumNum + 1;

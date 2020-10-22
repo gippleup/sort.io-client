@@ -46,7 +46,9 @@ const _getCurDataCurUser = (getState: AppGetState) => {
 export const loadPlayData: GeneralThunkAction<void> = () => (dispatch, getState) => {
   getLocalPlayData()
     .then((data: PlayData) => {
-      if (data) {
+      const isObject = typeof data === "object";
+      const hasValidData = isObject ? data.user : false;
+      if (hasValidData) {
         SortIoAPI.getPlayDataByUserId(data.user.id)
         .then((dataFromServer) => {
           dispatch(updatePlayData(dataFromServer || data));
@@ -85,12 +87,16 @@ export const fetchGoogleProfile: GeneralThunkAction<void> = () => (dispatch, get
 export const applyGuestId: GeneralThunkAction<void> = () => (dispatch, getState) => {
   const curUser = getState().playData.user;
   SortIoAPI.makeGuestId().then((user) => {
+    console.log(user);
     const mixedUser: SortIoUser = {
       ...curUser,
       id: user.id,
       name: user.name,
     }
     dispatch(updateUser(mixedUser))
+  })
+  .catch(() => {
+    console.log('???');
   })
 }
 

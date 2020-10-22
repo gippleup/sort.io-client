@@ -79,7 +79,8 @@ export const makeGuestId = (): Promise<SortIoUser> => {
   const url = `${API_BASE}/user/guest/create`
   return fetch(url)
     .then((res) => {
-      return res.json()
+      console.log('뭐지 ㅅㅂ');
+      return res.json();
     })
     .catch((err) => {
       console.log(err);

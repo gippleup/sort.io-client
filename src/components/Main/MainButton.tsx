@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, ViewStyle, Dimensions } from 'react-native'
 import styled from 'styled-components'
-import { FlexHorizontal } from '../../components/Generic/StyledComponents'
+import { FlexHorizontal } from '../Generic/StyledComponents'
 import { TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler'
 
 const MainButtonText: typeof Text = styled(Text)`

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { View, Dimensions } from 'react-native'
 import Logo from '../../components/Logo'
 import VolumeControl from '../../components/Main/VolumeControl'
@@ -16,6 +16,8 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../router/routes'
 import AnimationController from '../../components/AnimationController'
 import GoogleSigninController from '../../components/GoogleSigninController'
+import { useNetInfo } from '@react-native-community/netinfo'
+import { isServerAlive } from '../../api/sortio'
 
 const backgroundImage = require('../../assets/BackgroundPattern.png');
 
@@ -25,8 +27,8 @@ const ButtonIcon: typeof Icon = styled(Icon)`
   font-size: 30px;
 `;
 
-type MainNavigationProp = StackNavigationProp<RootStackParamList, 'PD_Main'>
-type MainRouteProp = RouteProp<RootStackParamList, 'PD_Main'>
+type MainNavigationProp = StackNavigationProp<RootStackParamList, 'Main'>
+type MainRouteProp = RouteProp<RootStackParamList, 'Main'>
 
 type MainProps = {
   navigation: MainNavigationProp;
@@ -37,16 +39,58 @@ const Main = (props: MainProps) => {
   const navigation = props.navigation;
   const playData = usePlayData();
   const dispatch = useDispatch();
+  const netInfo = useNetInfo();
+  const [serverStatus, setServerStatus] = React.useState<"dead" | "alive">("dead");
 
   if (!playData.loaded) {
     dispatch(loadPlayData());
   }
 
-  const onPressSingle = () => navigation.navigate('PD_SelectStage');
-
+  const onPressSingle = () => navigation.navigate('SelectStage');
   const onPressMulti = () => navigation.navigate('Popup_MultiWaiting');
+  const onPressShop = () => navigation.navigate("Shop");
+  const onPressLeaderBoard = () => navigation.navigate("LeaderBoard");
 
-  const onPressShop = () => navigation.navigate("PD_Shop");
+  const SubTitle = () => {
+    if (!netInfo.isConnected) {
+      return (
+        <NotoSans
+          color="tomato"
+          type="Black"
+          style={{backgroundColor: 'white', borderRadius: 5, paddingHorizontal: 10}}
+        >
+          인터넷 연결상태를 확인해주세요.
+        </NotoSans>
+      )
+    }
+
+    if (serverStatus === "dead") {
+      return (
+        <NotoSans
+          color="mediumseagreen"
+          type="Black"
+          style={{backgroundColor: 'white', borderRadius: 5, paddingHorizontal: 10}}
+        >
+          서버를 점검하고 있습니다.
+        </NotoSans>
+      )
+    }
+
+    return (
+      <Fragment>
+        <NotoSans type="Bold" color="yellow">Welcome! </NotoSans>
+        <NotoSans type="Black" color="white">{playData.user.name}</NotoSans>        
+      </Fragment>
+    )
+  }
+
+  React.useEffect(() => {
+    isServerAlive().then(() => {
+      setServerStatus("alive");
+    })
+  })
+
+  const isConnectionOk = netInfo.isConnected && serverStatus === "alive";
 
   return (
     <View style={{flex: 1, backgroundColor: 'grey'}}>
@@ -64,8 +108,7 @@ const Main = (props: MainProps) => {
       <View style={{alignItems: 'center', marginTop: 120, marginBottom: 40}}>
         <Logo fontSize={60} strokeWidth={2} color="white" strokeColor="rgba(0,0,0,0.2)" />
         <FlexHorizontal>
-          <NotoSans type="Bold" color="yellow">Welcome! </NotoSans>
-          <NotoSans type="Black" color="white">{playData.user.name}</NotoSans>
+          <SubTitle/>
         </FlexHorizontal>
       </View>
       <View style={{alignItems: 'center'}}>
@@ -73,21 +116,25 @@ const Main = (props: MainProps) => {
           preComponent={<ButtonIcon name="gamepad" color="tomato" />}
           text="싱글 플레이"
           onPress={onPressSingle}
+          impossible={!isConnectionOk}
         />
         <MainButton
           preComponent={<ButtonIcon name="users" color="mediumseagreen" />}
           text="멀티 플레이"
           onPress={onPressMulti}
+          impossible={!isConnectionOk}
         />
         <MainButton
           preComponent={<ButtonIcon name="shopping-basket" color="cornflowerblue" />}
           text="상점"
           onPress={onPressShop}
+          impossible={!isConnectionOk}
         />
         <MainButton
           preComponent={<ButtonIcon name="trophy" color="goldenrod" />}
           text="리더보드"
-          onPress={() => { }}
+          onPress={onPressLeaderBoard}
+          impossible={!isConnectionOk}
         />
       </View>
     </View>

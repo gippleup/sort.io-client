@@ -16,6 +16,8 @@ import { AppState } from '../../redux/store';
 import { fetchItemList } from '../../redux/actions/items/thunk';
 import { checkUsageOfItems } from '../../redux/actions/items/utils';
 
+const LazyItemList = React.lazy(() => import('../../components/ItemList'));
+
 const Shop = () => {
   const {playData, global, items} = useSelector((state: AppState) => state)
   const dispatch = useDispatch();
@@ -24,12 +26,15 @@ const Shop = () => {
   const [categoryFilter, setCategoryFilter] = React.useState<CategoryFilter>("skin");
   const loadedInitialList = React.useRef(false);
   const hasItems = Array.isArray(items) ? items.length > 0 : items;
+
   if (!hasItems && !loadedInitialList.current) {
     loadedInitialList.current = true;
-    dispatch(fetchItemList());
+    setTimeout(() => {
+      dispatch(fetchItemList());
+    })
   }
 
-  const listCheckedUsage = checkUsageOfItems(items, global);
+  const listCheckedUsage = items ? checkUsageOfItems(items, global) : [];
 
   const onCategoryChange = (category: CategoryFilter) => {
     setCategoryFilter(category);
@@ -37,7 +42,7 @@ const Shop = () => {
   
   const onPressGoback = () => {
     navigation.dispatch((state) => {
-      const routes = state.routes.filter((route) => route.name !== "PD_Shop")
+      const routes = state.routes.filter((route) => route.name !== "Shop")
       return CommonActions.reset({
         ...state,
         routes,
@@ -82,11 +87,22 @@ const Shop = () => {
           {!hasItems
             ? <></>
             : (
-              <ItemList
-                style={{ paddingVertical: 10 }}
-                categoryFilter={categoryFilter}
-                data={listCheckedUsage}
-              />
+              <React.Suspense
+                fallback={(
+                  // <ItemListFallback
+                  //   style={{paddingVertical: 10}}
+                  //   categoryFilter={categoryFilter}
+                  //   data={listCheckedUsage}
+                  // />
+                  <></>
+                )}
+              >
+                <LazyItemList
+                  style={{ paddingVertical: 10 }}
+                  categoryFilter={categoryFilter}
+                  data={listCheckedUsage}
+                />
+              </React.Suspense>
             )
           }
         </View>

@@ -1,9 +1,9 @@
 import { CommonActions, RouteProp, useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import React from 'react'
-import { View, Text, Dimensions, Alert } from 'react-native'
+import { View, Text, Dimensions, Alert, AppState } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { SupportedSkin } from '../../../components/Block/skinMap'
 import { FlexHorizontal, NotoSans, RoundPaddingCenter, Space } from '../../../components/Generic/StyledComponents'
@@ -15,6 +15,7 @@ import useGlobal from '../../../hooks/useGlobal'
 import TranslationPack from '../../../Language/translation'
 import { setExpression, setSkin } from '../../../redux/actions/global/creator'
 import { purchaseItem } from '../../../redux/actions/playData/thunk'
+import { RootState } from '../../../redux/reducers'
 import { RootStackParamList } from '../../../router/routes'
 
 export type ItemPurchasePopupParams = {
@@ -30,7 +31,7 @@ export type ItemPurchasePopupParams = {
 const Popup: typeof View = styled(View)`
   background-color: royalblue;
   padding: 20px;
-  width: ${Dimensions.get('screen').width - 100}px;
+  width: ${Dimensions.get('window').width - 100}px;
   max-width: 320px;
   justify-content: center;
   align-items: center;
@@ -80,7 +81,7 @@ type ItemPurchasePopupProps = {
 }
 
 const ItemPurchasePopup = (props: ItemPurchasePopupProps) => {
-  const global = useGlobal();
+  const {global, items, playData} = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
   const {language} = global;
   const navigation = useNavigation();
@@ -112,23 +113,25 @@ const ItemPurchasePopup = (props: ItemPurchasePopupProps) => {
   }
 
   const onPressMainButton = () => {
-    if (status === "notOwned") {
+    const hasEnoughMoney = playData.user.gold >= price;
+    if (status === "notOwned" && hasEnoughMoney) {
       dispatch(purchaseItem({
         category,
         name: item,
       }))
-    } else if (status === "inUse") {
-      if (category === "expression") {
-        navigation.navigate("ExpressionEquip")
-      }
-    } else if (status === "notInUse") {
-      if (category === "skin") {
-        dispatch(setSkin(item as SupportedSkin))
-      } else if (category === "expression") {
-        navigation.navigate("ExpressionEquip")
-      }
+      onPressClose();
+    } else if (status === "notOwned" && !hasEnoughMoney) {
+      navigation.navigate("Popup_NotEnoughMoney")
+    } else if (status === "inUse" && category === "expression") {
+      navigation.navigate("ExpressionEquip")
+      onPressClose();
+    } else if (status === "notInUse" && category === "skin") {
+      dispatch(setSkin(item as SupportedSkin))
+      onPressClose();
+    } else if (status === "notInUse" && category === "expression") {
+      navigation.navigate("ExpressionEquip");
+      onPressClose();
     }
-    onPressClose();
   }
 
   const ItemProfile = () => {
@@ -173,7 +176,7 @@ const ItemPurchasePopup = (props: ItemPurchasePopupProps) => {
   }
 
   return (
-    <View style={{...Dimensions.get('screen'), justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)'}}>
+    <View style={{...Dimensions.get('window'), justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)'}}>
       <View pointerEvents="none" style={{flex: 1, position: 'absolute'}} />
       <Popup>
         <Title size={25} type="Black">

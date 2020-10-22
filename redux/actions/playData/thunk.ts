@@ -100,7 +100,7 @@ export const signInWithGoogle: GeneralThunkAction<void> = () => async (dispatch,
 
   let {curData, curUser} = _getCurDataCurUser(getState)
 
-  if (!curUser.id) {
+  if (typeof curUser.id !== "number") {
     await SortIoAPI.makeGuestId().then((user) => {
       const mixedUser: SortIoUser = {
         ...curUser,
@@ -167,7 +167,7 @@ export const useGold: GeneralThunkAction<number> = (amount) => async (dispatch, 
   if (!isConnectionOk) return;
 
   const { curUser } = _getCurDataCurUser(getState);
-  if (curUser.id) {
+  if (typeof curUser.id !== "number") {
     const updated = await SortIoAPI.useGold(curUser.id, amount);
     if (updated) {
       const newAmount = updated.gold;
@@ -180,7 +180,7 @@ export const depositGold: GeneralThunkAction<number> = (amount) => async (dispat
   const isConnectionOk = await checkConnection();
   if (!isConnectionOk) return;
   const { curUser } = _getCurDataCurUser(getState);
-  if (curUser.id) {
+  if (typeof curUser.id !== "number") {
     const updated = await SortIoAPI.saveGold(curUser.id, amount);
     if (updated) {
       const newAmount = updated.gold;
@@ -194,7 +194,7 @@ export const useTicket: GeneralThunkAction<number> = (amount) => async (dispatch
   if (!isConnectionOk) return;
 
   const { curUser } = _getCurDataCurUser(getState);
-  if (curUser.id) {
+  if (typeof curUser.id !== "number") {
     const updated = await SortIoAPI.useTicket(curUser.id, amount);
     if (updated) {
       const newAmount = updated.ticket;
@@ -208,7 +208,7 @@ export const depositTicket: GeneralThunkAction<number> = (amount) => async (disp
   if (!isConnectionOk) return;
 
   const { curUser } = _getCurDataCurUser(getState);
-  if (curUser.id) {
+  if (typeof curUser.id !== "number") {
     const updated = await SortIoAPI.saveTicket(curUser.id, amount);
     if (updated) {
       const newAmount = updated.ticket;
@@ -256,7 +256,7 @@ export const purchaseItem: GeneralThunkAction<ItemDef> = (itemDef) => async (dis
   
   const {global} = getState();
   const {curData, curUser} = _getCurDataCurUser(getState);
-  if (!curUser.id) return;
+  if (typeof curUser.id !== "number") return;
   const {category, name} = itemDef;
   const updatedItemList = await SortIoAPI.purchaseItem(
     curUser.id,
@@ -266,4 +266,14 @@ export const purchaseItem: GeneralThunkAction<ItemDef> = (itemDef) => async (dis
   const updatedUser = await SortIoAPI.getPlayDataByUserId(curUser.id);
   dispatch(updateGold(updatedUser.user.gold));
   dispatch(updateItemList(updatedItemList));
+}
+
+
+export const refetchUserData: GeneralThunkAction<void> = () => async(dispatch, getState) => {
+  const isConnectionOk = await checkConnection();
+  if (!isConnectionOk) return;
+
+  const {curUser} = _getCurDataCurUser(getState);
+  if (typeof curUser.id !== "number") return;
+  
 }

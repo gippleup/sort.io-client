@@ -148,7 +148,7 @@ export class ReadyTimer extends Component<ReadyTimerProps, ReadyTimerState> {
             strokeColor="white"
             strokeWidth={10}
             text={textToRender || ''}
-            width={Dimensions.get('screen').width}
+            width={Dimensions.get('window').width}
           />
         </NativeRefBox>
       </View>

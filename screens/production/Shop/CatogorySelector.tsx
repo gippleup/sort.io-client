@@ -30,7 +30,7 @@ const CatogorySelector = (props: CategorySelectorProps) => {
       direction="horizontal"
       interval={10}
       style={props.style}
-      size={Dimensions.get('screen').width - 150}
+      size={Dimensions.get('window').width - 150}
       data={Object.keys(categoryFilter)}
       initialCursor={1}
       entryRenderer={(str: CategoryFilter, selected) => {

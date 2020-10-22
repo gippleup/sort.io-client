@@ -58,7 +58,7 @@ const ExpressionEquip = (props: ExpressionEquipProps) => {
   const expressionListTitleHeight = 50.28;
   const guideTextHeight = 47;
   const sizeConsideringMargin = expressionContainerSize + marginBetweenContainer;
-  const scrollViewWidth = Dimensions.get('screen').width;
+  const scrollViewWidth = Dimensions.get('window').width;
   const scrollViewHeight = Dimensions.get('window').height * (4 / 10) - expressionListTitleHeight;
   const expectedColumn = Math.floor(
     (scrollViewWidth - marginBetweenContainer)
@@ -110,7 +110,7 @@ const ExpressionEquip = (props: ExpressionEquipProps) => {
         </View>
         <GradientBlindScrollView
           blindColor="black"
-          style={{ height: scrollViewHeight, width: Dimensions.get('screen').width }}
+          style={{ height: scrollViewHeight, width: Dimensions.get('window').width }}
           contentContainerStyle={{
             flexDirection: 'row',
             flexWrap: "wrap",

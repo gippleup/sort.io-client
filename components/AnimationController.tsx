@@ -18,16 +18,16 @@ const IconContainer: typeof View = styled(View)`
 
 const ModalContentContainer: typeof View = styled(View)`
   position: absolute;
-  width: ${Dimensions.get('screen').width}px;
-  height: ${Dimensions.get('screen').height}px;
+  width: ${Dimensions.get('window').width}px;
+  height: ${Dimensions.get('window').height}px;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0,0,0,0.8);
 `;
 
 const ModalContentBox: typeof View = styled(View)`
   background-color: white;
-  width: ${Dimensions.get('screen').width - 100}px;
+  width: ${Dimensions.get('window').width - 100}px;
   max-width: 320px;
   padding: 10px;
   border-radius: 10px;

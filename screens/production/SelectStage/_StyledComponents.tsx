@@ -63,7 +63,7 @@ export const CustomTextContainer = styled(FlexHorizontal) <CustomTextContainerPr
   ${(props) => {
     if (props.wide) {
       return css`
-        width: ${Dimensions.get('screen').width - 60}px;
+        width: ${Dimensions.get('window').width - 60}px;
       `;
     } else if (props.full) {
       return css`
@@ -137,5 +137,5 @@ export const TicketIcon = (props: { small?: boolean, hasBackground?: boolean }) 
 )
 
 export const AskPopupContentContainer = styled(View)`
-  max-width: ${Dimensions.get('screen').width - 100}px;
+  max-width: ${Dimensions.get('window').width - 100}px;
 `;

@@ -23,7 +23,7 @@ const RematchLogger = React.forwardRef<Logger>((props, ref) => {
       blindHeight={40}
       style={{
         height: 90,
-        width: Dimensions.get('screen').width - 100,
+        width: Dimensions.get('window').width - 100,
         maxWidth: 250,
         paddingHorizontal: 10,
       }}

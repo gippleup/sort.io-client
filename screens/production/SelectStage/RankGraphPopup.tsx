@@ -38,7 +38,7 @@ const RankGraphPopup = () => {
           yExtractor={(entry: SinglePlayData) => entry.difficulty}
           xAxisMapper={(_, i) => i + 1}
           yAxisMapper={(entry: SinglePlayData, i) => getLevelString(entry.difficulty).replace(/[aeiou]/g, '')}
-          width={Dimensions.get('screen').width - 80}
+          width={Dimensions.get('window').width - 80}
         />
       )
     }

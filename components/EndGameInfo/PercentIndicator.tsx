@@ -29,7 +29,7 @@ export class PercentIndicator extends Component<PercentIndicatorProps> {
     borderColor: 'black',
     borderWidth: 2,
     height: 20,
-    width: Dimensions.get('screen').width - 120,
+    width: Dimensions.get('window').width - 120,
   };
 
   animateFill = (value: number) => {

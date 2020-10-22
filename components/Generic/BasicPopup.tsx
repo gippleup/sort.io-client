@@ -13,7 +13,7 @@ const TitleContainer = styled(View)`
   align-self: center;
 `;
 
-const Content = styled(View)`
+const Content: typeof View = styled(View)`
   margin-top: 10px;
   padding: 15px;
   background-color: white;
@@ -45,10 +45,11 @@ type BasicPopupProps = {
   content?: React.ReactNode;
   buttons?: PopupButton[];
   buttonAlign?: 'vertical' | 'horizontal';
+  backgroundColor?: string;
 }
 
 const BasicPopup: React.FC<BasicPopupProps> = (props) => {
-  const {title, content, buttons, buttonAlign} = props;
+  const {title, content, buttons, buttonAlign, backgroundColor} = props;
   const renderTitle = () => {
     if (!title) return <></>;
     return (
@@ -67,7 +68,7 @@ const BasicPopup: React.FC<BasicPopupProps> = (props) => {
             children={props.children}
             style={{
               justifyContent: 'center',
-              maxWidth: Dimensions.get('screen').width - 60
+              maxWidth: Dimensions.get('window').width - 60
             }}
           />
         )
@@ -112,10 +113,16 @@ const BasicPopup: React.FC<BasicPopupProps> = (props) => {
   )
 
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       <TouchBlocker />
       {renderTitle()}
-      <Content>
+      <Content style={{backgroundColor: backgroundColor || 'white'}}>
         {content || props.children}
       </Content>
       {renderButtons()}

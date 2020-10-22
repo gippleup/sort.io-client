@@ -15,8 +15,8 @@ export const GameInfoContainer = styled(View)`
 export const OpponentGameContainer: typeof View = styled(View)`
   justify-content: center;
   align-items: center;
-  width: ${(119 / 360) * Dimensions.get('screen').width}px;
-  height: ${(140 / 640) * Dimensions.get('screen').height}px;
+  width: ${(119 / 360) * Dimensions.get('window').width}px;
+  height: ${(150 / 640) * Dimensions.get('window').height}px;
   margin-left: 10px;
   margin-top: 20px;
 `;
@@ -77,8 +77,8 @@ export const OpponentBoard: typeof NativeRefBlockBoard = styled(NativeRefBlockBo
 `;
 
 export const StyledRefBoard: typeof NativeRefBlockBoard = styled(NativeRefBlockBoard)`
-  width: ${(340 / 360) * Dimensions.get('screen').width}px;
-  height: ${(400 / 640) * Dimensions.get('screen').height}px;
+  width: ${(340 / 360) * Dimensions.get('window').width}px;
+  height: ${(430 / 640) * Dimensions.get('window').height}px;
   border-width: 0.5px;
   border-color: black;
   background-color: ${chroma('black').alpha(0.3).hex()};

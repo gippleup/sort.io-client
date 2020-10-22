@@ -88,12 +88,12 @@ class GameScene extends React.Component<GameSceneProps, {}>{
   mapScale = 1;
   scoreCheckerMax = {
     single: {
-      width: 320 / 360 * Dimensions.get('screen').width,
-      height: 44 / 640 * Dimensions.get('screen').height,
+      width: 320 / 360 * Dimensions.get('window').width,
+      height: 44 / 640 * Dimensions.get('window').height,
     },
     multi: {
-      width: 130 / 360 * Dimensions.get('screen').width,
-      height: 32 / 640 * Dimensions.get('screen').height,
+      width: 130 / 360 * Dimensions.get('window').width,
+      height: 32 / 640 * Dimensions.get('window').height,
     },
   };
   scoreCheckerScale = 0.5;

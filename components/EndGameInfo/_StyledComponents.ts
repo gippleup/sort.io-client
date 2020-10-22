@@ -31,7 +31,7 @@ export const TitleContainer: typeof View = styled(View)`
 
 export const ContentContainer: typeof View = styled(View)`
   ${WhiteRoundBorder}
-  width: ${Dimensions.get('screen').width - 40}px;
+  width: ${Dimensions.get('window').width - 40}px;
   background-color: blueviolet;
   padding: 20px;
 `;

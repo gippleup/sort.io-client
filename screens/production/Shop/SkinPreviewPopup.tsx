@@ -14,7 +14,7 @@ import { RootStackParamList } from '../../../router/routes'
 
 const MyBoard: typeof RefBlockBoard = styled(RefBlockBoard)`
   background-color: royalblue;
-  width: ${Dimensions.get('screen').width - 100}px;
+  width: ${Dimensions.get('window').width - 100}px;
   max-width: 260px;
   height: 180px;
   border-width: 2px;
@@ -58,8 +58,8 @@ const SkinPreviewPopup = (props: SkinPreviewPopupProps) => {
         pointerEvents="none"
         style={{
           position: 'absolute',
-          width: Dimensions.get('screen').width,
-          height: Dimensions.get('screen').height
+          width: Dimensions.get('window').width,
+          height: Dimensions.get('window').height
         }}
       />
       <MyBoard

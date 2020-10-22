@@ -21,37 +21,51 @@ import { Routes, CommonPopupOption } from "./types";
 import ItemPurchasePopup, { ItemPurchasePopupParams } from "../screens/production/Shop/ItemPurchasePopup";
 import ExpressionPreviewPopup, { ExpressionPreviewPopupParams } from "../screens/production/Shop/ExpressionPreviewPopup";
 import ExpressionEquipPopup, { ExpressionEquipParams } from "../screens/production/Shop/ExpressionEquip";
+import NotEnoughMoneyPopup from "../screens/production/Shop/NotEnoughMoneyPopup";
+import LeaderBoard from "../screens/production/LeaderBoard";
 
 export const pdRoutes: Routes<pdParams> = {
-  PD_Main: {
+  Main: {
     type: 'production',
     devName: '메인화면',
     component: Main,
     headerShown: false,
   },
-  PD_GameScene: {
+  GameScene: {
     type: 'production',
     devName: '게임화면',
     component: GameScreen,
     headerShown: false,
   },
-  PD_SelectStage: {
+  SelectStage: {
     type: 'production',
     devName: '스테이지 선택 화면',
     component: SelectStage,
     headerShown: false,
     // header: SelectStageHeader,
   },
-  PD_Shop: {
+  Shop: {
     type: 'production',
     devName: '상점 화면',
     component: Shop,
     headerShown: false,
   },
-  PD_MultiGame: {
+  MultiGame: {
     type: 'production',
     devName: '멀티 게임',
     component: MultiGame,
+    headerShown: false,
+  },
+  LeaderBoard: {
+    type: "production",
+    devName: "리더보드",
+    component: LeaderBoard,
+    headerShown: false,
+  },
+  ExpressionEquip: {
+    type: "production",
+    devName: "표현 장착 화면",
+    component: ExpressionEquipPopup,
     headerShown: false,
   },
   Popup_OpponentLeft: {
@@ -163,20 +177,22 @@ export const pdRoutes: Routes<pdParams> = {
     component: ExpressionPreviewPopup,
     options: CommonPopupOption,
   },
-  ExpressionEquip: {
+  Popup_NotEnoughMoney: {
     type: "production",
-    devName: "표현 장착 화면",
-    component: ExpressionEquipPopup,
-    headerShown: false,
+    devName: "돈 부족함",
+    component: NotEnoughMoneyPopup,
+    options: CommonPopupOption,
   }
 }
 
 export type pdParams = {
-  PD_Main: undefined;
-  PD_GameScene: GameScreenParams;
-  PD_SelectStage: undefined;
-  PD_Shop: undefined;
-  PD_MultiGame: MultiGameParams;
+  Main: undefined;
+  GameScene: GameScreenParams;
+  SelectStage: undefined;
+  Shop: undefined;
+  MultiGame: MultiGameParams;
+  ExpressionEquip: ExpressionEquipParams;
+  LeaderBoard: undefined;
   Popup_OpponentLeft: undefined;
   Popup_CancelGame: CancelGameParams;
   Popup_NotEnoughTicket: undefined;
@@ -193,5 +209,5 @@ export type pdParams = {
   Popup_SkinPreview: SkinPreviewPopupParams;
   Popup_ItemPurchase: ItemPurchasePopupParams;
   Popup_ExpressionPreview: ExpressionPreviewPopupParams;
-  ExpressionEquip: ExpressionEquipParams;
+  Popup_NotEnoughMoney: undefined;
 }

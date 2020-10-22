@@ -12,8 +12,8 @@ import useGlobal from '../../hooks/useGlobal';
 
 export type StateEventCallback = EventListenerCallback<StackNavigationEventMap & EventMapCore<StackNavigationState>, "state">
 
-type GameScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PD_GameScene'>
-type GameScreenRouteProp = RouteProp<RootStackParamList, 'PD_GameScene'>
+type GameScreenNavigationProp = StackNavigationProp<RootStackParamList, 'GameScene'>
+type GameScreenRouteProp = RouteProp<RootStackParamList, 'GameScene'>
 
 export type GameScreenParams = {
   mode: GameMode;

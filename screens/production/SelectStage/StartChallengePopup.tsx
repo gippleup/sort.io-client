@@ -27,7 +27,7 @@ const StartChallengePopup = () => {
       dispatch(useTicket(1));
     }
 
-    navigation.navigate('PD_GameScene', {
+    navigation.navigate('GameScene', {
       mode: 'single',
       subType: 'challenge',
       level: lastPlayedDifficulty,

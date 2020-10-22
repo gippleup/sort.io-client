@@ -86,8 +86,8 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
           ...state,
           routes: [
             {
-              name: "PD_Main",
-              key: "PD_Main" + Date.now(),
+              name: "Main",
+              key: "Main" + Date.now(),
             },
             {
               name: "Popup_OpponentLeft",
@@ -104,7 +104,7 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
       props.navigation.dispatch((state) => {
         const routes: typeof state.routes = state.routes
           .filter((route) => {
-            const routesToStay = ["PD_Main", "PD_MultiGame"]
+            const routesToStay = ["Main", "MultiGame"]
             if (routesToStay.indexOf(route.name) !== -1) {
               return true;
             } else {
@@ -156,8 +156,8 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
       //   return CommonActions.reset({
       //     ...state,
       //     routes: [{
-      //       name: "PD_Main",
-      //       key: "PD_Main" + Date.now(),
+      //       name: "Main",
+      //       key: "Main" + Date.now(),
       //     }],
       //     index: 0,
       //   })

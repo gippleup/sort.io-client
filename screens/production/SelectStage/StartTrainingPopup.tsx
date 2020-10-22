@@ -25,7 +25,7 @@ const StartTrainingPopup = (props: StartTrainingProps) => {
 
   const startSingleGame = () => {
     navigation.goBack();
-    navigation.navigate('PD_GameScene', {
+    navigation.navigate('GameScene', {
       mode: 'single',
       subType: 'training',
       level: lastPlayedDifficulty,

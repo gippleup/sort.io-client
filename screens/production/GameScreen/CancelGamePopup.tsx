@@ -45,7 +45,7 @@ const CancelGamePopup = (props: CancelGameProps) => {
     navigation.dispatch((state) => {
       const result = CommonActions.reset({
         ...state,
-        routes: [{name: "PD_Main", key: "PD_Main" + Date.now()}],
+        routes: [{name: "Main", key: "Main" + Date.now()}],
         index: 0,
       });
       return result;

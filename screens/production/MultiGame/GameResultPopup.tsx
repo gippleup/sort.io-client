@@ -78,8 +78,8 @@ const GameResultPopup = (props: GameResultPopupProps) => {
   const goHome = () => {
     navigation.dispatch((state) => {
       const routes: typeof state.routes = [{
-        key: "PD_Main" + Date.now(),
-        name: "PD_Main",
+        key: "Main" + Date.now(),
+        name: "Main",
       }];
       return CommonActions.reset({
         ...state,
@@ -119,8 +119,8 @@ const GameResultPopup = (props: GameResultPopupProps) => {
         ...state,
         routes: [
           {
-            name: "PD_Main",
-            key: "PD_Main" + Date.now(),
+            name: "Main",
+            key: "Main" + Date.now(),
           },
           {
             name: "Popup_MultiWaiting",
@@ -330,7 +330,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
         <RankViewer
           ref={rankViewerRef}
           style={{
-            width: Dimensions.get('screen').width - 80,
+            width: Dimensions.get('window').width - 80,
             maxHeight: 160, maxWidth: 300,
             marginVertical: 20,
             borderWidth: 1,

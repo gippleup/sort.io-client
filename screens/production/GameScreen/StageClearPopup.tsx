@@ -49,7 +49,7 @@ const StageClearPopup = (props: StageClearPopupProps) => {
 
     props.navigation.pop();
     if (leftTrial > 0) {
-      props.navigation.replace('PD_GameScene', {
+      props.navigation.replace('GameScene', {
         mode: mode,
         level: nextLevel,
         leftTrial: leftTrial - 1,

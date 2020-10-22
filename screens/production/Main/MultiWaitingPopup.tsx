@@ -107,7 +107,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
   const onAnimationCompleted = () => {
     if (roomData.current) {
       props.navigation.removeListener("beforeRemove", blockRemoveStack);
-      props.navigation.replace("PD_MultiGame", roomData.current);
+      props.navigation.replace("MultiGame", roomData.current);
     }
   }
 
@@ -171,7 +171,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
 
   return (
     <FullFlexCenter style={{backgroundColor: "rgba(0,0,0,0.3)"}}>
-      <Modal style={{width: Dimensions.get('screen').width - 60, maxWidth: 300}} ref={modalRef}>
+      <Modal style={{width: Dimensions.get('window').width - 60, maxWidth: 300}} ref={modalRef}>
         <View style={{position: 'absolute', width: '100%', height: '100%'}}>
           <MaskedView maskElement={mask}>
             <Svg style={{width: '100%', height: '100%', borderRadius: 15}}>

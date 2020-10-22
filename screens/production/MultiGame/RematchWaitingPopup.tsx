@@ -220,8 +220,8 @@ const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
               const routes: typeof state.routes = [
                 ...state.routes.slice(state.routes.length - 2),
                 {
-                  key: `PD_MultiGame-${Date.now()}`,
-                  name: "PD_MultiGame",
+                  key: `MultiGame-${Date.now()}`,
+                  name: "MultiGame",
                   params: {
                     map,
                     mapDesc,

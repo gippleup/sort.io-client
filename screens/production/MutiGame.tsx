@@ -8,10 +8,10 @@ import {MultiGameLogic} from './MultiGame/_ComponentLogic';
 import {OnSendRoomParam} from '../../hooks/useMultiGameSocket';
 import {SupportedSkin} from '../../components/Block/skinMap';
 
-type MultiGameRouteProps = RouteProp<RootStackParamList, 'PD_MultiGame'>;
+type MultiGameRouteProps = RouteProp<RootStackParamList, 'MultiGame'>;
 type MultiGameNavigationProps = NavigationProp<
   RootStackParamList,
-  'PD_MultiGame'
+  'MultiGame'
 >;
 
 export type MapDesc = MapOption & {difficulty: number};

@@ -25,11 +25,11 @@ const checkConnection = () => {
   
     if (!isConnected) {
       reject(new Error("인터넷 연결 상태 불량"))
-      return Alert.alert("인터넷 연결 상태를 확인해주세요");
+      return;
     }
     if (!isServerOk) {
       reject(new Error("서버 상태 불량"))
-      return Alert.alert("서버가 맛탱이가 갔거나 업데이트 중입니다. 죄송합니다...");
+      return;
     }
 
     resolve(true);

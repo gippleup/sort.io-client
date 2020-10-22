@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { View, Dimensions } from 'react-native'
+import { View, Dimensions, BackHandler, NativeEventSubscription } from 'react-native'
 import Logo from '../../components/Logo'
 import VolumeControl from '../../components/Main/VolumeControl'
 import MoneyIndicator from '../../components/Main/MoneyIndicator'
@@ -41,12 +41,30 @@ const Main = (props: MainProps) => {
   const dispatch = useDispatch();
   const netInfo = useNetInfo();
   const [serverStatus, setServerStatus] = React.useState<"dead" | "alive">("dead");
+  const backHandler = React.useRef<NativeEventSubscription | null>(null);
 
   if (!playData.loaded) {
     dispatch(loadPlayData());
   }
 
-  const getUpToDatePlayData = () => dispatch(fetchPlayData());
+  const backHandlerListner = () => {
+    navigation.navigate("Popup_Exit");
+    return true;
+  };
+
+  const onFoucus = () => {
+    backHandler.current = BackHandler.addEventListener("hardwareBackPress", backHandlerListner);
+    isServerAlive().then(() => {
+      setServerStatus("alive");
+      dispatch(fetchPlayData());
+    })
+  };
+
+  const onBlur = () => {
+    if (backHandler.current) {
+      backHandler.current.remove();
+    }
+  }
 
   const onPressSingle = () => navigation.navigate('SelectStage');
   const onPressMulti = () => navigation.navigate('Popup_MultiWaiting');
@@ -89,13 +107,11 @@ const Main = (props: MainProps) => {
   }
 
   React.useEffect(() => {
-    isServerAlive().then(() => {
-      setServerStatus("alive");
-    })
-    const unsubscribeFocus = navigation.addListener("focus", getUpToDatePlayData);
-
+    const unsubscribeFocus = navigation.addListener("focus", onFoucus);
+    const unsubscribeBlur = navigation.addListener("blur", onBlur);
     return () => {
       unsubscribeFocus();
+      unsubscribeBlur();
     }
   })
 

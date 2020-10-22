@@ -5,7 +5,7 @@ const randomIndexFromArray = (array: any[]): number => {
   return randomValidIndex;
 }
 
-const pickRandomFromArray = (array: any[]) => {
+const pickRandomFromArray = <T>(array: T[]) => {
   return array[randomIndexFromArray(array)];
 }
 

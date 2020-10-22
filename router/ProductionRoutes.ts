@@ -23,6 +23,7 @@ import ExpressionPreviewPopup, { ExpressionPreviewPopupParams } from "../screens
 import ExpressionEquipPopup, { ExpressionEquipParams } from "../screens/production/Shop/ExpressionEquip";
 import NotEnoughMoneyPopup from "../screens/production/Shop/NotEnoughMoneyPopup";
 import LeaderBoard from "../screens/production/LeaderBoard";
+import ExitPopup from "../screens/production/Main/ExitPopup";
 
 export const pdRoutes: Routes<pdParams> = {
   Main: {
@@ -182,6 +183,12 @@ export const pdRoutes: Routes<pdParams> = {
     devName: "돈 부족함",
     component: NotEnoughMoneyPopup,
     options: CommonPopupOption,
+  },
+  Popup_Exit: {
+    type: "production",
+    devName: "게임종료",
+    component: ExitPopup,
+    options: CommonPopupOption,
   }
 }
 
@@ -210,4 +217,5 @@ export type pdParams = {
   Popup_ItemPurchase: ItemPurchasePopupParams;
   Popup_ExpressionPreview: ExpressionPreviewPopupParams;
   Popup_NotEnoughMoney: undefined;
+  Popup_Exit: undefined;
 }

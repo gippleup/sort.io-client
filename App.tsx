@@ -10,13 +10,13 @@ import React from 'react';
 import {
   StatusBar,
 } from 'react-native';
-import routes, { RootStackParamList } from './router/routes';
+import routes, { RootStackParamList } from './src/router/routes';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import Developer from './router/Developer';
+import Developer from './src/router/Developer';
 import {Provider as ReduxProvider} from 'react-redux';
-import store from './redux/store';
-import {cardTransitionSpecs, cardTransitions} from './router/cardTransition';
+import store from './src/redux/store';
+import {cardTransitionSpecs, cardTransitions} from './src/router/cardTransition';
 import {enableScreens} from 'react-native-screens';
 import BuildConfig from 'react-native-config';
 import CodePush, { CodePushOptions } from 'react-native-code-push';

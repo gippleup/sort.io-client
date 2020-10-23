@@ -29,6 +29,10 @@ const GoogleSigninController = () => {
     dispatch(signOutWithGoogle());
   }
 
+  const status = user
+    ? user.googleId ? "IN" : "OUT"
+    : "OUT";
+
   return (
     <View style={{alignItems: 'center'}}>
       <IconContainer>
@@ -40,7 +44,7 @@ const GoogleSigninController = () => {
         </NotoSans>
         <Space width={5} />
         <NotoSans size={12} type="Medium">
-          {user.googleId ? 'IN' : 'OUT'}
+          {status}
         </NotoSans>
       </FlexHorizontal>
     </View>

@@ -13,7 +13,7 @@ import { prettyPercent } from '../../../components/EndGameInfo/utils';
 import Profile from '../../../components/Profile';
 
 const RecordContainer: typeof View = styled(View)`
-  width: ${Dimensions.get('window').width - 120}px;
+  width: ${Dimensions.get('window').width - 60}px;
   max-width: 300px;
   border-width: 0.5px;
   padding: 20px;
@@ -87,7 +87,7 @@ const SinglePlayRankPopup = () => {
             <View style={{flex: 1}}>
               <NotoSans type="Bold">이름</NotoSans>
               <Line width="100%" height={1} color="black" />
-              <NotoSans size={30} type="Thin">{name}</NotoSans>
+              <NotoSans size={25} type="Thin">{name}</NotoSans>
             </View>
           </FlexHorizontal>
           <Space height={10} />

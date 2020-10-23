@@ -46,3 +46,16 @@ export const lazify = <P>(lazyComponent: Promise<JSX.Element>) => {
     })
   )
 }
+
+export const testLuck = (chance: number): boolean => {
+  const randomNum = Math.random();
+  if (randomNum < chance) {
+    return true;
+  }
+  return false;
+}
+
+export const getOneOutOf = (denominator: number): boolean => {
+  const judge = 1 / denominator;
+  return testLuck(judge);
+}

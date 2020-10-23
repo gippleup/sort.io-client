@@ -1,3 +1,4 @@
+import AdmobTester from "../screens/dev/AdmobTester";
 import AnimatedNumberTester from "../screens/dev/AnimatedNumberTester";
 import AsyncStorageController from "../screens/dev/AsyncStorageController";
 import BlockBoardTester from "../screens/dev/BlockBoardTester";
@@ -143,6 +144,12 @@ export const devRoutes: Routes<Omit<devParams, "Developer">> = {
     component: AsyncStorageController,
     headerShown: false,
   },
+  AdmobTester: {
+    type: "dev",
+    devName: '애드몹 테스터',
+    component: AdmobTester,
+    headerShown: false,
+  },
 }
 
 export type devParams = {
@@ -169,4 +176,5 @@ export type devParams = {
   Developer: undefined;
   GraphTester: undefined;
   NativeRefTester: undefined;
+  AdmobTester: undefined;
 }

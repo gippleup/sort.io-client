@@ -20,6 +20,7 @@ import { getLevelString } from './GameScreen/utils';
 import { getSinglePlayRank, UserSingleRankData } from '../../api/sortio';
 import { prettyPercent } from '../../components/EndGameInfo/utils';
 import { getIcon } from '../../api/icon';
+import RewardButton from '../../components/RewardButton';
 
 const backgroundImage = require('../../assets/BackgroundPattern.png');
 
@@ -98,6 +99,10 @@ const SelectStage = () => {
                   </CustomTextContainer>
                 </TouchableOpacity>
               </FlexHorizontal>
+              <Space height={10} />
+              <View>
+                <RewardButton chance={0.1} disappearOnFulfilled/>
+              </View>
               <Space height={10} />
               <TouchableOpacity onPress={onPressChallenge}>
                 <CustomTextContainer border full>

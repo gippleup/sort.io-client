@@ -173,12 +173,11 @@ export const useGold: GeneralThunkAction<number> = (amount) => async (dispatch, 
   if (!isConnectionOk) return;
 
   const { curUser } = _getCurDataCurUser(getState);
-  if (typeof curUser.id !== "number") {
-    const updated = await SortIoAPI.useGold(curUser.id, amount);
-    if (updated) {
-      const newAmount = updated.gold;
-      dispatch(updateGold(newAmount));
-    }
+  if (typeof curUser.id !== "number") return;
+  const updated = await SortIoAPI.useGold(curUser.id, amount);
+  if (updated) {
+    const newAmount = updated.gold;
+    dispatch(updateGold(newAmount));
   }
 }
 
@@ -186,12 +185,11 @@ export const depositGold: GeneralThunkAction<number> = (amount) => async (dispat
   const isConnectionOk = await checkConnection();
   if (!isConnectionOk) return;
   const { curUser } = _getCurDataCurUser(getState);
-  if (typeof curUser.id !== "number") {
-    const updated = await SortIoAPI.saveGold(curUser.id, amount);
-    if (updated) {
-      const newAmount = updated.gold;
-      dispatch(updateGold(newAmount));
-    }
+  if (typeof curUser.id !== "number") return;
+  const updated = await SortIoAPI.saveGold(curUser.id, amount);
+  if (updated) {
+    const newAmount = updated.gold;
+    dispatch(updateGold(newAmount));
   }
 }
 
@@ -200,12 +198,11 @@ export const useTicket: GeneralThunkAction<number> = (amount) => async (dispatch
   if (!isConnectionOk) return;
 
   const { curUser } = _getCurDataCurUser(getState);
-  if (typeof curUser.id !== "number") {
-    const updated = await SortIoAPI.useTicket(curUser.id, amount);
-    if (updated) {
-      const newAmount = updated.ticket;
-      dispatch(updateTicket(newAmount));
-    }
+  if (typeof curUser.id !== "number") return;
+  const updated = await SortIoAPI.useTicket(curUser.id, amount);
+  if (updated) {
+    const newAmount = updated.ticket;
+    dispatch(updateTicket(newAmount));
   }
 }
 
@@ -214,12 +211,11 @@ export const depositTicket: GeneralThunkAction<number> = (amount) => async (disp
   if (!isConnectionOk) return;
 
   const { curUser } = _getCurDataCurUser(getState);
-  if (typeof curUser.id !== "number") {
-    const updated = await SortIoAPI.saveTicket(curUser.id, amount);
-    if (updated) {
-      const newAmount = updated.ticket;
-      dispatch(updateTicket(newAmount));
-    }
+  if (typeof curUser.id !== "number") return;
+  const updated = await SortIoAPI.saveTicket(curUser.id, amount);
+  if (updated) {
+    const newAmount = updated.ticket;
+    dispatch(updateTicket(newAmount));
   }
 }
 

@@ -1,41 +1,28 @@
 import React, {Component} from 'react';
-import {Text, View, TextStyle} from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
+import {Text, View, TextStyle, TextInput, TextProps} from 'react-native';
 
 type DynamicTextProps = {
-  value?: string;
-  style?: TextStyle;
-};
+  initialValue?: string;
+  renderer: (text: string) => JSX.Element;
+}
 
-export class DynamicText extends Component<DynamicTextProps> {
-  _textInputRef = React.createRef<TextInput>();
+export class DynamicText extends Component<DynamicTextProps, {text: string}> {
   constructor(props: Readonly<DynamicTextProps>) {
     super(props);
-  }
-
-  setText(text: string) {
-    if (this._textInputRef.current) {
-      this._textInputRef.current.setNativeProps({text});
+    this.state = {
+      text: props.initialValue || '',
     }
   }
 
-  static defaultProps = {
-    style: {
-      color: 'black',
-    },
-  };
+  setText(text: string) {
+    this.setState({
+      text,
+    })
+  }
 
   render() {
-    const {props, _textInputRef} = this;
-    return (
-      <TextInput
-        children={props.children}
-        ref={_textInputRef}
-        value={props.value}
-        editable={false}
-        style={props.style}
-      />
-    );
+    const {props} = this;
+    return props.renderer(this.state.text);
   }
 }
 

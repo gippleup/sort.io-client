@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { View, Dimensions, BackHandler, NativeEventSubscription } from 'react-native'
+import { View, Dimensions, BackHandler, NativeEventSubscription, LayoutRectangle } from 'react-native'
 import Logo from '../../components/Logo'
 import VolumeControl from '../../components/Main/VolumeControl'
 import MoneyIndicator from '../../components/Main/MoneyIndicator'
@@ -18,6 +18,7 @@ import AnimationController from '../../components/AnimationController'
 import GoogleSigninController from '../../components/GoogleSigninController'
 import { useNetInfo } from '@react-native-community/netinfo'
 import { isServerAlive } from '../../api/sortio'
+import AdmobBanner from '../../components/AdmobBaner'
 
 const backgroundImage = require('../../assets/BackgroundPattern.png');
 
@@ -25,6 +26,11 @@ const ButtonIcon: typeof Icon = styled(Icon)`
   position: absolute;
   left: 20px;
   font-size: 30px;
+`;
+
+const BannerAdSpace: typeof View = styled(View)`
+  flex: 1;
+  /* margin-top: 20px; */
 `;
 
 type MainNavigationProp = StackNavigationProp<RootStackParamList, 'Main'>
@@ -42,6 +48,7 @@ const Main = (props: MainProps) => {
   const netInfo = useNetInfo();
   const [serverStatus, setServerStatus] = React.useState<"dead" | "alive">("dead");
   const backHandler = React.useRef<NativeEventSubscription | null>(null);
+  const [bannerAdSpace, setBannerAdSpace] = React.useState<{width: number; height: number;} | undefined>();
 
   if (!playData.loaded) {
     dispatch(loadPlayData());
@@ -164,6 +171,9 @@ const Main = (props: MainProps) => {
           impossible={!isConnectionOk}
         />
       </View>
+      <BannerAdSpace style={{transform:[{scale: 0.8}]}} onLayout={(e) => setBannerAdSpace(e.nativeEvent.layout)}>
+        <AdmobBanner availableSpace={bannerAdSpace} />
+      </BannerAdSpace>
     </View>
   )
 }

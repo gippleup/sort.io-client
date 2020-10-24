@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sort.io</string>
+    <string name="app_name">컬러매치 온라인</string>
     <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">DO_NOT_ASK_JAVASCRIPT</string>
     <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
     <string moduleConfig="true" name="CodePushDeploymentKey">ds2DNX4eZMuOl_s-KYj1Il14uEh05F4mBxL5p</string>

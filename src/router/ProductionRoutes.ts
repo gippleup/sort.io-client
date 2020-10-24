@@ -24,6 +24,7 @@ import ExpressionEquipPopup, { ExpressionEquipParams } from "../screens/producti
 import NotEnoughMoneyPopup from "../screens/production/Shop/NotEnoughMoneyPopup";
 import LeaderBoard from "../screens/production/LeaderBoard";
 import ExitPopup from "../screens/production/Main/ExitPopup";
+import WaitingOpponentPopup from "../screens/production/MultiGame/WaitingOpponentPopup";
 
 export const pdRoutes: Routes<pdParams> = {
   Main: {
@@ -189,6 +190,12 @@ export const pdRoutes: Routes<pdParams> = {
     devName: "게임종료",
     component: ExitPopup,
     options: CommonPopupOption,
+  },
+  Popup_WaitingOpponent: {
+    type: "production",
+    devName: "적놈을 기다리는 중",
+    component: WaitingOpponentPopup,
+    options: CommonPopupOption,
   }
 }
 
@@ -218,4 +225,5 @@ export type pdParams = {
   Popup_ExpressionPreview: ExpressionPreviewPopupParams;
   Popup_NotEnoughMoney: undefined;
   Popup_Exit: undefined;
+  Popup_WaitingOpponent: undefined;
 }

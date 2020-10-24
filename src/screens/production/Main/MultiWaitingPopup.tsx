@@ -112,6 +112,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
   }
 
   const updateLoadingText = () => {
+    if (foundMatch) return;
     if (text !== '상대를 찾고 있습니다...') {
       text += '.';
     } else {
@@ -137,6 +138,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
 
     const loadListener = socket.addListener("onSendRoom", (option: OnSendRoomParam) => {
       foundMatch = true;
+      setRefText("! 상대를 찾았습니다 !");
       roomData.current = option;
       BackHandler.removeEventListener("hardwareBackPress", closeSocket);
       props.navigation.addListener("beforeRemove", blockRemoveStack);
@@ -207,6 +209,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
             ref={loadingTextRef}
             editable={false}
             value={text}
+            style={{textAlign: "center"}}
           />
         </NativeRefBox>
       </Modal>

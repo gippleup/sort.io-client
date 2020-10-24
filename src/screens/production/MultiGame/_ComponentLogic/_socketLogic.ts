@@ -1,4 +1,4 @@
-import { CommonActions } from "@react-navigation/native";
+import { CommonActions, NavigationProp } from "@react-navigation/native";
 import { MutableRefObject, RefObject } from "react";
 import { View } from "react-native";
 import GameScene from "../../../../components/GameScene";
@@ -7,6 +7,7 @@ import useMultiGameSocket from "../../../../hooks/useMultiGameSocket";
 import socketClientActions from "../../../../hooks/useMultiGameSocket/action/creator";
 import { AlertDockConstructor } from "../../../../hooks/useMultiGameSocket/ServerMessages";
 import usePlayData from "../../../../hooks/usePlayData";
+import { RootStackParamList } from "../../../../router/routes";
 import { MultiGameProps } from "../../MutiGame";
 
 type MultiGameSocketLogicParams = {
@@ -18,6 +19,7 @@ type MultiGameSocketLogicParams = {
   gameStarted: MutableRefObject<boolean>,
   opponentExpress: (expression: SupportedExpression) => any;
   playerExpress: (expression: SupportedExpression) => any;
+  navigation: NavigationProp<RootStackParamList, "MultiGame">
 }
 
 const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
@@ -30,9 +32,32 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
     gameStarted,
     opponentExpress,
     playerExpress,
+    navigation,
   } = param;
   const { roomId } = socket.getRoomData();
   const {id: userId} = playData.user;
+
+  const removeOpponentWaitingPopup = () => {
+    navigation.dispatch((state) => {
+      const routes = state.routes.filter((route) => route.name !== "Popup_WaitingOpponent");
+      return CommonActions.reset({
+        ...state,
+        routes,
+        index: routes.length - 1,
+      })
+    })
+  }
+
+  const goToMain = () => {
+    navigation.dispatch((state) => {
+      const routes = state.routes.filter((route) => route.name === "Main");
+      return CommonActions.reset({
+        ...state,
+        routes,
+        index: routes.length - 1,
+      })
+    })
+  }
 
   const sendDockMessage = (stackIndex: number, action: 'DOCK' | 'UNDOCK') => {
     if (!playData.user.id) return;
@@ -81,28 +106,14 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
 
   const errorListener = socket.addListener("onError",
     (err: WebSocketErrorEvent) => {
-      props.navigation.dispatch((state) => {
-        return CommonActions.reset({
-          ...state,
-          routes: [
-            {
-              name: "Main",
-              key: "Main" + Date.now(),
-            },
-            // {
-            //   name: "Popup_OpponentLeft",
-            //   key: "Popup_OpponentLeft" + Date.now(),
-            // }
-          ],
-          index: 1,
-        })
-      })
+      goToMain();
       socket.close();
     })
 
   const informOpponentHasLeftListener = socket.addListener("onInformOpponentHasLeft",
     () => {
       props.navigation.dispatch((state) => {
+        removeOpponentWaitingPopup();
         const routes: typeof state.routes = state.routes
           .filter((route) => {
             const routesToStay = ["Main", "MultiGame"]
@@ -145,6 +156,7 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
 
   const alertPrepareListener = socket.addListener("onAlertPrepare",
     () => {
+      removeOpponentWaitingPopup();
       props.navigation.navigate("Popup_Prepare");
       containerRef.current?.setNativeProps({
         pointerEvents: "auto"

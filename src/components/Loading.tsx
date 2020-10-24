@@ -13,38 +13,51 @@ type LoadingProps = {
   skin?: SupportedSkin;
 }
 
-const Loading = (props: LoadingProps) => {
-  const {
-    checkIfLoaded,
-    onAnimationCompleted,
-    onLastAnimationStarted,
-    skin = "basic",
-  } = props;
-  const topRef = React.createRef<Block>();
-  const pieceRef = React.createRef<Block>();
-  const bottomRef = React.createRef<Block>();
-  const refBoxTopRef = React.createRef<NativeRefBox>();
-  const refBoxPieceRef = React.createRef<NativeRefBox>();
-  const refBoxBottomRef = React.createRef<NativeRefBox>();
-  const refBoxBlockRef = React.createRef<NativeRefBox>();
-  const exclaimerRef = React.createRef<NativeRefBox>();
 
-  const scaleOnComplete = 1.5;
+const scaleOnComplete = 1.5;
 
-  const setBlockType = (blockRef: RefObject<Block>, type: number) => {
+class Loading extends React.Component<LoadingProps> {
+  topRef = React.createRef<Block>();
+  pieceRef = React.createRef<Block>();
+  bottomRef = React.createRef<Block>();
+  refBoxTopRef = React.createRef<NativeRefBox>();
+  refBoxPieceRef = React.createRef<NativeRefBox>();
+  refBoxBottomRef = React.createRef<NativeRefBox>();
+  refBoxBlockRef = React.createRef<NativeRefBox>();
+  exclaimerRef = React.createRef<NativeRefBox>();
+
+  constructor(props: Readonly<LoadingProps>) {
+    super(props);
+
+    this.scaleUpBlock = this.scaleUpBlock.bind(this);
+    this.setPieceColorRandom = this.setPieceColorRandom.bind(this);
+    this.undockPiece = this.undockPiece.bind(this);
+    this.changePiece = this.changePiece.bind(this);
+    this.dockCap = this.dockCap.bind(this);
+    this.dockPiece = this.dockPiece.bind(this);
+    this.popExclaimer = this.popExclaimer.bind(this);
+    this.scaleUpBlock = this.scaleUpBlock.bind(this);
+    this.setBlockType = this.setBlockType.bind(this);
+    this.setPieceColorRandom = this.setPieceColorRandom.bind(this);
+    this.undockPiece = this.undockPiece.bind(this);
+  }
+
+  setBlockType(blockRef: RefObject<Block>, type: number) {
     blockRef.current?.setState({
       type: type,
     })
   }
 
-  const setPieceColorRandom = () => {
+  setPieceColorRandom() {
+    const {setBlockType, pieceRef} = this;
     const getRandomTypeOtherThan1 = () => {
       return 1 + Math.ceil(Math.random() * 16);
     }
     setBlockType(pieceRef, getRandomTypeOtherThan1())
   }
-
-  const dockCap = () => {
+  
+  dockCap() {
+    const {refBoxTopRef} = this;
     refBoxTopRef.current?.setOpacity(1);
     refBoxTopRef.current?.animate({
       style: {
@@ -56,7 +69,8 @@ const Loading = (props: LoadingProps) => {
     }).start();
   }
 
-  const undockPiece = (onComplete?: () => void) => {
+  undockPiece(onComplete?: () => void) {
+    const {refBoxPieceRef} = this;
     refBoxPieceRef.current?.animate({
       style: {
         top: -20,
@@ -76,7 +90,8 @@ const Loading = (props: LoadingProps) => {
     });
   }
 
-  const dockPiece = (onComplete?: () => void) => {
+  dockPiece(onComplete?: () => void) {
+    const {refBoxPieceRef} = this;
     refBoxPieceRef.current?.animate({
       style: {
         opacity: 1,
@@ -96,7 +111,8 @@ const Loading = (props: LoadingProps) => {
     });
   }
 
-  const popExclaimer = () => {
+  popExclaimer() {
+    const {exclaimerRef} = this;
     exclaimerRef.current?.animate({
       style: {
         top: 0,
@@ -107,7 +123,8 @@ const Loading = (props: LoadingProps) => {
     }).start();
   }
   
-  const scaleUpBlock = (callback?: () => any) => {
+  scaleUpBlock(callback?: () => any) {
+    const {refBoxBlockRef} = this;
     refBoxBlockRef.current?.animate({
       style: {
         scaleX: scaleOnComplete,
@@ -123,8 +140,28 @@ const Loading = (props: LoadingProps) => {
     });
   }
 
-  const changePiece = (callback?: () => any) => {
+  changePiece(callback?: () => any) {
+    const {
+      undockPiece,
+      setPieceColorRandom,
+      dockPiece,
+      setBlockType,
+      pieceRef,
+      dockCap,
+      popExclaimer,
+      scaleUpBlock,
+    } = this;
+
+    const {props} = this;
+
+    const {
+      checkIfLoaded,
+      onLastAnimationStarted,
+      onAnimationCompleted
+    } = props;
+
     const isLoaded = checkIfLoaded();
+
     if (!isLoaded) {
       undockPiece(() => {
         setPieceColorRandom();
@@ -149,12 +186,15 @@ const Loading = (props: LoadingProps) => {
     }
   }
 
-  let neverStopChange = () =>
-    changePiece(() => {
-      changePiece(neverStopChange)
-    })
-
-  React.useEffect(() => {
+  componentDidMount() {
+    const {
+      exclaimerRef,
+      refBoxBlockRef,
+      setBlockType,
+      topRef,
+      refBoxTopRef,
+      changePiece,
+    } = this;
     exclaimerRef.current?.setStyle({
       alignItems: 'center', top: 50, opacity: 0
     })
@@ -172,62 +212,90 @@ const Loading = (props: LoadingProps) => {
       top: -20
     })
 
+    let neverStopChange = () => {
+      changePiece(() => {
+        changePiece(neverStopChange)
+      })
+    } 
+
     neverStopChange();
 
     return () => {
       neverStopChange = () => {}
     }
-  })
+  }
 
-  return (
-    <NativeRefBox ref={refBoxBlockRef}>
-      <NativeRefBox ref={exclaimerRef}>
-        <StrokedText
-          text="!"
-          dyMultiplier={0.36}
-          fillColor={
-            chroma("yellowgreen")
-              .set("hsl.l", 0.5)
-              .set("hsl.s", 1)
-              .hex()
-          }
-          fontFamily="NotoSansKR-Black"
-          height={40}
-          fontSize={30}
-          strokeColor="black"
-          strokeWidth={5}
-          width={20}
-        />
+  render() {
+    const {
+      topRef,
+      pieceRef,
+      bottomRef,
+      refBoxTopRef,
+      refBoxPieceRef,
+      refBoxBottomRef,
+      refBoxBlockRef,
+      exclaimerRef,
+    } = this;
+
+    const {props} = this;
+
+    const {
+      checkIfLoaded,
+      onAnimationCompleted,
+      onLastAnimationStarted,
+      skin = "basic",
+    } = props;
+
+    return (
+      <NativeRefBox ref={refBoxBlockRef}>
+        <NativeRefBox ref={exclaimerRef}>
+          <StrokedText
+            text="!"
+            dyMultiplier={0.36}
+            fillColor={
+              chroma("yellowgreen")
+                .set("hsl.l", 0.5)
+                .set("hsl.s", 1)
+                .hex()
+            }
+            fontFamily="NotoSansKR-Black"
+            height={40}
+            fontSize={30}
+            strokeColor="black"
+            strokeWidth={5}
+            width={20}
+          />
+        </NativeRefBox>
+        <NativeRefBox ref={refBoxTopRef} style={{ opacity: 0 }}>
+          <Block
+            ref={topRef}
+            skin={skin}
+            part="top"
+            scale={1}
+            type={1}
+          />
+        </NativeRefBox>
+        <NativeRefBox ref={refBoxPieceRef}>
+          <Block
+            ref={pieceRef}
+            skin={skin}
+            part="piece"
+            scale={1}
+            type={1}
+          />
+        </NativeRefBox>
+        <NativeRefBox ref={refBoxBottomRef}>
+          <Block
+            ref={bottomRef}
+            skin={skin}
+            part="bottom"
+            scale={1}
+            type={1}
+          />
+        </NativeRefBox>
       </NativeRefBox>
-      <NativeRefBox ref={refBoxTopRef} style={{ opacity: 0 }}>
-        <Block
-          ref={topRef}
-          skin={skin}
-          part="top"
-          scale={1}
-          type={1}
-        />
-      </NativeRefBox>
-      <NativeRefBox ref={refBoxPieceRef}>
-        <Block
-          ref={pieceRef}
-          skin={skin}
-          part="piece"
-          scale={1}
-          type={1}
-        />
-      </NativeRefBox>
-      <NativeRefBox ref={refBoxBottomRef}>
-        <Block
-          ref={bottomRef}
-          skin={skin}
-          part="bottom"
-          scale={1}
-          type={1}
-        />
-      </NativeRefBox>
-    </NativeRefBox>
-  )
+    )
+  }
 }
 
 export default Loading

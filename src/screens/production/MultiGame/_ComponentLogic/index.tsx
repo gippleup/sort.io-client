@@ -19,7 +19,7 @@ export const MultiGameLogic = (props: MultiGameProps) => {
   const { map, mapDesc } = props.route.params;
   const socket = useMultiGameSocket();
   const {global, items, playData} = useSelector((state: RootState) => state);
-  const navigation = useNavigation();
+  const navigation = props.navigation;
   const gameSceneRef = React.useRef<GameScene>(null);
   const containerRef = React.useRef<View>(null);
   const playerProfileRef = React.useRef<Profile>(null);
@@ -61,6 +61,7 @@ export const MultiGameLogic = (props: MultiGameProps) => {
     gameStarted,
     opponentExpress,
     playerExpress,
+    navigation,
   })
 
   const {
@@ -103,6 +104,8 @@ export const MultiGameLogic = (props: MultiGameProps) => {
   const useEffectCallback = () => {
     const $TimerBase = gameSceneRef.current?.timerRef.current?.timerBaseRef.current;
     $TimerBase?.setTimeTo(120);
+
+    navigation.navigate("Popup_WaitingOpponent");
 
     navigation.addListener("beforeRemove", blockGoBack);
     return () => {

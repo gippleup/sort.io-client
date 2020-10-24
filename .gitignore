@@ -68,3 +68,5 @@ trace.html
 
 # Environment Variables
 # .env
+
+*.hprof

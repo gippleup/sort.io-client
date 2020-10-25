@@ -4,6 +4,11 @@ import styled from 'styled-components';
 import BlockBase from './Block/BlockBase';
 import {BlockTypes} from './Block/Types';
 import skinMap, { SupportedSkin } from './Block/skinMap';
+import Svg, { Path } from 'react-native-svg';
+import { GradientFill } from './Block/GradientFill';
+import SvgContainer from './Block/SvgContainer';
+import colors from './Block/CommonColorTheme';
+import { blockSkeleton } from './Block/_skeleton';
 
 const ShapeContainer: typeof View = styled(View)`
   position: absolute;
@@ -23,6 +28,7 @@ type BlockProps = {
   part: "top" | "piece" | "bottom";
   scale?: number;
   visible?: boolean;
+  noGradient?: boolean;
 };
 
 class Block extends React.Component<BlockProps, {type: BlockTypes}> {
@@ -45,10 +51,50 @@ class Block extends React.Component<BlockProps, {type: BlockTypes}> {
 
   renderShape(type: BlockTypes) {
     const {props} = this;
-    const Shape = skinMap[props.skin][props.part]
+    const {scale = 1, skin, part, noGradient} = props;
+    const fill = colors[type][part];
+    const shapeDefinition = blockSkeleton[skin][part];
+    const {
+      height,
+      path,
+      width,
+      innerMarginBottom,
+      innerMarginLeft,
+      innerMarginRight,
+      innerMarginTop,
+      marginBottom,
+      marginLeft,
+      marginRight,
+      marginTop,
+    } = shapeDefinition;
     return (
       <ShapeContainer>
-        <Shape scale={props.scale} type={type} />
+        <SvgContainer
+          innerMarginTop={innerMarginTop}
+          innerMarginBottom={innerMarginBottom}
+          innerMarginLeft={innerMarginLeft}
+          innerMarginRight={innerMarginRight}
+          marginLeft={marginLeft}
+          marginBottom={marginBottom}
+          marginRight={marginRight}
+          marginTop={marginTop}
+          height={blockHeight[part]}
+          scale={scale}
+        >
+          <Svg
+            width={width * scale}
+            height={height * scale}
+            viewBox={`0 0 ${width} ${height}`}
+            fill="none"
+          >
+            {noGradient ? undefined : GradientFill(fill)}
+            <Path
+              d={path}
+              fill={noGradient ? fill : "url(#grad)"}
+              stroke="black"
+            />
+          </Svg>
+        </SvgContainer>
       </ShapeContainer>
     );
   }
@@ -73,4 +119,4 @@ class Block extends React.Component<BlockProps, {type: BlockTypes}> {
   }
 }
 
-export default Block;
+export default  Block;

@@ -5,11 +5,11 @@ import { View, Text } from 'react-native';
 type SvgContainerType = {
   scale: number;
   height: number;
-  marginLeft: number;
+  marginLeft?: number;
   marginRight?: number;
   marginBottom?: number;
   marginTop?: number;
-  innerMarginTop: number;
+  innerMarginTop?: number;
   innerMarginBottom?: number;
   innerMarginLeft?: number;
   innerMarginRight?: number;
@@ -17,23 +17,36 @@ type SvgContainerType = {
 
 
 const SvgContainer: React.FC<SvgContainerType> = (props) => {
+  const {
+    children,
+    scale,
+    height,
+    innerMarginBottom = 0,
+    innerMarginLeft = 0,
+    innerMarginRight = 0,
+    innerMarginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
+    marginTop = 0,
+  } = props;
   return (
     <View
       style={{
-        height: props.height * props.scale,
-        marginLeft: props.marginLeft * props.scale,
-        marginRight: props.marginRight ? props.marginRight * props.scale : undefined,
-        marginTop: props.marginTop ? props.marginTop * props.scale : undefined,
-        marginBottom: props.marginBottom ? props.marginBottom * props.scale : undefined,
+        height: height * scale,
+        marginLeft: marginLeft * scale,
+        marginRight: marginRight * scale,
+        marginTop: marginTop * scale,
+        marginBottom: marginBottom * scale,
       }}>
         <View
           style={{
-            marginTop: props.innerMarginTop,
-            marginBottom: props.innerMarginBottom ? props.innerMarginBottom * props.scale : undefined,
-            marginLeft: props.innerMarginLeft ? props.innerMarginLeft * props.scale : undefined,
-            marginRight: props.innerMarginRight ? props.innerMarginRight * props.scale : undefined,
+            marginTop: innerMarginTop * scale,
+            marginBottom: innerMarginBottom * scale,
+            marginLeft: innerMarginLeft * scale,
+            marginRight: innerMarginRight * scale,
         }}>
-          {props.children}
+          {children}
         </View>
     </View>
   );

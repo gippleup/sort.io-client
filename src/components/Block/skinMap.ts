@@ -27,11 +27,11 @@ export type SupportedSkin =
 | 'sleepyworm'
 | 'volcano'
 | 'wave'
-// | 'plain'
-// | 'spiky'
-// | 'maguni'
-// | 'babyblock'
-// | 'bird';
+| 'plain'
+| 'spiky'
+| 'maguni'
+| 'babyblock'
+| 'bird';
 
 const skinMap: {[T in SupportedSkin]: {
   [T in "top" | "piece" | "bottom"]: React.FC<BasicBlockProps>;
@@ -171,26 +171,32 @@ const skinMap: {[T in SupportedSkin]: {
     piece: require('./Wave/Piece').default,
     bottom: require('./Wave/Bottom').default,
   },
-  // spiky: {
-  //   top: require('./Spiky/Top').default,
-  //   piece: require('./Spiky/Piece').default,
-  //   bottom: require('./Spiky/Bottom').default,
-  // },
-  // maguni: {
-  //   top: require('./Maguni/Top').default,
-  //   piece: require('./Maguni/Piece').default,
-  //   bottom: require('./Maguni/Bottom').default,
-  // },
-  // babyblock: {
-  //   top: require('./BabyBlock/Top').default,
-  //   piece: require('./BabyBlock/Piece').default,
-  //   bottom: require('./BabyBlock/Bottom').default,
-  // },
-  // bird: {
-  //   top: require('./Bird/Top').default,
-  //   piece: require('./Bird/Piece').default,
-  //   bottom: require('./Bird/Bottom').default,
-  // }
+  plain: {
+    top: require('./__Plain/Top').default,
+    piece: require('./__Plain/Piece').default,
+    bottom: require('./__Plain/Bottom').default,
+  },
+  spiky: {
+    top: require('./__Spiky/Top').default,
+    piece: require('./__Spiky/Piece').default,
+    bottom: require('./__Spiky/Bottom').default,
+  },
+  maguni: {
+    top: require('./__Maguni/Top').default,
+    piece: require('./__Maguni/Piece').default,
+    bottom: require('./__Maguni/Bottom').default,
+  },
+  babyblock: {
+    top: require('./__BabyBlock/Top').default,
+    piece: require('./__BabyBlock/Piece').default,
+    bottom: require('./__BabyBlock/Bottom').default,
+  },
+  bird: {
+    top: require('./__Bird/Top').default,
+    piece: require('./__Bird/Piece').default,
+    bottom: require('./__Bird/Bottom').default,
+  },
+
 };
 
 export default skinMap;

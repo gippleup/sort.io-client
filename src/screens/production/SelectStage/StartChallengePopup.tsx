@@ -12,10 +12,10 @@ import { useDispatch } from 'react-redux';
 const StartChallengePopup = () => {
   const navigation = useNavigation();
   const playData = usePlayData();
-  const {singlePlay} = playData;
+  const {singlePlay=[]} = playData;
   const dispatch = useDispatch();
   const lastSinglePlayData = singlePlay[singlePlay.length - 1];
-  const lastPlayedDifficulty = lastSinglePlayData ? lastSinglePlayData.difficulty : 0;
+  const lastPlayedDifficulty = lastSinglePlayData ? lastSinglePlayData.difficulty + 1 : 0;
   const diffToChallenge = lastPlayedDifficulty;
   const diffToChallengeStr = getLevelString(diffToChallenge);
 

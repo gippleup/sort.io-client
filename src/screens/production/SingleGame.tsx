@@ -134,7 +134,8 @@ const GameScreen = (props: GameScreenProps) => {
         navigateToStageClearPopup("fail")
       }}
       fps={60}
-      timerRoundTo={3}
+      timerRoundTo={0}
+      timerFps={1}
       playerDockEasingDuraton={300}
       playerDockEasing="easeOutBounce"
       noAnimation={!global.animationEnabled}

@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { View, Dimensions, BackHandler, NativeEventSubscription, LayoutRectangle } from 'react-native'
+import { View, Dimensions, BackHandler, NativeEventSubscription, LayoutRectangle, TouchableOpacity, Modal } from 'react-native'
 import Logo from '../../components/Logo'
 import VolumeControl from '../../components/Main/VolumeControl'
 import MoneyIndicator from '../../components/Main/MoneyIndicator'
@@ -56,15 +56,23 @@ const Main = (props: MainProps) => {
   }
 
   const backHandlerListner = () => {
-    navigation.navigate("Popup_Exit");
-    return true;
+    if (isConnectionOk) {
+      navigation.navigate("Popup_Exit");
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const onFoucus = () => {
     backHandler.current = BackHandler.addEventListener("hardwareBackPress", backHandlerListner);
-    isServerAlive().then(() => {
-      setServerStatus("alive");
-      dispatch(fetchPlayData());
+    isServerAlive().then((isAlive) => {
+      if (isAlive) {
+        setServerStatus("alive");
+        dispatch(fetchPlayData());
+      } else {
+        setServerStatus("dead")
+      }
     })
   };
 
@@ -124,7 +132,6 @@ const Main = (props: MainProps) => {
   })
 
   const isConnectionOk = netInfo.isConnected && serverStatus === "alive";
-
   const gold = playData.loaded && playData.user ? playData.user.gold : 0;
 
   return (
@@ -172,7 +179,7 @@ const Main = (props: MainProps) => {
           impossible={!isConnectionOk}
         />
       </View>
-      <BannerAdSpace onLayout={(e) => setBannerAdSpace(e.nativeEvent.layout)}>
+      <BannerAdSpace style={{display: isConnectionOk ? "flex" : "none"}} onLayout={(e) => setBannerAdSpace(e.nativeEvent.layout)}>
         <AdmobBanner availableSpace={bannerAdSpace} />
       </BannerAdSpace>
     </View>

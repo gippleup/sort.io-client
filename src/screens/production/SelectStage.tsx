@@ -27,7 +27,7 @@ const backgroundImage = require('../../assets/BackgroundPattern.png');
 const SelectStage = () => {
   const navigation = useNavigation();
   const playData = usePlayData();
-  const {singlePlay} = playData;
+  const {singlePlay = []} = playData;
   const lastSinglePlayData = singlePlay[singlePlay.length - 1];
   const lastPlayedDifficulty = lastSinglePlayData ? lastSinglePlayData.difficulty : 0;
   const lastPlayedDiffStr = getLevelString(lastPlayedDifficulty);

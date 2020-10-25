@@ -59,7 +59,6 @@ const RewardButton = (props: RewardButtonProps) => {
     const giveCompensation = () => {
       if (hasGivenCompensation) return;
       hasGivenCompensation = true;
-      console.log("???????")
       dispatch(depositGold(compensation));
     }
     

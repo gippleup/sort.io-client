@@ -68,6 +68,7 @@ type RefBlockBoardProps = {
   noAnimation?: boolean;
   dockEasing?: Easings;
   dockEasingDuration?: number;
+  noGradient?: boolean;
 };
 
 type RefBlockBoardState = {
@@ -656,6 +657,7 @@ export class RefBlockBoard extends Component<
                         skin={props.skin}
                         part="bottom"
                         scale={scale}
+                        noGradient={props.noGradient}
                       />
                     </React.Suspense>
                   </AbsoluteRefBox>
@@ -690,7 +692,8 @@ export class RefBlockBoard extends Component<
                             skin={props.skin}
                             part="piece"
                             scale={scale}
-                          />
+                            noGradient={props.noGradient}
+                            />
                         </React.Suspense>
                       </AbsoluteRefBox>
                     );
@@ -728,6 +731,7 @@ export class RefBlockBoard extends Component<
                         part="top"
                         scale={scale}
                         visible={true}
+                        noGradient={props.noGradient}
                       />
                     </React.Suspense>
                   </AbsoluteRefBox>

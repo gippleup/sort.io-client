@@ -96,7 +96,6 @@ export const applyGuestId: GeneralThunkAction<void> = () => (dispatch, getState)
     dispatch(updateUser(mixedUser))
   })
   .catch(() => {
-    console.log('???');
   })
 }
 

@@ -69,6 +69,7 @@ type GameSceneProps = {
     [T in ExpressionDirection]?: SupportedExpression;
   }
   onPressExpression?: (direction: ExpressionDirection) => any;
+  noGradient?: boolean;
 };
 
 
@@ -245,6 +246,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
           noAnimation={props.noAnimation}
           dockEasing={props.opponentDockEasing}
           dockEasingDuration={props.opponentDockEasingDuration}
+          noGradient={props.noGradient}
         />
       </OpponentGameContainer>
     )
@@ -457,6 +459,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
             noAnimation={props.noAnimation}
             dockEasing={props.playerDockEasing}
             dockEasingDuration={props.playerDockEasingDuraton}
+            noGradient={props.noGradient}
           />
         </BlockBoardContainer>
         <NativeRefBox

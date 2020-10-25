@@ -10,11 +10,9 @@ import expressions from '../../components/Profile/Expressions';
 
 
 const GameSceneTester = () => {
-  const navigation = useNavigation();
-
   const option = {
     blockStackCount: 21,
-    colorCount: 17,
+    colorCount: 18,
     maxScore: 20,
     stackLengthMax: 8,
     stackLengthMin: 2,
@@ -50,6 +48,7 @@ const GameSceneTester = () => {
           opponentProfileRef.current?.express(element, "bottomLeft", 50);
         }
       }}
+      noGradient
     />
   );
 };

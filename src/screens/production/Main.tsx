@@ -30,7 +30,8 @@ const ButtonIcon: typeof Icon = styled(Icon)`
 
 const BannerAdSpace: typeof View = styled(View)`
   flex: 1;
-  /* margin-top: 20px; */
+  margin-top: 10px;
+  transform: scale(0.8);
 `;
 
 type MainNavigationProp = StackNavigationProp<RootStackParamList, 'Main'>
@@ -171,7 +172,7 @@ const Main = (props: MainProps) => {
           impossible={!isConnectionOk}
         />
       </View>
-      <BannerAdSpace style={{transform:[{scale: 0.8}]}} onLayout={(e) => setBannerAdSpace(e.nativeEvent.layout)}>
+      <BannerAdSpace onLayout={(e) => setBannerAdSpace(e.nativeEvent.layout)}>
         <AdmobBanner availableSpace={bannerAdSpace} />
       </BannerAdSpace>
     </View>

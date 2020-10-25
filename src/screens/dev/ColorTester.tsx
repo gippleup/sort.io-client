@@ -1,11 +1,13 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import Block from '../../components/Block'
+import { blockTypeCount } from '../../components/Block/Colors'
 import { SupportedSkin } from '../../components/Block/skinMap'
 
 const ColorTester = () => {
   const skin: SupportedSkin = "basic"
-  const length = 17;
+  const hasGradient = false;
+  const length = blockTypeCount;
   return (
     <View>
       <Block
@@ -13,7 +15,8 @@ const ColorTester = () => {
         part="top"
         type={0}
         scale={1}
-      />
+        noGradient={!hasGradient}
+        />
       {Array(length).fill(1).map((_, i) => {
         return (
           <Block
@@ -22,15 +25,17 @@ const ColorTester = () => {
             skin={skin}
             type={i}
             scale={1}
+            noGradient={!hasGradient}
           />
         )
       })}
       <Block
         skin={skin}
         part="bottom"
-        type={length}
+        type={length - 1}
         scale={1}
-      />
+        noGradient={!hasGradient}
+        />
     </View>
   )
 }

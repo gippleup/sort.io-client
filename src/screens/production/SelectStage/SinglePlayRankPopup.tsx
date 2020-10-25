@@ -54,7 +54,7 @@ const SinglePlayRankPopup = () => {
         rate,
         id,
       } = data;
-      const time = prettyTime(createdAt, "$YYYY.$MM.$DD($dd) $hh:$mm", {
+      const time = createdAt ? prettyTime(createdAt, "$YYYY.$MM.$DD($dd) $hh:$mm", {
         "0": "일",
         "1": "월",
         "2": "화",
@@ -62,7 +62,7 @@ const SinglePlayRankPopup = () => {
         "4": "목",
         "5": "금",
         "6": "토",
-      });
+      }) : "흠, 기록이 없군요?";
 
       const percentage = Number(rate);
 

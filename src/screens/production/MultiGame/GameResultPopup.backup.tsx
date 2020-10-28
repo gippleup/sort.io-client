@@ -1,33 +1,26 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, Text, Dimensions, ViewStyle, TextStyle } from 'react-native'
 import StrokedText from '../../../components/StrokedText'
-import { RoundPaddingCenter, NotoSans, FlexHorizontal, FullFlexCenter, Space } from '../../../components/Generic/StyledComponents'
+import { RoundPaddingCenter, NotoSans, FlexHorizontal, FullFlexCenter } from '../../../components/Generic/StyledComponents'
+import chroma from 'chroma-js'
+import RankViewer, { RankViewerDataEntry, RankViewerData } from '../../../components/RankViewer'
 import usePlayData from '../../../hooks/usePlayData'
+import { RoundRectangleButton } from '../../../components/EndGameInfo/_StyledComponents'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RouteProp, useNavigation, CommonActions } from '@react-navigation/native'
-import { RootStackParamList } from '../../../router/routes'
+import routes, { RootStackParamList } from '../../../router/routes'
+import { getMultiPlayRank, UserMultiRankData, RankData } from '../../../api/sortio'
+import { convertToPlayCountText } from './GameResultPopup/util'
+import { prettyPercent } from '../../../components/EndGameInfo/utils'
 import NativeRefBox from '../../../components/NativeRefBox'
 import { BeforeRemoveEvent } from '../GameScreen/utils'
 import useMultiGameSocket from '../../../hooks/useMultiGameSocket'
-import socketClientActions, { requestRematch, requestOtherMatch } from '../../../hooks/useMultiGameSocket/action/creator'
-import {boardStyle, titleStyle} from './GameResultPopup/_styles'
+import socketClientActions, { exit, requestRematch, requestOtherMatch } from '../../../hooks/useMultiGameSocket/action/creator'
+import {boardStyle, rankViewerHighlightStyle, textColor, titleStyle} from './GameResultPopup/_styles'
 import { getSoundEffect } from '../../../assets/Sounds'
-import MultiGameResult from '../../../components/MultiGameResult'
-import styled from 'styled-components'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 type GameResultNavigationProps = StackNavigationProp<RootStackParamList, "Popup_GameResult">
 type GameResultRouteProps = RouteProp<RootStackParamList, "Popup_GameResult">
-
-const ButtonShape: typeof View = styled(View)`
-  background-color: rgba(255,255,255,0.9);
-  border-radius: 10px;
-  min-width: 100px;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  border-width: 1px;
-`;
 
 export type GameResultParams = {
   result: 'win' | 'lose' | 'draw';
@@ -42,56 +35,23 @@ type GameResultPopupProps = {
 const GameResultPopup = (props: GameResultPopupProps) => {
   const playData = usePlayData();
   const navigation = useNavigation();
+  const [data, setData] = React.useState<null | RankViewerData>(null);
+  const [rawData, setRawData] = React.useState<null | RankData<UserMultiRankData>>()
   const titleRefBox = React.createRef<NativeRefBox>();
   const socket = useMultiGameSocket();
   const roomId = socket.getRoomId();
-  const {players} = socket.getRoomData();
-  const player = players.filter((player) => player.id === playData.user.id)[0];
-  const opponent = players.filter((player) => player.id !== playData.user.id)[0];
   const {result, opponentHasLeft} = props.route.params;
   const buttonFontSize = 20;
   const containerRef = React.createRef<View>();
 
-  const resultStyle = {
-    me: {
-      container: result === "win" 
-        ? styles.winnerResult
-        : result === "lose"
-          ? styles.loserResult
-          : styles.drawResult,
-      info: result === "win" 
-      ? styles.winnerInfo
-      : result === "lose"
-        ? styles.loserInfo
-        : styles.drawInfo,
-      text: result === "win" ? "black" : "white",
-      iconBackground: result === "win" ? "gold" : "black",
-      modifier: result === "win" 
-      ? "WINNER"
-      : result === "lose"
-        ? "LOSER"
-        : "",
-    },
-    opponent: {
-      container: result === "win"
-        ? styles.loserResult
-        : result === "lose"
-          ? styles.winnerResult
-          : styles.drawResult,
-      info: result === "win" 
-      ? styles.loserInfo
-      : result === "lose"
-        ? styles.winnerInfo
-        : styles.drawInfo,
-      text: result === "win" ? "white" : "black",
-      iconBackground: result === "win" ? "black" : "gold",
-      modifier: result === "win" 
-      ? "LOSER"
-      : result === "lose"
-        ? "WINNER"
-        : "",
-    },
-  }
+  const rankViewerRef = React.createRef<RankViewer>();
+  const userData = rawData?.targetUser;
+  const playCountText = userData ? convertToPlayCountText({
+    draw: userData.draw,
+    lose: userData.lose,
+    total: userData.total,
+    win: userData.win,
+  }) : '로딩중';
 
   const renderOpponentLeftMessage = () => {
     if (opponentHasLeft) {
@@ -260,6 +220,52 @@ const GameResultPopup = (props: GameResultPopupProps) => {
       easing: "easeOutElastic"
     }).start();
 
+    if (playData.user.id && !rawData) {
+      getMultiPlayRank(playData.user.id, 5)
+      .then((rankData) => {
+        if (!rankData) {
+          return setData(rankData);
+        }
+
+        setRawData(rankData);
+
+        const mapEntry = (entry: UserMultiRankData) => {
+          const mapped: RankViewerDataEntry = {
+            rank: Number(entry.rank),
+            rate: Number(entry.rate),
+            name: entry.name,
+            id: entry.id,
+            photo: entry.photo,
+          }
+          return mapped;
+        };
+        const beforeUser = rankData.beforeTargetUser.map(mapEntry);
+        const afterUser = rankData.afterTargetUser.map(mapEntry);
+        const user: RankViewerDataEntry = {
+          ...mapEntry(rankData.targetUser),
+          name: mapEntry(rankData.targetUser).name + ' (YOU)'
+        };
+        const mappedData: RankViewerData = beforeUser.concat(user).concat(afterUser);
+        setData(mappedData);
+      })
+      }
+
+    if (rankViewerRef.current && data) {
+      const $ = rankViewerRef.current
+      let position = 1;
+      for (let i = 0; i < data.length; i += 1) {
+        if (data[i].id === playData.user.id) {
+          position = i;
+          break;
+        }
+      }
+      $._blindScrollViewRef.current?.
+      _scrollViewRef.current?.scrollTo({
+        y: 56 * position,
+        animated: true
+      })
+    }
+
     const removeBeforeRemoveListener = navigation
       .addListener("beforeRemove", (e: BeforeRemoveEvent) => {
         if (e.data.action.type === "GO_BACK") {
@@ -277,6 +283,16 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     }
   })
 
+  if (!data) {
+    return (
+      <FullFlexCenter>
+        <RoundPaddingCenter>
+          <NotoSans type="Black">데이터를 불러오고 있습니다</NotoSans>
+        </RoundPaddingCenter>
+      </FullFlexCenter>
+    )
+  }
+
   return (
     <FullFlexCenter ref={containerRef}>
       <NativeRefBox ref={titleRefBox} style={{marginBottom: 10, elevation: 100}}>
@@ -293,71 +309,89 @@ const GameResultPopup = (props: GameResultPopupProps) => {
         />
       </NativeRefBox>
       <RoundPaddingCenter style={boardStyle[result]}>
-        <MultiGameResult
-          infoContainerStyle={resultStyle.me.info}
-          style={resultStyle.me.container}
-          userId={player.id}
-          isMine
-          color={resultStyle.me.text}
-          iconBackground={resultStyle.me.iconBackground}
-          modifier={`(YOU) - ${resultStyle.me.modifier}`}
+        <View style={{ paddingHorizontal: 10 }}>
+          <FlexHorizontal style={{ justifyContent: 'space-between' }}>
+            <NotoSans color={textColor[result]} type="Bold">
+              대전 기록
+            </NotoSans>
+            <NotoSans color={textColor[result]} type="Bold">
+              {playCountText}
+            </NotoSans>
+          </FlexHorizontal>
+          <FlexHorizontal style={{ justifyContent: 'space-between' }}>
+            <NotoSans color={textColor[result]} size={30} type="Black">
+              승률
+            </NotoSans>
+            <NotoSans color={textColor[result]} size={30} type="Black">
+              {prettyPercent(Number(userData?.winningRate))}%
+            </NotoSans>
+          </FlexHorizontal>
+        </View>
+        <RankViewer
+          ref={rankViewerRef}
+          style={{
+            width: Dimensions.get('window').width - 80,
+            maxHeight: 160, maxWidth: 300,
+            marginVertical: 20,
+            borderWidth: 1,
+          }}
+          data={data}
+          blindColor={boardStyle[result].backgroundColor as string}
+          entryStyle={(entry, i, isEnd) => {
+            const defaultContainerStyle: ViewStyle = { backgroundColor: 'transparent' }
+            if (entry.id === playData.user.id) {
+              const { containerStyle, textStyle } = rankViewerHighlightStyle[result];
+              return {
+                containerStyle: containerStyle,
+                textStyle: textStyle
+              }
+            }
+
+            if (isEnd) {
+              return {
+                containerStyle: {
+                  ...defaultContainerStyle,
+                  borderBottomColor: 'transparent'
+                },
+                textStyle: {
+                  color: textColor[result]
+                }
+              }
+            }
+
+            return {
+              containerStyle: defaultContainerStyle,
+              textStyle: {
+                color: textColor[result]
+              }
+            }
+          }}
         />
-        <Space height={5}/>
-        <MultiGameResult
-          infoContainerStyle={resultStyle.opponent.info}
-          style={resultStyle.opponent.container}
-          userId={opponent.id}
-          color={resultStyle.opponent.text}
-          iconBackground={resultStyle.opponent.iconBackground}
-          modifier={`(OPPONENT) - ${resultStyle.opponent.modifier}`}
-        />
-        <Space height={10}/>
         <FlexHorizontal>
-          <TouchableOpacity onPress={onHomePressed}>
-            <ButtonShape>
+          <RoundRectangleButton onPress={onHomePressed} style={{marginRight: 10}} width={100}>
+            <View>
               <NotoSans type="Bold" size={buttonFontSize}>홈</NotoSans>
-            </ButtonShape>
-          </TouchableOpacity>
-          <Space width={10}/>
-          <View style={{flex:1}}>
-            <TouchableOpacity style={{width: "100%"}} onPress={onRematchPressed}>
-              <ButtonShape>
+            </View>
+          </RoundRectangleButton>
+          <View style={{flex: 1}}>
+            <RoundRectangleButton onPress={onRematchPressed}>
+              <View>
                 <NotoSans type="Bold" size={buttonFontSize}>재대결</NotoSans>
-              </ButtonShape>
-            </TouchableOpacity>
+              </View>
+            </RoundRectangleButton>
           </View>
         </FlexHorizontal>
-        <Space height={10} />
-        <TouchableOpacity onPress={onAnotherMatchPressed}>
-          <ButtonShape>
-            <NotoSans type="Bold" size={buttonFontSize}>한판 더 하기</NotoSans>
-          </ButtonShape>
-        </TouchableOpacity>
+        <View style={{marginTop: 10}}>
+          <RoundRectangleButton onPress={onAnotherMatchPressed}>
+            <View>
+              <NotoSans type="Bold" size={buttonFontSize}>한판 더 하기</NotoSans>
+            </View>
+          </RoundRectangleButton>
+        </View>
       </RoundPaddingCenter>
       {renderOpponentLeftMessage()}
     </FullFlexCenter>
   )
 }
-
-const styles = StyleSheet.create({
-  winnerResult: {
-    backgroundColor: "white",
-  },
-  winnerInfo: {
-    backgroundColor: "lemonchiffon",
-  },
-  loserResult: {
-    backgroundColor: "darkred",
-  },
-  loserInfo: {
-    backgroundColor: "grey"
-  },
-  drawResult: {
-    backgroundColor: "grey",
-  },
-  drawInfo: {
-    backgroundColor: "lightgrey",
-  }
-})
 
 export default GameResultPopup

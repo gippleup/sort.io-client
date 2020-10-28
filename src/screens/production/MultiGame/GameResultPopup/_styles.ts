@@ -1,4 +1,4 @@
-import { ViewStyle, TextStyle } from "react-native"
+import { ViewStyle, TextStyle, Dimensions } from "react-native"
 
 export const titleStyle = {
   win: {
@@ -18,21 +18,29 @@ export const titleStyle = {
   }
 }
 
+const boardMaxWidth = 320;
+
 export const boardStyle: { [index: string]: ViewStyle } = {
   win: {
     backgroundColor: 'royalblue',
-    borderWidth: 3,
     borderColor: 'white',
+    borderWidth: 3,
+    width: "100%",
+    maxWidth: boardMaxWidth,
   },
   lose: {
     backgroundColor: 'tomato',
-    borderWidth: 3,
     borderColor: 'black',
+    borderWidth: 3,
+    width: "100%",
+    maxWidth: boardMaxWidth,
   },
   draw: {
     backgroundColor: 'slategrey',
-    borderWidth: 3,
     borderColor: 'lightgrey',
+    borderWidth: 3,
+    width: "100%",
+    maxWidth: boardMaxWidth,
   }
 }
 

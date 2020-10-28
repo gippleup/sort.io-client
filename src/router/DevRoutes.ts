@@ -1,3 +1,4 @@
+import MultiGameResult from "../components/MultiGameResult";
 import AdmobTester from "../screens/dev/AdmobTester";
 import AnimatedNumberTester from "../screens/dev/AnimatedNumberTester";
 import AsyncStorageController from "../screens/dev/AsyncStorageController";
@@ -10,6 +11,7 @@ import GameSceneTester from "../screens/dev/GameSceneTester";
 import GoogleSignInTester from "../screens/dev/GoogleSignInTester";
 import GraphTester from "../screens/dev/GraphTester";
 import ItemBoxTester from "../screens/dev/ItemBoxTester";
+import MultiGameResultTester from "../screens/dev/MultiGameResultTester";
 import NativeRefTester from "../screens/dev/NativeRefTester";
 import ParticleTester from "../screens/dev/ParticleTester";
 import ProfileTester from "../screens/dev/ProfileTester";
@@ -150,6 +152,12 @@ export const devRoutes: Routes<Omit<devParams, "Developer">> = {
     component: AdmobTester,
     headerShown: false,
   },
+  MultiGameResultTester: {
+    type: "dev",
+    devName: "멀티게임 결과 테스터",
+    component: MultiGameResultTester,
+    headerShown: false,
+  }
 }
 
 export type devParams = {
@@ -177,4 +185,5 @@ export type devParams = {
   GraphTester: undefined;
   NativeRefTester: undefined;
   AdmobTester: undefined;
+  MultiGameResultTester: undefined;
 }

@@ -64,12 +64,20 @@ const GameResultPopup = (props: GameResultPopupProps) => {
       : result === "lose"
         ? styles.loserInfo
         : styles.drawInfo,
-      text: result === "win" ? "black" : "white",
-      iconBackground: result === "win" ? "gold" : "black",
-      modifier: result === "win" 
-      ? "WINNER"
+      text: result === "win"
+      ? "black"
       : result === "lose"
-        ? "LOSER"
+        ? "white"
+        : "black",
+      iconBackground: result === "win" 
+      ? "gold"
+      : result === "lose"
+        ? "black"
+        : "black",
+      modifier: result === "win" 
+      ? " - WINNER"
+      : result === "lose"
+        ? " - LOSER"
         : "",
     },
     opponent: {
@@ -83,12 +91,20 @@ const GameResultPopup = (props: GameResultPopupProps) => {
       : result === "lose"
         ? styles.winnerInfo
         : styles.drawInfo,
-      text: result === "win" ? "white" : "black",
-      iconBackground: result === "win" ? "black" : "gold",
-      modifier: result === "win" 
-      ? "LOSER"
+      text: result === "win"
+      ? "white"
       : result === "lose"
-        ? "WINNER"
+        ? "black"
+        : "black",
+      iconBackground:  result === "win" 
+      ? "black"
+      : result === "lose"
+        ? "gold"
+        : "black",
+      modifier: result === "win" 
+      ? " - LOSER"
+      : result === "lose"
+        ? " - WINNER"
         : "",
     },
   }
@@ -300,7 +316,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
           isMine
           color={resultStyle.me.text}
           iconBackground={resultStyle.me.iconBackground}
-          modifier={`(YOU) - ${resultStyle.me.modifier}`}
+          modifier={`(YOU)${resultStyle.me.modifier}`}
         />
         <Space height={5}/>
         <MultiGameResult
@@ -309,7 +325,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
           userId={opponent.id}
           color={resultStyle.opponent.text}
           iconBackground={resultStyle.opponent.iconBackground}
-          modifier={`(OPPONENT) - ${resultStyle.opponent.modifier}`}
+          modifier={`(OPPONENT)${resultStyle.opponent.modifier}`}
         />
         <Space height={10}/>
         <FlexHorizontal>
@@ -353,7 +369,7 @@ const styles = StyleSheet.create({
     backgroundColor: "grey"
   },
   drawResult: {
-    backgroundColor: "grey",
+    backgroundColor: "white",
   },
   drawInfo: {
     backgroundColor: "lightgrey",

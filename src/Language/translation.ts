@@ -24,9 +24,9 @@ export type ExpressionTranslation = {
 }
 
 export type Translation = {
-  category: CategoryTranslation
-  skin: SkinTranslation
-  expression: ExpressionTranslation
+  category: CategoryTranslation;
+  skin: SkinTranslation;
+  expression: ExpressionTranslation;
 }
 
 const TranslationPack: {[T in SupportedLanguage]: Translation} = {

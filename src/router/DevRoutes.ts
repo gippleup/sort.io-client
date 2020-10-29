@@ -11,6 +11,7 @@ import GameSceneTester from "../screens/dev/GameSceneTester";
 import GoogleSignInTester from "../screens/dev/GoogleSignInTester";
 import GraphTester from "../screens/dev/GraphTester";
 import ItemBoxTester from "../screens/dev/ItemBoxTester";
+import JamTester from "../screens/dev/JamTester";
 import MultiGameResultTester from "../screens/dev/MultiGameResultTester";
 import NativeRefTester from "../screens/dev/NativeRefTester";
 import ParticleTester from "../screens/dev/ParticleTester";
@@ -23,9 +24,16 @@ import RefBoxTester from "../screens/dev/RefBoxTester";
 import ScoreCheckerTester from "../screens/dev/ScoreCheckerTester";
 import SettingsTester from "../screens/dev/SettingsTester";
 import TimerTester from "../screens/dev/TimerTester";
+import UpdaterTester from "../screens/dev/UpdaterTester";
 import { Routes } from "./types";
 
 export const devRoutes: Routes<Omit<devParams, "Developer">> = {
+  JamTester: {
+    type: "dev",
+    devName: "꿀잼 테스터",
+    component: JamTester,
+    headerShown: true,
+  },
   ReduxTester: {
     type: "dev",
     devName: "리덕스 테스터",
@@ -157,6 +165,12 @@ export const devRoutes: Routes<Omit<devParams, "Developer">> = {
     devName: "멀티게임 결과 테스터",
     component: MultiGameResultTester,
     headerShown: false,
+  },
+  UpdaterTester: {
+    type: "dev",
+    devName: "업데이터 테스터",
+    component: UpdaterTester,
+    headerShown: false,
   }
 }
 
@@ -186,4 +200,6 @@ export type devParams = {
   NativeRefTester: undefined;
   AdmobTester: undefined;
   MultiGameResultTester: undefined;
+  JamTester: undefined;
+  UpdaterTester: undefined;
 }

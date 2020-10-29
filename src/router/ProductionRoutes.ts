@@ -25,6 +25,7 @@ import NotEnoughMoneyPopup from "../screens/production/Shop/NotEnoughMoneyPopup"
 import LeaderBoard from "../screens/production/LeaderBoard";
 import ExitPopup from "../screens/production/Main/ExitPopup";
 import WaitingOpponentPopup from "../screens/production/MultiGame/WaitingOpponentPopup";
+import UpdateScreen from "../screens/UpdateScreen";
 
 export const pdRoutes: Routes<pdParams> = {
   Main: {
@@ -76,6 +77,13 @@ export const pdRoutes: Routes<pdParams> = {
     devName: '상대방 나감 팝업',
     options: CommonPopupOption,
     invisibleOnDev: true,
+  },
+  Updater: {
+    type: 'production',
+    component: UpdateScreen,
+    devName: '업데이터',
+    invisibleOnDev: true,
+    headerShown: false,
   },
   Popup_CancelGame: {
     type: 'production',
@@ -196,7 +204,7 @@ export const pdRoutes: Routes<pdParams> = {
     devName: "적놈을 기다리는 중",
     component: WaitingOpponentPopup,
     options: CommonPopupOption,
-  }
+  },
 }
 
 export type pdParams = {
@@ -207,6 +215,7 @@ export type pdParams = {
   MultiGame: MultiGameParams;
   ExpressionEquip: ExpressionEquipParams;
   LeaderBoard: undefined;
+  Updater: undefined;
   Popup_OpponentLeft: undefined;
   Popup_CancelGame: CancelGameParams;
   Popup_NotEnoughTicket: undefined;

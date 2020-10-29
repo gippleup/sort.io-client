@@ -106,6 +106,11 @@ export const expressEmotion = (param: BasicParam & {expression: SupportedExpress
   payload: param,
 })
 
+export const pong = (param: BasicParam) => JSON.stringify({
+  type: SocketClientMessageTypes.PONG,
+  payload: param,
+})
+
 export const socketClientActions = {
   enter,
   dock,
@@ -123,6 +128,7 @@ export const socketClientActions = {
   cancelRequestRematch,
   cancelRequestOtherMatch,
   expressEmotion,
+  pong,
 }
 
 export default socketClientActions;

@@ -153,12 +153,22 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
       }))
     })
 
+    const pingListener = socket.addListener("onPing", () => {
+      const userId = playdata.user.id || -1;
+      const roomId = roomData.current?.roomId || -1;
+      socket.send(socketClientActions.pong({
+        userId,
+        roomId,
+      }))
+    })
+
     return () => {
       if (interval !== null) { clearInterval(interval); }
       BackHandler.removeEventListener("hardwareBackPress", closeSocket)
       socket.removeListener(openListener);
       socket.removeListener(loadListener);
-      socket.removeListener(closeListener)
+      socket.removeListener(closeListener);
+      // socket.removeListener(pingListener);
     }
   }, [])
 

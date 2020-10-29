@@ -20,6 +20,7 @@ export enum SocketClientMessageTypes {
   CANCEL_REQUEST_OTHERMATCH = 'CANCEL_REQUEST_OTHERMATCH',
   INFORM_RECEIVED_MAP = 'INFORM_RECEIVED_MAP',
   EXPRESS_EMOTION = 'EXPRESS_EMOTION',
+  PONG = 'PONG',
 }
 
 export type EnterMessage = {
@@ -121,6 +122,11 @@ export type ExpressEmotion = {
   payload: BasicParam & {expression: SupportedExpression};
 }
 
+export type Pong = {
+  type: SocketClientMessageTypes.PONG;
+  payload: BasicParam;
+}
+
 export type SocketClientMessages =
   EnterMessage
   | DockMessage
@@ -139,3 +145,4 @@ export type SocketClientMessages =
   | CancelRequestOtherMatch
   | DeclineRequestRematch
   | ExpressEmotion
+  | Pong

@@ -19,6 +19,10 @@ import GoogleSigninController from '../../components/GoogleSigninController'
 import { useNetInfo } from '@react-native-community/netinfo'
 import { isServerAlive } from '../../api/sortio'
 import AdmobBanner from '../../components/AdmobBaner'
+import BuildConfig from 'react-native-config'
+import { Node } from 'react-native-reanimated'
+
+const {BUILD_ENV} = BuildConfig;
 
 const backgroundImage = require('../../assets/BackgroundPattern.png');
 
@@ -50,12 +54,14 @@ const Main = (props: MainProps) => {
   const [serverStatus, setServerStatus] = React.useState<"dead" | "alive">("dead");
   const backHandler = React.useRef<NativeEventSubscription | null>(null);
   const [bannerAdSpace, setBannerAdSpace] = React.useState<{width: number; height: number;} | undefined>();
+  let focusTimeout: NodeJS.Timeout;
 
   if (!playData.loaded) {
     dispatch(loadPlayData());
   }
 
   const backHandlerListner = () => {
+    if (BUILD_ENV === "DEV") return false;
     if (isConnectionOk) {
       navigation.navigate("Popup_Exit");
       return true;
@@ -66,19 +72,24 @@ const Main = (props: MainProps) => {
 
   const onFoucus = () => {
     backHandler.current = BackHandler.addEventListener("hardwareBackPress", backHandlerListner);
-    isServerAlive().then((isAlive) => {
-      if (isAlive) {
-        setServerStatus("alive");
-        dispatch(fetchPlayData());
-      } else {
-        setServerStatus("dead")
-      }
-    })
+    focusTimeout = setTimeout(() => {
+      isServerAlive().then((isAlive) => {
+        if (isAlive) {
+          setServerStatus("alive");
+          dispatch(fetchPlayData());
+        } else {
+          setServerStatus("dead")
+        }
+      })
+    }, 1000)
   };
 
   const onBlur = () => {
     if (backHandler.current) {
       backHandler.current.remove();
+    }
+    if (focusTimeout !== undefined) {
+      clearTimeout(focusTimeout);
     }
   }
 

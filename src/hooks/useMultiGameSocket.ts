@@ -2,7 +2,7 @@ import React from 'react';
 import { configureSocket } from '../api/sortio';
 import { SocketServerMessages, SocketServerMessageTypes as MessageType, AlertDockConstructor, SendRoomMessage } from './useMultiGameSocket/ServerMessages';
 import { MapDesc } from '../screens/production/MutiGame';
-import { SupportedSkin } from '../components/Block/skinMap';
+import socketClientActions from "../hooks/useMultiGameSocket/action/creator";
 
 export type OnSendRoomParam = SendRoomMessage["payload"];
 
@@ -26,6 +26,7 @@ type ListenerCallback = {
   onInformPrepareRematch: () => any;
   onAllowInformRematchRequest: () => any;
   onSendExpressionData: (info: {userId: number, expression: string}) => any;
+  onPing: () => any;
 }
 
 type ListenerManager = {
@@ -34,7 +35,7 @@ type ListenerManager = {
   }
 }
 
-type MultiGameSocketListener = {
+export type MultiGameSocketListener = {
   key: keyof ListenerCallback;
   callbackId: number;
 }
@@ -70,6 +71,7 @@ const listenerManager: ListenerManager = {
   onInformPrepareRematch: {},
   onAllowInformRematchRequest: {},
   onSendExpressionData: {},
+  onPing: {},
 };
 
 const forEachValue = (target: Object, cb: (value: any) => any) => {
@@ -121,6 +123,7 @@ const useMultiGameSocket = () => {
   }).current;
 
   socket.onopen = () => {
+    console.log("잘 열렸다")
     forEachValue(listenerManager.onOpen, (cb) => cb());
   }
 
@@ -176,9 +179,10 @@ const useMultiGameSocket = () => {
     } else if (parsedData.type === MessageType.SEND_EXPRESSION_DATA) {
       const {expression, userId} = parsedData.payload;
       forEachValue(listenerManager.onSendExpressionData, (cb) => cb({userId, expression}))
+    } else if (parsedData.type === MessageType.PING) {
+      forEachValue(listenerManager.onPing, (cb) => cb())
     }
   }
-
   return multiGameSocket;
 }
 

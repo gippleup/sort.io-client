@@ -154,6 +154,7 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
       }
     })
 
+  console.log(socket.id);
   const alertPrepareListener = socket.addListener("onAlertPrepare",
     () => {
       removeOpponentWaitingPopup();

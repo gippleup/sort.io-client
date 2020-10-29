@@ -217,17 +217,17 @@ const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
             const {map, mapDesc} = socket.getRoomData();
             unsubscribeBeforeRemove();
             props.navigation.dispatch((state) => {
-              const routes: typeof state.routes = [
-                ...state.routes.slice(state.routes.length - 2),
-                {
+              const routes: typeof state.routes = state.routes
+                .filter((route) => route.name === "Main")
+                .concat({
                   key: `MultiGame-${Date.now()}`,
                   name: "MultiGame",
                   params: {
                     map,
                     mapDesc,
-                  }
-                }
-              ];
+                  }                  
+                });
+              
               return CommonActions.reset({
                 ...state,
                 routes,

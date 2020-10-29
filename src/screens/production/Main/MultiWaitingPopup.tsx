@@ -144,14 +144,14 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
       props.navigation.addListener("beforeRemove", blockRemoveStack);
     })
 
-    const closeListener = socket.addListener("onClose", () => {
-      const userId = playdata.user.id || -1;
-      const roomId = roomData.current?.roomId || -1;
-      socket.send(socketClientActions.alertDisconnect({
-        userId,
-        roomId
-      }))
-    })
+    // const closeListener = socket.addListener("onClose", () => {
+    //   const userId = playdata.user.id || -1;
+    //   const roomId = roomData.current?.roomId || -1;
+    //   socket.send(socketClientActions.alertDisconnect({
+    //     userId,
+    //     roomId
+    //   }))
+    // })
 
     const pingListener = socket.addListener("onPing", () => {
       const userId = playdata.user.id || -1;
@@ -167,7 +167,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
       BackHandler.removeEventListener("hardwareBackPress", closeSocket)
       socket.removeListener(openListener);
       socket.removeListener(loadListener);
-      socket.removeListener(closeListener);
+      // socket.removeListener(closeListener);
       // socket.removeListener(pingListener);
     }
   }, [])

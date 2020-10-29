@@ -110,14 +110,14 @@ export const MultiGameLogic = (props: MultiGameProps) => {
     navigation.addListener("beforeRemove", blockGoBack);
     return () => {
       navigation.removeListener("beforeRemove", blockGoBack);
-      socket.removeListener(errorListener);
-      socket.removeListener(alertDockListener);
-      socket.removeListener(deleteRoomListener);
-      socket.removeListener(informOpponentHasLeftListener);
-      socket.removeListener(syncTimerListener);
-      socket.removeListener(alertPrepareListener);
-      socket.removeListener(informWinnerListener);
-      socket.removeListener(sendExpressionDataListenr);
+      // socket.removeListener(errorListener);
+      // socket.removeListener(alertDockListener);
+      // socket.removeListener(deleteRoomListener);
+      // socket.removeListener(informOpponentHasLeftListener);
+      // socket.removeListener(syncTimerListener);
+      // socket.removeListener(alertPrepareListener);
+      // socket.removeListener(informWinnerListener);
+      // socket.removeListener(sendExpressionDataListenr);
     }
   }
 

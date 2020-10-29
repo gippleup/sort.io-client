@@ -170,20 +170,18 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     // containerRef.current?.setNativeProps({
     //   pointerEvents: "none",
     // })
+    socket.close();
     navigation.dispatch((state) => {
+      const routes = state.routes
+        .filter((route) => route.name === "Main")
+        .concat({
+          name: "Popup_MultiWaiting",
+          key: "Popup_MultiWaiting" + Date.now(),
+        })
       return CommonActions.reset({
         ...state,
-        routes: [
-          {
-            name: "Main",
-            key: "Main" + Date.now(),
-          },
-          {
-            name: "Popup_MultiWaiting",
-            key: "Popup_MultiWaiting" + Date.now(),
-          }
-        ],
-        index: 1,
+        routes,
+        index: routes.length - 1,
       })
     })
   };

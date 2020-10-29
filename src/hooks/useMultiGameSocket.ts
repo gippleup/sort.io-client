@@ -78,13 +78,17 @@ const forEachValue = (target: Object, cb: (value: any) => any) => {
   Object.values(target).forEach((value) => cb(value))
 }
 
+let socketId = 0;
+
 const useMultiGameSocket = () => {
   const listenerCount = React.useRef(0);
   if (!socket) {
     socket = configureSocket();
+    socketId += 1;
   }
 
   const multiGameSocket = React.useRef({
+    id: socketId,
     raw: socket,
     addListener: (key: keyof ListenerCallback, callback: ListenerCallback[typeof key]): MultiGameSocketListener => {
       const callbackId = listenerCount.current;
@@ -123,7 +127,6 @@ const useMultiGameSocket = () => {
   }).current;
 
   socket.onopen = () => {
-    console.log("잘 열렸다")
     forEachValue(listenerManager.onOpen, (cb) => cb());
   }
 
@@ -134,7 +137,7 @@ const useMultiGameSocket = () => {
   socket.onmessage = (e) => {
     forEachValue(listenerManager.onMessage, (cb) => cb(e))
     const parsedData: SocketServerMessages = JSON.parse(e.data);
-    console.log(parsedData);
+    // console.log(parsedData);
     if (parsedData.type === MessageType.SEND_ROOM) {
       const option = parsedData.payload;
       roomId = option.roomId;

@@ -1,28 +1,25 @@
-import { CommonActions, useNavigation } from '@react-navigation/native';
-import React, { Fragment } from 'react'
-import { View, Text, Dimensions } from 'react-native'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { CommonActions, NavigationProp, useNavigation } from '@react-navigation/native';
+import React from 'react'
+import { View } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getIcon } from '../../api/icon';
 import PatternBackground from '../../components/GameScene/PatternBackground';
-import { FlexHorizontal, NotoSans, Space } from '../../components/Generic/StyledComponents';
+import { FlexHorizontal, NotoSans } from '../../components/Generic/StyledComponents';
 import ItemList from '../../components/ItemList';
 import MoneyIndicator from '../../components/Main/MoneyIndicator';
 import translation from '../../Language/translation';
 import CatogorySelector, { CategoryFilter } from './Shop/CatogorySelector';
-import { getItemList } from '../../api/sortio';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateItemList } from '../../redux/actions/items/cretor';
 import { AppState } from '../../redux/store';
 import { fetchItemList } from '../../redux/actions/items/thunk';
 import { checkUsageOfItems } from '../../redux/actions/items/utils';
-
-const LazyItemList = React.lazy(() => import('../../components/ItemList'));
+import { RootStackParamList } from '../../router/routes';
 
 const Shop = () => {
   const {playData, global, items} = useSelector((state: AppState) => state)
   const dispatch = useDispatch();
   const {language: lan} = global;
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [categoryFilter, setCategoryFilter] = React.useState<CategoryFilter>("skin");
   const loadedInitialList = React.useRef(false);
   const hasItems = Array.isArray(items) ? items.length > 0 : items;
@@ -80,32 +77,18 @@ const Shop = () => {
                 {getIcon("fontAwesome", "arrow-left", {color: "white", size: 20})}
               </View>
             </TouchableOpacity>
-            <NotoSans type="Black" color="white" size={20}>{translation[lan].category[categoryFilter]}</NotoSans>
+            <NotoSans type="Black" color="white" size={20}>상점</NotoSans>
           </FlexHorizontal>
           <MoneyIndicator style={{height: 50, backgroundColor: 'rgba(0,0,0,0.5)'}} value={playData.user.gold} />
         </View>
         <View style={{flex: 1}}>
-          {!hasItems
-            ? <></>
-            : (
-              <React.Suspense
-                fallback={(
-                  // <ItemListFallback
-                  //   style={{paddingVertical: 10}}
-                  //   categoryFilter={categoryFilter}
-                  //   data={listCheckedUsage}
-                  // />
-                  <></>
-                )}
-              >
-                <LazyItemList
-                  style={{ paddingVertical: 10 }}
-                  categoryFilter={categoryFilter}
-                  data={listCheckedUsage}
-                />
-              </React.Suspense>
-            )
-          }
+          <ItemList
+            style={{ paddingVertical: 10 }}
+            categoryFilter={categoryFilter}
+            data={listCheckedUsage}
+            lan={lan}
+            navigation={navigation}
+          />
         </View>
       </View>
       <View

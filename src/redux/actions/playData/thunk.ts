@@ -86,8 +86,8 @@ export const fetchGoogleProfile: GeneralThunkAction<void> = () => (dispatch, get
 
 export const applyGuestId: GeneralThunkAction<void> = () => (dispatch, getState) => {
   const curUser = getState().playData.user;
+  
   SortIoAPI.makeGuestId().then((user) => {
-    console.log(user);
     const mixedUser: SortIoUser = {
       ...curUser,
       id: user.id,

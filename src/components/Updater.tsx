@@ -36,7 +36,6 @@ type UpdaterProps = {
 }
 
 type UpdaterState = {
-  availableUpdate: null | RemotePackage;
   downloadProgress: DownloadProgress;
   status: codePush.SyncStatus;
 }
@@ -48,7 +47,6 @@ class Updater extends React.Component<UpdaterProps, UpdaterState> {
   constructor(props: Readonly<UpdaterProps>) {
     super(props);
     this.state = {
-      availableUpdate: null,
       downloadProgress: {
         receivedBytes: 0,
         totalBytes: 0,
@@ -62,9 +60,12 @@ class Updater extends React.Component<UpdaterProps, UpdaterState> {
     codePush.checkForUpdate()
     .then((availableUpdate) => {
       if (this.unmounted) return;
-      this.setState({
-        availableUpdate,
-      })
+      if (availableUpdate) {
+        availableUpdate.download()
+        .then((localPackage)=>{
+          localPackage.install(codePush.InstallMode.ON_NEXT_RESUME);
+        });
+      }
     })
 
     codePush.sync(undefined, (status) => {
@@ -116,14 +117,6 @@ class Updater extends React.Component<UpdaterProps, UpdaterState> {
       if (this.unmounted) return;
       this.setState({downloadProgress})
     })
-  }
-
-  componentDidUpdate() {
-    const {availableUpdate} = this.state;
-    if (availableUpdate && !this.updatedStarted) {
-      this.updatedStarted = true;
-      availableUpdate.download();
-    }
   }
 
   componentWillUnmount() {

@@ -5,7 +5,6 @@ import Updater from '../components/Updater'
 import BuildConfig from 'react-native-config';
 import { RootStackParamList } from '../router/routes';
 import { StackNavigationProp } from '@react-navigation/stack';
-import PatternBackground from '../components/GameScene/PatternBackground';
 
 const {BUILD_ENV} = BuildConfig;
 

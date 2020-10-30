@@ -11,7 +11,7 @@ export const adUnitId = {
 
 admob()
   .setRequestConfiguration({
-    maxAdContentRating: MaxAdContentRating.PG,
+    maxAdContentRating: MaxAdContentRating.G,
     tagForChildDirectedTreatment: true,
     tagForUnderAgeOfConsent: true,
   })

@@ -30,10 +30,10 @@ const buildVariable: {[T in typeof BUILD_ENV]: {
   initialRouteName: keyof typeof routes | "Developer"
 }} = {
   DEV: {
-    initialRouteName: "Updater",
+    initialRouteName: "Developer",
   },
   RELEASE: {
-    initialRouteName: "Updater",
+    initialRouteName: "Main",
   }
 }
 
@@ -85,7 +85,7 @@ let App: () => React.ReactNode = () => {
 };
 
 const codePushOptions: CodePushOptions = {
-  checkFrequency: codePush.CheckFrequency.MANUAL,
+  checkFrequency: codePush.CheckFrequency.ON_APP_START,
   installMode: codePush.InstallMode.ON_NEXT_RESUME,
 }
 

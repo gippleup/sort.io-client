@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { View, Dimensions, BackHandler, NativeEventSubscription, LayoutRectangle, TouchableOpacity, Modal } from 'react-native'
+import { View, Dimensions, BackHandler, NativeEventSubscription, LayoutRectangle, TouchableOpacity, Modal, Alert } from 'react-native'
 import Logo from '../../components/Logo'
 import VolumeControl from '../../components/Main/VolumeControl'
 import MoneyIndicator from '../../components/Main/MoneyIndicator'

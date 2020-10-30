@@ -19,6 +19,7 @@ import store from './src/redux/store';
 import {cardTransitionSpecs, cardTransitions} from './src/router/cardTransition';
 import {enableScreens} from 'react-native-screens';
 import BuildConfig from 'react-native-config';
+import codePush, {CodePushOptions} from 'react-native-code-push';
 
 const { BUILD_ENV } = BuildConfig;
 
@@ -29,7 +30,7 @@ const buildVariable: {[T in typeof BUILD_ENV]: {
   initialRouteName: keyof typeof routes | "Developer"
 }} = {
   DEV: {
-    initialRouteName: "Updater",
+    initialRouteName: "Developer",
   },
   RELEASE: {
     initialRouteName: "Updater",
@@ -83,4 +84,9 @@ let App: () => React.ReactNode = () => {
   );
 };
 
-export default App;
+const codePushOptions: CodePushOptions = {
+  checkFrequency: codePush.CheckFrequency.MANUAL,
+  installMode: codePush.InstallMode.IMMEDIATE,
+}
+
+export default codePush(codePushOptions)(App);

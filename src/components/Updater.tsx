@@ -1,10 +1,12 @@
 import { NavigationProp } from '@react-navigation/native';
+import chroma from 'chroma-js';
 import React from 'react';
 import { View, Text } from 'react-native';
 import codePush, { DownloadProgress, RemotePackage } from 'react-native-code-push';
 import styled from 'styled-components';
 import { RootStackParamList } from '../router/routes';
 import { FlexHorizontal, Space, WindowSizeView } from './Generic/StyledComponents';
+import LoadingWave, { LoadingWaveProps } from './LoadingWave';
 import ProgressBar from './ProgressBar';
 
 const updateText = {
@@ -20,7 +22,7 @@ const updateText = {
 }
 
 const Container: typeof WindowSizeView = styled(WindowSizeView)`
-  background-color: royalblue;
+  background-color: black;
   align-items: center;
   justify-content: center;
 `;
@@ -138,18 +140,32 @@ class Updater extends React.Component<UpdaterProps, UpdaterState> {
     } else if (status === codePush.SyncStatus.SYNC_IN_PROGRESS) {
     }
 
+    const wavePropsToPass: LoadingWaveProps = {
+      particleCount: 5,
+      waveShape: 'horizontal',
+      halfDuration: 300,
+      particleRenderer: (i) => {
+        return (
+          <View
+            style={{
+              width: 5,
+              height: 5,
+              marginRight: 10,
+              backgroundColor: chroma.random().hex()
+            }}
+          />
+        )
+      },
+    }
+
     if (progress >= 0) {
-      return (
-        <>
-          <Space height={10} />
-          <ProgressBar rate={progress}/>
-        </>
-      )
+      return <ProgressBar rate={progress}/>
     } else {
       return (
-        <>
-        </>
-      )
+        <FlexHorizontal style={{marginLeft: 10}}>
+          <LoadingWave {...wavePropsToPass}/>
+        </FlexHorizontal>
+      );
     }
   }
 
@@ -158,6 +174,7 @@ class Updater extends React.Component<UpdaterProps, UpdaterState> {
     return (
       <Container>
         <UpdaterText>{updateText[status]}</UpdaterText>
+        <Space height={10} />
         {this.renderProgress()}
       </Container>
     )  

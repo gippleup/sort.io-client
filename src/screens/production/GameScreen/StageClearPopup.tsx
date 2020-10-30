@@ -1,5 +1,5 @@
 import React, { RefObject } from 'react'
-import { View, Animated, Easing, TextInput } from 'react-native'
+import { View, Animated, Easing, TextInput, BackHandler } from 'react-native'
 import StrokedText from '../../../components/StrokedText'
 import { FlexHorizontal, NotoSans } from '../../../components/Generic/StyledComponents';
 import AnimatedCheckbox from '../../../components/AnimatedCheckbox';
@@ -35,7 +35,7 @@ const StageClearPopup = (props: StageClearPopupProps) => {
   const { mode, leftTrial, level, subType, successiveWin, results } = props.route.params;
 
   const finishStageWith = (result: 'fail' | 'success') => {
-    const nextLevel = Math.max(level + (result === 'success' ? 1 : -1), 0);
+    const nextLevel = Math.min(Math.max(level + (result === 'success' ? 1 : -1), 0), 72);
     const nextSuccessiveWin = result === 'success' ? successiveWin + 1 : 0;
     const successiveWins = [];
     for (let i = 0; i < nextSuccessiveWin; i += 1) {
@@ -76,6 +76,9 @@ const StageClearPopup = (props: StageClearPopupProps) => {
     outputRange: [0, 1],
   });
 
+  const blockBack = () => true;
+  BackHandler.addEventListener("hardwareBackPress", blockBack);
+
   React.useEffect(() => {
     Animated.timing(titleAppearAnim, {
       toValue: 1,
@@ -83,6 +86,10 @@ const StageClearPopup = (props: StageClearPopupProps) => {
       easing: Easing.elastic(5),
       useNativeDriver: true,
     }).start()
+
+    return () => {
+      BackHandler.removeEventListener("hardwareBackPress", blockBack);
+    }
   })
 
   return (

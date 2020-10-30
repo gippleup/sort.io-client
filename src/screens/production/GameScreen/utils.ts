@@ -18,11 +18,6 @@ export enum GameLevel {
   GrandChallenger = 54,
   Champion = 60,
   GrandChampion = 66,
-  Demigod = 72,
-  Omnia = 78,
-  God = 84,
-  Uno = 90,
-  Nihil = 96,
 };
 
 const _getLeveEnumNumArr = () => {
@@ -47,11 +42,18 @@ export const getLevelIndex = (level: number) => {
   return levelIndex;
 }
 
+export const getSubLevel = (level: number): number => {
+  if (level < 0) return 0;
+  const levelEnumNum = _getLevelEnumNum(level);
+  const subLevel = level - levelEnumNum + 1;
+  return Math.min(subLevel, 6);
+}
+
 export const getLevelString = (level: number) => {
   if (level < 0) return GameLevel[0]
   const levelEnumNum = _getLevelEnumNum(level);
   const levelEnumStr = GameLevel[levelEnumNum];
-  const subLevel = level - levelEnumNum + 1;
+  const subLevel = getSubLevel(level);
   const levelStr = `${levelEnumStr} ${subLevel}`;
   return levelStr;
 }
@@ -68,17 +70,10 @@ export const generateOptionByLevel = (level: number) => {
     stackLengthMin: Math.min(levelIndex + 2, 5),
     shuffleCount: 100,
   }
-  // const map = {
-  //   blockStackCount: 21,
-  //   colorCount: 18,
-  //   maxScore: 20,
-  //   stackLengthMax: 8,
-  //   stackLengthMin: 5,
-  //   shuffleCount: 100,
-  // }
+  const subLevel = getSubLevel(level);
   return {
     map,
-    time: 120,
+    time: 120 - 10 * (subLevel - 1),
     levelStr,
   };
 }

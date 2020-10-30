@@ -94,13 +94,10 @@ const GameScreen = (props: GameScreenProps) => {
   })
 
   if (!map) {
-    if (props.route.params.mode === 'single') {
-      setMap(generateMap_Local(option.map).question);
-    } else {
-      generateMap_Server(option.map).then((data) => {
-        setMap(data.question)
-      })
-    }
+    setMap(generateMap_Local(option.map).question);
+    // generateMap_Server(option.map).then((data) => {
+    //   setMap(data.question)
+    // })
     return <></>;
   }
 

@@ -28,7 +28,7 @@ const PopupButton: typeof View | React.FC<{tomato?: boolean}> = styled(View)<{to
 `;
 
 GoogleSigninModule.configure({
-  webClientId: '139458839925-bqm86mnndgcd2d3e47b5i3ljplovff57.apps.googleusercontent.com',
+  webClientId: '124695122817-a0rpoq7c79o10jef4hk8aphsq9a1ru5s.apps.googleusercontent.com',
   forceCodeForRefreshToken: true,
 })
 
@@ -66,9 +66,10 @@ class CustomGoogleSignin extends Component<CustomGoogleSignInProps, CustomGoogle
     try {
       await GoogleSigninModule.hasPlayServices()
       const userInfo = await GoogleSigninModule.signIn()
-      this.setState({...this.state, userInfo, isSignedIn: true})
+      this.setState({...this.state, userInfo, isSignedIn: true});
       if (props.onSignIn) props.onSignIn(userInfo);
     } catch (error) {
+      console.log(error);
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
       } else if (error.code === statusCodes.IN_PROGRESS) {

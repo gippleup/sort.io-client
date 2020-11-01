@@ -152,7 +152,7 @@ const Main = (props: MainProps) => {
         <FlexHorizontal>
           <AnimationController/>
           <Line width={0.5} height='80%' marginHorizontal={10} color="rgba(255,255,255,0.5)" />
-          <GoogleSigninController/>
+          {/* <GoogleSigninController/> */}
         </FlexHorizontal>
       </View>
       <View style={{ position: 'absolute', right: 10, top: 10 }}>

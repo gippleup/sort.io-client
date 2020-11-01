@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "124695122817-p6ltn0adb2n1frl1r5a4j6g4vnqqkc47.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sortio",
+            "certificate_hash": "d33d32647026204a521891e00a414aeb064a7729"
+          }
+        },
+        {
           "client_id": "124695122817-19jb1s6s72meeeg3n0qg2b80puv7q3e4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

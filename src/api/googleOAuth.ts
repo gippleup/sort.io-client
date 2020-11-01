@@ -1,7 +1,7 @@
 import { GoogleSignin, statusCodes, User } from "@react-native-community/google-signin";
 
 GoogleSignin.configure({
-  webClientId: '124695122817-a0rpoq7c79o10jef4hk8aphsq9a1ru5s.apps.googleusercontent.com',
+  webClientId: '124695122817-p6ltn0adb2n1frl1r5a4j6g4vnqqkc47.apps.googleusercontent.com',
   forceCodeForRefreshToken: true,
 })
 

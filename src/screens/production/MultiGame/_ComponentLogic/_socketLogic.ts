@@ -105,7 +105,6 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
 
   // const closeListner = socket.addListener("onClose",
   //   () => {
-  //     console.log("여기가 맞나")
   //   }
   // )
 

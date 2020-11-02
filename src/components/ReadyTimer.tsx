@@ -15,6 +15,7 @@ type ReadyTimerProps = {
 
 type ReadyTimerState = {
   leftTime: number;
+  text: string;
 }
 
 export class ReadyTimer extends Component<ReadyTimerProps, ReadyTimerState> {
@@ -26,6 +27,7 @@ export class ReadyTimer extends Component<ReadyTimerProps, ReadyTimerState> {
     super(props);    
     this.state = {
       leftTime: props.duration + 1,
+      text: '',
     }
 
     this.appear = this.appear.bind(this);
@@ -54,6 +56,10 @@ export class ReadyTimer extends Component<ReadyTimerProps, ReadyTimerState> {
   setLeftTime(leftTime: number) {
     this.initialTextDisappeared = true;
     this.setState({leftTime})
+  }
+
+  setText(text: string) {
+    this.setState({text});
   }
 
   disappear(onFinished?: () => any) {
@@ -132,7 +138,7 @@ export class ReadyTimer extends Component<ReadyTimerProps, ReadyTimerState> {
     if (props.initialText && !initialTextDisappeared) {
       textToRender = props.initialText;
     } else {
-      textToRender = String(state.leftTime);
+      textToRender = state.text || String(state.leftTime);
     }
     return (
       <View>

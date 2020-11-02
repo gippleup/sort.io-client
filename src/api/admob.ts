@@ -16,7 +16,7 @@ admob()
     tagForUnderAgeOfConsent: true,
   })
   .then(() => {
-    console.log('configred successfully')
+    // configred admob successfully
   })
 
 

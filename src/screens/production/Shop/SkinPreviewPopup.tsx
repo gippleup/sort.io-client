@@ -67,7 +67,7 @@ const SkinPreviewPopup = (props: SkinPreviewPopupProps) => {
         }}
       />
       <MyBoard
-        onComplete={() => console.log('잘됨')}
+        onComplete={undefined}
         skin={skin}
         scale={0.5}
         initialMap={generateMap({

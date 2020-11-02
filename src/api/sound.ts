@@ -6,8 +6,7 @@ const loadedSound: Sound[] = [];
 export const getSound = (filename: string) => {
   const sound = new Sound(filename, Sound.MAIN_BUNDLE, (err) => {
     if (err) {
-      console.log('failed to load the sound', err);
-      return;
+      throw err;
     }
   })
 

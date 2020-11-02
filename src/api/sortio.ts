@@ -38,7 +38,9 @@ export const getCountryIconSvg = (lat: number, lng: number) => {
   const url = `${API_BASE}/country/icon`
   return fetch(`${url}?lat=${lat}&lng=${lng}`)
   .then((res)=> res.text())
-  .catch((err) => console.log(err))
+  .catch((err) => {
+    throw err;
+  })
 }
 
 export const signUpWithGoogle = (googleId: string, userId: number, photo: string | null, name: string | null) => {
@@ -82,7 +84,6 @@ export const makeGuestId = (): Promise<SortIoUser> => {
       return res.json();
     })
     .catch((err) => {
-      console.log(err);
       return null;
     });
 }

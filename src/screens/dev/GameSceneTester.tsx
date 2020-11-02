@@ -34,7 +34,7 @@ const GameSceneTester = () => {
       mode={'multi'}
       playerProfile={{ name: 'me', photo: <Profile ref={playerProfileRef} chatBubbleSize={50} iconColor="dodgerblue" /> }}
       opponentProfile={{ name: 'opponent', photo: <Profile ref={opponentProfileRef} chatBubbleSize={50} iconColor="black" /> }}
-      onComplete={() => console.log('끝남')}
+      onComplete={undefined}
       playerDockEasing="easeInOutSine"
       playerDockEasingDuraton={100}
       timerFps={1}

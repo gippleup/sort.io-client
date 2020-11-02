@@ -62,13 +62,13 @@ export const loadPlayData: GeneralThunkAction<void> = () => (dispatch, getState)
         try {
           dispatch(applyGuestId())
         } catch (e) {
-          console.log(e);
+          throw e;
         }
       }
 
     })
     .catch((e) => {
-      console.log(e);
+      throw e;
     })
 }
 
@@ -152,10 +152,9 @@ export const signInWithGoogle: GeneralThunkAction<void> = () => async (dispatch,
       }
       dispatch(updateUser(mixedUser));
       const response = await SortIoAPI.signUpWithGoogle(googleId, curUser.id, googleUser.user.photo, googleUser.user.name)
-      // console.log(response);
     }
   } catch (e) {
-    console.log(e);
+    throw e;
   }
 }
 

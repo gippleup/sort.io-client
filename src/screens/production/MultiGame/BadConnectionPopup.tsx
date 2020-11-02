@@ -34,7 +34,6 @@ const BadConnectionPopup = () => {
     const timeout = setTimeout(() => {
       navigation.dispatch((state) => {
         const routes = state.routes.filter((route) => route.name === "Main");
-        console.log(routes);
         return CommonActions.reset({
           ...state,
           routes,

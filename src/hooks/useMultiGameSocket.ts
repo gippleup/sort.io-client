@@ -137,7 +137,6 @@ const useMultiGameSocket = () => {
   socket.onmessage = (e) => {
     forEachValue(listenerManager.onMessage, (cb) => cb(e))
     const parsedData: SocketServerMessages = JSON.parse(e.data);
-    // console.log(parsedData);
     if (parsedData.type === MessageType.SEND_ROOM) {
       const option = parsedData.payload;
       roomId = option.roomId;

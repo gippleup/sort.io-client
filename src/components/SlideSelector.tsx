@@ -48,7 +48,7 @@ const SlideSelector: React.FC<SlideSelectorProps<any>> = (props) => {
       viewRefs.current[cursor].current?.measureLayout(scrollRefId, (...args) => {
         const {0: left, 1: top, 2: width, 3: height} = args;
         callback({height, width, x: left, y: top});
-      }, () => console.log('failed to measure layout'))
+      }, () => console.error('failed to measure layout'))
     }
   }
 

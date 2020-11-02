@@ -73,43 +73,34 @@ class Updater extends React.Component<UpdaterProps, UpdaterState> {
       this.setState({status})
       switch (status) {
         case SyncStatus.CHECKING_FOR_UPDATE: {
-          console.log("Checking for Update");
           break;
         }
         case SyncStatus.AWAITING_USER_ACTION: {
-          console.log("Waiting User Action");
           break;
         }
         case SyncStatus.DOWNLOADING_PACKAGE: {
-          console.log("Downloading Package");
           break;
         }
         case SyncStatus.INSTALLING_UPDATE: {
-          console.log("Installing Update");
           break;
         }
         case SyncStatus.SYNC_IN_PROGRESS: {
-          console.log("Syncing");
           break;
         }
         case SyncStatus.UNKNOWN_ERROR: {
           if (onFinish) onFinish();
-          console.log("Unknown Error");
           break;
         }
         case SyncStatus.UPDATE_IGNORED: {
           if (onFinish) onFinish();
-          console.log("Update Ignored");
           break;
         }
         case SyncStatus.UPDATE_INSTALLED: {
           if (onFinish) onFinish();
-          console.log("Update Installed");
           break;
         }
         case SyncStatus.UP_TO_DATE: {
           if (onFinish) onFinish();
-          console.log("Already Up to Date");
           break;
         }
       }

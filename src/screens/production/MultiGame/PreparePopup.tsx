@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import useMultiGameSocket from '../../../hooks/useMultiGameSocket'
 import socketClientActions from '../../../hooks/useMultiGameSocket/action/creator';
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import { CommonActions, RouteProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../router/routes';
 import { StackNavigationProp } from '@react-navigation/stack';
 import usePlayData from '../../../hooks/usePlayData';
@@ -52,7 +52,17 @@ const PreparePopup = (props: PreparePopupProps) => {
         if (leftTime > 0) {
           readyTimerRef.current?.setLeftTime(leftTime);
         } else {
-          props.navigation.pop();
+          readyTimerRef.current?.setText("START!");
+          setTimeout(() => {
+            props.navigation.dispatch((state) => {
+              const routes = state.routes.filter((route) => route.name === "Main" || route.name === "MultiGame");
+              return CommonActions.reset({
+                ...state,
+                routes,
+                index: routes.length - 1,
+              });
+            })
+          }, 1000);
         }
       })
 

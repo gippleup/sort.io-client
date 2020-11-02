@@ -149,7 +149,7 @@ export class ReadyTimer extends Component<ReadyTimerProps, ReadyTimerState> {
             dyMultiplier={0.33}
             fillColor="black"
             fontFamily="NotoSansKR-Black"
-            fontSize={initialTextDisappeared ? 100 : 60}
+            fontSize={initialTextDisappeared ? 100 : 50}
             height={150}
             strokeColor="white"
             strokeWidth={10}

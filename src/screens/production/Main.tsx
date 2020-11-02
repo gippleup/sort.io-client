@@ -49,6 +49,7 @@ type MainProps = {
 const Main = (props: MainProps) => {
   const navigation = props.navigation;
   const {playData, global} = useSelector((state: AppState) => state);
+  const loadedPlayData = React.useRef(false);
   const {language: lan} = global;
   const translation = TranslationPack[lan].screens.Main;
   const dispatch = useDispatch();
@@ -58,7 +59,8 @@ const Main = (props: MainProps) => {
   const [bannerAdSpace, setBannerAdSpace] = React.useState<{width: number; height: number;} | undefined>();
   let focusTimeout: NodeJS.Timeout;
 
-  if (!playData.loaded) {
+  if (!playData.loaded && !loadedPlayData.current) {
+    loadedPlayData.current = true;
     dispatch(loadPlayData());
   }
 

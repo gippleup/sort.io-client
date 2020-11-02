@@ -5,6 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components'
 import { FlexHorizontal, NotoSans, Space, WindowSizeView } from '../../../components/Generic/StyledComponents'
 import StrokedText from '../../../components/StrokedText';
+import useGlobal from '../../../hooks/useGlobal';
 import { getRandomQuestionSet } from './ExitPopup/utils';
 
 const Container = styled(WindowSizeView)`
@@ -31,8 +32,9 @@ const Button: typeof NotoSans = styled(NotoSans)`
 `;
 
 const ExitPopup = () => {
-  const questionSet = getRandomQuestionSet();
   const navigation = useNavigation();
+  const {language: lan} = useGlobal();
+  const questionSet = getRandomQuestionSet(lan);
 
   const exitGame = BackHandler.exitApp;
   const cancelExit = () => navigation.dispatch((state) => {

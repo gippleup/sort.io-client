@@ -1,7 +1,9 @@
 import { pickRandomFromArray } from "../../../../components/Block/utils"
-import questionSet from "./questionSets";
+import TranslationPack from "../../../../Language/translation";
+import { SupportedLanguage } from "../../../../redux/actions/global/types";
 
-export const getRandomQuestionSet = () => {
+export const getRandomQuestionSet = (lan: SupportedLanguage = SupportedLanguage.en) => {
+  const questionSet = TranslationPack[lan].exitQuestion;
   const randomSet = pickRandomFromArray(questionSet);
   return randomSet;
 }

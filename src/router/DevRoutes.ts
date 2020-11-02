@@ -8,7 +8,6 @@ import CountryFlagIconTester from "../screens/dev/CountryFlagIconTester";
 import EndGameInfoTester from "../screens/dev/EndGameInfoTester";
 import ForFun from "../screens/dev/ForFun";
 import GameSceneTester from "../screens/dev/GameSceneTester";
-import GoogleSignInTester from "../screens/dev/GoogleSignInTester";
 import GraphTester from "../screens/dev/GraphTester";
 import ItemBoxTester from "../screens/dev/ItemBoxTester";
 import JamTester from "../screens/dev/JamTester";
@@ -126,11 +125,6 @@ export const devRoutes: Routes<Omit<devParams, "Developer">> = {
     devName: '설정창 테스터',
     component: SettingsTester,
   },
-  GoogleSignInTester: {
-    type: "dev",
-    devName: '구글 로그인',
-    component: GoogleSignInTester,
-  },
   FlagIconTester: {
     type: "dev",
     devName: '국가 아이콘',
@@ -193,7 +187,6 @@ export type devParams = {
   PurchaseBoxTester: undefined;
   RankViewerTester: undefined;
   SettingsTester: undefined;
-  GoogleSignInTester: undefined;
   FlagIconTester: undefined;
   Developer: undefined;
   GraphTester: undefined;

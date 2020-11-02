@@ -1,11 +1,4 @@
-type QuestionSet = {
-  title: string;
-  content: string;
-  cancel: string;
-  exit: string;
-}[];
-
-const questionSet: QuestionSet = [
+const translation = [
   {
     title: "헐",
     content: "본인도 외모가 수려한 거 알고 있죠?",
@@ -30,6 +23,6 @@ const questionSet: QuestionSet = [
     cancel: "태어날 때부터",
     exit: "예?",
   },
-]
+];
 
-export default questionSet;
+export default translation;

@@ -17,6 +17,7 @@ const translation: typeof ScreenTranslation["Main"] = {
   no: "Nope",
   checkingServer: "Checking Server Status",
   pleaseCheckConnection: "Please Check Connection",
+  logoutDesc: "Sign Out?"
 }
 
 export default translation;

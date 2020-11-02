@@ -24,11 +24,19 @@ export type ExpressionTranslation = {
   }
 }
 
+export type QuestionSet = {
+  title: string;
+  content: string;
+  cancel: string;
+  exit: string;
+}[];
+
 export type Translation = {
   category: CategoryTranslation;
   skin: SkinTranslation;
   expression: ExpressionTranslation;
   screens: typeof ScreenTranslation;
+  exitQuestion: QuestionSet;
 }
 
 const TranslationPack: {[T in SupportedLanguage]: Translation} = {

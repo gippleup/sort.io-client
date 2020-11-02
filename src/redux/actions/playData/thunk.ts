@@ -1,6 +1,6 @@
 import { ThunkDispatch } from "redux-thunk";
 import { AppGetState, GeneralThunkDispatch } from "../../store";
-import { getLocalPlayData, PlayData, SortIoUser, SinglePlayData } from "../../../api/local";
+import { getLocalPlayData, PlayData, SortIoUser, SinglePlayData, setBackupPlayData, getBackupPlayData } from "../../../api/local";
 import { updatePlayData, updateUser, updateGold, updateTicket, updateSinglePlay, updateMultiPlay } from "./creator";
 import { Dispatch } from "redux";
 import * as SortIoAPI from "../../../api/sortio";
@@ -88,12 +88,16 @@ export const applyGuestId: GeneralThunkAction<void> = () => (dispatch, getState)
   const curUser = getState().playData.user;
   
   SortIoAPI.makeGuestId().then((user) => {
-    const mixedUser: SortIoUser = {
-      ...curUser,
-      id: user.id,
-      name: user.name,
-    }
-    dispatch(updateUser(mixedUser))
+    if (!curUser.googleId) {
+      const mixedUser: SortIoUser = {
+        ...curUser,
+        id: user.id,
+        name: user.name,
+      }
+      dispatch(updateUser(mixedUser))
+    } else {
+
+    }  
   })
   .catch(() => {
   })
@@ -132,6 +136,8 @@ export const signInWithGoogle: GeneralThunkAction<void> = () => async (dispatch,
         return null;
       });
 
+    const savedCurData = await setBackupPlayData(curData);
+
     if (savedServerData) {
       dispatch(updatePlayData(savedServerData));
     } else {
@@ -154,14 +160,19 @@ export const signInWithGoogle: GeneralThunkAction<void> = () => async (dispatch,
 export const signOutWithGoogle: GeneralThunkAction<void> = () => async (dispatch, getState) => {
   const internetConnected = await NetInfo.fetch().then((state) => state.isConnected);
   if (!internetConnected) return;
-
-  let {curData, curUser} = _getCurDataCurUser(getState)
-
+  
+  let {curData, curUser} = _getCurDataCurUser(getState);
+  
   if (!curUser.googleId) return;
-
+  
   try {
     await googleSignOut()
-    dispatch(applyGuestId())
+    const backedUpData = await getBackupPlayData();
+    if (backedUpData) {
+      dispatch(updatePlayData(backedUpData));
+    } else {
+      dispatch(applyGuestId());
+    }
   } catch (err) {
     throw err;
   }

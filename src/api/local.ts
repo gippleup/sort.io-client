@@ -73,6 +73,29 @@ export const setLocalPlayData = (data: PlayData) => {
   return AsyncStorage.setItem('playData', encrypted);
 }
 
+export const getBackupPlayData = (): Promise<PlayData | undefined> => {
+  return new Promise ((resolve, reject) => {
+    AsyncStorage.getItem('backupPlayData')
+      .then((data) => {
+        if (data) {
+          const decrypted = decrypt(data);
+          const decryptedData = JSON.parse(decrypted) as PlayData;
+          resolve(decryptedData);
+        } else {
+          resolve(undefined);
+        }
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+export const setBackupPlayData = (data: PlayData) => {
+  const encrypted = encrypt(JSON.stringify(data));
+  return AsyncStorage.setItem('backupPlayData', encrypted);
+}
+
 export const setLocalData = (key: string, data: string): Promise<void> => {
   const encrypted = encrypt(data);
   return AsyncStorage.setItem(key, encrypted);

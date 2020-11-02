@@ -4,9 +4,13 @@ import chroma from 'chroma-js'
 import Flickery from '../../../components/Flickery'
 import { RoundPaddingCenter, NotoSans } from '../../../components/Generic/StyledComponents'
 import { CommonActions, useNavigation } from '@react-navigation/native'
+import useGlobal from '../../../hooks/useGlobal'
+import TranslationPack from '../../../Language/translation'
 
 const NotEnoughTicketPopup = () => {
   const naviagtion = useNavigation();
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.SelectStage;
   const flickerRef = React.createRef<Flickery>();
   React.useEffect(() => {
     flickerRef.current?.flickerNTimes(3);
@@ -28,7 +32,7 @@ const NotEnoughTicketPopup = () => {
     <View style={{flex: 1, backgroundColor: chroma('red').alpha(0.5).hex(), justifyContent: 'center'}}>
       <Flickery ref={flickerRef}>
         <RoundPaddingCenter>
-          <NotoSans type="Black" size={20}>티켓이 없습니다</NotoSans>
+          <NotoSans type="Black" size={20}>{translation.needTicket}</NotoSans>
         </RoundPaddingCenter>
       </Flickery>
     </View>

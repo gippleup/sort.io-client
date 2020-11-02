@@ -1,7 +1,7 @@
 import { SupportedSkin } from "../components/Block/skinMap";
 import expressions from "../components/Profile/Expressions";
 import { SupportedLanguage } from "../redux/actions/global/types";
-import ScreenTranslation from "./ko/screens";
+import screenTranslation_ko from "./ko/screens";
 
 export type CategoryTranslation = {
   all: string;
@@ -31,11 +31,13 @@ export type QuestionSet = {
   exit: string;
 }[];
 
+export type ScreenTranslation = typeof screenTranslation_ko;
+
 export type Translation = {
   category: CategoryTranslation;
   skin: SkinTranslation;
   expression: ExpressionTranslation;
-  screens: typeof ScreenTranslation;
+  screens: ScreenTranslation;
   exitQuestion: QuestionSet;
 }
 

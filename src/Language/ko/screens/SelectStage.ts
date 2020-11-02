@@ -48,6 +48,7 @@ const translation = {
   havingGold: "보유한 골드",
   notEnoughGoldMessage: (goldToPay: number) => `${goldToPay} 골드가 부족합니다`,
   weekDay: ["일", "월", "화", "수", "목", "금", "토"],
+  needTicket: "티켓이 없습니다",
 }
 
 export default translation;

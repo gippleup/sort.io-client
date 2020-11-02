@@ -1,6 +1,6 @@
-import ScreenTranslation from "../../ko/screens";
+import { ScreenTranslation } from "../../translation";
 
-const translation: typeof ScreenTranslation["Main"] = {
+const translation: ScreenTranslation["Main"] = {
   title: "Sort.io",
   greeting: "Welcome!",
   singlePlay: "Single Play",

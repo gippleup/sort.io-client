@@ -3,13 +3,15 @@ import SelectStage from './SelectStage';
 import MultiPlay from './MultiPlay';
 import Shop from './Shop';
 import LeaderBoard from './LeaderBoard';
+import SinglePlay from './SinglePlay';
 
-const ScreenTranslation = {
+const screenTranslation = {
   Main,
   SelectStage,
   MultiPlay,
   Shop,
   LeaderBoard,
+  SinglePlay,
 }
 
-export default ScreenTranslation;
+export default screenTranslation;

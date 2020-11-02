@@ -1,6 +1,6 @@
-import ScreenTranslation from "../../ko/screens";
+import { ScreenTranslation } from "../../translation";
 
-const translation: typeof ScreenTranslation["LeaderBoard"] = {
+const translation: ScreenTranslation["LeaderBoard"] = {
   singlePlay: "Single Play",
   multiPlay: "Multi Play",
   goToMain: "Main",

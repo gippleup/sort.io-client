@@ -1,6 +1,6 @@
-import ScreenTranslation from "../../ko/screens";
+import { ScreenTranslation } from "../../translation";
 
-const translation: typeof ScreenTranslation["MultiPlay"] = {
+const translation: ScreenTranslation["MultiPlay"] = {
   waitingOpponent: "Waiting\nOpponent",
   withdrawal: "Withdrawal",
   withdrawalDesc: "If you exit now, a defeat will be recorded. Do you still want to exit?",

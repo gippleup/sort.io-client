@@ -54,6 +54,7 @@ class ScoreChecker extends React.Component<ScoreCheckerProps> {
 
   render() {
     const {props, state} = this;
+    this.icons = [];
     let iconToDrawCount = this.props.maxScore;
     // let scoreToCheckCount = state.curScore;
     const Space = () => (
@@ -80,8 +81,8 @@ class ScoreChecker extends React.Component<ScoreCheckerProps> {
         <Fragment key={'fragment' + i}>
           <Row key={'row' + i}>
             {row.map((bool, j) => {
-              if (!iconToDrawCount) {
-                return;
+              if (iconToDrawCount <= 0) {
+                return <Fragment key={'fragment' + i + j} />;
               } else if (bool) {
                 // const iconType = scoreToCheckCount > 0 ? 0 : 9;
                 const isEndOfCol = j === row.length - 1;

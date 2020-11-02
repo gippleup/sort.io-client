@@ -1,6 +1,6 @@
-import ScreenTranslation from "../../ko/screens";
+import { ScreenTranslation } from "../../translation";
 
-const translation: typeof ScreenTranslation["SelectStage"] = {
+const translation: ScreenTranslation["SelectStage"] = {
   navTitle: "Single Play",
   currentRank: "Current Rank",
   rankChangeProgess: "Rank Changes",
@@ -58,6 +58,7 @@ const translation: typeof ScreenTranslation["SelectStage"] = {
   havingGold: "Stored",
   notEnoughGoldMessage: (goldToPay: number) => `You need ${goldToPay} Gold`,
   weekDay: ["SUN", "MON", "TUE", "WED", "THURS", "FRI", "SAT"],
+  needTicket: "Need Ticket"
 }
 
 export default translation;

@@ -60,7 +60,7 @@ const StartChallengePopup = () => {
       )}
       buttons={[
         {
-          text: '시작하기',
+          text: translation.start,
           onPress: startSingleGame,
           style: {
             backgroundColor: 'palegreen',
@@ -68,7 +68,7 @@ const StartChallengePopup = () => {
           }
         },
         {
-          text: '취소하기',
+          text: translation.cancel,
           onPress: navigation.goBack,
           style: {
             backgroundColor: 'lightgrey',

@@ -75,7 +75,7 @@ const LogoutModal = (props: LogoutModalProps) => {
     >
       <Container>
         <Popup>
-          <AskText type="Black" color="tomato" size={25}>
+          <AskText type="Black" color="tomato" size={15}>
             {translation.logoutDesc}
           </AskText>
         </Popup>

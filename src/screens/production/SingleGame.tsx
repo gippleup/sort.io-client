@@ -36,6 +36,8 @@ const GameScreen = (props: GameScreenProps) => {
   const navigation = props.navigation;
   const gameSceneRef = React.createRef<GameScene>();
   const global = useGlobal();
+  const lan = global.language;
+  const translation = TranslationPack[lan].screens.SinglePlay;
   const {mode, leftTrial, level, subType, successiveWin, results} = props.route.params;
   let stageFinished = false;
 
@@ -72,9 +74,9 @@ const GameScreen = (props: GameScreenProps) => {
           let text = '';
   
           if (subType === 'challenge') {
-            text = '챌린지를 종료하시겠습니까?'
+            text = translation.quitChallenge;
           } else if (subType === 'training') {
-            text = '연습게임을 종료하시겠습니까?'
+            text = translation.quitPratice;
           }
   
           navigation.navigate('Popup_CancelGame', {

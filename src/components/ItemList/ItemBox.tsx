@@ -25,13 +25,6 @@ export type Item = {
   isInUse?: boolean;
 }
 
-
-const mainButtonText = {
-  hasPurchased: "적용하기",
-  hasApplied: "사용중",
-  notPurchased: "구매하기"
-}
-
 const mainButtonColor = {
   hasPurchased: "lightseagreen",
   hasApplied: "crimson",
@@ -61,6 +54,13 @@ class ItemBox extends React.PureComponent<ItemBoxProps> {
     // const navigation = useNavigation();
     let title = '';
     let description = '';
+    const translation = TranslationPack[lan].screens.Shop;
+
+    const mainButtonText = {
+      hasPurchased: translation.equipped,
+      hasApplied: translation.equip,
+      notPurchased: translation.purchase,
+    }
   
     if (category === "skin") {
       title = TranslationPack[lan].skin[name as SupportedSkin].title;
@@ -148,7 +148,7 @@ class ItemBox extends React.PureComponent<ItemBoxProps> {
           </ItemProfileContainer>
           <Space height={10} />
           <PreviewButton onPress={onPressPreview}>
-            <NotoSans color="white" size={13} type="Regular">미리보기</NotoSans>
+            <NotoSans color="white" size={13} type="Regular">{translation.preview}</NotoSans>
           </PreviewButton>
         </View>
         <Space width={20} />

@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react'
-import { View, Dimensions, BackHandler, NativeEventSubscription, LayoutRectangle, TouchableOpacity, Modal, Alert } from 'react-native'
+import { View, BackHandler, NativeEventSubscription, NativeModules, Platform } from 'react-native'
 import Logo from '../../components/Logo'
-import VolumeControl from '../../components/Main/VolumeControl'
 import MoneyIndicator from '../../components/Main/MoneyIndicator'
 import MainButton from '../../components/Main/MainButton'
 import PatternBackground from '../../components/GameScene/PatternBackground'
@@ -10,7 +9,7 @@ import styled from 'styled-components'
 import { useNavigation, RouteProp, CommonActions } from '@react-navigation/native'
 import usePlayData from '../../hooks/usePlayData'
 import { FlexHorizontal, Space, NotoSans, Line } from '../../components/Generic/StyledComponents'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { fetchPlayData, loadPlayData, signInWithGoogle, signOutWithGoogle } from '../../redux/actions/playData/thunk'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../router/routes'
@@ -20,7 +19,8 @@ import { useNetInfo } from '@react-native-community/netinfo'
 import { isServerAlive } from '../../api/sortio'
 import AdmobBanner from '../../components/AdmobBaner'
 import BuildConfig from 'react-native-config'
-import { Node } from 'react-native-reanimated'
+import { AppState } from '../../redux/store'
+import TranslationPack from '../../Language/translation'
 
 const {BUILD_ENV} = BuildConfig;
 
@@ -48,7 +48,9 @@ type MainProps = {
 
 const Main = (props: MainProps) => {
   const navigation = props.navigation;
-  const playData = usePlayData();
+  const {playData, global} = useSelector((state: AppState) => state);
+  const {language: lan} = global;
+  const translation = TranslationPack[lan].screens.Main;
   const dispatch = useDispatch();
   const netInfo = useNetInfo();
   const [serverStatus, setServerStatus] = React.useState<"dead" | "alive">("dead");
@@ -106,7 +108,7 @@ const Main = (props: MainProps) => {
           type="Black"
           style={{backgroundColor: 'white', borderRadius: 5, paddingHorizontal: 10}}
         >
-          인터넷 연결상태를 확인해주세요.
+          {translation.pleaseCheckConnection}
         </NotoSans>
       )
     }
@@ -118,7 +120,7 @@ const Main = (props: MainProps) => {
           type="Black"
           style={{backgroundColor: 'white', borderRadius: 5, paddingHorizontal: 10}}
         >
-          서버를 점검하고 있습니다.
+          {translation.checkingServer}
         </NotoSans>
       )
     }
@@ -127,7 +129,7 @@ const Main = (props: MainProps) => {
 
     return (
       <Fragment>
-        <NotoSans type="Bold" color="yellow">Welcome! </NotoSans>
+        <NotoSans type="Bold" color="yellow">{translation.greeting} </NotoSans>
         <NotoSans type="Black" color="white">{playData.user.name}</NotoSans>        
       </Fragment>
     )
@@ -167,25 +169,25 @@ const Main = (props: MainProps) => {
       <View style={{alignItems: 'center'}}>
         <MainButton
           preComponent={<ButtonIcon name="gamepad" color="tomato" />}
-          text="싱글 플레이"
+          text={translation.singlePlay}
           onPress={onPressSingle}
           impossible={!isConnectionOk}
         />
         <MainButton
           preComponent={<ButtonIcon name="users" color="mediumseagreen" />}
-          text="멀티 플레이"
+          text={translation.multiPlay}
           onPress={onPressMulti}
           impossible={!isConnectionOk}
         />
         <MainButton
           preComponent={<ButtonIcon name="shopping-basket" color="cornflowerblue" />}
-          text="상점"
+          text={translation.shop}
           onPress={onPressShop}
           impossible={!isConnectionOk}
         />
         <MainButton
           preComponent={<ButtonIcon name="trophy" color="goldenrod" />}
-          text="리더보드"
+          text={translation.leaderBoard}
           onPress={onPressLeaderBoard}
           impossible={!isConnectionOk}
         />

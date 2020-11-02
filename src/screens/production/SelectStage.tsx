@@ -21,12 +21,16 @@ import { getSinglePlayRank, UserSingleRankData } from '../../api/sortio';
 import { prettyPercent } from '../../components/EndGameInfo/utils';
 import { getIcon } from '../../api/icon';
 import RewardButton from '../../components/RewardButton';
+import useGlobal from '../../hooks/useGlobal';
+import TranslationPack from '../../Language/translation';
 
 const backgroundImage = require('../../assets/BackgroundPattern.png');
 
 const SelectStage = () => {
   const navigation = useNavigation();
   const playData = usePlayData();
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.SelectStage;
   const {singlePlay = []} = playData;
   const lastSinglePlayData = singlePlay[singlePlay.length - 1];
   const lastPlayedDifficulty = lastSinglePlayData ? lastSinglePlayData.difficulty : 0;
@@ -47,7 +51,7 @@ const SelectStage = () => {
           <Division>
             <RecordEntryContainer>
               <FlexHorizontal>
-                <RecordTitle>현재 랭크</RecordTitle>
+                <RecordTitle>{translation.currentRank}</RecordTitle>
               </FlexHorizontal>
               <FlexHorizontal>
                 <TouchableOpacity>
@@ -80,7 +84,7 @@ const SelectStage = () => {
                     size: 20,
                   })}
                   <Space width={10} />
-                  싱글 플레이 성적
+                  {translation.singlePlayPerformance}
                 </NotoSans>
               </TouchableOpacity>
             </RecordEntryContainer>
@@ -95,7 +99,7 @@ const SelectStage = () => {
                 <Space width={10} />
                 <TouchableOpacity onPress={onPressTicketPurchase}>
                   <CustomTextContainer fit>
-                    <CustomText dark small>티켓 구매</CustomText>
+                    <CustomText dark small>{translation.ticketPurchase}</CustomText>
                   </CustomTextContainer>
                 </TouchableOpacity>
               </FlexHorizontal>
@@ -108,13 +112,13 @@ const SelectStage = () => {
                 <CustomTextContainer border full>
                   <TicketIcon hasBackground/>
                   <Space width={10} />
-                  <CustomText large dark>챌린지</CustomText>
+                    <CustomText large dark>{translation.challenge}</CustomText>
                 </CustomTextContainer>
               </TouchableOpacity>
               <Space height={10} />
               <TouchableOpacity onPress={onPressTraining}>
                 <CustomTextContainer border full>
-                  <CustomText large dark>연습하기</CustomText>
+                  <CustomText large dark>{translation.practice}</CustomText>
                 </CustomTextContainer>
               </TouchableOpacity>
             </View>

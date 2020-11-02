@@ -9,6 +9,7 @@ import { RootStackParamList } from '../../router/routes';
 import {GameMode, GameSubType, generateOptionByLevel, BeforeRemoveEvent} from './GameScreen/utils'
 import { StackNavigationEventMap } from '@react-navigation/stack/lib/typescript/src/types';
 import useGlobal from '../../hooks/useGlobal';
+import TranslationPack from '../../Language/translation';
 
 export type StateEventCallback = EventListenerCallback<StackNavigationEventMap & EventMapCore<StackNavigationState>, "state">
 

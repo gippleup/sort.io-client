@@ -5,6 +5,8 @@ import { useNavigation, CommonActions, RouteProp } from '@react-navigation/nativ
 import { BeforeRemoveEvent } from '../GameScreen/utils'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../../router/routes'
+import useGlobal from '../../../hooks/useGlobal'
+import TranslationPack from '../../../Language/translation'
 
 type OpponentLeftPopupNavigationProps = StackNavigationProp<RootStackParamList, "Popup_OpponentLeft">;
 type OpponentLeftPopupRouteProps = RouteProp<RootStackParamList, "Popup_OpponentLeft">;
@@ -16,6 +18,8 @@ type OpponentLeftPopupProps = {
 
 const OpponentLeftPopup = (props: OpponentLeftPopupProps) => {
   const navigation = props.navigation;
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.MultiPlay;
 
   React.useEffect(() => {
     const unsubscribeBeforeRemoveEvent = navigation.addListener(
@@ -50,7 +54,7 @@ const OpponentLeftPopup = (props: OpponentLeftPopupProps) => {
           borderColor: 'black'
         }}
       >
-        <NotoSans color="tomato" type="Black">아쿠, 상대방이 나갔습니다.</NotoSans>
+        <NotoSans color="tomato" type="Black">{translation.opponentLeft}</NotoSans>
       </RoundPaddingCenter>
     </FullFlexCenter>
   )

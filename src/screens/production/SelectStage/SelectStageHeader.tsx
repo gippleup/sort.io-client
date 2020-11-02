@@ -8,6 +8,9 @@ import MoneyIndicator from '../../../components/Main/MoneyIndicator'
 import { FlexHorizontal } from '../../../components/Generic/StyledComponents'
 import { useNavigation } from '@react-navigation/native'
 import usePlayData from '../../../hooks/usePlayData'
+import { useSelector } from 'react-redux'
+import { AppState } from '../../../redux/store'
+import TranslationPack from '../../../Language/translation'
 
 const HeaderContainer = styled(View)`
   background-color: rgba(255,255,255,0.2);
@@ -30,15 +33,16 @@ const HeaderText = styled(Text)`
 `;
 
 const SelectStageHeader = () => {
- const navigation = useNavigation();
-const playData = usePlayData();
+  const navigation = useNavigation();
+  const {playData, global} = useSelector((state: AppState) => state);
+  const translation = TranslationPack[global.language].screens.SelectStage;
   return (
     <HeaderContainer>
       <FlexHorizontal>
         <NavigationButton onPress={navigation.goBack}>
           <Icon name="arrow-left" color="white" size={20} />
         </NavigationButton>
-        <HeaderText>싱글 플레이</HeaderText>
+        <HeaderText>{translation.navTitle}</HeaderText>
       </FlexHorizontal>
       <MoneyIndicator value={playData.loaded ? playData?.user.gold : 0} />
     </HeaderContainer>

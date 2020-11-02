@@ -14,11 +14,13 @@ import { AppState } from '../../redux/store';
 import { fetchItemList } from '../../redux/actions/items/thunk';
 import { checkUsageOfItems } from '../../redux/actions/items/utils';
 import { RootStackParamList } from '../../router/routes';
+import TranslationPack from '../../Language/translation';
 
 const Shop = () => {
   const {playData, global, items} = useSelector((state: AppState) => state)
   const dispatch = useDispatch();
   const {language: lan} = global;
+  const translation = TranslationPack[lan].screens.Shop;
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [categoryFilter, setCategoryFilter] = React.useState<CategoryFilter>("skin");
   const loadedInitialList = React.useRef(false);
@@ -77,7 +79,7 @@ const Shop = () => {
                 {getIcon("fontAwesome", "arrow-left", {color: "white", size: 20})}
               </View>
             </TouchableOpacity>
-            <NotoSans type="Black" color="white" size={20}>상점</NotoSans>
+            <NotoSans type="Black" color="white" size={20}>{translation.navTitle}</NotoSans>
           </FlexHorizontal>
           <MoneyIndicator style={{height: 50, backgroundColor: 'rgba(0,0,0,0.5)'}} value={playData.user.gold} />
         </View>

@@ -1,3 +1,4 @@
+import { getSystemLocale, getSystemLocaleCode, LanguageCode } from '../../api/locale';
 import { SupportedSkin } from '../../components/Block/skinMap';
 import { SupportedExpression } from '../../components/Profile/Expressions';
 import { ExpressionDirection, GlobalReducerActions } from '../actions/global/creator';
@@ -15,8 +16,12 @@ export type GlobalReducerState = {
   animationEnabled: boolean;
 };
 
+const localeCode = getSystemLocaleCode();
+
+const defaultCode = localeCode === "ko" ? SupportedLanguage.ko : SupportedLanguage.en;
+
 const initialState: GlobalReducerState = {
-  language: SupportedLanguage.ko,
+  language: defaultCode,
   skin: "basic",
   expressions: {
     top: "like",

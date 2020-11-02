@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { getIcon } from '../api/icon'
 import useGlobal from '../hooks/useGlobal'
+import TranslationPack from '../Language/translation'
 import { toggleAnimation } from '../redux/actions/global/creator'
 import { FlexHorizontal, NotoSans, Space } from './Generic/StyledComponents'
 
@@ -49,7 +50,8 @@ const AnimationController = () => {
   const global = useGlobal();
   const dispatch = useDispatch();
   const [modalVisible, setModalVisibility] = React.useState(false);
-  const {animationEnabled} = global;
+  const {animationEnabled, language: lan} = global;
+  const translation = TranslationPack[lan].screens.Main;
 
   const onPressIcon = () => {
     if (!global.animationEnabled) {
@@ -91,13 +93,13 @@ const AnimationController = () => {
       </FlexHorizontal>
       <Modal visible={modalVisible} transparent>
         <ModalContentContainer>
-          <ModalTitle size={20} type="Black">블록 애니메이션 활성화</ModalTitle>
+          <ModalTitle size={20} type="Black">{translation.activateAnimTitle}</ModalTitle>
           <Space height={10} />
           <ModalContentBox>
             <NotoSans size={15} type="Light">
-              기기에 따라 게임 속도가 크게 저하될 수 있습니다. {' '}그래도
+              {translation.activateAnimDescThin}
               <NotoSans size={15} type="Bold">
-                {' '}블록 애니메이션을 활성화하시겠습니까?
+                {translation.activateAnimDescBold}
               </NotoSans>
             </NotoSans>
           </ModalContentBox>
@@ -109,7 +111,7 @@ const AnimationController = () => {
                 style={{backgroundColor: 'grey'}}
                 type="Black"
               >
-                예
+                {translation.yes}
               </ModalTitle>
             </TouchableOpacity>
             <Space width={10} />
@@ -119,7 +121,7 @@ const AnimationController = () => {
                 style={{backgroundColor: 'dodgerblue'}}
                 type="Black"
               >
-                아니오
+                {translation.no}
               </ModalTitle>
             </TouchableOpacity>
           </FlexHorizontal>

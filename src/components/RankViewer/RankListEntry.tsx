@@ -1,5 +1,7 @@
 import React from 'react';
 import {View, Text, Image, ViewStyle, TextStyle, LayoutChangeEvent} from 'react-native';
+import TranslationPack from '../../Language/translation';
+import { SupportedLanguage } from '../../redux/actions/global/types';
 import {prettyPercent} from '../EndGameInfo/utils';
 import {FlexHorizontal} from '../Generic/StyledComponents';
 import {
@@ -25,15 +27,17 @@ type RankListEntryProps = {
   rankRateStyle?: TextStyle;
   textStyle?: TextStyle;
   onLayout?: (e: LayoutChangeEvent) => any;
+  lan?: SupportedLanguage;
 };
 
 const defaultProfile = require('../../assets/default-profile.png');
 
 const RankListEntry = (props: RankListEntryProps) => {
-  const {data, style} = props;
+  const {data, style, lan = SupportedLanguage.en} = props;
+  const translation = TranslationPack[lan].screens.LeaderBoard;
   const {rank, rate, name, photo} = data;
   const profile = photo ? {uri: photo} : defaultProfile;
-  const prettyRate = `(상위 ${prettyPercent(rate)}%)`;
+  const prettyRate = `(${translation.top} ${prettyPercent(rate)}%)`;
   return (
     <EntryContainer onLayout={props.onLayout} style={style}>
       <FlexHorizontal>
@@ -54,7 +58,7 @@ const RankListEntry = (props: RankListEntryProps) => {
               ...props.rankTextStyle
               }}
             >
-              {rank + '위'}
+              {translation.rankText(Number(rank)) + " "}
             </RankText>
             <RankRateText
               style={{

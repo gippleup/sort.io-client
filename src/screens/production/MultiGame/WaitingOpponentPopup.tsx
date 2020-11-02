@@ -2,6 +2,9 @@ import React from 'react'
 import { View, Text, Easing, Animated } from 'react-native'
 import styled from 'styled-components'
 import { NotoSans } from '../../../components/Generic/StyledComponents';
+import useGlobal from '../../../hooks/useGlobal';
+import translation from '../../../Language/ko/screens/Main';
+import TranslationPack from '../../../Language/translation';
 
 const Container: typeof View = styled(View)`
   flex: 1;
@@ -22,6 +25,8 @@ const InfoText: typeof NotoSans = styled(NotoSans)`
 
 const WaitingOpponentPopup = () => {
   const wiggle = React.useRef(new Animated.Value(0));
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.MultiPlay;
   const scale = wiggle.current.interpolate({
     inputRange: [0, 1],
     outputRange: [1, 1.5],
@@ -53,7 +58,7 @@ const WaitingOpponentPopup = () => {
           color="white"
           type="Black"
         >
-          {"상대방을\n기다리고\n있습니다"}
+          {translation.waitingOpponent}
         </InfoText>
       </Animated.View>
     </Container>

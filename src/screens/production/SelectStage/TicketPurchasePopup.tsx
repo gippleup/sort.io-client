@@ -9,9 +9,11 @@ import MoneyIcon from '../../../components/Main/MoneyIcon'
 import usePlayData from '../../../hooks/usePlayData'
 import chroma from 'chroma-js'
 import Flickery from '../../../components/Flickery'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import * as thunkAction from '../../../redux/actions/playData/thunk'
 import { useNavigation } from '@react-navigation/native'
+import { AppState } from '../../../redux/store'
+import TranslationPack from '../../../Language/translation'
 
 const ItemIconContainer = styled(View)`
   border-radius: 10px;
@@ -54,7 +56,8 @@ const TicketPurchasePopup = () => {
   const [quantity, setQuantity] = React.useState(0);
   const increaseQuantity = () => setQuantity(Math.max(quantity - 1, 0));
   const decreaseQuantity = () => setQuantity(quantity + 1);
-  const playData = usePlayData();
+  const {playData, global} = useSelector((state: AppState) => state);
+  const translation = TranslationPack[global.language].screens.SelectStage;
   const dispatch = useDispatch();
   const [alertVisible, setAlertVisible] = React.useState(false);
   const flickerRef = React.createRef<Flickery>();
@@ -76,11 +79,11 @@ const TicketPurchasePopup = () => {
 
   const buttons: PopupButton[] = [
     {
-      text: '구매하기',
+      text: translation.purchase,
       onPress: purchaseTicket,
     },
     {
-      text: '취소하기',
+      text: translation.cancel,
       onPress: navigation.goBack,
     },
   ]
@@ -93,7 +96,7 @@ const TicketPurchasePopup = () => {
 
   return (
     <>
-    <BasicPopup title="티켓 구매" buttons={buttons} buttonAlign="horizontal">
+    <BasicPopup title={translation.ticketPurchase} buttons={buttons} buttonAlign="horizontal">
       <View style={{width: 240}}>
         <FlexHorizontal style={{alignItems: 'flex-start'}}>
           <ItemIconContainer>
@@ -102,7 +105,7 @@ const TicketPurchasePopup = () => {
           <Space width={10}/>
           <FlexHorizontal style={{alignItems: 'flex-end', justifyContent: 'space-between', flex: 1}}>
             <View style={{alignItems: 'center'}}>
-              <NotoSans type="Bold">구매 수량</NotoSans> 
+              <NotoSans type="Bold">{translation.purchaseQuantity}</NotoSans> 
               <Space height={5} />
               <FlexHorizontal>
                 <PurchaseQuantity type="Bold">{quantity}</PurchaseQuantity>
@@ -150,13 +153,13 @@ const TicketPurchasePopup = () => {
       <AlertContainer>
         <Flickery ref={flickerRef}>
           <RoundPaddingCenter>
-            <NotoSans size={20} type="Black">골드가 부족합니다</NotoSans>
+            <NotoSans size={20} type="Black">{translation.notEnoughGold}</NotoSans>
           </RoundPaddingCenter>
         </Flickery>
         <RequiredMoneyDesc>
-          <NotoSans size={15} type="Black" style={{ color: 'black' }}>필요한 골드: {ticketPrice * quantity}</NotoSans>
-          <NotoSans size={15} type="Black" style={{ color: 'orange' }}>보유한 골드: {playData.user.gold}</NotoSans>
-          <RequiredMoney size={20} type="Black">{ticketPrice * quantity - playData.user.gold} 골드가 부족합니다</RequiredMoney>
+          <NotoSans size={15} type="Black" style={{ color: 'black' }}>{translation.requiredGold}: {ticketPrice * quantity}</NotoSans>
+          <NotoSans size={15} type="Black" style={{ color: 'orange' }}>{translation.havingGold}: {playData.user.gold}</NotoSans>
+          <RequiredMoney size={20} type="Black">{translation.notEnoughGoldMessage(ticketPrice * quantity - playData.user.gold)}</RequiredMoney>
         </RequiredMoneyDesc>
       </AlertContainer>
     </Modal>

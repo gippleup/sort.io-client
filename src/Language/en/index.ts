@@ -1,9 +1,14 @@
 import { Translation } from "../translation";
+import category from './category';
+import expression from './expression';
+import skin from './skin';
+import screens from './screens';
 
 const translation: Translation = {
-  category: require('./category').default,
-  expression: require('./expression').default,
-  skin: require('./skin').default,
+  category,
+  expression,
+  skin,
+  screens,
 }
 
 export default translation;

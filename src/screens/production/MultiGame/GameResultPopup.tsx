@@ -15,6 +15,9 @@ import { getSoundEffect } from '../../../assets/Sounds'
 import MultiGameResult from '../../../components/MultiGameResult'
 import styled from 'styled-components'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { useSelector } from 'react-redux'
+import { AppState } from '../../../redux/store'
+import TranslationPack from '../../../Language/translation'
 
 type GameResultNavigationProps = StackNavigationProp<RootStackParamList, "Popup_GameResult">
 type GameResultRouteProps = RouteProp<RootStackParamList, "Popup_GameResult">
@@ -40,7 +43,9 @@ type GameResultPopupProps = {
 }
 
 const GameResultPopup = (props: GameResultPopupProps) => {
-  const playData = usePlayData();
+  const {playData, global} = useSelector((state: AppState) => state);
+  const {language: lan} = global;
+  const translation = TranslationPack[lan].screens.MultiPlay;
   const navigation = useNavigation();
   const titleRefBox = React.createRef<NativeRefBox>();
   const socket = useMultiGameSocket();
@@ -122,7 +127,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
           }}
         >
           <NotoSans size={14} type="Bold" color="tomato">
-            상대방이 나갔습니다.
+            {translation.opponentLeft}
           </NotoSans>
         </RoundPaddingCenter>
       )
@@ -315,6 +320,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
           color={resultStyle.me.text}
           iconBackground={resultStyle.me.iconBackground}
           modifier={`(YOU)${resultStyle.me.modifier}`}
+          lan={lan}
         />
         <Space height={5}/>
         <MultiGameResult
@@ -324,19 +330,20 @@ const GameResultPopup = (props: GameResultPopupProps) => {
           color={resultStyle.opponent.text}
           iconBackground={resultStyle.opponent.iconBackground}
           modifier={`(OPPONENT)${resultStyle.opponent.modifier}`}
+          lan={lan}
         />
         <Space height={10}/>
         <FlexHorizontal>
           <TouchableOpacity onPress={onHomePressed}>
             <ButtonShape>
-              <NotoSans type="Bold" size={buttonFontSize}>홈</NotoSans>
+              <NotoSans type="Bold" size={buttonFontSize}>{translation.home}</NotoSans>
             </ButtonShape>
           </TouchableOpacity>
           <Space width={10}/>
           <View style={{flex:1}}>
             <TouchableOpacity style={{width: "100%"}} onPress={onRematchPressed}>
               <ButtonShape>
-                <NotoSans type="Bold" size={buttonFontSize}>재대결</NotoSans>
+                <NotoSans type="Bold" size={buttonFontSize}>{translation.rematch}</NotoSans>
               </ButtonShape>
             </TouchableOpacity>
           </View>
@@ -344,7 +351,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
         <Space height={10} />
         <TouchableOpacity onPress={onAnotherMatchPressed}>
           <ButtonShape>
-            <NotoSans type="Bold" size={buttonFontSize}>한판 더 하기</NotoSans>
+            <NotoSans type="Bold" size={buttonFontSize}>{translation.anotherMatch}</NotoSans>
           </ButtonShape>
         </TouchableOpacity>
       </RoundPaddingCenter>

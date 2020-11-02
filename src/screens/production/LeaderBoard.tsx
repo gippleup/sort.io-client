@@ -12,7 +12,9 @@ import NativeRefBox from '../../components/NativeRefBox';
 import RankViewer, { RankViewerDataEntry, RankViewerData } from '../../components/RankViewer';
 import SlideSelector from '../../components/SlideSelector';
 import StrokedText from '../../components/StrokedText';
+import useGlobal from '../../hooks/useGlobal';
 import usePlayData from '../../hooks/usePlayData';
+import TranslationPack from '../../Language/translation';
 import RankBoard from './LeaderBoard/RankBoard';
 
 const backgroundImage = require('../../assets/BackgroundPattern.png');
@@ -37,7 +39,8 @@ const GoBack: typeof NotoSans = styled(NotoSans)`
 
 const LeaderBoard = () => {
   const navigation = useNavigation();
-  
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.LeaderBoard;
   const touchStartX = React.useRef<null | number>(null);
   const touchEndX = React.useRef<null | number>(null);
   const prevOffsetX = React.useRef(0);
@@ -155,8 +158,8 @@ const LeaderBoard = () => {
               height={50}
               strokeColor="white"
               strokeWidth={3}
-              text="싱글게임"
-              width={200}
+              text={translation.singlePlay}
+              width={Dimensions.get('window').width - 50}
             />
           </View>
           <Space height={10} />
@@ -174,8 +177,8 @@ const LeaderBoard = () => {
               height={50}
               strokeColor="white"
               strokeWidth={3}
-              text="멀티게임"
-              width={200}
+              text={translation.multiPlay}
+              width={Dimensions.get('window').width - 50}
             />
           </View>
           <Space height={10} />
@@ -187,7 +190,7 @@ const LeaderBoard = () => {
       <Space height={20} />
       <TouchableOpacity onPress={goback}>
         <GoBack size={20} color="slateblue" type="Black">
-          메인으로
+          {translation.goToMain}
         </GoBack>
       </TouchableOpacity>
     </WindowSizeView>

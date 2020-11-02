@@ -9,6 +9,8 @@ import { BlockTypes } from '../../../components/Block/Types'
 import PatternBackground from '../../../components/GameScene/PatternBackground'
 import { NotoSans, RoundPaddingCenter, Space } from '../../../components/Generic/StyledComponents'
 import RefBlockBoard from '../../../components/NativeRefBlockBoard'
+import useGlobal from '../../../hooks/useGlobal'
+import TranslationPack from '../../../Language/translation'
 import { RootStackParamList } from '../../../router/routes'
 
 
@@ -40,6 +42,8 @@ const defaultParam: SkinPreviewPopupParams = {
 const SkinPreviewPopup = (props: SkinPreviewPopupProps) => {
   const { params = defaultParam } = props.route;
   const { skin } = params;
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.Shop;
   const navigation = useNavigation();
   const onPressClose = () => {
     navigation.dispatch((state) => {
@@ -79,7 +83,7 @@ const SkinPreviewPopup = (props: SkinPreviewPopupProps) => {
       <TouchableOpacity onPress={onPressClose}>
         <RoundPaddingCenter>
           <NotoSans size={20} type="Black">
-            돌아가기
+            {translation.goBack}
           </NotoSans>
         </RoundPaddingCenter>
       </TouchableOpacity>

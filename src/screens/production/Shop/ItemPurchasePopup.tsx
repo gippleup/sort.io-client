@@ -83,7 +83,8 @@ type ItemPurchasePopupProps = {
 const ItemPurchasePopup = (props: ItemPurchasePopupProps) => {
   const {global, items, playData} = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
-  const {language} = global;
+  const {language: lan} = global;
+  const translation = TranslationPack[lan].screens.Shop;
   const navigation = useNavigation();
   const {
     category,
@@ -151,7 +152,7 @@ const ItemPurchasePopup = (props: ItemPurchasePopupProps) => {
   }
 
   const MainButton = () => {
-    const text = hasOwned ? "적용하기" : "구매하기"
+    const text = hasOwned ? translation.equip : translation.purchase;
     return (
       <TouchableOpacity onPress={onPressMainButton}>
         <RoundPaddingCenter style={{borderWidth: 3}}>
@@ -168,7 +169,7 @@ const ItemPurchasePopup = (props: ItemPurchasePopupProps) => {
       <TouchableOpacity onPress={onPressClose} >
         <RoundPaddingCenter style={{backgroundColor: 'grey', borderWidth: 3}}>
           <NotoSans size={20} type="Bold">
-            닫기
+            {translation.close}
           </NotoSans>
         </RoundPaddingCenter>
       </TouchableOpacity>
@@ -187,7 +188,7 @@ const ItemPurchasePopup = (props: ItemPurchasePopupProps) => {
         </ProfileContainer>
         <FlexHorizontal>
           <SubTitle size={20} type="Black">
-            가격
+            {translation.price}
           </SubTitle>
           <Space width={10} />
           <PriceTag value={price} />

@@ -6,6 +6,8 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { getInterstial, getRewarded } from '../api/admob'
 import { getIcon } from '../api/icon'
+import useGlobal from '../hooks/useGlobal'
+import TranslationPack from '../Language/translation'
 import { depositGold } from '../redux/actions/playData/thunk'
 import DynamicText from './DynamicText'
 import { FlexHorizontal, Space } from './Generic/StyledComponents'
@@ -37,9 +39,8 @@ const MoneyIconContainer: typeof View = styled(View)`
 const RewardButton = (props: RewardButtonProps) => {
   const {disappearOnFulfilled, chance = 1} = props;
   const hasGoodLuck = testLuck(chance);
-
-  if (!hasGoodLuck) return <RewardGuide/>;
-
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.SelectStage;
   const [display, setDisplay] = React.useState<"flex" | "none" | undefined>("flex");
   const dispatch = useDispatch();
   const interstitialRef = React.useRef<FirebaseAdMobTypes.InterstitialAd | null>(null);
@@ -48,7 +49,7 @@ const RewardButton = (props: RewardButtonProps) => {
   const [_, reset] = React.useState(false);
 
   const setText = (text: string | number) => {
-    textRef.current?.setText(String(text) + " 골드 얻기");
+    textRef.current?.setText(String(text) + translation.getGold);
   }
 
   const setupAd = (adType: "rewarded" | "interstitial", fallback?: Function) => {
@@ -115,7 +116,7 @@ const RewardButton = (props: RewardButtonProps) => {
 
     const readyInterstitial = () => {
       deleteInterstital = setupAd("interstitial", () => {
-        textRef.current?.setText("광고를 불러올 수 없습니다.");
+        textRef.current?.setText(translation.cantLoadAd);
       });
     }
 
@@ -128,6 +129,8 @@ const RewardButton = (props: RewardButtonProps) => {
       if (deleteRewarded) deleteRewarded();
     }
   })
+
+  if (!hasGoodLuck) return <RewardGuide/>;
 
   if (display === "none") {
     return <></>;
@@ -156,7 +159,7 @@ const RewardButton = (props: RewardButtonProps) => {
                   />
                 </View>
               )
-            }} initialValue={"광고 로딩중"}/>
+            }} initialValue={translation.loadingAd}/>
           </FlexHorizontal>
       </TouchableOpacity>
     </FlexHorizontal>

@@ -15,6 +15,7 @@ import Svg, { Defs, Ellipse, RadialGradient, Rect, Stop, StopProps } from 'react
 import MaskedView from '@react-native-community/masked-view'
 import chroma from 'chroma-js'
 import useGlobal from '../../../hooks/useGlobal'
+import TranslationPack from '../../../Language/translation'
 
 type MultiWaitingPopupNavigationProps = StackNavigationProp<RootStackParamList, "Popup_MultiWaiting">;
 type MultiWaitingPopupRouteProps = RouteProp<RootStackParamList, "Popup_MultiWaiting">;
@@ -31,16 +32,15 @@ const blockRemoveStack = (e: BeforeRemoveEvent) => {
 };
 
 const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
-  let foundMatch = false;
-  let text = '상대를 찾고 있습니다';
-  let interval: null | NodeJS.Timer = null;
   const global = useGlobal();
   const loadingTextRef = React.createRef<Text>();
   const modalRef = React.createRef<NativeRefBox>();
   const loadingTextContainerRef = React.createRef<NativeRefBox>();
   const socket = useMultiGameSocket();
   const playdata = usePlayData();
+  const {language: lan} = global;
   const roomData = React.useRef<OnSendRoomParam | null>(null);
+  const translation = TranslationPack[lan].screens.Main;
   const stopColorAnimation = new Animated.Value(0);
   const animContainerRef = React.createRef<NativeRefBox>();
   const innerStopOffset = stopColorAnimation.interpolate({
@@ -51,6 +51,10 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
     inputRange: [0, 1],
     outputRange: [0.2, 1],
   });
+
+  let foundMatch = false;
+  let text = translation.searchingOpponent;
+  let interval: null | NodeJS.Timer = null;
 
   const closeSocket = () => {
     socket.close();
@@ -72,7 +76,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
       clearInterval(interval);
     }
 
-    setRefText("곧 시작합니다!");
+    setRefText(`${foundMatch}!`);
 
     Animated.timing(stopColorAnimation, {
       toValue: 1,
@@ -113,10 +117,10 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
 
   const updateLoadingText = () => {
     if (foundMatch) return;
-    if (text !== '상대를 찾고 있습니다...') {
+    if (text !== `${translation.searchingOpponent}...`) {
       text += '.';
     } else {
-      text = '상대를 찾고 있습니다';
+      text = translation.searchingOpponent;
     }
     setRefText(text);
   }
@@ -138,7 +142,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
 
     const loadListener = socket.addListener("onSendRoom", (option: OnSendRoomParam) => {
       foundMatch = true;
-      setRefText("! 상대를 찾았습니다 !");
+      setRefText(`! ${translation.foundMatch} !`);
       roomData.current = option;
       BackHandler.removeEventListener("hardwareBackPress", closeSocket);
       props.navigation.addListener("beforeRemove", blockRemoveStack);

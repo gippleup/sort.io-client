@@ -3,6 +3,8 @@ import { View } from 'react-native'
 import {Svg, Path, Rect, G, Line, Defs, LinearGradient, Stop, Text, Circle} from 'react-native-svg';
 import * as d3 from 'd3';
 import { NotoSans } from './Generic/StyledComponents';
+import useGlobal from '../hooks/useGlobal';
+import TranslationPack from '../Language/translation';
 
 type GraphProps = {
   data: any[];
@@ -29,10 +31,12 @@ const lineGenerator = (data: [number, number][]): string => {
 const Graph = (props: GraphProps) => {
   const {data, xExtractor, yExtractor, width, xAxisMapper, yAxisMapper} = props;
   const height = (220 / 300) * width;
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.SelectStage;
   const points: [number, number][] = data
     .map((entry, i) => [xExtractor(entry, i) * 50, yExtractor(entry, i) * 50]);
   if (data.length < 2) return (
-    <NotoSans type="Black">데이터가 부족합니다.</NotoSans>
+    <NotoSans type="Black">{translation.notEnoughData}</NotoSans>
   );
   const yMax = points.map((entry) => entry[1]).reduce((acc, ele) => acc < ele ? ele : acc);
   const yMin = points.map((entry) => entry[1]).reduce((acc, ele) => acc < ele ? acc : ele);

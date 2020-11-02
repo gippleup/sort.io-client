@@ -15,6 +15,9 @@ import RematchStatusPlayerAnimation from './RematchWaitingPopup/RematchStatusAni
 import { set } from 'd3'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import chroma from 'chroma-js'
+import { useSelector } from 'react-redux'
+import { AppState } from '../../../redux/store'
+import TranslationPack from '../../../Language/translation'
 
 type RematchWaitingPopupRouteProps = RouteProp<RootStackParamList, "Popup_RematchWaiting">
 
@@ -41,7 +44,6 @@ const Button: React.FC<ButtonProps & TouchableOpacityProps> = (props) => (
       style={{
         backgroundColor: props.backgroundColor,
         borderWidth: 3,
-        width: 80,
         alignItems: 'center',
         borderColor: chroma(props.backgroundColor)
           .set('hsl.l', chroma(props.backgroundColor).get('hsl.l') - 0.2)
@@ -56,7 +58,9 @@ const Button: React.FC<ButtonProps & TouchableOpacityProps> = (props) => (
 const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
   const socket = useMultiGameSocket();
   const {players, roomId} = socket.getRoomData();
-  const playData = usePlayData();
+  const {playData, global} = useSelector((state: AppState) => state);
+  const {language: lan} = global;
+  const translation = TranslationPack[lan].screens.MultiPlay;
   const userId = playData.user.id as number;
   const opponent = players.filter((player) => player.id !== userId)[0];
   const animationRef = React.createRef<RematchStatusAnimation>();
@@ -114,7 +118,7 @@ const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
       animate("player", "agreeRematch");
       addMessage({
         ownerId: userId,
-        text: `${playData.user.name}이(가) 재대결을 수락했다!`
+        text: `${translation.acceptRematchText(playData.user.name)}`
       });
     }
 
@@ -127,14 +131,14 @@ const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
         <>
           <Button
             backgroundColor="dodgerblue"
-            text="수락"
+            text={translation.accept}
             color="white"
             onPress={onAcceptPressed}
           />
           <Space width={10} />
           <Button
             backgroundColor="bisque"
-            text="거절"
+            text={translation.decline}
             onPress={props.navigation.goBack}
           />
         </>
@@ -145,7 +149,7 @@ const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
           <Button
             backgroundColor="slategrey"
             color="white"
-            text="취소"
+            text={translation.cancel}
             onPress={props.navigation.goBack}
           />
         </>
@@ -159,7 +163,7 @@ const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
         animate("opponent", "disagreeRematch");
         addMessage({
           ownerId: opponent.id,
-          text: `${opponent.name}이(가) 재대결 요청을 철회했다!`
+          text: `${translation.cancelRematchText(opponent.name)}`
         })
         if (!closedPopup) {
           closedPopup = true;
@@ -174,7 +178,7 @@ const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
         animate("opponent", "disagreeRematch");
         addMessage({
           ownerId: opponent.id,
-          text: `${opponent.name}이(가) 재대결을 거부했다!`
+          text: `${translation.declineRematchText(opponent.name)}`
         })
         if (!closedPopup) {
           closedPopup = true;
@@ -189,7 +193,7 @@ const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
         animate("opponent", "agreeRematch");
         addMessage({
           ownerId: opponent.id,
-          text: `${opponent.name}이(가) 재대결을 수락했다!`
+          text: `${translation.acceptRematchText(opponent.name)}`
         })
       })
 
@@ -202,7 +206,7 @@ const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
 
         addMessage({
           ownerId: -1,
-          text: '새로운 블록 맵을 만들고 있습니다'
+          text: translation.buildingBlockMap
         })
       })
 
@@ -210,7 +214,7 @@ const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
       .addListener("onInformPrepareRematch", () => {
         addMessage({
           ownerId: -1,
-          text: `재대결이 곧 시작됩니다!`
+          text: translation.rematchStartSoon,
         })
         setTimeout(() => {
           if (!beenInformedToPrepare) {
@@ -252,7 +256,7 @@ const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
             animate("player", "disagreeRematch");
             addMessage({
               ownerId: userId,
-              text: `${playData.user.name}이(가) 재대결 요청을 철회했다!`
+              text: `${translation.cancelRematchText(playData.user.name)}`
             });
             if (!closedPopup) {
               closedPopup = true;
@@ -268,7 +272,7 @@ const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
             animate("player", "disagreeRematch");
             addMessage({
               ownerId: userId,
-              text: `${playData.user.name}이(가) 재대결을 거부했다!`
+              text: `${translation.declineRematchText(playData.user.name)}`
             });
             if (!closedPopup) {
               closedPopup = true;
@@ -285,14 +289,14 @@ const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
       setUserAnim().player.think();
       addMessage({
         ownerId: opponent.id,
-        text: `${opponent.name}은(는) 재대결을 요청했다!`
+        text: `${translation.requestRematchText(opponent.name)}`
       });
     } else {
       animate("player", "askRematch");
       setUserAnim().opponent.think();
       addMessage({
         ownerId: userId,
-        text: `${playData.user.name}은(는) 재대결을 요청했다!`
+        text: `${translation.requestRematchText(playData.user.name)}`
       });
     }
 

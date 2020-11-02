@@ -1,6 +1,8 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import styled from 'styled-components'
+import useGlobal from '../../hooks/useGlobal';
+import TranslationPack from '../../Language/translation';
 import { NotoSans } from '../Generic/StyledComponents'
 
 const TextContainer: typeof View = styled(View)`
@@ -12,11 +14,13 @@ const TextContainer: typeof View = styled(View)`
 `;
 
 const RewardGuide = () => {
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.SelectStage;
   return (
     <View style={{flexDirection: 'row', justifyContent: 'center'}}>
       <TextContainer>
         <NotoSans color="white" type="Thin">
-          10% 확률로 광고가 나타납니다.
+          {translation.adAdvert}
         </NotoSans>
       </TextContainer>
     </View>

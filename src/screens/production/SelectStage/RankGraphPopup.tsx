@@ -7,6 +7,8 @@ import styled from 'styled-components'
 import BasicPopup from '../../../components/Generic/BasicPopup'
 import { NotoSans } from '../../../components/Generic/StyledComponents'
 import { useNavigation } from '@react-navigation/native'
+import useGlobal from '../../../hooks/useGlobal'
+import TranslationPack from '../../../Language/translation'
 
 const GraphContainer = styled(View)`
   padding-bottom: 5px;
@@ -15,6 +17,8 @@ const GraphContainer = styled(View)`
 `;
 
 const RankGraphPopup = () => {
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.SelectStage;
   const [data, setData] = React.useState<SinglePlayData[] | null>(null);
   const navigation = useNavigation();
   if (!data) {
@@ -28,7 +32,7 @@ const RankGraphPopup = () => {
   const renderGraph = () => {
     if (!data) {
       return (
-        <NotoSans type="Black">데이터 로딩중...</NotoSans>
+        <NotoSans type="Black">{translation.loadingData}...</NotoSans>
       );
     } else {
       return (
@@ -46,8 +50,8 @@ const RankGraphPopup = () => {
   return (
     <BasicPopup
       buttonAlign="vertical"
-      buttons={[{text: '닫기', onPress: navigation.goBack}]}
-      title="랭크 변화 추이">
+      buttons={[{text: translation.close, onPress: navigation.goBack}]}
+      title={translation.rankChangeProgess}>
       <GraphContainer>
         {renderGraph()}
       </GraphContainer>

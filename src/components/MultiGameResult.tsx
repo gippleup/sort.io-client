@@ -2,6 +2,8 @@ import React from 'react'
 import { View, Text, ViewStyle } from 'react-native'
 import styled from 'styled-components'
 import { getMultiPlayRank } from '../api/sortio'
+import TranslationPack from '../Language/translation'
+import { SupportedLanguage } from '../redux/actions/global/types'
 import { prettyPercent } from './EndGameInfo/utils'
 import { FlexHorizontal, Line, NotoSans, Space } from './Generic/StyledComponents'
 import { lazify } from './Generic/utils'
@@ -30,10 +32,21 @@ type MultiGameResultProps = {
   color?: string;
   iconBackground?: string;
   modifier?: string;
+  lan?: SupportedLanguage;
 }
 
 const MultiGameResult = (props: MultiGameResultProps) => {
-  const {userId, isMine, style, infoContainerStyle, color, iconBackground, modifier} = props;
+  const {
+    userId,
+    isMine,
+    style,
+    infoContainerStyle,
+    color,
+    iconBackground,
+    modifier,
+    lan = SupportedLanguage.en,
+  } = props;
+  const translation = TranslationPack[lan].screens.MultiPlay;
   const Result = lazify(new Promise(async (resolve) => {
     const rankData = await getMultiPlayRank(userId, 0);
     const {
@@ -66,27 +79,25 @@ const MultiGameResult = (props: MultiGameResultProps) => {
               <NotoSans size={12} color={color} type="Thin">{modifier}</NotoSans>
             </FlexHorizontal>
             <FlexHorizontal>
-              <NotoSans color={color} size={12} type="Light">{rankData.total}명 중 </NotoSans>
-              <NotoSans color={color} size={12} type="Bold">{rank}위 </NotoSans>
-              <NotoSans color={color} size={12} type="Thin">(상위 {prettyPercent(Number(rate))}%)</NotoSans>
+              <NotoSans color={color} size={12} type="Light">{translation.rankText(Number(rank), rankData.total)}</NotoSans>
+              <NotoSans color={color} size={12} type="Bold"> ({translation.top} {prettyPercent(Number(rate))}%)</NotoSans>
             </FlexHorizontal>
           </View>
         </FlexHorizontal>
         <InfoContainer style={infoContainerStyle}>
           <View>
-            <NotoSans color={color} type="Thin">전적</NotoSans>
+            <NotoSans color={color} type="Thin">{translation.score}</NotoSans>
             <NotoSans color={color} type="Thin">KBI</NotoSans>
           </View>
           <View>
             <FlexHorizontal>
               <Line height="50%" width={0.5} marginHorizontal={5} />
-              <NotoSans color={color} type="Medium">{total}전 </NotoSans>
-              <NotoSans color={color} type="Medium">{win}승 {lose}패 {draw}무 </NotoSans>
-              <NotoSans color={color} type="Thin">(승률: {prettyPercent(Number(winningRate))}%)</NotoSans>
+              <NotoSans color={color} type="Medium">{translation.scoreText(Number(win), Number(lose), Number(draw))} </NotoSans>
+              <NotoSans color={color} type="Thin">({translation.winningRate}: {prettyPercent(Number(winningRate))}%)</NotoSans>
             </FlexHorizontal>
             <FlexHorizontal>
               <Line height="50%" width={0.5} marginHorizontal={5} />
-              <NotoSans color={color} type="Bold">{KBI}점</NotoSans>
+              <NotoSans color={color} type="Bold">{KBI} {translation.point}</NotoSans>
             </FlexHorizontal>
           </View>
         </InfoContainer>

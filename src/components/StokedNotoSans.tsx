@@ -1,5 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
+import useGlobal from '../hooks/useGlobal'
+import { SupportedLanguage } from '../redux/actions/global/types'
 import { FlexHorizontal } from './Generic/StyledComponents'
 import StrokedText from './StrokedText'
 
@@ -18,11 +20,14 @@ type StrokedNotoSansProps = {
 const StrokedNotoSans = (props: StrokedNotoSansProps) => {
   const {text, size = 30} = props;
   const rows = text.split("\n");
+  const {language: lan} = useGlobal();
   const lengthMap = rows.map((row) => {
+    const charRatio = lan === SupportedLanguage.ko ? 72/100 : 44/100;
+    const spaceRatio = lan === SupportedLanguage.ko ? 28/100 : 28/100;
     const characters = row.split("");
     const characterCount = characters.filter((char) => char !== " ").length;
     const spaceCount = characters.filter((char) => char !== " ").length;
-    const expectedWidth = characterCount * (size * 72/100) + spaceCount * (size * 28/100);
+    const expectedWidth = characterCount * (size * charRatio) + spaceCount * (size * spaceRatio);
     return expectedWidth;
   });
 

@@ -11,6 +11,8 @@ import { prettyTime } from './utils';
 import { getLevelString } from '../GameScreen/utils';
 import { prettyPercent } from '../../../components/EndGameInfo/utils';
 import Profile from '../../../components/Profile';
+import useGlobal from '../../../hooks/useGlobal';
+import TranslationPack from '../../../Language/translation';
 
 const RecordContainer: typeof View = styled(View)`
   width: ${Dimensions.get('window').width - 60}px;
@@ -34,15 +36,17 @@ const SinglePlayRankPopup = () => {
   const playData = usePlayData();
   const [data, setData] = React.useState<UserSingleRankData | null>(null);
   const navigation = useNavigation();
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.SelectStage;
 
   const Content = () => {
     if (!playData.user.id) {
       return (
-        <NotoSans type="Black">인터넷 연결 상태를 확인해주세요.</NotoSans>
+        <NotoSans type="Black">{translation.checkConnection}</NotoSans>
       )
     } else if (!data) {
       return (
-        <NotoSans type="Black">플레이 데이터가 없습니다.</NotoSans>
+        <NotoSans type="Black">{translation.noPlayData}</NotoSans>
       )
     } else {
       const {
@@ -55,21 +59,21 @@ const SinglePlayRankPopup = () => {
         id,
       } = data;
       const time = createdAt ? prettyTime(createdAt, "$YYYY.$MM.$DD($dd) $hh:$mm", {
-        "0": "일",
-        "1": "월",
-        "2": "화",
-        "3": "수",
-        "4": "목",
-        "5": "금",
-        "6": "토",
-      }) : "흠, 기록이 없군요?";
+        "0": translation.weekDay[0],
+        "1": translation.weekDay[1],
+        "2": translation.weekDay[2],
+        "3": translation.weekDay[3],
+        "4": translation.weekDay[4],
+        "5": translation.weekDay[5],
+        "6": translation.weekDay[6],
+      }) : translation.noData;
 
       const percentage = Number(rate);
 
       return (
         <RecordContainer>
           <FlexHorizontal>
-            <NotoSans size={12} type="Bold">최근 업데이트 날짜</NotoSans>
+            <NotoSans size={12} type="Bold">{translation.recentUpdate}</NotoSans>
             <Line height="90%" marginHorizontal={10} width={0.5} color="black" />
             <NotoSans size={12} type="Regular">{time}</NotoSans>
           </FlexHorizontal>
@@ -85,29 +89,29 @@ const SinglePlayRankPopup = () => {
             </ProfileBox>
             <Space width={10} />
             <View style={{flex: 1}}>
-              <NotoSans type="Bold">이름</NotoSans>
+              <NotoSans type="Bold">{translation.name}</NotoSans>
               <Line width="100%" height={1} color="black" />
               <NotoSans size={25} type="Thin">{name}</NotoSans>
             </View>
           </FlexHorizontal>
           <Space height={10} />
           <View>
-            <NotoSans type="Bold">최종 클리어 난이도</NotoSans>
+            <NotoSans type="Bold">{translation.lastClearDifficulty}</NotoSans>
             <Line width="100%" height={1} color="black" />
             <NotoSans size={30} type="Thin">{getLevelString(difficulty)}</NotoSans>
           </View>
           <Space height={10} />
           <View>
-            <NotoSans type="Bold">순위</NotoSans>
+            <NotoSans type="Bold">{translation.rank}</NotoSans>
             <Line width="100%" height={1} color="black" />
             <FlexHorizontal>
-              <NotoSans size={30} type="Thin">앞에서 </NotoSans>
-              <NotoSans size={30} type="Black">{rank}위</NotoSans>
+              <NotoSans size={30} type="Thin">{translation.top} </NotoSans>
+              <NotoSans size={30} type="Black">{translation.rankText(Number(rank))}</NotoSans>
             </FlexHorizontal>
           </View>
           <Space height={10} />
           <View>
-            <NotoSans type="Bold">백분위</NotoSans>
+            <NotoSans type="Bold">{translation.percentile}</NotoSans>
             <Line width="100%" height={1} color="black" />
             <NotoSans size={30} type="Black">{prettyPercent(percentage)}%</NotoSans>
           </View>
@@ -137,7 +141,7 @@ const SinglePlayRankPopup = () => {
     <View style={{flex: 1}}>
       <BasicPopup
         backgroundColor="white"
-        title="싱글 플레이 성적"
+        title={translation.singlePlayPerformance}
         buttons={buttons}
       >
         <Content/>

@@ -2,104 +2,104 @@ import { ExpressionTranslation } from "../translation";
 
 const expression: ExpressionTranslation = {
   dislike: {
-    title: '싫어요',
-    description: ''
+    title: "Dislike",
+    description: "Does opponent act annoyingly? Let opponent know they have attitude problem"
     },
   frowno: {
-    title: '으엑',
-    description: '',
+    title: "Frown",
+    description: "Do you want to cry? Nono, Don't cry. I will permit to frown, at most",
   },
   grinBeamSweat: {
-    title: '',
-    description: '',
+    title: "Too bad",
+    description: "Use it when you are literally pressing opponent, opponent will be very delightful",
   },
   grinSquint: {
-    title: '',
-    description: '',
+    title: "Hell-Yeah",
+    description: "Do you feel you're winning? Use this, then our upset opponent will make a mistake",
   },
   grinSquitTears: {
-    title: '',
-    description: '',
+    title: "LOL",
+    description: "Use it when you notice opponent's mistake, your chance of winning will be a bit increased thanks to upset opponent",
   },
   grinTears: {
-    title: '',
-    description: '',
+    title: "Kkya-ha-ha",
+    description: "Use it before finishing your move, It can increase your winning rate because upset opponent may want to request rematch. Easy Winning, Alright?",
   },
   grinTongueSquint: {
-    title: '',
-    description: '',
+    title: "Meh",
+    description: "Did you almost finished your move? Use this and exit roomt as soon as the game is over. Ahh.. katharsis",
   },
   grinWink: {
-    title: '',
-    description: '',
+    title: "Wink",
+    description: "Use it whenever you finish a line of block. Opponent maybe get warm-hearted more and more",
   },
   hand: {
-    title: '',
-    description: '',
+    title: "Hi!",
+    description: "Start game with light heart",
   },
   handPeace: {
-    title: '',
-    description: '',
+    title: "Victory!",
+    description: "Let the opponent know that they are defeated",
   },
   handShake: {
-    title: '',
-    description: '',
+    title: "Good match!",
+    description: "Let the opponent know that you liked the match",
   },
   heart: {
-    title: '',
-    description: '',
+    title: "Heart",
+    description: "Do you like the opponent? Send this",
   },
   heartBroken: {
-    title: '',
-    description: '',
+    title: "Broken Heart",
+    description: "'I DONT LIKE THIS'",
   },
   hourglassHalf: {
-    title: '',
-    description: '',
+    title: "Hey, time's up!",
+    description: "When there's not much time, send this, lol. I can hear someone's sweating",
   },
   like: {
-    title: '',
-    description: '',
+    title: "Like",
+    description: "This is very useful expression, which suit for many cases, like you won easily or you want to show repect to opponent",
   },
   meh: {
-    title: '',
-    description: '',
+    title: "...",
+    description: "If you find that opponent is really not good, send this. You can make their day gloomy",
   },
   neutral: {
-    title: '',
-    description: '',
+    title: "Hmm",
+    description: "Hmm...",
   },
   question: {
-    title: '',
-    description: '',
+    title: "Question Mark",
+    description: "Do you have anything curious? Use this expression.",
   },
   redo: {
-    title: '',
-    description: '',
+    title: "Do it again!",
+    description: "It will be useful to express your will to rematch",
   },
   sad: {
-    title: '',
-    description: '',
+    title: "Frownnnn..",
+    description: "Don't cry, frown.",
   },
   smile: {
-    title: '',
-    description: '',
+    title: ":)",
+    description: "Let's smile brightly",
   },
   smileo: {
-    title: '',
-    description: '',
+    title: "Smile",
+    description: "Smile",
   },
   tired: {
-    title: '',
-    description: '',
+    title: "Tired!",
+    description: "Do you think it was tough? Use this expression",
   },
   trophy: {
-    title: '',
-    description: '',
+    title: "Trophy",
+    description: "You can inform your winning in a cool manner. Raise your trophy!",
   },
   wink: {
-    title: '',
-    description: '',
+    title: "^_=",
+    description: "Wink",
   },
 };
 

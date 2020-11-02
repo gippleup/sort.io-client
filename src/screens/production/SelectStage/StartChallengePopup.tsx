@@ -7,11 +7,14 @@ import { SubTitleText, NotoSans, Space } from '../../../components/Generic/Style
 import { useNavigation } from '@react-navigation/native';
 import usePlayData from '../../../hooks/usePlayData';
 import { useTicket } from '../../../redux/actions/playData/thunk';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppState } from '../../../redux/store';
+import TranslationPack from '../../../Language/translation';
 
 const StartChallengePopup = () => {
   const navigation = useNavigation();
-  const playData = usePlayData();
+  const {playData, global} = useSelector((state: AppState) => state);
+  const translation = TranslationPack[global.language].screens.SelectStage;
   const {singlePlay=[]} = playData;
   const dispatch = useDispatch();
   const lastSinglePlayData = singlePlay[singlePlay.length - 1];
@@ -39,19 +42,19 @@ const StartChallengePopup = () => {
 
   return (
     <BasicPopup
-      title="챌린지"
+      title={translation.challenge}
       content={(
         <AskPopupContentContainer>
-          <SubTitleText>도전할 랭크: {lastSinglePlayData ? diffToChallengeStr : getLevelString(0)}</SubTitleText>
-          <NotoSans type="Light">티켓을 하나 소모하여 더 높은 난이도에 도전합니다.</NotoSans>
+          <SubTitleText>{translation.rankToChallenge}: {lastSinglePlayData ? diffToChallengeStr : getLevelString(0)}</SubTitleText>
+          <NotoSans type="Light">{translation.challengeDes}</NotoSans>
           <Space height={10}/>
           <View>
-            <NotoSans size={16} style={{color: 'orange'}} type="Bold">챌린지모드 보상</NotoSans>
-            <NotoSans style={{color: 'tomato'}} type="Regular">: 10골드 + 10골드 * (0 + ...연승횟수) * 2</NotoSans>
-            <NotoSans size={13} type="Light">예) 1승: 10골드 + 10골드(0 + 1) * 2 = 30골드</NotoSans>
-            <NotoSans size={13} type="Light">예) 2연승: 10골드 + 10골드(0 + 1 + 2) * 2 = 70골드</NotoSans>
-            <NotoSans size={13} type="Light">예) 3연승: 10골드 + 10골드(0 + 1 + 2 + 3) * 2 = 130골드</NotoSans>
-            <NotoSans size={15} type="Black">{'\n'}3연승 시 획득 골드 총합: 230골드</NotoSans>
+            <NotoSans size={16} style={{color: 'orange'}} type="Bold">{translation.challengeReward}</NotoSans>
+            <NotoSans style={{color: 'tomato'}} type="Regular">{translation.challengeRewardDes}</NotoSans>
+            <NotoSans size={13} type="Light">{translation.challengeRewardEx1}</NotoSans>
+            <NotoSans size={13} type="Light">{translation.challengeRewardEx2}</NotoSans>
+            <NotoSans size={13} type="Light">{translation.challengeRewardEx3}</NotoSans>
+            <NotoSans size={15} type="Black">{'\n'}{translation.rewardTotal}</NotoSans>
           </View>
         </AskPopupContentContainer>
       )}

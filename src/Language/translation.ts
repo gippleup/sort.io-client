@@ -1,6 +1,7 @@
 import { SupportedSkin } from "../components/Block/skinMap";
 import expressions from "../components/Profile/Expressions";
 import { SupportedLanguage } from "../redux/actions/global/types";
+import ScreenTranslation from "./ko/screens";
 
 export type CategoryTranslation = {
   all: string;
@@ -27,6 +28,7 @@ export type Translation = {
   category: CategoryTranslation;
   skin: SkinTranslation;
   expression: ExpressionTranslation;
+  screens: typeof ScreenTranslation;
 }
 
 const TranslationPack: {[T in SupportedLanguage]: Translation} = {

@@ -76,7 +76,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
       clearInterval(interval);
     }
 
-    setRefText(`${foundMatch}!`);
+    setRefText(`${translation.matchSoonStart}!`);
 
     Animated.timing(stopColorAnimation, {
       toValue: 1,

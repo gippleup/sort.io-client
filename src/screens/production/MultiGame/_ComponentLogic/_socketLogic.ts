@@ -103,17 +103,34 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
     }))
   }
 
+  // const closeListner = socket.addListener("onClose",
+  //   () => {
+  //     console.log("여기가 맞나")
+  //   }
+  // )
 
   const errorListener = socket.addListener("onError",
     (err: WebSocketErrorEvent) => {
-      goToMain();
+      navigation.dispatch((state) => {
+        const routes = state.routes
+          .filter((route) => route.name === "Main")
+          .concat({
+            key: "BadConnection" + Date.now(),
+            name: "Popup_BadConnection",
+          });
+        return CommonActions.reset({
+          ...state,
+          routes,
+          index: routes.length - 1,
+        })
+      })
       socket.close();
     })
 
   const informOpponentHasLeftListener = socket.addListener("onInformOpponentHasLeft",
-    () => {
+    (passedGoodTime: boolean) => {
+      removeOpponentWaitingPopup();
       props.navigation.dispatch((state) => {
-        removeOpponentWaitingPopup();
         const routes: typeof state.routes = state.routes
           .filter((route) => {
             const routesToStay = ["Main", "MultiGame"]
@@ -127,7 +144,7 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
             key: "Popup_GameResult" + Date.now(),
             name: "Popup_GameResult",
             params: {
-              result: 'draw',
+              result: passedGoodTime ? "win" : "draw",
               opponentHasLeft: true,
             }
           }]);
@@ -154,7 +171,6 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
       }
     })
 
-  console.log(socket.id);
   const alertPrepareListener = socket.addListener("onAlertPrepare",
     () => {
       removeOpponentWaitingPopup();

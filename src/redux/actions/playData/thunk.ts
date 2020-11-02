@@ -51,9 +51,11 @@ export const loadPlayData: GeneralThunkAction<void> = () => (dispatch, getState)
       if (hasValidData) {
         SortIoAPI.getPlayDataByUserId(data.user.id)
         .then((dataFromServer) => {
-          dispatch(updatePlayData(dataFromServer || data));
-          if (dataFromServer.user.googleId !== undefined) {
-            dispatch(fetchGoogleProfile());
+          if (dataFromServer) {
+            dispatch(updatePlayData(dataFromServer || data));
+            if (dataFromServer.user.googleId !== undefined) {
+              dispatch(fetchGoogleProfile());
+            }
           }
         });
       } else {

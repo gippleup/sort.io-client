@@ -1,7 +1,7 @@
 const translation = {
   waitingOpponent: "상대방을\n기다리고\n있습니다",
   withdrawal: "기권",
-  withdrawalDesc: "지금 종료하면 패배 처리됩니다. 기권하시겠습니까?",
+  withdrawalDesc: "지금 종료하면 패배 처리됩니다.\n기권하시겠습니까?",
   yes: "예",
   no: "아니요",
   opponentLeft: "상대방이 나갔습니다",

@@ -1,14 +1,13 @@
 import React from 'react'
-import { View, Text, Easing, Animated } from 'react-native'
+import { View, Text, Easing, Animated, BackHandler } from 'react-native'
 import styled from 'styled-components'
 import { NotoSans } from '../../../components/Generic/StyledComponents';
 import useGlobal from '../../../hooks/useGlobal';
-import translation from '../../../Language/ko/screens/Main';
 import TranslationPack from '../../../Language/translation';
 
 const Container: typeof View = styled(View)`
   flex: 1;
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgba(0,0,0,0.9);
   align-items: center;
   justify-content: center;
 `;
@@ -31,6 +30,12 @@ const WaitingOpponentPopup = () => {
     inputRange: [0, 1],
     outputRange: [1, 1.5],
   });
+
+  const blockGoBack = () => {
+    return true;
+  }
+
+  BackHandler.addEventListener("hardwareBackPress", blockGoBack);
   
   React.useEffect(() => {
     const scaleAnimation = Animated.sequence([
@@ -48,6 +53,10 @@ const WaitingOpponentPopup = () => {
       }),
     ]);
     Animated.loop(scaleAnimation).start();
+
+    return () => {
+      BackHandler.removeEventListener("hardwareBackPress", blockGoBack);
+    }
   })
 
   return (

@@ -26,6 +26,7 @@ import LeaderBoard from "../screens/production/LeaderBoard";
 import ExitPopup from "../screens/production/Main/ExitPopup";
 import WaitingOpponentPopup from "../screens/production/MultiGame/WaitingOpponentPopup";
 import UpdateScreen from "../screens/UpdateScreen";
+import BadConnectionPopup from "../screens/production/MultiGame/BadConnectionPopup";
 
 export const pdRoutes: Routes<pdParams> = {
   Main: {
@@ -205,6 +206,12 @@ export const pdRoutes: Routes<pdParams> = {
     component: WaitingOpponentPopup,
     options: CommonPopupOption,
   },
+  Popup_BadConnection: {
+    type: "production",
+    devName: "연결 상태가 나쁨",
+    component: BadConnectionPopup,
+    options: CommonPopupOption,
+  },
 }
 
 export type pdParams = {
@@ -235,4 +242,5 @@ export type pdParams = {
   Popup_NotEnoughMoney: undefined;
   Popup_Exit: undefined;
   Popup_WaitingOpponent: undefined;
+  Popup_BadConnection: undefined;
 }

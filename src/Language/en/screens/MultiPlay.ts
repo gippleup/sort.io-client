@@ -3,7 +3,7 @@ import { ScreenTranslation } from "../../translation";
 const translation: ScreenTranslation["MultiPlay"] = {
   waitingOpponent: "Waiting\nOpponent",
   withdrawal: "Withdrawal",
-  withdrawalDesc: "If you exit now, a defeat will be recorded. Do you still want to exit?",
+  withdrawalDesc: "If you exit now,\na defeat will be recorded.\nDo you still want to exit?",
   yes: "Yes",
   no: "No",
   opponentLeft: "Opponent has left",

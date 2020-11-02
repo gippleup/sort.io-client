@@ -1,6 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import { RefObject } from "react";
+import useGlobal from "../../../../hooks/useGlobal";
 import useMultiGameSocket from "../../../../hooks/useMultiGameSocket";
+import TranslationPack from "../../../../Language/translation";
 import { BeforeRemoveEvent } from "../../GameScreen/utils";
 
 type MultiGameNavigationLogicParams = {
@@ -12,6 +14,8 @@ type MultiGameNavigationLogicParams = {
 const multiGameNavigationLogic = (params: MultiGameNavigationLogicParams) => {
   const {gameStarted, navigation, socket} = params;
   const {roomId} = socket.getRoomData();
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.MultiPlay;
   const blockGoBack = (e: BeforeRemoveEvent) => {
     const { payload, type } = e.data.action;
     if (type === "GO_BACK") {
@@ -19,8 +23,8 @@ const multiGameNavigationLogic = (params: MultiGameNavigationLogicParams) => {
       if (gameStarted.current) {
         setTimeout(() => {
           navigation.navigate('Popup_CancelGame', {
-            title: '기권',
-            text: '지금 종료하면 패배 처리됩니다. \n기권하시겠습니까?',
+            title: translation.withdrawal,
+            text: translation.withdrawalDesc,
             mode: "multi",
             roomId,
           });

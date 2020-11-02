@@ -8,6 +8,8 @@ import routes, { RootStackParamList } from '../../../router/routes'
 import useMultiGameSocket from '../../../hooks/useMultiGameSocket'
 import socketClientActions from '../../../hooks/useMultiGameSocket/action/creator'
 import usePlayData from '../../../hooks/usePlayData'
+import useGlobal from '../../../hooks/useGlobal'
+import TranslationPack from '../../../Language/translation'
 
 type CancelGameNavigationProp = StackNavigationProp<RootStackParamList, 'Popup_CancelGame'>
 type CancelGameRouteProp = RouteProp<RootStackParamList, 'Popup_CancelGame'>
@@ -29,6 +31,8 @@ const CancelGamePopup = (props: CancelGameProps) => {
   const navigation = props.navigation;
   const socket = useMultiGameSocket();
   const roomId = socket.getRoomId();
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.MultiPlay;
 
   const sendExitGame = () => {
     if (mode === "multi") {
@@ -60,14 +64,14 @@ const CancelGamePopup = (props: CancelGameProps) => {
 
   const buttons: PopupButton[] = [
     {
-      text: "예",
+      text: translation.yes,
       onPress: exitGame,
       style: {
         backgroundColor: 'pink',
       }
     },
     {
-      text: "아니요",
+      text: translation.no,
       onPress: navigation.goBack,
       style: {
         backgroundColor: 'lightgrey',

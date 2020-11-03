@@ -40,6 +40,7 @@ class ItemBox extends React.PureComponent<ItemBoxProps> {
   constructor(props: Readonly<ItemBoxProps>) {
     super(props);
   }
+  
   render() {
     const {
       category,
@@ -57,8 +58,8 @@ class ItemBox extends React.PureComponent<ItemBoxProps> {
     const translation = TranslationPack[lan].screens.Shop;
 
     const mainButtonText = {
-      hasPurchased: translation.equipped,
-      hasApplied: translation.equip,
+      hasPurchased: translation.equip,
+      hasApplied: translation.equipped,
       notPurchased: translation.purchase,
     }
   

@@ -60,11 +60,11 @@ const GoogleSigninController = () => {
           <GoogleSignInIndicator isSignedIn={isSignedIn} onPress={onPress} size={40} />
         </IconContainer>
         <FlexHorizontal>
-          <NotoSans size={12} type="Thin">
+          <NotoSans color="white" size={12} type="Thin">
             Logged
           </NotoSans>
           <Space width={5} />
-          <NotoSans size={12} type="Medium">
+          <NotoSans color="white" size={12} type="Medium">
             {statusText}
           </NotoSans>
         </FlexHorizontal>

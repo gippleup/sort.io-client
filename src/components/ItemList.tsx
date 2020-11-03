@@ -11,14 +11,25 @@ type ItemListProps = {
   categoryFilter: CategoryFilter;
   style?: ViewStyle;
   lan?: SupportedLanguage;
-  navigation: NavigationProp<RootStackParamList>
+  navigation: NavigationProp<RootStackParamList>;
+  fallback?: JSX.Element;
 }
 
 const ItemList: React.FC<ItemListProps> = (props) => {
-  const { data, categoryFilter, lan = SupportedLanguage.ko, navigation } = props;
+  const {
+    data,
+    categoryFilter,
+    lan = SupportedLanguage.ko,
+    navigation,
+    fallback,
+  } = props;
   const selectedItems = categoryFilter === "all"
   ? data
   : data.filter((item) => item.category === categoryFilter)
+
+  if (!selectedItems.length && fallback) {
+    return fallback;
+  }
 
   return (
     <FlatList

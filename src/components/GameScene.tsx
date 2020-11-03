@@ -238,9 +238,9 @@ class GameScene extends React.Component<GameSceneProps, {}>{
             this.onLayout();
           }}
           onDock={() => {
-            const sound = getSoundEffect(props.playerSkin || "basic").dock;
-            sound.setVolume(0.3);
-            sound.play();
+            // const sound = getSoundEffect(props.playerSkin || "basic").dock;
+            // sound.setVolume(0.3);
+            // sound.play();
           }}
           fps={props.fps}
           noAnimation={props.noAnimation}
@@ -434,9 +434,11 @@ class GameScene extends React.Component<GameSceneProps, {}>{
               if (props.onDock) {
                 props.onDock(stackIndex);
               }
-              const sound = getSoundEffect(props.playerSkin || "basic").dock;
-              sound.setVolume(1);
-              sound.play();
+              setImmediate(() => {
+                const sound = getSoundEffect(props.playerSkin || "basic").dock;
+                sound.setVolume(1);
+                sound.play();                
+              })
               this.hideExpressionWheel();
             }}
             onUndock={(stackIndex) => {

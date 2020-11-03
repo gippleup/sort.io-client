@@ -72,8 +72,12 @@ const soundMap: {
 }
 
 export function getSoundEffect(skinName: SupportedSkin = "basic") {
+  const availableDockSound = Object
+    .values(soundMap[skinName].dock)
+    .filter((sound) => !sound.isPlaying())
+  console.log(availableDockSound.length);
   return {
-    dock: pickRandomFromArray<Sound>(Object.values(soundMap[skinName].dock)),
+    dock: pickRandomFromArray<Sound>(availableDockSound),
     success: {
       1: soundMap.success.first,
       2: soundMap.success.double,

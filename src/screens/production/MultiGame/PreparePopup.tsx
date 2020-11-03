@@ -59,7 +59,7 @@ const PreparePopup = (props: PreparePopupProps) => {
       })
 
     return () => {
-      socket.removeListener(syncPrepareTimerListener);
+      // socket.removeListener(syncPrepareTimerListener);
       navigation.removeListener("beforeRemove", blockGoBack);
     }
   })

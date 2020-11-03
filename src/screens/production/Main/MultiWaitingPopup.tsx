@@ -174,8 +174,8 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
     return () => {
       if (interval !== null) { clearInterval(interval); }
       BackHandler.removeEventListener("hardwareBackPress", closeSocket)
-      socket.removeListener(openListener);
-      socket.removeListener(loadListener);
+      // socket.removeListener(openListener);
+      // socket.removeListener(loadListener);
       // socket.removeListener(closeListener);
       // socket.removeListener(pingListener);
     }

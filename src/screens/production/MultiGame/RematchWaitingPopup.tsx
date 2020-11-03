@@ -288,11 +288,11 @@ const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
     }
 
     return () => {
-      socket.removeListener(cancelRematchAskListener);
-      socket.removeListener(alertRematchDeclinedListener);
-      socket.removeListener(informRematchAcceptedListener);
-      socket.removeListener(sendRoomListener);
-      socket.removeListener(informPrepareRematchListener);
+      // socket.removeListener(cancelRematchAskListener);
+      // socket.removeListener(alertRematchDeclinedListener);
+      // socket.removeListener(informRematchAcceptedListener);
+      // socket.removeListener(sendRoomListener);
+      // socket.removeListener(informPrepareRematchListener);
       unsubscribeBeforeRemove();
     }
   })

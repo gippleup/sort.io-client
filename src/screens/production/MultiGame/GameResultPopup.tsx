@@ -245,10 +245,10 @@ const GameResultPopup = (props: GameResultPopupProps) => {
       })
 
     return () => {
-      socket.removeListener(askRematchListener);
-      socket.removeListener(allowInformRematchRequestListener);
-      socket.removeListener(informOpponentHasLeftListener);
-      socket.removeListener(closeListener);
+      // socket.removeListener(askRematchListener);
+      // socket.removeListener(allowInformRematchRequestListener);
+      // socket.removeListener(informOpponentHasLeftListener);
+      // socket.removeListener(closeListener);
       removeBeforeRemoveListener();
       removeStackLengthListener();
     }

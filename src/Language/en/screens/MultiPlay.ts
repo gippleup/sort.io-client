@@ -29,7 +29,8 @@ const translation: ScreenTranslation["MultiPlay"] = {
   decline: "Decline",
   cancel: "Cancel",
   buildingBlockMap: "Building New Blocks",
-  rematchStartSoon: "Rematch Start Soon!"
+  rematchStartSoon: "Rematch Start Soon!",
+  badConnection: "Bad Connection",
 }
 
 export default translation;

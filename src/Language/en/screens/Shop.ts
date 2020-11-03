@@ -11,6 +11,7 @@ const translation: ScreenTranslation["Shop"] = {
   equip: "Equip",
   goBack: "Go Back",
   notEnoughGold: "Not Enough Gold",
+  noItems: "There's No Item",
 }
 
 export default translation;

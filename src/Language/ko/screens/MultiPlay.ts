@@ -27,7 +27,8 @@ const translation = {
   decline: "거절",
   cancel: "취소",
   buildingBlockMap: "새로운 블록 맵을 만들고 있습니다",
-  rematchStartSoon: "재대결을 곧 시작합니다!"
+  rematchStartSoon: "재대결을 곧 시작합니다!",
+  badConnection: "연결 상태가 좋지 않아 게임이 종료되었습니다.",
 }
 
 export default translation;

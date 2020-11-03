@@ -9,6 +9,7 @@ const translation = {
   equip: "장착하기",
   goBack: "돌아가기",
   notEnoughGold: "골드가 부족합니다",
+  noItems: "상품이 없습니다",
 }
 
 export default translation;

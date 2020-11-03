@@ -155,6 +155,7 @@ const RewardButton = (props: RewardButtonProps) => {
                     type="Black"
                     color="yellow"
                     strokeColor="green"
+                    size={20}
                     // width={220}
                   />
                 </View>

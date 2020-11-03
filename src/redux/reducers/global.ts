@@ -30,7 +30,7 @@ const initialState: GlobalReducerState = {
     left: "heart",
     center: "sad",
   },
-  animationEnabled: false,
+  animationEnabled: true,
 };
 
 const reducer = (state = initialState, action: GlobalReducerActions) => {

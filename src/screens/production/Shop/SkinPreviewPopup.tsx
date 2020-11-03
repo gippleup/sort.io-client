@@ -4,6 +4,7 @@ import React from 'react'
 import { View, Text, Dimensions, TouchableOpacity } from 'react-native'
 import styled from 'styled-components'
 import generateMap from '../../../algo/generateMap'
+import { removeTargetRoute } from '../../../api/navigation'
 import { SupportedSkin } from '../../../components/Block/skinMap'
 import { BlockTypes } from '../../../components/Block/Types'
 import PatternBackground from '../../../components/GameScene/PatternBackground'
@@ -44,17 +45,8 @@ const SkinPreviewPopup = (props: SkinPreviewPopupProps) => {
   const { skin } = params;
   const {language: lan} = useGlobal();
   const translation = TranslationPack[lan].screens.Shop;
-  const navigation = useNavigation();
-  const onPressClose = () => {
-    navigation.dispatch((state) => {
-      const routes = state.routes.filter((route) => route.name !== "Popup_SkinPreview")
-      return CommonActions.reset({
-        ...state,
-        routes,
-        index: routes.length - 1,
-      })
-    })
-  }
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
+  const onPressClose = () => removeTargetRoute(navigation, "Popup_SkinPreview");
 
   return (
     <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>

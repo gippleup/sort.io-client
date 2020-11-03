@@ -1,4 +1,4 @@
-import { CommonActions, RouteProp, useNavigation } from '@react-navigation/native'
+import { CommonActions, NavigationProp, RouteProp, useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import chroma, { gl } from 'chroma-js'
 import React from 'react'
@@ -7,6 +7,7 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import Svg, { Circle, G, Path } from 'react-native-svg'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
+import { removeTargetRoute } from '../../../api/navigation'
 import ExpressionEquipWheel from '../../../components/ExpressionEquipWheel'
 import PatternBackground from '../../../components/GameScene/PatternBackground'
 import { NotoSans, Space } from '../../../components/Generic/StyledComponents'
@@ -44,7 +45,7 @@ const ExpressionEquip = (props: ExpressionEquipProps) => {
   const state = useSelector((state: AppState) => state);
   const {global, items, playData} = state;
   const {user} = playData;
-  const navigation = useNavigation();
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
   const dispatch = useDispatch();
   const ownedExpressions = items
     .filter((item) => item.category === "expression" && item.hasOwned)
@@ -71,16 +72,7 @@ const ExpressionEquip = (props: ExpressionEquipProps) => {
   const requiredWidth = expectedColumn * (sizeConsideringMargin) + marginBetweenContainer;
   const requiredHeight = expectedRow * (sizeConsideringMargin) + marginBetweenContainer;
 
-  const onPressComplete = () => {
-    navigation.dispatch((state) => {
-      const routes = state.routes.filter((route) => route.name !== "ExpressionEquip")
-      return CommonActions.reset({
-        ...state,
-        routes,
-        index: routes.length - 1,
-      })
-    })    
-  }
+  const onPressComplete = () => removeTargetRoute(navigation, "ExpressionEquip");
 
   const onPressWheel = (direction: ExpressionDirection) => {
     if(selectedExpression.current) {

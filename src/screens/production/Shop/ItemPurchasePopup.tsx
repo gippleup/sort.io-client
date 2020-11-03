@@ -1,10 +1,11 @@
-import { CommonActions, RouteProp, useNavigation } from '@react-navigation/native'
+import { CommonActions, NavigationProp, RouteProp, useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import React from 'react'
 import { View, Text, Dimensions, Alert, AppState } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
+import { removeTargetRoute } from '../../../api/navigation'
 import { SupportedSkin } from '../../../components/Block/skinMap'
 import { FlexHorizontal, NotoSans, RoundPaddingCenter, Space } from '../../../components/Generic/StyledComponents'
 import { ItemCategory } from '../../../components/ItemList/ItemBox'
@@ -85,7 +86,7 @@ const ItemPurchasePopup = (props: ItemPurchasePopupProps) => {
   const dispatch = useDispatch();
   const {language: lan} = global;
   const translation = TranslationPack[lan].screens.Shop;
-  const navigation = useNavigation();
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
   const {
     category,
     item,
@@ -102,16 +103,7 @@ const ItemPurchasePopup = (props: ItemPurchasePopupProps) => {
     : "notInUse"
   : "notOwned"
 
-  const onPressClose = () => {
-    navigation.dispatch((state) => {
-      const routes = state.routes.filter((route) => route.name !== "Popup_ItemPurchase")
-      return CommonActions.reset({
-        ...state,
-        routes,
-        index: routes.length - 1,
-      })
-    })
-  }
+  const onPressClose = () => removeTargetRoute(navigation, "Popup_ItemPurchase");
 
   const onPressMainButton = () => {
     const hasEnoughMoney = playData.user.gold >= price;

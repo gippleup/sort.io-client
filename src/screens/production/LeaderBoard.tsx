@@ -1,10 +1,11 @@
 import MaskedView from '@react-native-community/masked-view';
-import { CommonActions, useNavigation } from '@react-navigation/native';
+import { CommonActions, NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { RefObject } from 'react'
 import { View, Text, Dimensions, ViewStyle, Easing, Animated, PanResponder } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components';
 import { SinglePlayData } from '../../api/local';
+import { removeTargetRoute } from '../../api/navigation';
 import { getSinglePlayRank, RankData, UserSingleRankData } from '../../api/sortio';
 import PatternBackground from '../../components/GameScene/PatternBackground'
 import { FlexHorizontal, FullFlexCenter, NotoSans, Space, WindowSizeView } from '../../components/Generic/StyledComponents';
@@ -15,6 +16,7 @@ import StrokedText from '../../components/StrokedText';
 import useGlobal from '../../hooks/useGlobal';
 import usePlayData from '../../hooks/usePlayData';
 import TranslationPack from '../../Language/translation';
+import { RootStackParamList } from '../../router/routes';
 import RankBoard from './LeaderBoard/RankBoard';
 
 const backgroundImage = require('../../assets/BackgroundPattern.png');
@@ -38,7 +40,7 @@ const GoBack: typeof NotoSans = styled(NotoSans)`
 `;
 
 const LeaderBoard = () => {
-  const navigation = useNavigation();
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
   const {language: lan} = useGlobal();
   const translation = TranslationPack[lan].screens.LeaderBoard;
   const touchStartX = React.useRef<null | number>(null);
@@ -76,16 +78,7 @@ const LeaderBoard = () => {
     outputRange: ['0deg', '-30deg', '0deg'],
   })
 
-  const goback = () => {
-    navigation.dispatch((state) => {
-      const routes = state.routes.filter((route) => route.name !== "LeaderBoard")
-      return CommonActions.reset({
-        ...state,
-        routes,
-        index: routes.length - 1,
-      })
-    })
-  }
+  const goback = () => removeTargetRoute(navigation, "LeaderBoard");
 
   const gestureResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,

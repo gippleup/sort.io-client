@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import useMultiGameSocket from '../../../hooks/useMultiGameSocket'
 import socketClientActions from '../../../hooks/useMultiGameSocket/action/creator';
-import { CommonActions, RouteProp, useNavigation } from '@react-navigation/native';
+import { CommonActions, NavigationProp, RouteProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../router/routes';
 import { StackNavigationProp } from '@react-navigation/stack';
 import usePlayData from '../../../hooks/usePlayData';
@@ -11,6 +11,7 @@ import ReadyTimer from '../../../components/ReadyTimer';
 import { BeforeRemoveEvent } from '../GameScreen/utils';
 import { FullFlexCenter } from '../../../components/Generic/StyledComponents';
 import chroma from 'chroma-js';
+import { remainTargetRoutes } from '../../../api/navigation';
 
 type PreparePopupRouteProps = RouteProp<RootStackParamList, "Popup_Prepare">;
 type PreparePopupNavigationProps = StackNavigationProp<RootStackParamList, "Popup_Prepare">;
@@ -27,7 +28,7 @@ const PreparePopup = (props: PreparePopupProps) => {
   const socket = useMultiGameSocket();
   const roomId = socket.getRoomId();
   const readyTimerRef = React.createRef<ReadyTimer>();
-  const navigation = useNavigation();
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
 
   const sendPrepared = () => {
     if (!playData.user.id) return;
@@ -53,16 +54,7 @@ const PreparePopup = (props: PreparePopupProps) => {
           readyTimerRef.current?.setLeftTime(leftTime);
         } else {
           readyTimerRef.current?.setText("START!");
-          setTimeout(() => {
-            props.navigation.dispatch((state) => {
-              const routes = state.routes.filter((route) => route.name === "Main" || route.name === "MultiGame");
-              return CommonActions.reset({
-                ...state,
-                routes,
-                index: routes.length - 1,
-              });
-            })
-          }, 1000);
+          setTimeout(() => remainTargetRoutes(navigation, ["Main", "MultiGame"]), 1000);
         }
       })
 

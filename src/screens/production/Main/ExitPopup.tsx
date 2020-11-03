@@ -1,11 +1,13 @@
-import { CommonActions, useNavigation } from '@react-navigation/native';
+import { CommonActions, NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react'
 import { View, Text, Dimensions, BackHandler } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components'
+import { removeTargetRoute } from '../../../api/navigation';
 import { FlexHorizontal, NotoSans, Space, WindowSizeView } from '../../../components/Generic/StyledComponents'
 import StrokedText from '../../../components/StrokedText';
 import useGlobal from '../../../hooks/useGlobal';
+import { RootStackParamList } from '../../../router/routes';
 import { getRandomQuestionSet } from './ExitPopup/utils';
 
 const Container = styled(WindowSizeView)`
@@ -32,19 +34,12 @@ const Button: typeof NotoSans = styled(NotoSans)`
 `;
 
 const ExitPopup = () => {
-  const navigation = useNavigation();
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
   const {language: lan} = useGlobal();
   const questionSet = getRandomQuestionSet(lan);
 
   const exitGame = BackHandler.exitApp;
-  const cancelExit = () => navigation.dispatch((state) => {
-    const routes = state.routes.filter((route) => route.name !== "Popup_Exit");
-    return CommonActions.reset({
-      ...state,
-      routes,
-      index: routes.length - 1,
-    })
-  })
+  const cancelExit = () => removeTargetRoute(navigation, "Popup_Exit");
 
   return (
     <Container>

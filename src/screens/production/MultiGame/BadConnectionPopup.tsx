@@ -1,10 +1,13 @@
-import { CommonActions, useNavigation } from '@react-navigation/native';
+import { CommonActions, NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react'
 import { View, Text, BackHandler } from 'react-native'
 import styled from 'styled-components'
+import { remainTargetRoutes } from '../../../api/navigation';
 import Flickery from '../../../components/Flickery';
 import { NotoSans } from '../../../components/Generic/StyledComponents';
-import routes from '../../../router/routes';
+import useGlobal from '../../../hooks/useGlobal';
+import TranslationPack from '../../../Language/translation';
+import routes, { RootStackParamList } from '../../../router/routes';
 
 const Container: typeof View = styled(View)`
   flex: 1;
@@ -22,8 +25,10 @@ const Popup: typeof View = styled(View)`
 `;
 
 const BadConnectionPopup = () => {
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.MultiPlay;
   const flickeryRef = React.useRef<Flickery>(null);
-  const navigation = useNavigation();
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
 
   const blockGoBack = () => true;
 
@@ -31,16 +36,7 @@ const BadConnectionPopup = () => {
 
   React.useEffect(() => {
     flickeryRef.current?.flickerNTimes(3);
-    const timeout = setTimeout(() => {
-      navigation.dispatch((state) => {
-        const routes = state.routes.filter((route) => route.name === "Main");
-        return CommonActions.reset({
-          ...state,
-          routes,
-          index: routes.length - 1,
-        })
-      })
-    }, 1500);
+    const timeout = setTimeout(() => remainTargetRoutes(navigation, ["Main"]), 1500);
 
     return () => {
       clearTimeout(timeout);
@@ -53,7 +49,7 @@ const BadConnectionPopup = () => {
       <Flickery ref={flickeryRef}>
         <Popup>
           <NotoSans size={20} color="white" type="Black">
-            연결 상태가 좋지 않아 게임이 종료되었습니다.
+            {translation.badConnection}
           </NotoSans>
         </Popup>
       </Flickery>

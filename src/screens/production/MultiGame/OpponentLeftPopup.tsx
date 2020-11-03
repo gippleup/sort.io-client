@@ -1,12 +1,13 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { FullFlexCenter, RoundPaddingCenter, NotoSans, FlexHorizontal } from '../../../components/Generic/StyledComponents'
-import { useNavigation, CommonActions, RouteProp } from '@react-navigation/native'
+import { useNavigation, CommonActions, RouteProp, NavigationProp } from '@react-navigation/native'
 import { BeforeRemoveEvent } from '../GameScreen/utils'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../../router/routes'
 import useGlobal from '../../../hooks/useGlobal'
 import TranslationPack from '../../../Language/translation'
+import { removeTargetRoute } from '../../../api/navigation'
 
 type OpponentLeftPopupNavigationProps = StackNavigationProp<RootStackParamList, "Popup_OpponentLeft">;
 type OpponentLeftPopupRouteProps = RouteProp<RootStackParamList, "Popup_OpponentLeft">;
@@ -17,7 +18,7 @@ type OpponentLeftPopupProps = {
 }
 
 const OpponentLeftPopup = (props: OpponentLeftPopupProps) => {
-  const navigation = props.navigation;
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
   const {language: lan} = useGlobal();
   const translation = TranslationPack[lan].screens.MultiPlay;
 
@@ -29,16 +30,7 @@ const OpponentLeftPopup = (props: OpponentLeftPopupProps) => {
       }
     })
 
-    setTimeout(() => {
-      props.navigation.dispatch((state) => {
-        const routes = state.routes.filter((route) => route.name !== "Popup_OpponentLeft");
-        return CommonActions.reset({
-          ...state,
-          routes,
-          index: routes.length - 1,
-        })
-      })
-    }, 2000)
+    setTimeout(() => removeTargetRoute(navigation, "Popup_OpponentLeft"), 2000);
 
     return () => {
       unsubscribeBeforeRemoveEvent();

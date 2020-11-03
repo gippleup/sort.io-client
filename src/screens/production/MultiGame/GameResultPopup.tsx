@@ -4,7 +4,7 @@ import StrokedText from '../../../components/StrokedText'
 import { RoundPaddingCenter, NotoSans, FlexHorizontal, FullFlexCenter, Space } from '../../../components/Generic/StyledComponents'
 import usePlayData from '../../../hooks/usePlayData'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { RouteProp, useNavigation, CommonActions } from '@react-navigation/native'
+import { RouteProp, useNavigation, CommonActions, NavigationProp } from '@react-navigation/native'
 import { RootStackParamList } from '../../../router/routes'
 import NativeRefBox from '../../../components/NativeRefBox'
 import { BeforeRemoveEvent } from '../GameScreen/utils'
@@ -18,6 +18,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../../redux/store'
 import TranslationPack from '../../../Language/translation'
+import { modifyToTargetRoutes, remainTargetRoutes } from '../../../api/navigation'
 
 type GameResultNavigationProps = StackNavigationProp<RootStackParamList, "Popup_GameResult">
 type GameResultRouteProps = RouteProp<RootStackParamList, "Popup_GameResult">
@@ -46,7 +47,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
   const {playData, global} = useSelector((state: AppState) => state);
   const {language: lan} = global;
   const translation = TranslationPack[lan].screens.MultiPlay;
-  const navigation = useNavigation();
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
   const titleRefBox = React.createRef<NativeRefBox>();
   const socket = useMultiGameSocket();
   const roomId = socket.getRoomId();
@@ -136,19 +137,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     }
   }
 
-  const goHome = () => {
-    navigation.dispatch((state) => {
-      const routes: typeof state.routes = [{
-        key: "Main" + Date.now(),
-        name: "Main",
-      }];
-      return CommonActions.reset({
-        ...state,
-        routes,
-        index: routes.length - 1,
-      });
-    })
-  }
+  const goHome = () => remainTargetRoutes(navigation, ["Main"])
 
   const onHomePressed = () => {
     socket.close();
@@ -176,19 +165,10 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     //   pointerEvents: "none",
     // })
     socket.close();
-    navigation.dispatch((state) => {
-      const routes = state.routes
-        .filter((route) => route.name === "Main")
-        .concat({
-          name: "Popup_MultiWaiting",
-          key: "Popup_MultiWaiting" + Date.now(),
-        })
-      return CommonActions.reset({
-        ...state,
-        routes,
-        index: routes.length - 1,
-      })
-    })
+    modifyToTargetRoutes(navigation, [
+      {name: "Main"},
+      {name: "Popup_MultiWaiting"},
+    ]);
   };
   
   React.useEffect(() => {
@@ -218,55 +198,33 @@ const GameResultPopup = (props: GameResultPopupProps) => {
 
     const informOpponentHasLeftListener = socket.addListener(
       "onInformOpponentHasLeft", () => {
-        navigation.dispatch((state) => {
-          const routes: typeof state.routes = state.routes.concat([{
-            key: "Popup_OpponentLeft" + Date.now(),
-            name: "Popup_OpponentLeft",
-          }]);
-
-          return CommonActions.reset({
-            ...state,
-            routes,
-            index: routes.length - 1,
-          })
-        })
+        modifyToTargetRoutes(navigation, [
+          {name: "Main"},
+          {name: "MultiGame"},
+          {name: "Popup_GameResult"},
+          {name: "Popup_OpponentLeft"},
+        ])
       }
     )
     
     const allowInformRematchRequestListener = socket.addListener(
       "onAllowInformRematchRequest", () => {
-      navigation.dispatch((state) => {
-        const routes: typeof state.routes = state.routes.concat([{
-          key: "Popup_RematchWaiting" + Date.now(),
-          name: "Popup_RematchWaiting",
-          params: {
-            beingInvited: false,
-          }
-        }]);
-        return CommonActions.reset({
-          ...state,
-          routes,
-          index: routes.length - 1,
-        });
-      })
+        modifyToTargetRoutes(navigation, [
+          {name: "Main"},
+          {name: "MultiGame"},
+          {name: "Popup_GameResult"},
+          {name: "Popup_RematchWaiting", params: {beingInvited: false}},
+        ])
     })
 
     const askRematchListener = socket.addListener(
       "onAskRematch", () => {
-      navigation.dispatch((state) => {
-        const routes: typeof state.routes = state.routes.concat([{
-          key: "Popup_RematchWaiting" + Date.now(),
-          name: "Popup_RematchWaiting",
-          params: {
-            beingInvited: true,
-          }
-        }]);
-        return CommonActions.reset({
-          ...state,
-          routes,
-          index: routes.length - 1,
-        });
-      })
+        modifyToTargetRoutes(navigation, [
+          {name: "Main"},
+          {name: "MultiGame"},
+          {name: "Popup_GameResult"},
+          {name: "Popup_RematchWaiting", params: {beingInvited: true}},
+        ])
     })
 
     titleRefBox.current?.setScale(3);

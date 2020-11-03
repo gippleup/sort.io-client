@@ -18,6 +18,7 @@ import chroma from 'chroma-js'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../../redux/store'
 import TranslationPack from '../../../Language/translation'
+import { modifyToTargetRoutes } from '../../../api/navigation'
 
 type RematchWaitingPopupRouteProps = RouteProp<RootStackParamList, "Popup_RematchWaiting">
 
@@ -220,24 +221,10 @@ const RematchWaitingPopup = (props: RematchWaitingPopupProps) => {
           if (!beenInformedToPrepare) {
             const {map, mapDesc} = socket.getRoomData();
             unsubscribeBeforeRemove();
-            props.navigation.dispatch((state) => {
-              const routes: typeof state.routes = state.routes
-                .filter((route) => route.name === "Main")
-                .concat({
-                  key: `MultiGame-${Date.now()}`,
-                  name: "MultiGame",
-                  params: {
-                    map,
-                    mapDesc,
-                  }                  
-                });
-              
-              return CommonActions.reset({
-                ...state,
-                routes,
-                index: routes.length - 1,
-              });
-            });
+            modifyToTargetRoutes(props.navigation, [
+              {name: "Main"},
+              {name: "MultiGame", params: {map, mapDesc}, renew: true},
+            ])
           }
 
           beenInformedToPrepare = true;

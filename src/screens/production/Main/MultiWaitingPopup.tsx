@@ -6,7 +6,7 @@ import { Modal, LoadingAnimationContainer, LoadingText } from './MultiWaitingPop
 import useMultiGameSocket, { OnSendRoomParam } from '../../../hooks/useMultiGameSocket'
 import usePlayData from '../../../hooks/usePlayData'
 import socketClientActions from '../../../hooks/useMultiGameSocket/action/creator'
-import { RouteProp } from '@react-navigation/native'
+import { NavigationProp, RouteProp, useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '../../../router/routes'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { FullFlexCenter } from '../../../components/Generic/StyledComponents'
@@ -16,6 +16,7 @@ import MaskedView from '@react-native-community/masked-view'
 import chroma from 'chroma-js'
 import useGlobal from '../../../hooks/useGlobal'
 import TranslationPack from '../../../Language/translation'
+import { modifyToTargetRoutes } from '../../../api/navigation'
 
 type MultiWaitingPopupNavigationProps = StackNavigationProp<RootStackParamList, "Popup_MultiWaiting">;
 type MultiWaitingPopupRouteProps = RouteProp<RootStackParamList, "Popup_MultiWaiting">;
@@ -32,6 +33,7 @@ const blockRemoveStack = (e: BeforeRemoveEvent) => {
 };
 
 const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
   const global = useGlobal();
   const loadingTextRef = React.createRef<Text>();
   const modalRef = React.createRef<NativeRefBox>();
@@ -111,7 +113,10 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
   const onAnimationCompleted = () => {
     if (roomData.current) {
       props.navigation.removeListener("beforeRemove", blockRemoveStack);
-      props.navigation.replace("MultiGame", roomData.current);
+      modifyToTargetRoutes(navigation, [
+        {name: "Main"},
+        {name: "MultiGame", params: roomData.current},
+      ])
     }
   }
 

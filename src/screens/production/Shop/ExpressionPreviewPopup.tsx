@@ -1,9 +1,10 @@
-import { CommonActions, RouteProp, useNavigation } from '@react-navigation/native'
+import { CommonActions, NavigationProp, RouteProp, useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import React from 'react'
 import { View, Text } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import styled from 'styled-components'
+import { removeTargetRoute } from '../../../api/navigation'
 import { NotoSans, RoundPaddingCenter, Space } from '../../../components/Generic/StyledComponents'
 import Profile from '../../../components/Profile'
 import expressions, { SupportedExpression } from '../../../components/Profile/Expressions'
@@ -33,18 +34,9 @@ type ExpressionPreviewPopupProps = {
 const ExpressionPreviewPopup = (props: ExpressionPreviewPopupProps) => {
   const { expression: name } = props.route.params;
   const profileRef = React.createRef<Profile>();
-  const navigation = useNavigation();
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
 
-  const onPressClose = () => {
-    navigation.dispatch((state) => {
-      const routes = state.routes.filter((route) => route.name !== "Popup_ExpressionPreview")
-      return CommonActions.reset({
-        ...state,
-        routes,
-        index: routes.length - 1,
-      })
-    })
-  }
+  const onPressClose = () => removeTargetRoute(navigation, "Popup_ExpressionPreview")
 
   React.useEffect(() => {
     const interval = setInterval(() => {

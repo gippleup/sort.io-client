@@ -15,13 +15,22 @@ import { fetchItemList } from '../../redux/actions/items/thunk';
 import { checkUsageOfItems } from '../../redux/actions/items/utils';
 import { RootStackParamList } from '../../router/routes';
 import TranslationPack from '../../Language/translation';
+import {
+  CategorySelectorContainer,
+  Flex,
+  Header,
+  IconContainer,
+  StyledMoneyIndicator,
+} from './Shop/_StyledComponents';
+import PreparingItem from './Shop/PreparingItem';
+import { removeTargetRoute } from '../../api/navigation';
 
 const Shop = () => {
   const {playData, global, items} = useSelector((state: AppState) => state)
   const dispatch = useDispatch();
   const {language: lan} = global;
   const translation = TranslationPack[lan].screens.Shop;
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
   const [categoryFilter, setCategoryFilter] = React.useState<CategoryFilter>("skin");
   const loadedInitialList = React.useRef(false);
   const hasItems = Array.isArray(items) ? items.length > 0 : items;
@@ -36,75 +45,49 @@ const Shop = () => {
   const listCheckedUsage = items ? checkUsageOfItems(items, global) : [];
 
   const onCategoryChange = (category: CategoryFilter) => {
-    setCategoryFilter(category);
-  }
-  
-  const onPressGoback = () => {
-    navigation.dispatch((state) => {
-      const routes = state.routes.filter((route) => route.name !== "Shop")
-      return CommonActions.reset({
-        ...state,
-        routes,
-        index: routes.length - 1,
-      })
+    setImmediate(() => {
+      setCategoryFilter(category);
     })
   }
+  
+  const onPressGoback = () => removeTargetRoute(navigation, "Shop");
+
+  const ArrowIcon = () => getIcon("fontAwesome", "arrow-left", {color: "white", size: 20});
+  const NavTitle = () => <NotoSans type="Black" color="white" size={20}>{translation.navTitle}</NotoSans>;
 
   return (
-    <View
-      style={{
-        flex: 1
-      }}>
-      <View
-        style={{
-          flex: 1,
-          width: '100%',
-        }}
-      >
+    <Flex>
+      <Flex>
         <PatternBackground source={require('../../assets/BackgroundPattern.png')} />
-        <View
-          style={{
-            backgroundColor: 'dodgerblue',
-            paddingHorizontal: 20,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingVertical: 10,
-            borderBottomWidth: 1,
-          }}
-        >
+
+        <Header>
           <FlexHorizontal>
             <TouchableOpacity onPress={onPressGoback}>
-              <View style={{padding: 15}}>
-                {getIcon("fontAwesome", "arrow-left", {color: "white", size: 20})}
-              </View>
+              <IconContainer>
+                <ArrowIcon/>
+              </IconContainer>
             </TouchableOpacity>
-            <NotoSans type="Black" color="white" size={20}>{translation.navTitle}</NotoSans>
+            <NavTitle/>
           </FlexHorizontal>
-          <MoneyIndicator style={{height: 50, backgroundColor: 'rgba(0,0,0,0.5)'}} value={playData.user.gold} />
-        </View>
-        <View style={{flex: 1}}>
+          <StyledMoneyIndicator value={playData.user.gold} />
+        </Header>
+
+        <Flex>
           <ItemList
             style={{ paddingVertical: 10 }}
             categoryFilter={categoryFilter}
             data={listCheckedUsage}
             lan={lan}
             navigation={navigation}
+            fallback={<PreparingItem/>}
           />
-        </View>
-      </View>
-      <View
-        style={{
-          backgroundColor: 'black',
-          height: 100,
-          width: '100%',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderTopWidth: 1,
-        }}>
+        </Flex>
+
+      </Flex>
+      <CategorySelectorContainer>
         <CatogorySelector onChange={onCategoryChange} />
-      </View>
-    </View>
+      </CategorySelectorContainer>
+    </Flex>
   )
 }
 

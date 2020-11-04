@@ -436,8 +436,10 @@ class GameScene extends React.Component<GameSceneProps, {}>{
               }
               setImmediate(() => {
                 const sound = getSoundEffect(props.playerSkin || "basic").dock;
-                sound.setVolume(1);
-                sound.play();                
+                if (sound) {
+                  sound.setVolume(1);
+                  sound.play();
+                }
               })
               this.hideExpressionWheel();
             }}

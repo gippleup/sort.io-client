@@ -4,19 +4,25 @@ import { SupportedSkin } from "../components/Block/skinMap";
 import { pickRandomFromArray } from "../components/Block/utils";
 
 const defaultSound = {
-  dock: {
-    1: getSound('wood_on_wood_1.mp3'),
-    2: getSound('wood_on_wood_2.mp3'),
-    3: getSound('wood_on_wood_3.mp3'),
-    4: getSound('wood_on_wood_4.mp3'),
-    5: getSound('wood_on_wood_5.mp3'),
-    6: getSound('wood_on_wood_6.mp3'),
-  }
+  dock: [
+    getSound('wood_on_wood_1.mp3'),
+    getSound('wood_on_wood_2.mp3'),
+    getSound('wood_on_wood_3.mp3'),
+    getSound('wood_on_wood_4.mp3'),
+    getSound('wood_on_wood_5.mp3'),
+    getSound('wood_on_wood_6.mp3'),
+    getSound('wood_on_wood_1.mp3'),
+    getSound('wood_on_wood_2.mp3'),
+    getSound('wood_on_wood_3.mp3'),
+    getSound('wood_on_wood_4.mp3'),
+    getSound('wood_on_wood_5.mp3'),
+    getSound('wood_on_wood_6.mp3'),
+  ]
 }
 
 const soundMap: {
   [T in SupportedSkin]: {
-    dock: {[index: number]: Sound};
+    dock: Sound[];
   }
 } & {
   success: {
@@ -72,10 +78,8 @@ const soundMap: {
 }
 
 export function getSoundEffect(skinName: SupportedSkin = "basic") {
-  const availableDockSound = Object
-    .values(soundMap[skinName].dock)
+  const availableDockSound = soundMap[skinName].dock
     .filter((sound) => !sound.isPlaying())
-  console.log(availableDockSound.length);
   return {
     dock: pickRandomFromArray<Sound>(availableDockSound),
     success: {

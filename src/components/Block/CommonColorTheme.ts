@@ -29,7 +29,7 @@ const colorTheme = colorArr.reduce((
       // .set('hsl.l', l + 0.2)
       .hex(),
     bottom: chroma(color)
-      .set('hsl.l', Math.max(l - 0.3, 0.3))
+      .set('hsl.l', l - 0.1)
       .hex(),
   };
   return acc;

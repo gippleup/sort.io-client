@@ -110,15 +110,15 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
     })
   }
 
-  const onAnimationCompleted = () => {
-    if (roomData.current) {
-      props.navigation.removeListener("beforeRemove", blockRemoveStack);
-      modifyToTargetRoutes(navigation, [
-        {name: "Main"},
-        {name: "MultiGame", params: roomData.current},
-      ])
-    }
-  }
+  // const onAnimationCompleted = () => {
+  //   if (roomData.current) {
+  //     props.navigation.removeListener("beforeRemove", blockRemoveStack);
+  //     modifyToTargetRoutes(navigation, [
+  //       {name: "Main"},
+  //       {name: "MultiGame", params: roomData.current},
+  //     ])
+  //   }
+  // }
 
   const updateLoadingText = () => {
     if (foundMatch) return;
@@ -149,8 +149,13 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
       foundMatch = true;
       setRefText(`! ${translation.foundMatch} !`);
       roomData.current = option;
-      BackHandler.removeEventListener("hardwareBackPress", closeSocket);
-      props.navigation.addListener("beforeRemove", blockRemoveStack);
+      modifyToTargetRoutes(navigation, [
+        {name: "Main"},
+        {name: "MultiGame", params: roomData.current},
+      ])
+      // props.navigation.removeListener("beforeRemove", blockRemoveStack);
+      // BackHandler.removeEventListener("hardwareBackPress", closeSocket);
+      // props.navigation.addListener("beforeRemove", blockRemoveStack);
     })
 
     // const closeListener = socket.addListener("onClose", () => {
@@ -219,7 +224,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
           <Loading
             checkIfLoaded={checkIfFoundMatch}
             onLastAnimationStarted={onLastAnimationStarted}
-            onAnimationCompleted={onAnimationCompleted}
+            // onAnimationCompleted={onAnimationCompleted}
             skin={global.skin}
           />
         </LoadingAnimationContainer>

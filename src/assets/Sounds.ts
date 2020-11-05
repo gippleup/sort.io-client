@@ -11,12 +11,6 @@ const defaultSound = {
     getSound('wood_on_wood_4.mp3'),
     getSound('wood_on_wood_5.mp3'),
     getSound('wood_on_wood_6.mp3'),
-    getSound('wood_on_wood_1.mp3'),
-    getSound('wood_on_wood_2.mp3'),
-    getSound('wood_on_wood_3.mp3'),
-    getSound('wood_on_wood_4.mp3'),
-    getSound('wood_on_wood_5.mp3'),
-    getSound('wood_on_wood_6.mp3'),
   ]
 }
 

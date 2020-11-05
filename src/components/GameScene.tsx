@@ -434,13 +434,11 @@ class GameScene extends React.Component<GameSceneProps, {}>{
               if (props.onDock) {
                 props.onDock(stackIndex);
               }
-              setImmediate(() => {
-                const sound = getSoundEffect(props.playerSkin || "basic").dock;
-                if (sound) {
-                  sound.setVolume(1);
-                  sound.play();
-                }
-              })
+              const sound = getSoundEffect(props.playerSkin || "basic").dock;
+              if (sound) {
+                sound.setVolume(1);
+                sound.play();
+              }
               this.hideExpressionWheel();
             }}
             onUndock={(stackIndex) => {

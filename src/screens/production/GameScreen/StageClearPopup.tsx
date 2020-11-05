@@ -127,9 +127,14 @@ const StageClearPopup = (props: StageClearPopupProps) => {
                 onAnimationStart={() => {
                   if (i === results.length - 1) {
                     if (hasWin) {
-                      getSoundEffect().success[(successiveWin + 1) as 1 | 2 | 3].play();
+                      const sound = getSoundEffect().success[(successiveWin + 1) as 1 | 2 | 3];
+                      sound.setVolume(1);
+                      sound.setCurrentTime(0);
                       if (successiveWin === 2) {
-                        getSoundEffect().success[4].play();
+                        const sound = getSoundEffect().success[4]
+                        sound.setVolume(1);
+                        sound.setCurrentTime(0);
+                        sound.play();
                       }
                     } else {
                       getSoundEffect().fail.play();

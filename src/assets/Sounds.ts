@@ -67,14 +67,14 @@ const soundMap: {
   volcano: defaultSound,
   wave: defaultSound,
   success: {
-    first: getSound('success_1.wav'),
-    double: getSound('success_2.wav'),
-    triple: getSound('success_3.wav'),
-    additive: getSound('success_additive.wav'),
+    first: getSound('success_1.mp3'),
+    double: getSound('success_2.mp3'),
+    triple: getSound('success_3.mp3'),
+    additive: getSound('success_additive.mp3'),
   },
-  fail: getSound('fail.wav'),
-  win: getSound('win.wav'),
-  lose: getSound('lose.wav'),
+  fail: getSound('fail.mp3'),
+  win: getSound('win.mp3'),
+  lose: getSound('lose.mp3'),
 }
 
 export function getSoundEffect(skinName: SupportedSkin = "basic") {

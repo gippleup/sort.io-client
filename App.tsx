@@ -85,7 +85,7 @@ let App: () => React.ReactNode = () => {
 };
 
 const codePushOptions: CodePushOptions = {
-  checkFrequency: codePush.CheckFrequency.ON_APP_START,
+  checkFrequency: BUILD_ENV === "RELEASE" ? codePush.CheckFrequency.ON_APP_START : codePush.CheckFrequency.MANUAL,
   installMode: codePush.InstallMode.ON_NEXT_RESUME,
 }
 

@@ -584,6 +584,7 @@ export class RefBlockBoard extends Component<
                     <BlockFrame
                       pieceCount={props.initialMap[stackIndex].length}
                       scale={scale}
+                      style={{backgroundColor: 'rgba(0,0,0,0.2)'}}
                     />
                   </Cell>
                 );

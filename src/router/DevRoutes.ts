@@ -6,6 +6,7 @@ import BlockBoardTester from "../screens/dev/BlockBoardTester";
 import ColorTester from "../screens/dev/ColorTester";
 import CountryFlagIconTester from "../screens/dev/CountryFlagIconTester";
 import EndGameInfoTester from "../screens/dev/EndGameInfoTester";
+import FastBlockBoardTester from "../screens/dev/FastBlockBoardTester";
 import ForFun from "../screens/dev/ForFun";
 import GameSceneTester from "../screens/dev/GameSceneTester";
 import GraphTester from "../screens/dev/GraphTester";
@@ -27,6 +28,12 @@ import UpdaterTester from "../screens/dev/UpdaterTester";
 import { Routes } from "./types";
 
 export const devRoutes: Routes<Omit<devParams, "Developer">> = {
+  FastBlockBoardTester: {
+    type: "dev",
+    devName: "빠른 블록보드 테스터",
+    component: FastBlockBoardTester,
+    headerShown: false,
+  },
   JamTester: {
     type: "dev",
     devName: "꿀잼 테스터",
@@ -165,7 +172,7 @@ export const devRoutes: Routes<Omit<devParams, "Developer">> = {
     devName: "업데이터 테스터",
     component: UpdaterTester,
     headerShown: false,
-  }
+  },
 }
 
 export type devParams = {
@@ -195,4 +202,5 @@ export type devParams = {
   MultiGameResultTester: undefined;
   JamTester: undefined;
   UpdaterTester: undefined;
+  FastBlockBoardTester: undefined;
 }

@@ -2,6 +2,10 @@ import { Dimensions } from "react-native";
 
 const Constants = {
   blockWidth: 66,
+  stackMarginHorizontal: 10,
+  stackMarginVertical: 10,
+  boardPaddingHorizontal: 10,
+  boardPaddingVertical: 10,
   blockPadding: 15,
   blockHeight: {
     top: 8,
@@ -13,7 +17,7 @@ const Constants = {
     },
   },
   maxStackLength: 8,
-  minStackLength: 2,
+  minStackLength: 5,
 };
 
 export default Constants;

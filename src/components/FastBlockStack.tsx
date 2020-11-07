@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, ViewStyle, Animated } from 'react-native'
+import { View, Text, ViewStyle, Animated, Easing } from 'react-native'
 import Constants from '../assets/Constants';
 import Block from './Block';
 import { SupportedSkin } from './Block/skinMap';
@@ -29,12 +29,19 @@ class FastBlockStack extends React.Component<FastBlockStackProps> {
     const prevProps = this.props;
     const reasons = [
       prevProps.status !== nextProps.status,
+      prevProps.scale !== nextProps.scale,
+      prevProps.skin !== nextProps.skin,
+      prevProps.completed !== nextProps.completed,
+      prevProps.noAnimation !== nextProps.noAnimation,
+      prevProps.noGradient !== nextProps.noGradient,
+      JSON.stringify(prevProps.stack) !== JSON.stringify(nextProps.stack),
     ]
 
     const haveReasonToUpdate = reasons.filter((bool) => bool === true).length;
     if (haveReasonToUpdate) {
       return true;
     }
+
     return false;
   }
 
@@ -43,17 +50,21 @@ class FastBlockStack extends React.Component<FastBlockStackProps> {
     const {status} = this.props;
     dockAnim.stopAnimation();
     if (status === "docked") {
+      dockAnim.setValue(1);
       Animated.timing(dockAnim, {
         toValue: 0,
         useNativeDriver: true,
+        easing: Easing.in(Easing.bounce),
         duration: 300,
       }).start();
-    } else {
+    } else if (status === "undocked") {
       Animated.timing(dockAnim, {
         toValue: 1,
         useNativeDriver: true,
         duration: 100,
       }).start();
+    } else if (status === "neutral") {
+      dockAnim.setValue(0);
     }
   }
 

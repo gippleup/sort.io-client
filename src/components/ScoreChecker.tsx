@@ -98,7 +98,7 @@ class ScoreChecker extends React.Component<ScoreCheckerProps> {
                         height: Constants.blockHeight.count(1) * props.scale,
                       }}>
                       <View style={{position: 'absolute'}}>
-                        <BlockFrame pieceCount={1} scale={props.scale} />
+                        <BlockFrame pieceCount={1} scale={props.scale} style={{backgroundColor: 'rgba(0,0,0,0.4)'}} />
                       </View>
                       <RefBox style={{opacity: 0}} ref={iconRef}>
                         <ScoreIcon

@@ -1,7 +1,7 @@
 import { stack } from "d3";
 import { FastStackModel } from "./FastStackModel";
 
-export type FastStackStatus = "docked" | "undocked";
+export type FastStackStatus = "docked" | "undocked" | "neutral";
 
 export type ActiveStackDescription = null | {
   index: number;
@@ -12,24 +12,46 @@ export type FastBoardStatus = {
   stacks: number[][];
   activeStack: ActiveStackDescription;
   holdingBlock: null | number;
+  finished: boolean;
+  score: number;
 }
 
 export class FastBoardModel {
   stacks: FastStackModel[];
   activeStack: ActiveStackDescription;
   holdingBlock: null | number;
+  finished: boolean;
   constructor(boardStatus: FastBoardStatus) {
-    const {activeStack, holdingBlock, stacks} = boardStatus;
+    const {activeStack, holdingBlock, stacks, finished, score} = boardStatus;
     this.stacks = stacks.map((stackData) => new FastStackModel(stackData));
     this.activeStack = activeStack;
     this.holdingBlock = holdingBlock;
+    this.finished = finished;
+  }
+
+  get score() {
+    return this.stacks
+      .filter((stackModel) => stackModel.hasAnyBlock)
+      .map((stackModel) => stackModel.isFinished)
+      .filter((bool) => bool)
+      .length;
+  }
+  
+  get isFinished() {
+    return this.stacks
+      .filter((stackModel) => stackModel.hasAnyBlock)
+      .map((stackModel) => stackModel.isFinished)
+      .filter((bool) => !bool)
+      .length === 0;
   }
 
   get boardStatus(): FastBoardStatus {
     return {
       activeStack: this.activeStack,
       holdingBlock: this.holdingBlock,
-      stacks: this.stacks.map((model) => model.stack),
+      stacks: this.stacks.map((stackModel) => stackModel.stack),
+      finished: this.isFinished,
+      score: this.score,
     };
   }
 
@@ -46,8 +68,8 @@ export class FastBoardModel {
   }
 
   undock(stackIndex: number): FastBoardStatus {
-    const undockedBlock = this.stacks[stackIndex].undock();
-    if (undockedBlock !== null) {
+    const undockedBlock = this.stacks[stackIndex].tail;
+    if (undockedBlock !== undefined) {
       this.activeStack = {
         index: stackIndex,
         status: "undocked",
@@ -59,10 +81,17 @@ export class FastBoardModel {
   }
 
   dock(stackIndex: number): FastBoardStatus {
-    if (this.holdingBlock) {
-      this.stacks[stackIndex].dock(this.holdingBlock);
-      this.holdingBlock = null;
+    if (this.stacks[stackIndex].isFull) {
+    } else if (this.holdingBlock !== null && this.activeStack !== null) {
+      this.stacks[this.activeStack.index].removeTail();
+      this.stacks[stackIndex].add(this.holdingBlock);
     }
+
+    this.activeStack = {
+      index: stackIndex,
+      status: "docked",
+    };
+    this.holdingBlock = null;
 
     return this.boardStatus;
   }

@@ -22,8 +22,8 @@ const FastBlockBoardTester = () => {
       <View style={{backgroundColor: 'grey'}}>
         <FastBlockBoard
           initialMap={map.question}
-          height={Dimensions.get('window').height - 150}
-          width={Dimensions.get('window').width}
+          height={Dimensions.get('window').height - 200}
+          width={Dimensions.get('window').width - 100}
           skin="basic"
         />
       </View>

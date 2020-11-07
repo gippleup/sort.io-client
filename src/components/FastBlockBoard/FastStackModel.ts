@@ -4,7 +4,54 @@ export class FastStackModel {
     this.stack = stack;
   }
 
-  dock(newBlock: number): number[] {
+  get isFinished(): boolean {
+    return this.isFull && this.hasAllSameColor;
+  }
+
+  get isFull(): boolean {
+    return this.stack.filter((type) => type === -1).length === 0;
+  }
+
+  get hasAnyBlock(): boolean {
+    return this.stack.filter((type) => type !== -1).length !== 0;
+  }
+
+  get hasAllSameColor(): boolean {
+    for (let i = 0; i < this.stack.length; i += 1) {
+      if (this.stack[i] !== this.stack[0]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  get tailIndex(): number | undefined {
+    const {stack} = this;
+    let lastBlockIndex: undefined | number = undefined;
+    const reversedStack = stack.slice(0).reverse();
+    reversedStack.forEach((blockType, i) => {
+      if (blockType !== -1 && lastBlockIndex === undefined) {
+        lastBlockIndex = i;
+      }
+    })
+
+    if (typeof lastBlockIndex === "number") {
+      return stack.length - 1 - lastBlockIndex;
+    }
+
+    return lastBlockIndex;
+  }
+
+  get tail(): number | undefined {
+    const {tailIndex} = this;
+    if (tailIndex !== undefined) {
+      return this.stack[tailIndex];
+    }
+    return undefined;
+  }
+
+  add(newBlock: number): number[] {
     const {stack} = this;
     let blankSpaceIndex: null | number = null;
     stack.forEach((blockType, i) => {
@@ -19,21 +66,12 @@ export class FastStackModel {
     return this.stack;
   }
 
-  undock(): number | null {
-    const {stack} = this;
-    let lastBlockIndex: null | number = null;
-    stack.reverse().forEach((blockType, i) => {
-      if (blockType !== -1 && lastBlockIndex === null) {
-        lastBlockIndex = i;
-      }
-    })
-
-    if (typeof lastBlockIndex === "number") {
-      const undockedBlock = stack[lastBlockIndex];
-      this.stack[lastBlockIndex] = -1;
-      return undockedBlock;
+  removeTail(): number | undefined {
+    const {tailIndex, tail} = this;
+    if (tailIndex !== undefined) {
+      this.stack[tailIndex] = -1;
     }
 
-    return null;
+    return tail;
   }
 }

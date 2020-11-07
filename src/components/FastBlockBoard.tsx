@@ -1,13 +1,14 @@
 import React, { Fragment } from 'react'
-import { View, Text, ViewStyle, LayoutRectangle, Dimensions } from 'react-native'
+import { View, Text, ViewStyle, LayoutRectangle, Dimensions, LayoutChangeEvent } from 'react-native'
 import Constants from '../assets/Constants'
 import { SupportedSkin } from './Block/skinMap'
 import { FastBlockBoardActions } from './FastBlockBoard/action'
-import { FastBoardStatus, FastStackStatus } from './FastBlockBoard/FastBoardModel'
+import { FastBoardModel, FastBoardStatus, FastStackStatus } from './FastBlockBoard/FastBoardModel'
 import { FastBoardReducer } from './FastBlockBoard/reducer'
 import { getStackLayout } from './FastBlockBoard/utils'
 import FastBlockStack from './FastBlockStack'
 import { FlexHorizontal } from './Generic/StyledComponents'
+import { Easings } from './NativeRefBox/easings'
 
 type FastBlockBoardProps = {
   initialMap: number[][];
@@ -32,10 +33,24 @@ const FastBlockBoard = (props: FastBlockBoardProps) => {
     stacks: initialMap,
     activeStack: null,
     holdingBlock: null,
+    finished: false,
+    score: 0,
   }
 
-  const [boardStatus, dispatch] = React.useReducer(FastBoardReducer, initialBoardStatus);
+  const [boardStatus, dispatch] = React.useReducer(
+    FastBoardReducer,
+    new FastBoardModel(initialBoardStatus).boardStatus
+  );
+
   const {stacks, activeStack} = boardStatus;
+  const firedEvent = React.useRef({
+    layout: false,
+    complete: false,
+  })
+
+  const onTouchStack = (stackIndex: number) => {
+    dispatch(FastBlockBoardActions.touchBlock(stackIndex));
+  }
 
   const {
     scale,
@@ -46,10 +61,6 @@ const FastBlockBoard = (props: FastBlockBoardProps) => {
     column,
     row,
   } = getStackLayout({width, height}, stacks.length);
-
-  const onTouchStack = (stackIndex: number) => {
-    dispatch(FastBlockBoardActions.touchBlock(stackIndex));
-  }
 
   const stackLayoutArr: number[][] = Array(row).fill(Array(column).fill(1));
   return (
@@ -72,10 +83,11 @@ const FastBlockBoard = (props: FastBlockBoardProps) => {
               const allHasSameColor = stack.filter((blockType) => blockType !== stack[0]).length === 0;
               const completed = blankSpace.length === 0 && allHasSameColor;
               const stackStatus: FastStackStatus = activeStack === null
-                ? "docked"
+                ? "neutral"
                 : activeStack.index === stackIndex 
                   ? activeStack.status
-                  : "docked";
+                  : "neutral";
+              const onTouchEnd = () => onTouchStack(stackIndex);
               return (
                 <FastBlockStack
                   stack={stack}
@@ -85,7 +97,7 @@ const FastBlockBoard = (props: FastBlockBoardProps) => {
                   noGradient={noGradient}
                   noAnimation={noAnimation}
                   key={`stack${stackIndex}`}
-                  onTouchEnd={() => onTouchStack(stackIndex)}
+                  onTouchEnd={onTouchEnd}
                   status={stackStatus}
                   style={{
                     marginHorizontal: stackMarginHorizontal,

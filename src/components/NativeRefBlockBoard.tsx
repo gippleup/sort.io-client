@@ -1,13 +1,9 @@
 import React, {Component, RefObject, Fragment} from 'react';
 import {
-  Text,
   View,
   ViewStyle,
   LayoutRectangle,
   LayoutChangeEvent,
-  Easing,
-  Animated,
-  Dimensions,
 } from 'react-native';
 import styled from 'styled-components';
 import Constants from '../assets/Constants';
@@ -18,13 +14,11 @@ import {BlockTypes} from './Block/Types';
 import NativeRefBox from './NativeRefBox';
 import TouchAgent from './TouchAgent';
 import BlockBase from './Block/BlockBase';
-import chroma from 'chroma-js';
 import { Easings } from './NativeRefBox/easings';
+import { getStackLayout } from './FastBlockBoard/utils';
 
-const LayoutContainer: typeof View | React.ComponentClass<{marginLeft: number; marginTop: number}> = styled(View)`
+const LayoutContainer: typeof View = styled(View)`
   position: absolute;
-  margin-left: ${(props) => props.marginLeft}px;
-  margin-top: ${(props) => props.marginTop}px;
 `;
 
 const AbsoluteRefBox: typeof NativeRefBox = styled(NativeRefBox)`
@@ -55,9 +49,7 @@ type stackModel = {
 };
 
 type RefBlockBoardProps = {
-  style?: ViewStyle;
   initialMap: BlockTypes[][];
-  scale?: number;
   skin: SupportedSkin;
   onDock?: (stackIndex: number) => void;
   onUndock?: (stackIndex: number) => void;
@@ -69,27 +61,20 @@ type RefBlockBoardProps = {
   dockEasing?: Easings;
   dockEasingDuration?: number;
   noGradient?: boolean;
-};
-
-type RefBlockBoardState = {
-  layout: null | LayoutRectangle;
+  width?: number;
+  height?: number;
 };
 
 const defaultDockEasing: Easings = "easeInOutSine";
 const defaultDockEasingDuration = 100;
 
-export class RefBlockBoard extends Component<
-  RefBlockBoardProps,
-  RefBlockBoardState
-> {
+export class RefBlockBoard extends Component<RefBlockBoardProps> {
   constructor(props: RefBlockBoardProps) {
     super(props);
     this.stacks = Array(props.initialMap.length);
     this.state = {
       layout: null,
     };
-    this.catchLayout = this.catchLayout.bind(this);
-
     this.getTopPiecePos = this.getTopPiecePos.bind(this);
 
     this.undock = this.undock.bind(this);
@@ -118,12 +103,14 @@ export class RefBlockBoard extends Component<
   }} = {};
 
   scale = 1;
-  maxRows = 3;
-  maxColumns = 3;
-  blockWidth = Constants.blockWidth;
-  blockHeight = Constants.blockHeight.full;
+  row = 3;
+  column = 3;
+  stackWidth = Constants.blockWidth;
+  stackHeight = Constants.blockHeight.full;
   marginVertical = 15;
   marginHorizontal = 15;
+  layoutMarginTop = 15;
+  layoutMarginLeft = 15;
 
   checkIfStackCompleted(targetStack: stackModel) {
     // const targetStack = this.stacks[stackIndex];
@@ -150,24 +137,28 @@ export class RefBlockBoard extends Component<
 
   getTopPiecePos(stackIndex: number) {
     const {
-      maxColumns,
+      column,
       stacks,
       scale,
       marginHorizontal,
       marginVertical,
-      blockWidth,
-      blockHeight,
+      stackWidth,
+      stackHeight,
+      layoutMarginLeft,
+      layoutMarginTop,
     } = this;
     const targetStack = stacks[stackIndex];
-    const stackRow = Math.floor(stackIndex / maxColumns);
-    const stackColumn = stackIndex % maxColumns;
+    const stackRow = Math.floor(stackIndex / column);
+    const stackColumn = stackIndex % column;
     const curStackLength = targetStack.pieces.length;
 
     const curPos = {
-      x: marginHorizontal + (blockWidth + marginHorizontal * 2) * stackColumn,
-      y:
+      x: layoutMarginLeft +
+        marginHorizontal +
+        (stackWidth + marginHorizontal * 2) * stackColumn,
+      y: layoutMarginTop +
         marginVertical +
-        (blockHeight + marginVertical * 2) * stackRow +
+        (stackHeight + marginVertical * 2) * stackRow +
         Constants.blockHeight.top * scale +
         Constants.blockHeight.piece * scale * Constants.maxStackLength -
         Constants.blockHeight.piece * scale * curStackLength,
@@ -505,16 +496,6 @@ export class RefBlockBoard extends Component<
     this.dockCount += 1;
   }
 
-  catchLayout(e: LayoutChangeEvent) {
-    this.setState({
-      ...this.state,
-      layout: e.nativeEvent.layout,
-    });
-    if (this.props.onLayout) {
-      this.props.onLayout(e);
-    }
-  }
-
   clear() {
     this.setState({
       layout: null,
@@ -524,55 +505,48 @@ export class RefBlockBoard extends Component<
   render() {
     const LazyBlock = React.lazy(() => import('./Block'))
 
-    const {props, catchLayout, state} = this;
-    if (!state.layout) {
-      return <View onLayout={catchLayout} style={this.props.style} />;
-    }
+    const {props, state} = this;
+    const {
+      width = 300,
+      height = 300,
+    } = props;
+    const {
+      boardPaddingHorizontal,
+      boardPaddingVertical,
+      column,
+      row,
+      scale,
+      stackMarginHorizontal: marginHorizontal,
+      stackMarginVertical: marginVertical,
+    } = getStackLayout({width, height}, props.initialMap.length);
 
-    const scale = props.scale || 1;
-    const blockWidth = Constants.blockWidth * scale;
-    const blockHeight = Constants.blockHeight.full * scale;
-
-    const maxColumns = Math.floor(
-      state.layout.width / (blockWidth + Constants.blockPadding * scale * 2),
-    );
-    const maxRows = Math.floor(
-      state.layout.height / (blockHeight + Constants.blockPadding * scale * 2),
-    );
-
-    const leftWidth = state.layout.width - maxColumns * blockWidth;
-    const leftHeight = state.layout.height - maxRows * blockHeight;
-
-    const marginHorizontal = (leftWidth / (maxColumns * 2)) * scale;
-    const marginVertical = (leftHeight / (maxRows * 2)) * scale;
-
-    const layoutMarginLeft = (state.layout.width - maxColumns * (blockWidth + marginHorizontal * 2)) / 2
-    const layoutMarginTop = (state.layout.height - maxRows * (blockHeight + marginVertical * 2)) / 2
+    const stackWidth = Constants.blockWidth * scale;
+    const stackHeight = Constants.blockHeight.full * scale;
+    const requiredWidth = (stackWidth + marginHorizontal * 2) * column + boardPaddingHorizontal * 2;
+    const requiredHeight = (stackHeight + marginVertical * 2) * row + boardPaddingVertical * 2;
+    const leftWidth = width - requiredWidth;
+    const leftHeight = height - requiredHeight;
+    const layoutMarginLeft = leftWidth / 2 + boardPaddingHorizontal;
+    const layoutMarginTop = leftHeight / 2 + boardPaddingVertical;
 
     this.scale = scale;
-    this.blockWidth = blockWidth;
-    this.blockHeight = blockHeight;
-    this.maxColumns = maxColumns;
-    this.maxRows = maxRows;
+    this.stackWidth = stackWidth;
+    this.stackHeight = stackHeight;
+    this.column = column;
+    this.row = row;
     this.marginHorizontal = marginHorizontal;
     this.marginVertical = marginVertical;
+    this.layoutMarginLeft = layoutMarginLeft;
+    this.layoutMarginTop = layoutMarginTop;
 
-    // if (maxRows * maxColumns < props.initialMap.length) {
-    //   return (
-    //     <View>
-    //       <Text>공간이 부족합니다.</Text>
-    //     </View>
-    //   );
-    // }
-
-    const layout = Array(maxRows).fill(Array(maxColumns).fill(1));
+    const layout = Array(row).fill(Array(column).fill(1));
 
     return (
-      <View style={this.props.style}>
-        <LayoutContainer marginLeft={layoutMarginLeft} marginTop={layoutMarginTop}>
+      <View onLayout={props.onLayout} style={{width, height}}>
+        <LayoutContainer style={{paddingLeft: layoutMarginLeft, paddingTop: layoutMarginTop}}>
           {layout.map((row, i) => (
             <Row key={'frameRow' + i} style={{marginVertical}}>
-              {row.map((cell, j: number) => {
+              {row.map((cell: number, j: number) => {
                 const stackIndex = layout[0].length * i + j;
                 if (props.initialMap[stackIndex] === undefined) {
                   return (
@@ -592,9 +566,9 @@ export class RefBlockBoard extends Component<
             </Row>
           ))}
         </LayoutContainer>
-        <LayoutContainer marginLeft={layoutMarginLeft} marginTop={layoutMarginTop} ref={this.layoutRef}>
+        <LayoutContainer ref={this.layoutRef}>
           {layout.map((row, i) =>
-            row.map((cell, j: number) => {
+            row.map((cell: number, j: number) => {
               const stackIndex = layout[0].length * i + j;
               const curStack = props.initialMap[stackIndex];
               if (curStack === undefined) {
@@ -634,19 +608,21 @@ export class RefBlockBoard extends Component<
                     key={'bottom' + i + j}
                     style={{
                       left:
+                        layoutMarginLeft +
                         marginHorizontal +
-                        j * (blockWidth + marginHorizontal * 2),
+                        j * (stackWidth + marginHorizontal * 2),
                       top:
+                        layoutMarginTop +
                         marginVertical +
-                        i * (blockHeight + marginVertical * 2) +
-                        blockHeight -
+                        i * (stackHeight + marginVertical * 2) +
+                        stackHeight -
                         Constants.blockHeight.bottom * scale,
                     }}>
                     <React.Suspense fallback={(
                       <BlockBase
                         height={34}
                         width={66}
-                        scale={props.scale}
+                        scale={scale}
                         color="rgba(255,255,255,0.4)"
                         borderWidth={0.5}
                       />
@@ -670,12 +646,14 @@ export class RefBlockBoard extends Component<
                         ref={pieces[k].ref}
                         style={{
                           left:
+                            layoutMarginLeft +
                             marginHorizontal +
-                            j * (blockWidth + marginHorizontal * 2),
+                            j * (stackWidth + marginHorizontal * 2),
                           top:
+                            layoutMarginTop +
                             marginVertical +
-                            i * (blockHeight + marginVertical * 2) +
-                            blockHeight -
+                            i * (stackHeight + marginVertical * 2) +
+                            stackHeight -
                             Constants.blockHeight.bottom * scale -
                             Constants.blockHeight.piece * (k + 1) * scale,
                         }}>
@@ -683,7 +661,7 @@ export class RefBlockBoard extends Component<
                           <BlockBase
                             height={24}
                             width={66}
-                            scale={props.scale}
+                            scale={scale}
                             color="rgba(255,255,255,0.2)"
                             borderWidth={0.5}
                           />
@@ -705,12 +683,14 @@ export class RefBlockBoard extends Component<
                     // eslint-disable-next-line react-native/no-inline-styles
                     style={{
                       left:
+                        layoutMarginLeft +
                         marginHorizontal +
-                        j * (blockWidth + marginHorizontal * 2),
+                        j * (stackWidth + marginHorizontal * 2),
                       top:
+                        layoutMarginTop +
                         marginVertical +
-                        i * (blockHeight + marginVertical * 2) +
-                        blockHeight -
+                        i * (stackHeight + marginVertical * 2) +
+                        stackHeight -
                         Constants.blockHeight.bottom * scale -
                         Constants.blockHeight.piece * curStack.length * scale -
                         Constants.blockHeight.top * scale,
@@ -720,7 +700,7 @@ export class RefBlockBoard extends Component<
                       <BlockBase
                         width={66}
                         height={8}
-                        scale={props.scale}
+                        scale={scale}
                         color="rgba(255,255,255,0.4)"
                         borderWidth={0.5}
                       />
@@ -741,10 +721,10 @@ export class RefBlockBoard extends Component<
             }),
           )}
         </LayoutContainer>
-        <LayoutContainer marginLeft={layoutMarginLeft} marginTop={layoutMarginTop}>
+        <LayoutContainer style={{marginLeft: layoutMarginLeft, marginTop: layoutMarginTop}}>
           {layout.map((row, i) => (
             <Row key={'agentRow' + i} style={{marginVertical}}>
-              {row.map((cell, j: number) => {
+              {row.map((cell: number, j: number) => {
                 const stackIndex = layout[0].length * i + j;
                 if (props.initialMap[stackIndex] === undefined) {
                   return (

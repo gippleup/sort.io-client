@@ -48,7 +48,6 @@ const GameSceneTester = () => {
           opponentProfileRef.current?.express(element, "bottomLeft", 50);
         }
       }}
-      noGradient
     />
   );
 };

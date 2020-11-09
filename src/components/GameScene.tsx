@@ -16,11 +16,11 @@ import {
   LevelInfo,
   LevelInfoContainer,
   MetaInfoContainer,
-  OpponentBoard,
+  OpponentBoardContainer,
   OpponentGameContainer,
+  PlayerBoardContainer,
   ProfileContainer,
   ScoreCheckerContainer,
-  StyledRefBoard,
   TimerContainer,
   UserName
 } from './GameScene/_StyledComponent'
@@ -86,7 +86,6 @@ class GameScene extends React.Component<GameSceneProps, {}>{
   playerProfileRef = React.createRef<View>();
   opponentProfileRef = React.createRef<View>();
   playerProfileCenter: null | {x: number; y: number} = null;
-  mapScale = 1;
   scoreCheckerMax = {
     single: {
       width: 320 / 360 * Dimensions.get('window').width,
@@ -107,7 +106,6 @@ class GameScene extends React.Component<GameSceneProps, {}>{
 
   constructor(props: Readonly<GameSceneProps>) {
     super(props);
-    this.mapScale = decideMapScale(props.map.length);
     this.checkerMaxWidth = this.scoreCheckerMax[props.mode].width;
     this.checkerMaxHeight = this.scoreCheckerMax[props.mode].height;
     this.expressionWheelSize = props.expressionWheelSize || 200;
@@ -207,7 +205,6 @@ class GameScene extends React.Component<GameSceneProps, {}>{
       props,
       opponentBoardRef,
       opponentScoreCheckerRef,
-      mapScale,
       boardReadyStatus,
     } = this;
 
@@ -217,37 +214,40 @@ class GameScene extends React.Component<GameSceneProps, {}>{
 
     return (
       <OpponentGameContainer pointerEvents="none">
-        <OpponentBoard
-          ref={opponentBoardRef}
-          initialMap={props.map}
-          skin={props.opponentSkin || "basic"}
-          onScoreChange={(score) => {
-            opponentScoreCheckerRef.current?.setScore(score);
-            if (props.onScoreChange) {
-              props.onScoreChange("opponent", score);
-            }
-          }}
-          onComplete={() => {
-            if (props.onComplete) {
-              props.onComplete("opponent");
-            }
-          }}
-          scale={mapScale * 0.35}
-          onLayout={() => {
-            boardReadyStatus.opponent = true
-            this.onLayout();
-          }}
-          onDock={() => {
-            // const sound = getSoundEffect(props.playerSkin || "basic").dock;
-            // sound.setVolume(0.3);
-            // sound.play();
-          }}
-          fps={props.fps}
-          noAnimation={props.noAnimation}
-          dockEasing={props.opponentDockEasing}
-          dockEasingDuration={props.opponentDockEasingDuration}
-          noGradient={props.noGradient}
-        />
+        <OpponentBoardContainer>
+          <NativeRefBlockBoard
+            width={(130 / 360) * Dimensions.get('window').width}
+            height={(150 / 640) * Dimensions.get('window').height}
+            ref={opponentBoardRef}
+            initialMap={props.map}
+            skin={props.opponentSkin || "basic"}
+            onScoreChange={(score) => {
+              opponentScoreCheckerRef.current?.setScore(score);
+              if (props.onScoreChange) {
+                props.onScoreChange("opponent", score);
+              }
+            }}
+            onComplete={() => {
+              if (props.onComplete) {
+                props.onComplete("opponent");
+              }
+            }}
+            onLayout={() => {
+              boardReadyStatus.opponent = true
+              this.onLayout();
+            }}
+            onDock={() => {
+              // const sound = getSoundEffect(props.playerSkin || "basic").dock;
+              // sound.setVolume(0.3);
+              // sound.play();
+            }}
+            fps={props.fps}
+            noAnimation={props.noAnimation}
+            dockEasing={props.opponentDockEasing}
+            dockEasingDuration={props.opponentDockEasingDuration}
+            noGradient={props.noGradient}
+          />
+        </OpponentBoardContainer>
       </OpponentGameContainer>
     )
   }
@@ -388,7 +388,6 @@ class GameScene extends React.Component<GameSceneProps, {}>{
       scoreCheckerRef,
       boardReadyStatus,
       startTimerIfBothReady,
-      mapScale,
       timerRef,
       expressionWheelSize,
       expressionWheelContainerRef,
@@ -421,48 +420,51 @@ class GameScene extends React.Component<GameSceneProps, {}>{
           </MetaInfoContainer>
         </GameInfoContainer>
         <BlockBoardContainer>
-          <StyledRefBoard
-            initialMap={props.map}
-            skin={props.playerSkin || "basic"}
-            onScoreChange={(score) => {
-              scoreCheckerRef.current?.setScore(score);
-              if (props.onScoreChange) {
-                props.onScoreChange("me", score);
-              }
-            }}
-            onDock={(stackIndex) => {
-              if (props.onDock) {
-                props.onDock(stackIndex);
-              }
-              const sound = getSoundEffect(props.playerSkin || "basic").dock;
-              if (sound) {
-                sound.setVolume(1);
-                sound.play();
-              }
-              this.hideExpressionWheel();
-            }}
-            onUndock={(stackIndex) => {
-              if (props.onUndock) {
-                props.onUndock(stackIndex);
-              }
-              this.hideExpressionWheel();
-            }}
-            onComplete={() => {
-              if (props.onComplete) {
-                props.onComplete("me");
-              }
-            }}
-            scale={mapScale}
-            onLayout={() => {
-              boardReadyStatus.player = true;
-              this.onLayout();
-            }}
-            fps={props.fps}
-            noAnimation={props.noAnimation}
-            dockEasing={props.playerDockEasing}
-            dockEasingDuration={props.playerDockEasingDuraton}
-            noGradient={props.noGradient}
-          />
+          <PlayerBoardContainer>
+            <NativeRefBlockBoard
+              width={Dimensions.get('window').width - 20}
+              height={Dimensions.get('window').height * 0.65 - 20}
+              initialMap={props.map}
+              skin={props.playerSkin || "basic"}
+              onScoreChange={(score) => {
+                scoreCheckerRef.current?.setScore(score);
+                if (props.onScoreChange) {
+                  props.onScoreChange("me", score);
+                }
+              }}
+              onDock={(stackIndex) => {
+                if (props.onDock) {
+                  props.onDock(stackIndex);
+                }
+                const sound = getSoundEffect(props.playerSkin || "basic").dock;
+                if (sound) {
+                  sound.setVolume(1);
+                  sound.play();
+                }
+                this.hideExpressionWheel();
+              }}
+              onUndock={(stackIndex) => {
+                if (props.onUndock) {
+                  props.onUndock(stackIndex);
+                }
+                this.hideExpressionWheel();
+              }}
+              onComplete={() => {
+                if (props.onComplete) {
+                  props.onComplete("me");
+                }
+              }}
+              onLayout={() => {
+                boardReadyStatus.player = true;
+                this.onLayout();
+              }}
+              fps={props.fps}
+              noAnimation={props.noAnimation}
+              dockEasing={props.playerDockEasing}
+              dockEasingDuration={props.playerDockEasingDuraton}
+              noGradient={props.noGradient}
+            />
+          </PlayerBoardContainer>
         </BlockBoardContainer>
         <NativeRefBox
           ref={expressionWheelContainerRef}

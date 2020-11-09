@@ -39,13 +39,15 @@ export const getStackLayout = (layout: Pick<LayoutRectangle, "height" | "width">
     if (availableCell < stackCount) {
       scale -= 0.01;
     } else {
+      const requiredColumn = Math.min(possibleColumnCount, stackCount);
+      const requiredRow = Math.ceil(stackCount / requiredColumn);
       foundFitScale = true;
       stackLayout = {
         scale,
         boardPaddingHorizontal: boardPaddingHorizontal * scale,
         boardPaddingVertical: boardPaddingVertical * scale,
-        column: possibleColumnCount,
-        row: possibleRowCount,
+        column: requiredColumn,
+        row: requiredRow,
         stackMarginHorizontal: stackMarginHorizontal * scale,
         stackMarginVertical: stackMarginVertical * scale
       }

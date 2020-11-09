@@ -1,4 +1,3 @@
-import NativeRefBlockBoard from '../NativeRefBlockBoard';
 import styled from "styled-components";
 import { View, Dimensions, Text, ViewProps, TextProps } from "react-native";
 import chroma from 'chroma-js';
@@ -15,10 +14,13 @@ export const GameInfoContainer = styled(View)`
 export const OpponentGameContainer: typeof View = styled(View)`
   justify-content: center;
   align-items: center;
-  width: ${(119 / 360) * Dimensions.get('window').width}px;
-  height: ${(150 / 640) * Dimensions.get('window').height}px;
   margin-left: 10px;
   margin-top: 20px;
+`;
+
+export const OpponentBoardContainer: typeof View = styled(View)`
+  background-color: rgba(0,0,0,0.2);
+  border-width: 0.5px;
 `;
 
 export const LevelInfoContainer = styled(View)`
@@ -68,20 +70,9 @@ export const BlockBoardContainer = styled(View)`
   justify-content: center;
 `;
 
-export const OpponentBoard: typeof NativeRefBlockBoard = styled(NativeRefBlockBoard)`
-  width: 100%;
-  height: 100%;
-  background-color: ${chroma('black').alpha(0.2).hex()};
-  border-width: 0.5px;
-  border-color: black;
-`;
-
-export const StyledRefBoard: typeof NativeRefBlockBoard = styled(NativeRefBlockBoard)`
-  width: ${(340 / 360) * Dimensions.get('window').width}px;
-  height: ${(430 / 640) * Dimensions.get('window').height}px;
-  border-width: 0.5px;
-  border-color: black;
-  background-color: ${chroma('black').alpha(0.3).hex()};
+export const PlayerBoardContainer = styled(View)`
+  background-color: rgba(0,0,0,0.2);
+  border-width: 1px;
 `;
 
 export const UserName: React.FC<TextProps & {color?: string, backgroundColor?: string}> = styled(Text)`

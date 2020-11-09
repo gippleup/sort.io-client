@@ -1,15 +1,8 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Dimensions} from 'react-native';
 import NativeRefBlockBoard from '../../components/NativeRefBlockBoard';
 import styled from 'styled-components';
 import {BlockTypes} from '../../components/Block/Types';
-
-const MyBoard: typeof NativeRefBlockBoard = styled(NativeRefBlockBoard)`
-  background-color: royalblue;
-  width: 340px;
-  height: 400px;
-  /* transform: scale(0.5) translateX(-85px) translateY(-100px); */
-`;
 
 const exStackMap: BlockTypes[][] = [
   [0, 0, 0],
@@ -22,12 +15,16 @@ const exStackMap: BlockTypes[][] = [
 
 const RefBlockBoardTester = () => {
   return (
-    <View>
-      <MyBoard
-        onComplete={undefined}
-        skin="baby"
-        initialMap={exStackMap}
-      />
+    <View style={{justifyContent: "center", alignItems: "center"}}>
+      <View onLayout={(e) => console.log(e.nativeEvent.layout)} style={{backgroundColor: "royalblue"}}>
+        <NativeRefBlockBoard
+          onComplete={undefined}
+          skin="baby"
+          initialMap={exStackMap}
+          width={278}
+          height={215}
+        />
+      </View>
     </View>
   );
 };

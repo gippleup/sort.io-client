@@ -232,7 +232,6 @@ class FastGameScene extends React.Component<FastGameSceneProps, {}>{
               props.onComplete("opponent");
             }
           }}
-          scale={mapScale * 0.35}
           onLayout={() => {
             boardReadyStatus.opponent = true
             this.onLayout();
@@ -452,7 +451,6 @@ class FastGameScene extends React.Component<FastGameSceneProps, {}>{
                 props.onComplete("me");
               }
             }}
-            scale={mapScale}
             onLayout={() => {
               boardReadyStatus.player = true;
               this.onLayout();

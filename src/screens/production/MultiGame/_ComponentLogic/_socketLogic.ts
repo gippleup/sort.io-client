@@ -135,6 +135,19 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
       remainTargetRoutes(navigation, ["Main"]);
     })
 
+  const syncPrepareTimerListener = socket.addListener("onSyncPrepareTimer",
+    (leftTime: number) => {
+      if (leftTime > 0) {
+      } else {
+        setTimeout(() => {
+          modifyToTargetRoutes(navigation, [
+            {name: "LoadingScreen"},
+            {name: "MultiGame"},
+          ])
+        }, 1000);
+      }
+    })
+
   const informWinnerListener = socket.addListener("onInformWinner",
     (winnerId: number) => {
       const hasWon = playData.user.id === winnerId;

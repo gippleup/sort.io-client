@@ -45,24 +45,18 @@ const PreparePopup = (props: PreparePopupProps) => {
     }
   })
 
-  React.useEffect(() => {
-    const syncPrepareTimerListener = socket.addListener("onSyncPrepareTimer",
-      (leftTime: number) => {
-        if (leftTime > 0) {
-          readyTimerRef.current?.setLeftTime(leftTime);
-        } else {
-          readyTimerRef.current?.setText("START!");
-          setTimeout(() => {
-            modifyToTargetRoutes(navigation, [
-              {name: "LoadingScreen"},
-              {name: "MultiGame"},
-            ])
-          }, 1000);
-        }
-      })
+  const syncPrepareTimerListener = socket.addListener("onSyncPrepareTimer",
+    (leftTime: number) => {
+      if (leftTime > 0) {
+        readyTimerRef.current?.setLeftTime(leftTime);
+      } else {
+        readyTimerRef.current?.setText("START!");
+      }
+    })
 
+    React.useEffect(() => {
     return () => {
-      // socket.removeListener(syncPrepareTimerListener);
+      socket.removeListener(syncPrepareTimerListener);
       unsubscribeBlockRemove();
     }
   })

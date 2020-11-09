@@ -107,6 +107,8 @@ export const GraphButton: typeof TouchableOpacity = styled(TouchableOpacity)`
 
 export const Division = styled(View)`
   align-items: center;
+  flex: 1;
+  justify-content: center;
 `;
 
 export const TicketIcon = (props: { small?: boolean, hasBackground?: boolean }) => (

@@ -23,6 +23,15 @@ import { getIcon } from '../../api/icon';
 import RewardButton from '../../components/RewardButton';
 import useGlobal from '../../hooks/useGlobal';
 import TranslationPack from '../../Language/translation';
+import styled from 'styled-components';
+import AdmobBanner from '../../components/AdmobBaner';
+
+const BannerAdSpace: typeof View = styled(View)`
+  width: 100%;
+  flex: 1;
+  margin-top: 10px;
+  transform: scale(0.8);
+`;
 
 const backgroundImage = require('../../assets/BackgroundPattern.png');
 
@@ -35,6 +44,7 @@ const SelectStage = () => {
   const lastSinglePlayData = singlePlay[singlePlay.length - 1];
   const lastPlayedDifficulty = lastSinglePlayData ? lastSinglePlayData.difficulty : 0;
   const lastPlayedDiffStr = getLevelString(lastPlayedDifficulty);
+  const [bannerAdSpace, setBannerAdSpace] = React.useState<{width: number; height: number;} | undefined>();
 
   const onPressChallenge = () => navigation.navigate('Popup_StartChallenge');
   const onPressTraining = () => navigation.navigate('Popup_StartTraining');
@@ -47,7 +57,7 @@ const SelectStage = () => {
       <PatternBackground source={backgroundImage}/>
       <View style={{flex: 1}}>
         <SelectStageHeader />
-        <View style={{justifyContent: 'space-between', flex: 1, paddingBottom: 50}}>
+        <View style={{justifyContent: 'space-between', flex: 1}}>
           <Division>
             <RecordEntryContainer>
               <FlexHorizontal>
@@ -88,6 +98,9 @@ const SelectStage = () => {
                 </NotoSans>
               </TouchableOpacity>
             </RecordEntryContainer>
+            <BannerAdSpace onLayout={(e) => setBannerAdSpace(e.nativeEvent.layout)}>
+              <AdmobBanner availableSpace={bannerAdSpace} />
+            </BannerAdSpace>
           </Division>
           <Division>
             <View style={{width: Dimensions.get('window').width - 100}}>
@@ -104,9 +117,9 @@ const SelectStage = () => {
                 </TouchableOpacity>
               </FlexHorizontal>
               <Space height={10} />
-              <View>
+              {/* <View>
                 <RewardButton chance={0.1} disappearOnFulfilled/>
-              </View>
+              </View> */}
               <Space height={10} />
               <TouchableOpacity onPress={onPressChallenge}>
                 <CustomTextContainer border full>

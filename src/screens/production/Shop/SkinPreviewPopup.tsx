@@ -15,14 +15,13 @@ import TranslationPack from '../../../Language/translation'
 import { RootStackParamList } from '../../../router/routes'
 
 
-const MyBoard: typeof RefBlockBoard = styled(RefBlockBoard)`
+const BoardContainer: typeof View = styled(View)`
   background-color: royalblue;
   width: ${Dimensions.get('window').width - 100}px;
-  max-width: 260px;
-  height: 180px;
   border-width: 2px;
   border-color: white;
   border-radius: 20px;
+  margin-bottom: 10px;
   /* transform: scale(0.5) translateX(-85px) translateY(-100px); */
 `;
 
@@ -58,18 +57,22 @@ const SkinPreviewPopup = (props: SkinPreviewPopupProps) => {
           height: Dimensions.get('window').height
         }}
       />
-      <MyBoard
-        onComplete={undefined}
-        skin={skin}
-        initialMap={generateMap({
-          blockStackCount: 5,
-          colorCount: 4,
-          maxScore: 4,
-          stackLengthMax: 8,
-          stackLengthMin: 5,
-          shuffleCount: 100,
-        }).question}
-      />
+      <BoardContainer>
+        <RefBlockBoard
+          width={Dimensions.get('window').width - 100}
+          height={Math.min(Dimensions.get('window').height - 100, 400)}
+          onComplete={undefined}
+          skin={skin}
+          initialMap={generateMap({
+            blockStackCount: 5,
+            colorCount: 4,
+            maxScore: 4,
+            stackLengthMax: 8,
+            stackLengthMin: 5,
+            shuffleCount: 100,
+          }).question}
+        />
+      </BoardContainer>
       <Space height={10} />
       <TouchableOpacity onPress={onPressClose}>
         <RoundPaddingCenter>

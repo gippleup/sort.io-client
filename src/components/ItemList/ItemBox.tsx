@@ -2,7 +2,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import chroma from 'chroma-js';
 import React from 'react'
 import { View } from 'react-native'
-import { slimNavigate } from '../../api/navigation';
+import { modifyToTargetRoutes, slimNavigate } from '../../api/navigation';
 import TranslationPack from '../../Language/translation';
 import { SupportedLanguage } from '../../redux/actions/global/types';
 import { RootStackParamList } from '../../router/routes';
@@ -101,21 +101,26 @@ class ItemBox extends React.PureComponent<ItemBoxProps> {
       const navigationOption = {
         skin: {
           target: "Popup_SkinPreview",
-          param: {
+          params: {
             skin: name,
           }
         },
         expression: {
           target: "Popup_ExpressionPreview",
-          param: {
+          params: {
             expression: name,
           }
         }
       }
   
       if (category === "skin" || category === "expression") {
-        const { target, param } = navigationOption[category];
-        slimNavigate(navigation, target as keyof RootStackParamList, param, "LOADING");
+        const { target, params } = navigationOption[category];
+        modifyToTargetRoutes(navigation, [
+          {name: "LoadingScreen"},
+          {name: "Main", onDemand: true},
+          {name: "Shop", onDemand: true},
+          {name: target as keyof RootStackParamList, params, LoadingText: "Loading"}
+        ])
         // navigation.navigate(target as keyof RootStackParamList, param);
       }
     };

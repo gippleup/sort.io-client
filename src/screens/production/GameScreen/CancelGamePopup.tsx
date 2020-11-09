@@ -10,7 +10,7 @@ import socketClientActions from '../../../hooks/useMultiGameSocket/action/creato
 import usePlayData from '../../../hooks/usePlayData'
 import useGlobal from '../../../hooks/useGlobal'
 import TranslationPack from '../../../Language/translation'
-import { remainTargetRoutes, removeTargetRoute } from '../../../api/navigation'
+import { modifyToTargetRoutes, remainTargetRoutes, removeTargetRoute } from '../../../api/navigation'
 
 type CancelGameNavigationProp = StackNavigationProp<RootStackParamList, 'Popup_CancelGame'>
 type CancelGameRouteProp = RouteProp<RootStackParamList, 'Popup_CancelGame'>
@@ -46,11 +46,20 @@ const CancelGamePopup = (props: CancelGameProps) => {
     }
   }
 
-  const goToMain = () => remainTargetRoutes(navigation, ["Main"]);
-
   const exitGame = () => {
-    goToMain();
-    sendExitGame();
+    if (mode === "multi") {
+      sendExitGame();
+      modifyToTargetRoutes(navigation, [
+        {name: "LoadingScreen"},
+        {name: "Main"},
+      ]);
+    } else if (mode === "single") {
+      modifyToTargetRoutes(navigation, [
+        {name: "LoadingScreen"},
+        {name: "Main", onDemand: true},
+        {name: "SelectStage"},
+      ]);
+    }
   }
 
   const buttons: PopupButton[] = [

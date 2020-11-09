@@ -21,6 +21,8 @@ import AdmobBanner from '../../components/AdmobBaner'
 import BuildConfig from 'react-native-config'
 import { AppState } from '../../redux/store'
 import TranslationPack from '../../Language/translation'
+import { modifyToTargetRoutes, slimNavigate } from '../../api/navigation'
+import useMultiGameSocket from '../../hooks/useMultiGameSocket'
 
 const {BUILD_ENV} = BuildConfig;
 
@@ -55,7 +57,6 @@ const Main = (props: MainProps) => {
   const dispatch = useDispatch();
   const netInfo = useNetInfo();
   const [serverStatus, setServerStatus] = React.useState<"dead" | "alive">("dead");
-  const backHandler = React.useRef<NativeEventSubscription | null>(null);
   const [bannerAdSpace, setBannerAdSpace] = React.useState<{width: number; height: number;} | undefined>();
   let focusTimeout: NodeJS.Timeout;
 
@@ -64,18 +65,33 @@ const Main = (props: MainProps) => {
     dispatch(loadPlayData());
   }
 
-  const backHandlerListner = () => {
-    if (BUILD_ENV === "DEV") return false;
-    if (isConnectionOk) {
-      navigation.navigate("Popup_Exit");
-      return true;
-    } else {
-      return false;
+  let unsubscribeBeforeRemove: null | (() => void) = null;
+  
+  const configureBeforeRemove = () => {
+    if (unsubscribeBeforeRemove !== null) return;
+    unsubscribeBeforeRemove = navigation.addListener("beforeRemove", (e) => {
+      if (e.data.action.type === "GO_BACK") {
+        e.preventDefault();
+      }
+      // if (BUILD_ENV === "DEV") return false;
+      if (isConnectionOk) {
+        navigation.navigate("Popup_Exit");
+        return true;
+      } else {
+        return false;
+      }
+    })
+  }
+
+  const removeBeforeRemove = () => {
+    if (unsubscribeBeforeRemove) {
+      unsubscribeBeforeRemove();
+      unsubscribeBeforeRemove = null;
     }
-  };
+  }
 
   const onFoucus = () => {
-    backHandler.current = BackHandler.addEventListener("hardwareBackPress", backHandlerListner);
+    configureBeforeRemove();
     focusTimeout = setTimeout(() => {
       isServerAlive().then((isAlive) => {
         if (isAlive) {
@@ -89,18 +105,39 @@ const Main = (props: MainProps) => {
   };
 
   const onBlur = () => {
-    if (backHandler.current) {
-      backHandler.current.remove();
-    }
+    removeBeforeRemove();
     if (focusTimeout !== undefined) {
       clearTimeout(focusTimeout);
     }
   }
 
-  const onPressSingle = () => navigation.navigate('SelectStage');
-  const onPressMulti = () => navigation.navigate('Popup_MultiWaiting');
-  const onPressShop = () => navigation.navigate("Shop");
-  const onPressLeaderBoard = () => navigation.navigate("LeaderBoard");
+  const onPressSingle = () => {
+    removeBeforeRemove();
+    modifyToTargetRoutes(navigation, [
+      {name: "LoadingScreen"},
+      {name: "Main", onDemand: true},
+      {name: "SelectStage"},
+    ])
+  }
+  const onPressMulti = () => {
+    navigation.navigate('Popup_MultiWaiting');
+  }
+  const onPressShop = () => {
+    removeBeforeRemove();
+    modifyToTargetRoutes(navigation, [
+      {name: "LoadingScreen"},
+      {name: "Main", onDemand: true},
+      {name: "Shop"},
+    ])
+  }
+  const onPressLeaderBoard = () => {
+    removeBeforeRemove();
+    modifyToTargetRoutes(navigation, [
+      {name: "LoadingScreen"},
+      {name: "Main", onDemand: true},
+      {name: "LeaderBoard"},
+    ])
+  }
 
   const SubTitle = () => {
     if (!netInfo.isConnected) {
@@ -138,9 +175,11 @@ const Main = (props: MainProps) => {
   }
 
   React.useEffect(() => {
+    configureBeforeRemove();
     const unsubscribeFocus = navigation.addListener("focus", onFoucus);
     const unsubscribeBlur = navigation.addListener("blur", onBlur);
     return () => {
+      removeBeforeRemove();
       unsubscribeFocus();
       unsubscribeBlur();
     }

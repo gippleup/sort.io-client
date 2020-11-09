@@ -90,6 +90,7 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
   const errorListener = socket.addListener("onError",
     (err: WebSocketErrorEvent) => {
       modifyToTargetRoutes(navigation, [
+        {name: "LoadingScreen"},
         {name: "Main"},
         {name: "Popup_BadConnection"}
       ]);
@@ -99,7 +100,7 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
   const informOpponentHasLeftListener = socket.addListener("onInformOpponentHasLeft",
     (passedGoodTime: boolean) => {
       modifyToTargetRoutes(navigation, [
-        {name: "Main"},
+        {name: "LoadingScreen"},
         {name: "MultiGame"},
         {name: "Popup_GameResult", params: {
           result: passedGoodTime ? "win" : "draw",
@@ -124,11 +125,6 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
 
   const alertPrepareListener = socket.addListener("onAlertPrepare",
     () => {
-      modifyToTargetRoutes(navigation, [
-        {name: "Main"},
-        {name: "MultiGame"},
-        {name: "Popup_Prepare"},
-      ])
       containerRef.current?.setNativeProps({
         pointerEvents: "auto"
       })

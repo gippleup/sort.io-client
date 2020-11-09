@@ -3,12 +3,15 @@ import React from 'react'
 import { View, Text, Dimensions, BackHandler } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components'
-import { removeTargetRoute } from '../../../api/navigation';
+import { modifyToTargetRoutes, removeTargetRoute } from '../../../api/navigation';
 import { FlexHorizontal, NotoSans, Space, WindowSizeView } from '../../../components/Generic/StyledComponents'
 import StrokedText from '../../../components/StrokedText';
 import useGlobal from '../../../hooks/useGlobal';
 import { RootStackParamList } from '../../../router/routes';
 import { getRandomQuestionSet } from './ExitPopup/utils';
+import BuildConfig from 'react-native-config';
+
+const {BUILD_ENV} = BuildConfig;
 
 const Container = styled(WindowSizeView)`
   justify-content: center;
@@ -38,7 +41,15 @@ const ExitPopup = () => {
   const {language: lan} = useGlobal();
   const questionSet = getRandomQuestionSet(lan);
 
-  const exitGame = BackHandler.exitApp;
+  const exitGame = () => {
+    if (BUILD_ENV === "DEV") {
+      modifyToTargetRoutes(navigation, [
+        {name: "Developer"},
+      ])
+    } else {
+      BackHandler.exitApp();
+    }
+  }
   const cancelExit = () => removeTargetRoute(navigation, "Popup_Exit");
 
   return (

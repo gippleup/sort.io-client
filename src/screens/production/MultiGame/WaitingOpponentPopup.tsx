@@ -1,8 +1,11 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react'
 import { View, Text, Easing, Animated, BackHandler } from 'react-native'
 import styled from 'styled-components'
+import { modifyToTargetRoutes } from '../../../api/navigation';
 import { NotoSans } from '../../../components/Generic/StyledComponents';
 import useGlobal from '../../../hooks/useGlobal';
+import useMultiGameSocket from '../../../hooks/useMultiGameSocket';
 import TranslationPack from '../../../Language/translation';
 
 const Container: typeof View = styled(View)`
@@ -26,16 +29,28 @@ const WaitingOpponentPopup = () => {
   const wiggle = React.useRef(new Animated.Value(0));
   const {language: lan} = useGlobal();
   const translation = TranslationPack[lan].screens.MultiPlay;
+  const navigation = useNavigation();
+  const socket = useMultiGameSocket();
   const scale = wiggle.current.interpolate({
     inputRange: [0, 1],
     outputRange: [1, 1.5],
   });
 
-  const blockGoBack = () => {
-    return true;
-  }
+  const unsubscribeBeforeRemove = navigation.addListener("beforeRemove", (e) => {
+    if (e.data.action.type === "GO_BACK") {
+      e.preventDefault();
+    }
+  })
 
-  BackHandler.addEventListener("hardwareBackPress", blockGoBack);
+  const alertPrepareListener = socket.addListener("onAlertPrepare",
+    () => {
+      unsubscribeBeforeRemove();
+      modifyToTargetRoutes(navigation, [
+        {name: "LoadingScreen"},
+        {name: "MultiGame"},
+        {name: "Popup_Prepare"},
+      ])
+    })
   
   React.useEffect(() => {
     const scaleAnimation = Animated.sequence([
@@ -55,7 +70,7 @@ const WaitingOpponentPopup = () => {
     Animated.loop(scaleAnimation).start();
 
     return () => {
-      BackHandler.removeEventListener("hardwareBackPress", blockGoBack);
+      unsubscribeBeforeRemove();
     }
   })
 

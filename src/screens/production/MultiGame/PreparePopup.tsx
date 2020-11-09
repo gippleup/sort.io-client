@@ -11,7 +11,7 @@ import ReadyTimer from '../../../components/ReadyTimer';
 import { BeforeRemoveEvent } from '../GameScreen/utils';
 import { FullFlexCenter } from '../../../components/Generic/StyledComponents';
 import chroma from 'chroma-js';
-import { remainTargetRoutes } from '../../../api/navigation';
+import { modifyToTargetRoutes, remainTargetRoutes } from '../../../api/navigation';
 
 type PreparePopupRouteProps = RouteProp<RootStackParamList, "Popup_Prepare">;
 type PreparePopupNavigationProps = StackNavigationProp<RootStackParamList, "Popup_Prepare">;
@@ -38,29 +38,32 @@ const PreparePopup = (props: PreparePopupProps) => {
     }))
   }
 
-  React.useEffect(() => {
-    const blockGoBack = (e: BeforeRemoveEvent) => {
-      const { payload, type } = e.data.action;
-      if (type === "GO_BACK") {
-        e.preventDefault();
-      }
+  const unsubscribeBlockRemove = navigation.addListener("beforeRemove", (e) => {
+    const { payload, type } = e.data.action;
+    if (type === "GO_BACK") {
+      e.preventDefault();
     }
+  })
 
-    navigation.addListener("beforeRemove", blockGoBack)
-
+  React.useEffect(() => {
     const syncPrepareTimerListener = socket.addListener("onSyncPrepareTimer",
       (leftTime: number) => {
         if (leftTime > 0) {
           readyTimerRef.current?.setLeftTime(leftTime);
         } else {
           readyTimerRef.current?.setText("START!");
-          setTimeout(() => remainTargetRoutes(navigation, ["Main", "MultiGame"]), 1000);
+          setTimeout(() => {
+            modifyToTargetRoutes(navigation, [
+              {name: "LoadingScreen"},
+              {name: "MultiGame"},
+            ])
+          }, 1000);
         }
       })
 
     return () => {
       // socket.removeListener(syncPrepareTimerListener);
-      navigation.removeListener("beforeRemove", blockGoBack);
+      unsubscribeBlockRemove();
     }
   })
 

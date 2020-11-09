@@ -137,7 +137,10 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     }
   }
 
-  const goHome = () => remainTargetRoutes(navigation, ["Main"])
+  const goHome = () => modifyToTargetRoutes(navigation, [
+    {name: "LoadingScreen"},
+    {name: "Main"},
+  ])
 
   const onHomePressed = () => {
     socket.close();
@@ -166,6 +169,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     // })
     socket.close();
     modifyToTargetRoutes(navigation, [
+      {name: "LoadingScreen"},
       {name: "Main"},
       {name: "Popup_MultiWaiting"},
     ]);
@@ -199,7 +203,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     const informOpponentHasLeftListener = socket.addListener(
       "onInformOpponentHasLeft", () => {
         modifyToTargetRoutes(navigation, [
-          {name: "Main"},
+          {name: "LoadingScreen"},
           {name: "MultiGame"},
           {name: "Popup_GameResult"},
           {name: "Popup_OpponentLeft"},
@@ -210,7 +214,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     const allowInformRematchRequestListener = socket.addListener(
       "onAllowInformRematchRequest", () => {
         modifyToTargetRoutes(navigation, [
-          {name: "Main"},
+          {name: "LoadingScreen"},
           {name: "MultiGame"},
           {name: "Popup_GameResult"},
           {name: "Popup_RematchWaiting", params: {beingInvited: false}},
@@ -220,7 +224,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     const askRematchListener = socket.addListener(
       "onAskRematch", () => {
         modifyToTargetRoutes(navigation, [
-          {name: "Main"},
+          {name: "LoadingScreen"},
           {name: "MultiGame"},
           {name: "Popup_GameResult"},
           {name: "Popup_RematchWaiting", params: {beingInvited: true}},

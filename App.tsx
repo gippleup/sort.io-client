@@ -11,15 +11,16 @@ import {
   StatusBar,
 } from 'react-native';
 import routes, { RootStackParamList } from './src/router/routes';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, NavigationContainerRef} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Developer from './src/router/Developer';
 import {Provider as ReduxProvider} from 'react-redux';
 import store from './src/redux/store';
 import {cardTransitionSpecs, cardTransitions} from './src/router/cardTransition';
-import {enableScreens} from 'react-native-screens';
+import {enableScreens, useScreens} from 'react-native-screens';
 import BuildConfig from 'react-native-config';
 import codePush, {CodePushOptions} from 'react-native-code-push';
+import { ModifyOption, modifyToTargetRoutes } from './src/api/navigation';
 
 const { BUILD_ENV } = BuildConfig;
 
@@ -39,6 +40,7 @@ const buildVariable: {[T in typeof BUILD_ENV]: {
 
 let App: () => React.ReactNode = () => {
   const { initialRouteName } = buildVariable[BUILD_ENV];
+  const navContainerRef = React.useRef<NavigationContainerRef>(null)
   const renderDevloperScreen = () => {
     if (BUILD_ENV === "DEV") {
       return <Stack.Screen name="Developer" component={Developer} />
@@ -55,11 +57,21 @@ let App: () => React.ReactNode = () => {
     }
   })
 
+  React.useEffect(() => {
+    const navigation = navContainerRef.current;
+    if (navigation && BUILD_ENV === "RELEASE") {
+      modifyToTargetRoutes(navigation, [
+        {name: "LoadingScreen"},
+        {name: "Main"},
+      ])
+    }
+  })
+
   return (
     <>
       <StatusBar barStyle="dark-content" hidden />
       <ReduxProvider store={store}>
-        <NavigationContainer>
+        <NavigationContainer ref={navContainerRef}>
           <Stack.Navigator mode="modal" initialRouteName={initialRouteName}>
             {renderDevloperScreen()}
             {filteredRoute.map(([routeName, routerOption]) => {

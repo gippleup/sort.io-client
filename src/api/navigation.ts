@@ -1,8 +1,8 @@
-import { CommonActions, NavigationProp } from "@react-navigation/native";
+import { CommonActions, NavigationContainerRef, NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../router/routes";
 
-type SortIoNavigation = NavigationProp<RootStackParamList>;
 type RouteName = keyof RootStackParamList;
+type SortIoNavigation = NavigationProp<RootStackParamList, RouteName> | NavigationProp<any>;
 
 export const removeTargetRoute = (navigation: SortIoNavigation, target: RouteName) => {
   navigation.dispatch((state) => {
@@ -30,21 +30,36 @@ export const remainTargetRoutes = (navigation: SortIoNavigation, targets: RouteN
   })
 }
 
-type ModifyOption = {
+export type ModifyOption = {
   name: RouteName,
   params?: any,
   renew?: boolean,
+  onDemand?: boolean,
+  LoadingText?: string,
 }
 
-export const modifyToTargetRoutes = (navigation: SortIoNavigation, options: ModifyOption[]) => {
+let routeId = 0;
+
+export const modifyToTargetRoutes = (navigation: SortIoNavigation | NavigationContainerRef, options: ModifyOption[]) => {
   navigation.dispatch((state) => {
     const existingRoutes = state.routes.map((route) => route.name);
     const routes = options.map((option) => {
       const alreadyOnState = existingRoutes.indexOf(option.name) !== -1;
       const existingRoute = state.routes.filter((route) => route.name === option.name)[0];
-      if (!alreadyOnState || option.renew) {
+      routeId += 1;
+      if (option.onDemand) {
         return {
-          key: option.name + Date.now(),
+          key: "LoadingScreen" + routeId,
+          name: "LoadingScreen",
+          params: {
+            navigateTo: option.name,
+            params: option.params,
+            text: option.LoadingText,
+          },
+        };
+      } else if (!alreadyOnState || option.renew) {
+        return {
+          key: option.name + routeId,
           name: option.name,
           params: option.params,
         };
@@ -53,6 +68,40 @@ export const modifyToTargetRoutes = (navigation: SortIoNavigation, options: Modi
       }
     });
   
+    return CommonActions.reset({
+      ...state,
+      routes,
+      index: routes.length - 1,
+    })
+  })
+}
+
+export const slimNavigate = (navigation: SortIoNavigation | NavigationContainerRef, name: RouteName, params?: any, loadingText?: string) => {
+  navigation.dispatch((state) => {
+    const curRoute = state.routes[state.index];
+    let routes: typeof state.routes = state.routes
+      .map((route) => {
+        if (route === curRoute) {
+          routeId += 1;
+          return {
+            key: "LoadingScreen" + routeId,
+            name: "LoadingScreen",
+            params: {
+              navigateTo: curRoute.name,
+              params: curRoute.params,
+              text: loadingText,
+            },
+          }
+        }
+        return route;
+      })
+    routeId += 1;
+    routes = routes.concat({
+      name,
+      key: name + routeId,
+      params,
+    });
+
     return CommonActions.reset({
       ...state,
       routes,

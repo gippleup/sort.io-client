@@ -27,6 +27,7 @@ import ExitPopup from "../screens/production/Main/ExitPopup";
 import WaitingOpponentPopup from "../screens/production/MultiGame/WaitingOpponentPopup";
 import UpdateScreen from "../screens/UpdateScreen";
 import BadConnectionPopup from "../screens/production/MultiGame/BadConnectionPopup";
+import LoadingScreen, { LoadingScreenParams } from "../screens/production/LoadingScreen";
 
 export const pdRoutes: Routes<pdParams> = {
   Main: {
@@ -84,6 +85,12 @@ export const pdRoutes: Routes<pdParams> = {
     component: UpdateScreen,
     devName: '업데이터',
     invisibleOnDev: true,
+    headerShown: false,
+  },
+  LoadingScreen: {
+    type: "production",
+    devName: "로딩중",
+    component: LoadingScreen,
     headerShown: false,
   },
   Popup_CancelGame: {
@@ -243,4 +250,5 @@ export type pdParams = {
   Popup_Exit: undefined;
   Popup_WaitingOpponent: undefined;
   Popup_BadConnection: undefined;
+  LoadingScreen: LoadingScreenParams;
 }

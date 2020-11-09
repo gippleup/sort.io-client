@@ -2,6 +2,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import chroma from 'chroma-js';
 import React from 'react'
 import { View } from 'react-native'
+import { slimNavigate } from '../../api/navigation';
 import TranslationPack from '../../Language/translation';
 import { SupportedLanguage } from '../../redux/actions/global/types';
 import { RootStackParamList } from '../../router/routes';
@@ -114,7 +115,8 @@ class ItemBox extends React.PureComponent<ItemBoxProps> {
   
       if (category === "skin" || category === "expression") {
         const { target, param } = navigationOption[category];
-        navigation.navigate(target as keyof RootStackParamList, param);
+        slimNavigate(navigation, target as keyof RootStackParamList, param, "LOADING");
+        // navigation.navigate(target as keyof RootStackParamList, param);
       }
     };
   

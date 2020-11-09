@@ -5,11 +5,13 @@ import BasicPopup from '../../../components/Generic/BasicPopup';
 import { AskPopupContentContainer } from './_StyledComponents';
 import { SubTitleText, NotoSans, Space } from '../../../components/Generic/StyledComponents';
 import usePlayData from '../../../hooks/usePlayData';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useTicket } from '../../../redux/actions/playData/thunk';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../redux/store';
 import TranslationPack from '../../../Language/translation';
+import { modifyToTargetRoutes, slimNavigate } from '../../../api/navigation';
+import { RootStackParamList } from '../../../router/routes';
 
 type StartTrainingProps = {
   onPressStart: () => any;
@@ -18,7 +20,7 @@ type StartTrainingProps = {
 const StartTrainingPopup = (props: StartTrainingProps) => {
   const {global, playData} = useSelector((state: AppState) => state);
   const translation = TranslationPack[global.language].screens.SelectStage;
-  const navigation = useNavigation();
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
   const {singlePlay=[]} = playData;
   const dispatch = useDispatch();
   const lastSinglePlayData = singlePlay[singlePlay.length - 1];
@@ -27,15 +29,17 @@ const StartTrainingPopup = (props: StartTrainingProps) => {
   const diffToChallengeStr = getLevelString(diffToChallenge);
 
   const startSingleGame = () => {
-    navigation.goBack();
-    navigation.navigate('GameScene', {
-      mode: 'single',
-      subType: 'training',
-      level: lastPlayedDifficulty,
-      leftTrial: 2,
-      successiveWin: 0,
-      results: [],
-    })
+    modifyToTargetRoutes(navigation, [
+      {name: "LoadingScreen"},
+      {name: "GameScene", params: {
+        mode: 'single',
+        subType: 'training',
+        level: lastPlayedDifficulty,
+        leftTrial: 2,
+        successiveWin: 0,
+        results: [],  
+      }}
+    ])
   }
 
   return (

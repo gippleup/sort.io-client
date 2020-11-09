@@ -12,6 +12,7 @@ import { depositGold, saveSinglePlay } from '../../../redux/actions/playData/thu
 import { GameSubType, GameMode, findLastBoolean, getLevelString } from './utils';
 import Svg, { Text } from 'react-native-svg';
 import { getSoundEffect } from '../../../assets/Sounds';
+import { modifyToTargetRoutes } from '../../../api/navigation';
 
 type StageClearPopupNavigationProp = StackNavigationProp<RootStackParamList, 'Popup_StageClear'>
 type StageClearPopupRouteProp = RouteProp<RootStackParamList, 'Popup_StageClear'>
@@ -32,7 +33,13 @@ type StageClearPopupProps = {
 
 const StageClearPopup = (props: StageClearPopupProps) => {
   const dispatch = useDispatch();
-  const { mode, leftTrial, level, subType, successiveWin, results } = props.route.params;
+  const {route, navigation } = props;
+  const { mode, leftTrial, level, subType, successiveWin, results } = route.params;
+  const unsubscribeBeforeRemove = navigation.addListener("beforeRemove", (e) => {
+    if (e.data.action.type === "GO_BACK") {
+      e.preventDefault();
+    }
+  })
 
   const finishStageWith = (result: 'fail' | 'success') => {
     const nextLevel = Math.min(Math.max(level + (result === 'success' ? 1 : -1), 0), 72);
@@ -47,25 +54,32 @@ const StageClearPopup = (props: StageClearPopupProps) => {
 
     dispatch(depositGold(reward))
 
-    props.navigation.pop();
+    unsubscribeBeforeRemove();
+
     if (leftTrial > 0) {
-      props.navigation.replace('GameScene', {
-        mode: mode,
-        level: nextLevel,
-        leftTrial: leftTrial - 1,
-        subType: subType,
-        successiveWin: nextSuccessiveWin,
-        results,
-      })
+      modifyToTargetRoutes(navigation, [
+        {name: "LoadingScreen"},
+        {name: "GameScene", renew: true, params: {
+          mode: mode,
+          level: nextLevel,
+          leftTrial: leftTrial - 1,
+          subType: subType,
+          successiveWin: nextSuccessiveWin,
+          results,  
+        }}
+      ])
     } else {
       if (subType === 'challenge') {
         dispatch(saveSinglePlay(level))
       }
-      navigation.goBack();
+      modifyToTargetRoutes(navigation, [
+        {name: "LoadingScreen"},
+        {name: "Main", onDemand: true},
+        {name: "SelectStage"},
+      ])
     }
   }
 
-  const navigation = useNavigation();
   const { index: round, value: hasWin } = findLastBoolean(props.route.params.results);
   const title = hasWin ? "SUCCESS!" : "FAIL!"
   const subTitle = `${round + 1}   /   3`;
@@ -76,9 +90,6 @@ const StageClearPopup = (props: StageClearPopupProps) => {
     outputRange: [0, 1],
   });
 
-  const blockBack = () => true;
-  BackHandler.addEventListener("hardwareBackPress", blockBack);
-
   React.useEffect(() => {
     Animated.timing(titleAppearAnim, {
       toValue: 1,
@@ -88,7 +99,6 @@ const StageClearPopup = (props: StageClearPopupProps) => {
     }).start()
 
     return () => {
-      BackHandler.removeEventListener("hardwareBackPress", blockBack);
     }
   })
 
@@ -130,6 +140,7 @@ const StageClearPopup = (props: StageClearPopupProps) => {
                       const sound = getSoundEffect().success[(successiveWin + 1) as 1 | 2 | 3];
                       sound.setVolume(1);
                       sound.setCurrentTime(0);
+                      sound.play();
                       if (successiveWin === 2) {
                         const sound = getSoundEffect().success[4]
                         sound.setVolume(1);

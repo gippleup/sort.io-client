@@ -10,6 +10,7 @@ import { useTicket } from '../../../redux/actions/playData/thunk';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../redux/store';
 import TranslationPack from '../../../Language/translation';
+import { modifyToTargetRoutes } from '../../../api/navigation';
 
 const StartChallengePopup = () => {
   const navigation = useNavigation();
@@ -23,21 +24,23 @@ const StartChallengePopup = () => {
   const diffToChallengeStr = getLevelString(diffToChallenge);
 
   const startSingleGame = () => {
-    navigation.goBack();
     if (playData.user.ticket < 1) {
       return navigation.navigate('Popup_NotEnoughTicket')
     } else {
       dispatch(useTicket(1));
     }
 
-    navigation.navigate('GameScene', {
-      mode: 'single',
-      subType: 'challenge',
-      level: lastPlayedDifficulty,
-      leftTrial: 2,
-      successiveWin: 0,
-      results: [],
-    })
+    modifyToTargetRoutes(navigation, [
+      {name: "LoadingScreen"},
+      {name: "GameScene", params: {
+        mode: 'single',
+        subType: 'challenge',
+        level: lastPlayedDifficulty,
+        leftTrial: 2,
+        successiveWin: 0,
+        results: [],
+      }}
+    ])
   }
 
   return (

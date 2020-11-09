@@ -5,7 +5,7 @@ import { View, Text, Dimensions, Alert, AppState } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { removeTargetRoute } from '../../../api/navigation'
+import { modifyToTargetRoutes, removeTargetRoute, slimNavigate } from '../../../api/navigation'
 import { SupportedSkin } from '../../../components/Block/skinMap'
 import { FlexHorizontal, NotoSans, RoundPaddingCenter, Space } from '../../../components/Generic/StyledComponents'
 import { ItemCategory } from '../../../components/ItemList/ItemBox'
@@ -86,7 +86,7 @@ const ItemPurchasePopup = (props: ItemPurchasePopupProps) => {
   const dispatch = useDispatch();
   const {language: lan} = global;
   const translation = TranslationPack[lan].screens.Shop;
-  const navigation: NavigationProp<RootStackParamList> = useNavigation();
+  const navigation = useNavigation();
   const {
     category,
     item,
@@ -116,8 +116,12 @@ const ItemPurchasePopup = (props: ItemPurchasePopupProps) => {
     } else if (status === "notOwned" && !hasEnoughMoney) {
       navigation.navigate("Popup_NotEnoughMoney")
     } else if (status === "inUse" && category === "expression") {
-      navigation.navigate("ExpressionEquip")
-      onPressClose();
+      modifyToTargetRoutes(navigation, [
+        {name: "LoadingScreen"},
+        {name: "Main", onDemand: true},
+        {name: "Shop", onDemand: true},
+        {name: "ExpressionEquip"},
+      ])
     } else if (status === "notInUse" && category === "skin") {
       dispatch(setSkin(item as SupportedSkin))
       onPressClose();

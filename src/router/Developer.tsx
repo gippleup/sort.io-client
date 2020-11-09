@@ -4,6 +4,10 @@ import styled, {css} from 'styled-components';
 import routes from './routes';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import BuildConfig from 'react-native-config';
+import { modifyToTargetRoutes } from '../api/navigation';
+
+const {BUILD_ENV} = BuildConfig;
 
 const DeveloperContainer = styled(ScrollView)``;
 
@@ -43,7 +47,17 @@ const DevNavButton = (props: DevNavButtonProps) => {
   return (
     <NavButtonContainer
       important={props.type === 'production'}
-      onPress={() => navigation.navigate(props.routeName)}>
+      onPress={() => {
+        if (BUILD_ENV === "DEV" && props.routeName === "Main") {
+          modifyToTargetRoutes(navigation, [
+            {name: "Developer"},
+            {name: "LoadingScreen"},
+            {name: "Main"},
+          ])
+        } else {
+          navigation.navigate(props.routeName)
+        }
+      }}>
       <NavButtonText>{props.devName}</NavButtonText>
     </NavButtonContainer>
   );

@@ -1,4 +1,5 @@
 import { EventArg } from "@react-navigation/native";
+import Constants from "../../../assets/Constants";
 
 export type GameMode = 'single' | 'multi';
 export type GameSubType = 'challenge' | 'training';
@@ -9,15 +10,19 @@ export enum GameLevel {
   Iron = 6,
   Bronze = 9,
   Silver = 12,
-  Gold = 18,
-  Platinum = 24,
-  Diamond = 30,
-  Master = 36,
-  GrandMaster = 42,
-  Challenger = 48,
-  GrandChallenger = 54,
-  Champion = 60,
-  GrandChampion = 66,
+  Gold = 15,
+  Platinum = 18,
+  Diamond = 21,
+  Master = 24,
+  GrandMaster = 27,
+  Challenger = 30,
+  GrandChallenger = 33,
+  Champion = 36,
+  GrandChampion = 39,
+  DemiGod = 42,
+  God = 45,
+  Atom = 48,
+  Nihil = 51,
 };
 
 const _getLeveEnumNumArr = () => {
@@ -63,8 +68,8 @@ export const generateOptionByLevel = (level: number) => {
   const levelStr = getLevelString(level);
   const levelEnumNum = _getLevelEnumNum(level);
   const map = {
-    blockStackCount: levelIndex + 3,
-    colorCount: levelIndex + 2,
+    blockStackCount: Math.floor(levelIndex * 1.5) + 3,
+    colorCount: Math.min(levelIndex + 2, Constants.colorCount),
     maxScore: levelIndex + 2,
     stackLengthMax: 8,
     stackLengthMin: Math.min(levelIndex + 2, 5),

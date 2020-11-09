@@ -1,9 +1,10 @@
 import chroma from 'chroma-js';
+import Constants from '../../assets/Constants';
 
 const mainColor = chroma('red').hex();
 
 const colorArr: string[] = [];
-export const blockTypeCount = 18; // This is the max allowance for color counts.
+export const blockTypeCount = Constants.colorCount; // This is the max allowance for color counts.
 const h = chroma(mainColor).get('hsl.h');
 const s = chroma(mainColor).get('hsl.s');
 const l = chroma(mainColor).get('hsl.l');

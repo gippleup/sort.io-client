@@ -18,6 +18,7 @@ const Constants = {
   },
   maxStackLength: 8,
   minStackLength: 5,
+  colorCount: 18,
 };
 
 export default Constants;

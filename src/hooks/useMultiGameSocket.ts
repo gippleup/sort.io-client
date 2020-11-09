@@ -80,9 +80,17 @@ const forEachValue = (target: Object, cb: (value: any) => any) => {
 
 let socketId = 0;
 
-const useMultiGameSocket = () => {
+type MultiGameSocketOption = {
+  reconfigure: boolean;
+}
+
+const useMultiGameSocket = (option?: MultiGameSocketOption) => {
   const listenerCount = React.useRef(0);
   if (!socket) {
+    socket = configureSocket();
+    socketId += 1;
+  } else if (option && option.reconfigure) {
+    if (socket) socket.close();
     socket = configureSocket();
     socketId += 1;
   }

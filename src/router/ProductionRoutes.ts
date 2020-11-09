@@ -14,7 +14,7 @@ import StartTrainingPopup from "../screens/production/SelectStage/StartTrainingP
 import TicketPurchasePopup from "../screens/production/SelectStage/TicketPurchasePopup";
 import MultigameWaitingPopup from '../screens/production/Main/MultiWaitingPopup';
 import MultiGame, { MultiGameParams } from '../screens/production/MutiGame';
-import Shop from "../screens/production/Shop";
+import Shop, { ShopParams } from "../screens/production/Shop";
 import GameScreen, { GameScreenParams } from "../screens/production/SingleGame";
 import SkinPreviewPopup, { SkinPreviewPopupParams } from "../screens/production/Shop/SkinPreviewPopup";
 import { Routes, CommonPopupOption } from "./types";
@@ -225,7 +225,7 @@ export type pdParams = {
   Main: undefined;
   GameScene: GameScreenParams;
   SelectStage: undefined;
-  Shop: undefined;
+  Shop: ShopParams;
   MultiGame: MultiGameParams;
   ExpressionEquip: ExpressionEquipParams;
   LeaderBoard: undefined;

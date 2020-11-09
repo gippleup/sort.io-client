@@ -40,7 +40,7 @@ const LoadingScreen = (props: LoadingScreenProps) => {
   const text = (params && params.text !== undefined) ? params.text : "로딩중";
 
   return (
-    <View style={{flex: 1, backgroundColor: "royalblue", justifyContent: "center", alignItems: "center"}}>
+    <View style={{flex: 1, backgroundColor: "black", justifyContent: "center", alignItems: "center"}}>
       <NotoSans type="Black" color="white" size={30}>{text}</NotoSans>
     </View>
   )

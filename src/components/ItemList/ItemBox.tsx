@@ -118,7 +118,7 @@ class ItemBox extends React.PureComponent<ItemBoxProps> {
         modifyToTargetRoutes(navigation, [
           {name: "LoadingScreen"},
           {name: "Main", onDemand: true},
-          {name: "Shop", onDemand: true},
+          {name: "Shop", onDemand: true, params: {initialCategory: category}},
           {name: target as keyof RootStackParamList, params, LoadingText: "Loading"}
         ])
         // navigation.navigate(target as keyof RootStackParamList, param);

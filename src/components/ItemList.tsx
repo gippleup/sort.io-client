@@ -1,4 +1,5 @@
 import { NavigationProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react'
 import { ViewStyle, FlatList } from 'react-native'
 import { SupportedLanguage } from '../redux/actions/global/types';
@@ -11,7 +12,7 @@ type ItemListProps = {
   categoryFilter: CategoryFilter;
   style?: ViewStyle;
   lan?: SupportedLanguage;
-  navigation: NavigationProp<RootStackParamList>;
+  navigation: StackNavigationProp<RootStackParamList, "Shop">;
   fallback?: JSX.Element;
 }
 

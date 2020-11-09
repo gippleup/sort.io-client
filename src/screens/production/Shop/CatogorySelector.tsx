@@ -17,14 +17,17 @@ export type CategoryFilter = keyof typeof categoryFilter;
 type CategorySelectorProps = {
   onChange?: (category: CategoryFilter) => any;
   style?: ViewStyle;
+  initialCategory?: CategoryFilter;
 }
 
 const CatogorySelector = (props: CategorySelectorProps) => {
-  const {onChange} = props;
+  const {onChange, initialCategory = "skin"} = props;
   const global = useGlobal();
   const {language: lan} = global;
   const idleColor = 'grey';
   const activeColor = 'dodgerblue';
+  const data = Object.keys(categoryFilter);
+  const initialCursor = data.indexOf(initialCategory);
   return (
     <SlideSelector
       direction="horizontal"
@@ -32,7 +35,7 @@ const CatogorySelector = (props: CategorySelectorProps) => {
       style={props.style}
       size={Dimensions.get('window').width - 150}
       data={Object.keys(categoryFilter)}
-      initialCursor={1}
+      initialCursor={initialCursor}
       entryRenderer={(str: CategoryFilter, selected) => {
         return (
           <View style={{ padding: 20, backgroundColor: selected ? activeColor : idleColor, borderRadius: 10 }}>

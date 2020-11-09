@@ -1,4 +1,4 @@
-import { CommonActions, NavigationProp, useNavigation } from '@react-navigation/native';
+import { CommonActions, NavigationProp, RouteProp, useNavigation } from '@react-navigation/native';
 import React from 'react'
 import { View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -24,14 +24,26 @@ import {
 } from './Shop/_StyledComponents';
 import PreparingItem from './Shop/PreparingItem';
 import { removeTargetRoute } from '../../api/navigation';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-const Shop = () => {
+type ShopProps = {
+  navigation: StackNavigationProp<RootStackParamList, "Shop">;
+  route: RouteProp<RootStackParamList, "Shop">;
+}
+
+export type ShopParams = {
+  initialCategory?: CategoryFilter;
+}
+
+const Shop = (props: ShopProps) => {
+  const {navigation, route} = props;
+  const {params} = route;
+  const initialCategory = (params && params.initialCategory) ? params.initialCategory : "skin";
   const {playData, global, items} = useSelector((state: AppState) => state)
   const dispatch = useDispatch();
   const {language: lan} = global;
   const translation = TranslationPack[lan].screens.Shop;
-  const navigation: NavigationProp<RootStackParamList> = useNavigation();
-  const [categoryFilter, setCategoryFilter] = React.useState<CategoryFilter>("skin");
+  const [categoryFilter, setCategoryFilter] = React.useState<CategoryFilter>(initialCategory);
   const loadedInitialList = React.useRef(false);
   const hasItems = Array.isArray(items) ? items.length > 0 : items;
 
@@ -85,7 +97,7 @@ const Shop = () => {
 
       </Flex>
       <CategorySelectorContainer>
-        <CatogorySelector onChange={onCategoryChange} />
+        <CatogorySelector initialCategory={initialCategory} onChange={onCategoryChange} />
       </CategorySelectorContainer>
     </Flex>
   )

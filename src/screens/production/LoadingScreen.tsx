@@ -37,7 +37,7 @@ const LoadingScreen = (props: LoadingScreenProps) => {
     }
   })
 
-  const text = (params && params.text !== undefined) ? params.text : "로딩중";
+  const text = (params && params.text !== undefined) ? params.text : "LOADING";
 
   return (
     <View style={{flex: 1, backgroundColor: "black", justifyContent: "center", alignItems: "center"}}>

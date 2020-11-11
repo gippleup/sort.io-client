@@ -10,6 +10,8 @@ type StrokedNotoSansProps = {
   size?: number;
   strokeColor?: string;
   strokeWidth?: number;
+  strokeOffsetX?: number;
+  strokeOffsetY?: number;
   width?: number;
   height?: number;
   type?: "Black" | "Thin" | "Regular" | "Bold" | "Light" | "Medium";
@@ -46,6 +48,8 @@ const StrokedNotoSans = (props: StrokedNotoSansProps) => {
     width = maxWidth,
     height = expectedHeight,
     test,
+    strokeOffsetX,
+    strokeOffsetY,
   } = props;
 
   return (
@@ -58,6 +62,8 @@ const StrokedNotoSans = (props: StrokedNotoSansProps) => {
         height={height}
         strokeColor={strokeColor}
         strokeWidth={strokeWidth}
+        strokeOffsetX={strokeOffsetX}
+        strokeOffsetY={strokeOffsetY}
         text={text}
         width={width}
         test={test}

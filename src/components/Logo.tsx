@@ -1,41 +1,33 @@
 import React from 'react'
-import { View } from 'react-native'
+import { Dimensions, View } from 'react-native'
 import { Svg, Text } from 'react-native-svg'
+import useGlobal from '../hooks/useGlobal'
+import TranslationPack from '../Language/translation'
+import { SupportedLanguage } from '../redux/actions/global/types'
+import StrokedNotoSans from './StokedNotoSans'
 
 type LogoProps = {
   fontSize: number;
   strokeWidth?: number;
   strokeColor?: string;
   color?: string;
+  lan?: SupportedLanguage;
 }
 
 const Logo = (props: LogoProps) => {
-  const {fontSize, strokeColor, strokeWidth, color} = props;
+  const {fontSize, strokeColor, strokeWidth, color, lan = SupportedLanguage.en} = props;
+  const translation = TranslationPack[lan].screens.Main;
   return (
     <View style={{backgroundColor: 'transparent'}}>
-      <Svg width={fontSize * (230 / 60)} height={fontSize * (80 / 60)}>
-        <Text
-          fontFamily="NotoSansKR-Thin"
-          alignmentBaseline="center"
-          textAnchor="start"
-          stroke={strokeColor || 'pink'}
-          strokeWidth={strokeWidth ? strokeWidth * 2 : 0}
-          x={fontSize * (27 / 60) - 2}
-          y={0 + 2}
-          fontSize={fontSize}>
-            Sort.io
-        </Text>
-        <Text
-          fontFamily="NotoSansKR-Thin"
-          alignmentBaseline="center"
-          textAnchor="start"
-          x={fontSize * (27 / 60)}
-          y={0}
-          fill={color || "black"}
-          fontSize={fontSize}>
-            Sort.io
-        </Text>
-      </Svg>
+      <StrokedNotoSans
+        text={translation.title}
+        size={fontSize}
+        color="white"
+        strokeColor="rgba(0,0,0,0.5)"
+        type="Thin"
+        strokeOffsetX={1}
+        strokeOffsetY={1}
+      />
     </View>
   )
 }

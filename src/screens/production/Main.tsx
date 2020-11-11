@@ -203,7 +203,7 @@ const Main = (props: MainProps) => {
         <MoneyIndicator value={gold} />
       </View>
       <View style={{alignItems: 'center', marginTop: 120, marginBottom: 40}}>
-        <Logo fontSize={60} strokeWidth={2} color="white" strokeColor="rgba(0,0,0,0.2)" />
+        <Logo lan={lan} fontSize={40} strokeWidth={2} color="white" strokeColor="rgba(0,0,0,0.2)" />
         <FlexHorizontal>
           <SubTitle/>
         </FlexHorizontal>

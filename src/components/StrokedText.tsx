@@ -13,32 +13,50 @@ type StrokedTextProps = {
   height: number;
   test?: boolean;
   dyMultiplier: number;
+  strokeOffsetX?: number;
+  strokeOffsetY?: number;
 }
 
 const StrokedText: React.FC<StrokedTextProps> = (props) => {
+  const {
+    dyMultiplier,
+    fillColor,
+    fontFamily,
+    fontSize,
+    height,
+    strokeColor,
+    strokeWidth,
+    text,
+    width,
+    children,
+    strokeOffsetX = 0,
+    strokeOffsetY = 0,
+    test,
+  } = props;
   return (
-    <View style={{backgroundColor: props.test ? 'white' : 'transparent'}}>
-      <Svg width={props.width} height={props.height}>
+    <View style={{backgroundColor: test ? 'white' : 'transparent'}}>
+      <Svg width={width} height={height}>
         <Text
           fill="none"
-          stroke={props.strokeColor}
-          fontFamily={props.fontFamily}
-          fontSize={props.fontSize} x="50%" y={props.height / 2}
-          dy={props.fontSize * props.dyMultiplier}
-          strokeWidth={props.strokeWidth}
+          stroke={strokeColor}
+          fontFamily={fontFamily}
+          fontSize={fontSize} x="50%" y={height / 2}
+          dy={fontSize * dyMultiplier + strokeOffsetY}
+          dx={strokeOffsetX}
+          strokeWidth={strokeWidth}
           strokeLinejoin="round"
           textAnchor="middle"
         >
-          {props.text || props.children}
+          {text || children}
         </Text>
         <Text
-          fill={props.fillColor}
-          fontFamily={props.fontFamily}
-          fontSize={props.fontSize} x="50%" y={props.height / 2}
-          dy={props.fontSize * props.dyMultiplier}
+          fill={fillColor}
+          fontFamily={fontFamily}
+          fontSize={fontSize} x="50%" y={height / 2}
+          dy={fontSize * dyMultiplier}
           textAnchor="middle"
         >
-          {props.text}
+          {text}
         </Text>
       </Svg>
     </View>

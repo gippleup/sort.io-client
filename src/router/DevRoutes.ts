@@ -24,11 +24,18 @@ import RefBlockBoardTester from "../screens/dev/RefBlockBoardTester";
 import RefBoxTester from "../screens/dev/RefBoxTester";
 import ScoreCheckerTester from "../screens/dev/ScoreCheckerTester";
 import SettingsTester from "../screens/dev/SettingsTester";
+import ShapeChecker from "../screens/dev/ShapeChecker";
 import TimerTester from "../screens/dev/TimerTester";
 import UpdaterTester from "../screens/dev/UpdaterTester";
 import { Routes } from "./types";
 
 export const devRoutes: Routes<Omit<devParams, "Developer">> = {
+  ShapeChecker: {
+    type: "dev",
+    devName: "모양을 보자",
+    component: ShapeChecker,
+    headerShown: false,
+  },
   FastBlockBoardTester: {
     type: "dev",
     devName: "빠른 블록보드 테스터",
@@ -183,6 +190,7 @@ export const devRoutes: Routes<Omit<devParams, "Developer">> = {
 }
 
 export type devParams = {
+  ShapeChecker: undefined;
   ReduxTester: undefined;
   AnimatedNumberTester: undefined;
   ForFun: undefined;

@@ -5,6 +5,7 @@ import { View, Text } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import styled from 'styled-components'
 import { removeTargetRoute } from '../../../api/navigation'
+import { getExpressionSoundEffect } from '../../../assets/sounds/expressionSound'
 import { NotoSans, RoundPaddingCenter, Space } from '../../../components/Generic/StyledComponents'
 import Profile from '../../../components/Profile'
 import expressions, { SupportedExpression } from '../../../components/Profile/Expressions'
@@ -32,7 +33,7 @@ type ExpressionPreviewPopupProps = {
 }
 
 const ExpressionPreviewPopup = (props: ExpressionPreviewPopupProps) => {
-  const { expression: name } = props.route.params;
+  const { expression } = props.route.params;
   const profileRef = React.createRef<Profile>();
   const navigation: NavigationProp<RootStackParamList> = useNavigation();
 
@@ -40,11 +41,7 @@ const ExpressionPreviewPopup = (props: ExpressionPreviewPopupProps) => {
 
   React.useEffect(() => {
     const interval = setInterval(() => {
-      profileRef.current?.express(
-        expressions[name](true),
-        "bottomLeft",
-        50
-      )
+      profileRef.current?.express(expression, "bottomLeft", 50)
     }, 1000)
 
     return () => {

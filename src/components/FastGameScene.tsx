@@ -25,7 +25,7 @@ import {
   UserName
 } from './GameScene/_StyledComponent'
 import { FlexHorizontal } from './Generic/StyledComponents';
-import { getSoundEffect } from '../assets/Sounds';
+import { getSkinSoundEffect } from '../assets/sounds/skinSound';
 import { Easings } from './NativeRefBox/easings';
 import NativeRefBox from './NativeRefBox';
 import ExpressionEquipWheel from './ExpressionEquipWheel';
@@ -237,7 +237,7 @@ class FastGameScene extends React.Component<FastGameSceneProps, {}>{
             this.onLayout();
           }}
           onDock={() => {
-            // const sound = getSoundEffect(props.playerSkin || "basic").dock;
+            // const sound = getSkinSoundEffect(props.playerSkin || "basic").dock;
             // sound.setVolume(0.3);
             // sound.play();
           }}
@@ -433,7 +433,7 @@ class FastGameScene extends React.Component<FastGameSceneProps, {}>{
               if (props.onDock) {
                 props.onDock(stackIndex);
               }
-              const sound = getSoundEffect(props.playerSkin || "basic").dock;
+              const sound = getSkinSoundEffect(props.playerSkin || "basic").dock;
               if (sound) {
                 sound.play();
               }

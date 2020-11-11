@@ -25,7 +25,7 @@ import {
   UserName
 } from './GameScene/_StyledComponent'
 import { FlexHorizontal } from './Generic/StyledComponents';
-import { getSoundEffect } from '../assets/Sounds';
+import { getSkinSoundEffect } from '../assets/sounds/skinSound';
 import { Easings } from './NativeRefBox/easings';
 import NativeRefBox from './NativeRefBox';
 import ExpressionEquipWheel from './ExpressionEquipWheel';
@@ -433,7 +433,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
                 if (props.onDock) {
                   props.onDock(stackIndex);
                 }
-                const sound = getSoundEffect(props.playerSkin || "basic").dock;
+                const sound = getSkinSoundEffect(props.playerSkin || "basic").dock;
                 if (sound) {
                   sound.play();
                 }
@@ -446,19 +446,19 @@ class GameScene extends React.Component<GameSceneProps, {}>{
                 this.hideExpressionWheel();
               }}
               onSelfCompleteStack={(stackIndex) => {
-                const sound = getSoundEffect(props.playerSkin || "basic").self_dock_complete;
+                const sound = getSkinSoundEffect(props.playerSkin || "basic").self_dock_complete;
                 sound.pause();
                 sound.setCurrentTime(0);
                 sound.play();
               }}
               onCompleteStack={(stackIndex) => {
-                const sound = getSoundEffect(props.playerSkin || "basic").dock_complete;
+                const sound = getSkinSoundEffect(props.playerSkin || "basic").dock_complete;
                 sound.pause();
                 sound.setCurrentTime(0);
                 sound.play();
               }}
               onLeftOver={(stackIndex) => {
-                const sound = getSoundEffect(props.playerSkin || "basic").leftover;
+                const sound = getSkinSoundEffect(props.playerSkin || "basic").leftover;
                 sound.pause();
                 sound.setCurrentTime(0);
                 sound.play();

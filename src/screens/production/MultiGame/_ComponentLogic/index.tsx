@@ -2,12 +2,11 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View } from "react-native";
 import { useSelector } from "react-redux";
+import { getExpressionSoundEffect } from "../../../../assets/sounds/expressionSound";
+import { getSkinSoundEffect } from "../../../../assets/sounds/skinSound";
 import GameScene from "../../../../components/GameScene";
 import Profile from "../../../../components/Profile";
-import useGlobal from "../../../../hooks/useGlobal";
 import useMultiGameSocket from "../../../../hooks/useMultiGameSocket";
-import socketClientActions from "../../../../hooks/useMultiGameSocket/action/creator";
-import usePlayData from "../../../../hooks/usePlayData";
 import { ExpressionDirection } from "../../../../redux/actions/global/creator";
 import { RootState } from "../../../../redux/reducers";
 import { MultiGameProps } from "../../MutiGame";
@@ -75,6 +74,10 @@ export const MultiGameLogic = (props: MultiGameProps) => {
   const onPressExpression = (direction: ExpressionDirection) => {
     const expression = global.expressions[direction];
     if (!expression) return;
+    const sound = getExpressionSoundEffect(expression);
+    sound.stop();
+    sound.setCurrentTime(0);
+    sound.play();
     sendExpressEmotionMessage(expression);
   }
 

@@ -2,9 +2,11 @@ import React from 'react'
 import { View, Text, Image, ImageStyle, ViewStyle, StyleSheet } from 'react-native'
 import Animated from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { getExpressionSoundEffect } from '../assets/sounds/expressionSound';
 import ExpressionEquipWheel from './ExpressionEquipWheel';
 import NativeRefBox from './NativeRefBox';
 import Chat from './Profile/Chat';
+import expressions, { SupportedExpression } from './Profile/Expressions';
 
 type ProfileProps = {
   photoUri?: string;
@@ -42,12 +44,13 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
   }
 
   express(
-    expression: JSX.Element,
+    expression: SupportedExpression,
     direction: "topRight" | "topLeft" | "bottomRight" | "bottomLeft" = "topLeft",
     offset: number = 50,
   ) {
     const {bubbleOffsetDiff, size, chatBubbleSize} = this;
     const offsetForCenter = size > chatBubbleSize ? bubbleOffsetDiff : -bubbleOffsetDiff;
+    const expressionElement = expressions[expression](true);
 
     if (this.timeout !== null) return;
     if (this.isAnimating) return;
@@ -86,7 +89,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     }[direction];
 
     this.setState({
-      expression
+      expression: expressionElement
     });
 
     this.chatBoxRef.current?.setStyle({
@@ -95,6 +98,11 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
       scaleX: 0,
       scaleY: 0,
     })
+
+    const sound = getExpressionSoundEffect(expression);
+    sound.stop();
+    sound.setCurrentTime(0);
+    sound.play();
 
     this.chatBoxRef.current?.animate({
       style: {

@@ -11,7 +11,7 @@ import { BeforeRemoveEvent } from '../GameScreen/utils'
 import useMultiGameSocket from '../../../hooks/useMultiGameSocket'
 import socketClientActions, { requestRematch, requestOtherMatch } from '../../../hooks/useMultiGameSocket/action/creator'
 import {boardStyle, titleStyle} from './GameResultPopup/_styles'
-import { getSoundEffect } from '../../../assets/Sounds'
+import { getSkinSoundEffect } from '../../../assets/sounds/skinSound'
 import MultiGameResult from '../../../components/MultiGameResult'
 import styled from 'styled-components'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -177,9 +177,9 @@ const GameResultPopup = (props: GameResultPopupProps) => {
   
   React.useEffect(() => {
     if (result === "win") {
-      getSoundEffect().win.play();
+      getSkinSoundEffect().win.play();
     } else {
-      getSoundEffect().lose.play();
+      getSkinSoundEffect().lose.play();
     }
 
     const removeStackLengthListener = props.navigation.addListener("state", (e) => {

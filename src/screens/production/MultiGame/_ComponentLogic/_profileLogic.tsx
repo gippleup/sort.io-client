@@ -34,11 +34,11 @@ const multiGameProfileLogic = (param: MultiGameProfileLogicParams) => {
   )
 
   const playerExpress = (expression: SupportedExpression) => {
-    playerProfileRef.current?.express(expressions[expression](true), "topLeft", 40)
+    playerProfileRef.current?.express(expression, "topLeft", 40)
   }
 
   const opponentExpress = (expression: SupportedExpression) => {
-    opponentProfileRef.current?.express(expressions[expression](true), "topLeft", 40)
+    opponentProfileRef.current?.express(expression, "topLeft", 40)
   }
 
   const playerProfile = {

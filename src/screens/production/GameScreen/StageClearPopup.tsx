@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { depositGold, saveSinglePlay } from '../../../redux/actions/playData/thunk';
 import { GameSubType, GameMode, findLastBoolean, getLevelString } from './utils';
 import Svg, { Text } from 'react-native-svg';
-import { getSoundEffect } from '../../../assets/Sounds';
+import { getSkinSoundEffect } from '../../../assets/sounds/skinSound';
 import { modifyToTargetRoutes } from '../../../api/navigation';
 
 type StageClearPopupNavigationProp = StackNavigationProp<RootStackParamList, 'Popup_StageClear'>
@@ -137,18 +137,18 @@ const StageClearPopup = (props: StageClearPopupProps) => {
                 onAnimationStart={() => {
                   if (i === results.length - 1) {
                     if (hasWin) {
-                      const sound = getSoundEffect().success[(successiveWin + 1) as 1 | 2 | 3];
+                      const sound = getSkinSoundEffect().success[(successiveWin + 1) as 1 | 2 | 3];
                       sound.pause();
                       sound.setCurrentTime(0);
                       sound.play();
                       if (successiveWin === 2) {
-                        const sound = getSoundEffect().success[4]
+                        const sound = getSkinSoundEffect().success[4]
                         sound.pause();
                         sound.setCurrentTime(0);
                         sound.play();
                       }
                     } else {
-                      getSoundEffect().fail.play();
+                      getSkinSoundEffect().fail.play();
                     }
                   }
                 }}

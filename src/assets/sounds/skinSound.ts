@@ -1,7 +1,7 @@
 import Sound from "react-native-sound";
-import { getSound, setVolumes } from "../api/sound";
-import { SupportedSkin } from "../components/Block/skinMap";
-import { pickRandomFromArray } from "../components/Block/utils";
+import { getSound, setVolumes } from "../../api/sound";
+import { SupportedSkin } from "../../components/Block/skinMap";
+import { pickRandomFromArray } from "../../components/Block/utils";
 
 const defaultSound = {
   dock: [
@@ -79,7 +79,7 @@ const soundMap: {
   leftover: getSound('leftover.wav'),
 }
 
-export function getSoundEffect(skinName: SupportedSkin = "basic") {
+export function getSkinSoundEffect(skinName: SupportedSkin = "basic") {
   const availableDockSound = soundMap[skinName].dock
     .filter((sound) => !sound.isPlaying())
   return {

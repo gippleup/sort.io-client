@@ -8,11 +8,7 @@ const ProfileTester = () => {
 
   React.useEffect(() => {
     const interval = setInterval(() => {
-      profileRef.current?.express(
-        expressions.tired,
-        "bottomLeft",
-        50
-      )
+      profileRef.current?.express("tired", "bottomLeft", 50)
     }, 1000)
 
     return () => {

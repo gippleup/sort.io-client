@@ -43,9 +43,8 @@ const GameSceneTester = () => {
       onPressExpression={(direction) => {
         const expression = global.expressions[direction];
         if (expression) {
-          const element = expressions[expression](true);
-          playerProfileRef.current?.express(element, "topLeft", 50);
-          opponentProfileRef.current?.express(element, "bottomLeft", 50);
+          playerProfileRef.current?.express(expression, "topLeft", 50);
+          opponentProfileRef.current?.express(expression, "bottomLeft", 50);
         }
       }}
     />

@@ -39,7 +39,7 @@ export const getCountryIconSvg = (lat: number, lng: number) => {
   return fetch(`${url}?lat=${lat}&lng=${lng}`)
   .then((res)=> res.text())
   .catch((err) => {
-    throw err;
+    console.log(err);
   })
 }
 
@@ -95,7 +95,7 @@ export const getPlayDataByUserId = (userId: number): Promise<PlayData> => {
       if (res.status === 200) {
         return res.json();
       } else {
-        throw new Error('NO PLAY DATA FOUND ON SERVER');
+        console.log('NO PLAY DATA FOUND ON SERVER');
       }
     })
     .catch((err) => {

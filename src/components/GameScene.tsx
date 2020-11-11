@@ -447,21 +447,27 @@ class GameScene extends React.Component<GameSceneProps, {}>{
               }}
               onSelfCompleteStack={(stackIndex) => {
                 const sound = getSkinSoundEffect(props.playerSkin || "basic").self_dock_complete;
-                sound.pause();
-                sound.setCurrentTime(0);
-                sound.play();
+                if (sound) {
+                  sound.pause();
+                  sound.setCurrentTime(0);
+                  sound.play();
+                }
               }}
               onCompleteStack={(stackIndex) => {
                 const sound = getSkinSoundEffect(props.playerSkin || "basic").dock_complete;
-                sound.pause();
-                sound.setCurrentTime(0);
-                sound.play();
+                if (sound) {
+                  sound.pause();
+                  sound.setCurrentTime(0);
+                  sound.play();
+                }
               }}
               onLeftOver={(stackIndex) => {
                 const sound = getSkinSoundEffect(props.playerSkin || "basic").leftover;
-                sound.pause();
-                sound.setCurrentTime(0);
-                sound.play();
+                if (sound) {
+                  sound.pause();
+                  sound.setCurrentTime(0);
+                  sound.play();
+                }
               }}
               onComplete={() => {
                 if (props.onComplete) {

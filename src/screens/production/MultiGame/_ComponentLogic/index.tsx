@@ -74,10 +74,6 @@ export const MultiGameLogic = (props: MultiGameProps) => {
   const onPressExpression = (direction: ExpressionDirection) => {
     const expression = global.expressions[direction];
     if (!expression) return;
-    const sound = getExpressionSoundEffect(expression);
-    sound.stop();
-    sound.setCurrentTime(0);
-    sound.play();
     sendExpressEmotionMessage(expression);
   }
 

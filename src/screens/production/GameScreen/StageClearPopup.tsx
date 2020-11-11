@@ -138,14 +138,18 @@ const StageClearPopup = (props: StageClearPopupProps) => {
                   if (i === results.length - 1) {
                     if (hasWin) {
                       const sound = getSkinSoundEffect().success[(successiveWin + 1) as 1 | 2 | 3];
-                      sound.pause();
-                      sound.setCurrentTime(0);
-                      sound.play();
-                      if (successiveWin === 2) {
-                        const sound = getSkinSoundEffect().success[4]
+                      if (sound) {
                         sound.pause();
                         sound.setCurrentTime(0);
                         sound.play();
+                      }
+                      if (successiveWin === 2) {
+                        const sound = getSkinSoundEffect().success[4]
+                        if (sound) {
+                          sound.pause();
+                          sound.setCurrentTime(0);
+                          sound.play();
+                        }
                       }
                     } else {
                       getSkinSoundEffect().fail.play();

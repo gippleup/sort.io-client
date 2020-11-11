@@ -62,13 +62,13 @@ export const loadPlayData: GeneralThunkAction<void> = () => (dispatch, getState)
         try {
           dispatch(applyGuestId())
         } catch (e) {
-          throw e;
+          console.log(e);
         }
       }
 
     })
     .catch((e) => {
-      throw e;
+      console.log(e);
     })
 }
 
@@ -124,7 +124,7 @@ export const signInWithGoogle: GeneralThunkAction<void> = () => async (dispatch,
 
   curData = getState().playData;
   curUser = curData.user;
-  if (!curUser.id) throw new Error('어어 이게 왜 이러지');
+  if (!curUser.id) console.log('어어 이게 왜 이러지');
 
   const googleUser = await googleSignIn();
 
@@ -154,7 +154,7 @@ export const signInWithGoogle: GeneralThunkAction<void> = () => async (dispatch,
       const response = await SortIoAPI.signUpWithGoogle(googleId, curUser.id, googleUser.user.photo, googleUser.user.name)
     }
   } catch (e) {
-    throw e;
+    console.log(e);
   }
 }
 
@@ -175,7 +175,7 @@ export const signOutWithGoogle: GeneralThunkAction<void> = () => async (dispatch
       dispatch(applyGuestId());
     }
   } catch (err) {
-    throw err;
+    console.log(err);
   }
 }
 

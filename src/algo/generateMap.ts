@@ -23,11 +23,11 @@ const extractRandomFromArray = (array: any[]) => {
 
 const generateBlockStackShell = (stackCount: number, max: number, min: number) => {
   if (max > 8) {
-    throw new Error('max should not exceed 6');
+    console.log('max should not exceed 6');
   }
 
   if (min < 2) {
-    throw new Error('min should be larger than 1');
+    console.log('min should be larger than 1');
   }
 
   const result = [];
@@ -170,11 +170,11 @@ export const generateMap = (mapOption: MapOption) => {
   const blockStackShell = generateBlockStackShell(blockStackCount, stackLengthMax, stackLengthMin);
 
   if (blockStackCount - 1 < maxScore) {
-    throw new Error('INVALID INPUT')
+    console.log('INVALID INPUT')
   }
   
   if (maxScore < colorCount) {
-    throw new Error('colorCount should be smaller than maxScore')
+    console.log('colorCount should be smaller than maxScore')
   }
 
   const seed = generateSeed(blockStackShell, maxScore, colorCount);

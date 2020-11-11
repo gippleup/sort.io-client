@@ -29,7 +29,7 @@ export const googleSignOut = async () => {
     await GoogleSignin.hasPlayServices();
     await GoogleSignin.signOut();
   } catch (error) {
-    throw error;
+    console.log(error)
   }
 }
 

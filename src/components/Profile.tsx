@@ -99,11 +99,6 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
       scaleY: 0,
     })
 
-    const sound = getExpressionSoundEffect(expression);
-    sound.stop();
-    sound.setCurrentTime(0);
-    sound.play();
-
     this.chatBoxRef.current?.animate({
       style: {
         opacity: 1,
@@ -114,6 +109,12 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
       duration: 1000,
       easing: "easeOutElastic"
     }).start(() => {
+      const sound = getExpressionSoundEffect(expression);
+      if (sound) {
+        sound.stop();
+        sound.setCurrentTime(0);
+        sound.play();
+      }
       this.timeout = setTimeout(() => {
         this.chatBoxRef.current?.animate({
           style: {

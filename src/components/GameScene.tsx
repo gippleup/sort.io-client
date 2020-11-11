@@ -220,6 +220,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
             height={(150 / 640) * Dimensions.get('window').height}
             ref={opponentBoardRef}
             initialMap={props.map}
+            maxScore={props.maxScore}
             skin={props.opponentSkin || "basic"}
             onScoreChange={(score) => {
               opponentScoreCheckerRef.current?.setScore(score);
@@ -235,11 +236,6 @@ class GameScene extends React.Component<GameSceneProps, {}>{
             onLayout={() => {
               boardReadyStatus.opponent = true
               this.onLayout();
-            }}
-            onDock={() => {
-              // const sound = getSoundEffect(props.playerSkin || "basic").dock;
-              // sound.setVolume(0.3);
-              // sound.play();
             }}
             fps={props.fps}
             noAnimation={props.noAnimation}
@@ -424,6 +420,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
             <NativeRefBlockBoard
               width={Dimensions.get('window').width - 20}
               height={Dimensions.get('window').height * 0.65 - 20}
+              maxScore={props.maxScore}
               initialMap={props.map}
               skin={props.playerSkin || "basic"}
               onScoreChange={(score) => {
@@ -438,7 +435,6 @@ class GameScene extends React.Component<GameSceneProps, {}>{
                 }
                 const sound = getSoundEffect(props.playerSkin || "basic").dock;
                 if (sound) {
-                  sound.setVolume(1);
                   sound.play();
                 }
                 this.hideExpressionWheel();
@@ -448,6 +444,24 @@ class GameScene extends React.Component<GameSceneProps, {}>{
                   props.onUndock(stackIndex);
                 }
                 this.hideExpressionWheel();
+              }}
+              onSelfCompleteStack={(stackIndex) => {
+                const sound = getSoundEffect(props.playerSkin || "basic").self_dock_complete;
+                sound.pause();
+                sound.setCurrentTime(0);
+                sound.play();
+              }}
+              onCompleteStack={(stackIndex) => {
+                const sound = getSoundEffect(props.playerSkin || "basic").dock_complete;
+                sound.pause();
+                sound.setCurrentTime(0);
+                sound.play();
+              }}
+              onLeftOver={(stackIndex) => {
+                const sound = getSoundEffect(props.playerSkin || "basic").leftover;
+                sound.pause();
+                sound.setCurrentTime(0);
+                sound.play();
               }}
               onComplete={() => {
                 if (props.onComplete) {

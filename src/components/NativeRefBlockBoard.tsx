@@ -16,6 +16,7 @@ import TouchAgent from './TouchAgent';
 import BlockBase from './Block/BlockBase';
 import { Easings } from './NativeRefBox/easings';
 import { getStackLayout } from './FastBlockBoard/utils';
+import chroma from 'chroma-js';
 
 const LayoutContainer: typeof View = styled(View)`
   position: absolute;
@@ -54,6 +55,11 @@ type RefBlockBoardProps = {
   onDock?: (stackIndex: number) => void;
   onUndock?: (stackIndex: number) => void;
   onComplete?: () => void;
+  onCompleteStack?: (stackIndex: number) => any;
+  onSelfCompleteStack?: (stackIndex: number) => any;
+  onCancelCompleteStack?: (stackIndex: number) => any;
+  onAlertUnableToDock?: (stackIndex: number) => any;
+  onLeftOver?: (leftoverIndex: number) => any;
   onScoreChange?: (score: number) => void;
   onLayout?: (layout: LayoutChangeEvent) => void;
   fps?: number;
@@ -63,6 +69,7 @@ type RefBlockBoardProps = {
   noGradient?: boolean;
   width?: number;
   height?: number;
+  maxScore?: number;
 };
 
 const defaultDockEasing: Easings = "easeInOutSine";
@@ -72,6 +79,7 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
   constructor(props: RefBlockBoardProps) {
     super(props);
     this.stacks = Array(props.initialMap.length);
+    this.effectFrames = Array(props.initialMap.length);
     this.state = {
       layout: null,
     };
@@ -90,6 +98,7 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
     this.getCompleteMap = this.getCompleteMap.bind(this);
   }
 
+  effectFrames: RefObject<BlockFrame>[];
   stacks: stackModel[];
   layoutRef = React.createRef<View>();
   readyToDock = false;
@@ -111,6 +120,21 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
   marginHorizontal = 15;
   layoutMarginTop = 15;
   layoutMarginLeft = 15;
+  leftOverAlertTimeout: NodeJS.Timeout | null = null;
+
+  get completedAllStack() {
+    const detailedMap = this.getDetailedMap();
+    return detailedMap.filter((status) => status === "incomplete").length === 0;
+  }
+
+  get score() {
+    const detailedMap = this.getDetailedMap();
+    return detailedMap.filter((status) => status === "completed").length;
+  }
+
+  getEffectFrame(stackIndex: number) {
+    return this.effectFrames[stackIndex];
+  }
 
   checkIfStackCompleted(targetStack: stackModel) {
     // const targetStack = this.stacks[stackIndex];
@@ -125,10 +149,31 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
 
   getCompleteMap() {
     const filledStacks = this.stacks.filter((stack) => stack.pieces.length);
-    const completeMap = filledStacks.map((stack) =>
-      this.checkIfStackCompleted(stack),
-    );
+    const completeMap = filledStacks.map((stack) => this.checkIfStackCompleted(stack));
     return completeMap;
+  }
+
+  getDetailedMap() {
+    const stacks = this.stacks;
+    const detailedMap = stacks.map((stack) => {
+      const stackLength = stack.pieces.length;
+      if (stackLength > 0 && this.checkIfStackCompleted(stack)) {
+        return "completed";
+      } else if (stackLength === 0) {
+        return "blank";
+      } else if (stackLength > 0 && !this.checkIfStackCompleted(stack)) {
+        return "incomplete";
+      }
+    })
+    return detailedMap;
+  }
+
+  getLeftoverIndex() {
+    const detailedMap = this.getDetailedMap();
+    const gotMaxScore = this.score === this.props.maxScore;
+    const hasLeftOver = detailedMap.filter((status) => status === "incomplete").length === 1;
+    const leftoverIndex = gotMaxScore && hasLeftOver ? detailedMap.indexOf("incomplete") : -1;
+    return leftoverIndex;
   }
 
   getCurScore() {
@@ -173,6 +218,8 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
     const targetStack = this.stacks[stackIndex];
     const pieceOnTop = targetStack.pieces.pop();
 
+    if (props.onUndock) props.onUndock(stackIndex)
+
     if (!pieceOnTop || !pieceOnTop.ref.current) {
       return;
     }
@@ -187,6 +234,10 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
         scaleY: 0,
         top: topPiecePos.y - 20 - Constants.blockHeight.top * this.scale,
       };
+
+      if (props.onCancelCompleteStack) {
+        props.onCancelCompleteStack(stackIndex);
+      }
 
       if (props.noAnimation) {
         targetStack.capRef.current.setStyle(targetStyle)
@@ -246,6 +297,10 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
 
     let animateCapY, animateCapScale;
     if (originStackWasCompleted && targetStack.capRef.current) {
+      if (props.onSelfCompleteStack) {
+        props.onSelfCompleteStack(stackIndex);
+      }
+
       if (props.noAnimation) {
         targetStack.capRef.current.setStyle({
           top: topPiecePos.y - Constants.blockHeight.top * this.scale,
@@ -293,8 +348,7 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
     }
 
     if (animateCapY && animateCapScale) {
-      animateCapY.start();
-      animateCapScale.start();
+      NativeRefBox.sequence([animateCapScale, animateCapY]).start();
     }
 
     if (pieceDockAnim) {
@@ -308,6 +362,11 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
     const topPiecePos = getTopPiecePos(stackIndex);
     const targetStack = stacks[stackIndex];
     const pieceOnTop = targetStack.pieces.pop();
+
+    if (props.onAlertUnableToDock) {
+      props.onAlertUnableToDock(stackIndex);
+    }
+    
     if (!pieceOnTop) {
       return;
     }
@@ -418,6 +477,10 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
     }
 
     if (targetStackCompleted && targetStack.capRef.current) {
+      if (props.onCompleteStack) {
+        props.onCompleteStack(stackIndex);
+      }
+
       const readyForCapAnim = () => {
         targetStack.capRef.current?.setStyle({
           opacity: 1,
@@ -439,15 +502,21 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
         })
       } else {
         readyForCapAnim();
-        targetStack.capRef.current.animate({
-          style: {
-            scaleX: 1,
-            scaleY: 1,
-          },
-          duration: 100,
-          easing: "easeInOutSine",
-          fps: props.fps || 60,
-        }).start(() => {
+        const effectFrame = this.getEffectFrame(stackIndex);
+        effectFrame.current?.blink(chroma("white").alpha(0.5).hex(), 3);
+        targetStack.capRef.current.setStyle({
+          
+        })
+        NativeRefBox.sequence([
+          targetStack.capRef.current.animate({
+            style: {
+              scaleX: 1,
+              scaleY: 1,
+            },
+            duration: 100,
+            easing: "easeInOutSine",
+            fps: props.fps || 60,
+          }),
           targetStack.capRef?.current?.animate({
             style: {
               top: topPiecePos.y -
@@ -457,20 +526,16 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
             duration: this.props.dockEasingDuration || defaultDockEasingDuration,
             easing: this.props.dockEasing || defaultDockEasing,
             fps: props.fps || 60,
-          }).start();
-        })
+          }),
+        ]).start()
       }
     }
 
-    const completeMap = this.getCompleteMap();
-    const score = completeMap.filter((bool) => bool).length;
-    const completedAllStack = completeMap.filter((bool) => !bool).length === 0;
-
     if (props.onScoreChange) {
-      props.onScoreChange(score);
+      props.onScoreChange(this.score);
     }
 
-    if (completedAllStack && props.onComplete) {
+    if (this.completedAllStack && props.onComplete) {
       props.onComplete();
     }
   }
@@ -485,6 +550,10 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
       dockOrigin,
     } = this;
 
+    if (props.onDock) {
+      props.onDock(stackIndex);
+    }
+
     const targetStack = stacks[stackIndex];
     if (targetStack === dockOrigin) {
       dockToSelf(stackIndex);
@@ -493,6 +562,22 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
     } else {
       dockToOther(stackIndex);
     }
+
+    const leftoverIndex = this.getLeftoverIndex();
+
+    if (leftoverIndex !== -1) {
+      if (this.leftOverAlertTimeout !== null) {
+        clearTimeout(this.leftOverAlertTimeout);
+      }
+      this.leftOverAlertTimeout = setTimeout(() => {
+        if (props.onLeftOver) {
+          props.onLeftOver(leftoverIndex);
+          const effectFrame = this.getEffectFrame(leftoverIndex);
+          effectFrame.current?.blink(chroma("red").alpha(0.5).hex(), 3);
+        }
+      }, 1000)
+    }
+
     this.dockCount += 1;
   }
 
@@ -741,15 +826,44 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
                       style={{zIndex: 100}}
                       onTouchStart={() => {
                         if (!this.readyToDock) {
-                          if (props.onUndock) props.onUndock(stackIndex)
                           this.undock(stackIndex);
                         } else {
-                          if (props.onDock) props.onDock(stackIndex)
                           this.dock(stackIndex);
                         }
                       }}>
-                      <BlockFrame pieceCount={Constants.maxStackLength} scale={scale} />
+                      <BlockFrame
+                        pieceCount={Constants.maxStackLength}
+                        scale={scale}
+                      />
                     </TouchAgent>
+                  </Cell>
+                );
+              })}
+            </Row>
+          ))}
+        </LayoutContainer>
+        <LayoutContainer style={{paddingLeft: layoutMarginLeft, paddingTop: layoutMarginTop}}>
+          {layout.map((row, i) => (
+            <Row key={'frameRow' + i} style={{marginVertical}}>
+              {row.map((cell: number, j: number) => {
+                const frameRef = React.createRef<BlockFrame>();
+                const stackIndex = layout[0].length * i + j;
+                this.effectFrames[stackIndex] = frameRef;
+
+                if (props.initialMap[stackIndex] === undefined) {
+                  return (
+                    <Cell key={'cell' + i + j} scale={scale} style={{marginHorizontal}} />
+                  );
+                }
+                return (
+                  <Cell key={'cell' + i + j} scale={scale} style={{marginHorizontal}}>
+                    <BlockFrame
+                      ref={frameRef}
+                      pieceCount={props.initialMap[stackIndex].length}
+                      scale={scale}
+                      style={{backgroundColor: "red", opacity: 0, zIndex: 10}}
+                      animated
+                    />
                   </Cell>
                 );
               })}

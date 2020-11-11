@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { View, BackHandler, NativeEventSubscription, NativeModules, Platform } from 'react-native'
+import { View, BackHandler, NativeEventSubscription, NativeModules, Platform, Text, Linking } from 'react-native'
 import Logo from '../../components/Logo'
 import MoneyIndicator from '../../components/Main/MoneyIndicator'
 import MainButton from '../../components/Main/MainButton'
@@ -23,6 +23,7 @@ import { AppState } from '../../redux/store'
 import TranslationPack from '../../Language/translation'
 import { modifyToTargetRoutes, slimNavigate } from '../../api/navigation'
 import useMultiGameSocket from '../../hooks/useMultiGameSocket'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 const {BUILD_ENV} = BuildConfig;
 

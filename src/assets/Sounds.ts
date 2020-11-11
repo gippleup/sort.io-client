@@ -28,6 +28,10 @@ const soundMap: {
   fail: Sound;
   win: Sound;
   lose: Sound;
+  dock_complete: Sound;
+  dock_complete_cancel: Sound;
+  self_dock_complete: Sound;
+  leftover:Sound;
 } = {
   basic: defaultSound,
   // spiky: defaultSound,
@@ -69,6 +73,10 @@ const soundMap: {
   fail: getSound('fail.mp3'),
   win: getSound('win.mp3'),
   lose: getSound('lose.mp3'),
+  dock_complete: getSound('dock_complete.wav'),
+  dock_complete_cancel: getSound('dock_complete_cancel.wav'),
+  self_dock_complete: getSound('self_dock_complete.wav'),
+  leftover: getSound('leftover.wav'),
 }
 
 export function getSoundEffect(skinName: SupportedSkin = "basic") {
@@ -85,5 +93,9 @@ export function getSoundEffect(skinName: SupportedSkin = "basic") {
     fail: soundMap.fail,
     win: soundMap.win,
     lose: soundMap.lose,
+    dock_complete: soundMap.dock_complete,
+    dock_complete_cancel: soundMap.dock_complete_cancel,
+    self_dock_complete: soundMap.self_dock_complete,
+    leftover: soundMap.leftover,
   }
 }

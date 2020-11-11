@@ -138,12 +138,12 @@ const StageClearPopup = (props: StageClearPopupProps) => {
                   if (i === results.length - 1) {
                     if (hasWin) {
                       const sound = getSoundEffect().success[(successiveWin + 1) as 1 | 2 | 3];
-                      sound.setVolume(1);
+                      sound.pause();
                       sound.setCurrentTime(0);
                       sound.play();
                       if (successiveWin === 2) {
                         const sound = getSoundEffect().success[4]
-                        sound.setVolume(1);
+                        sound.pause();
                         sound.setCurrentTime(0);
                         sound.play();
                       }

@@ -163,9 +163,6 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
         } else {
           targetValue = Number(style[key] === undefined ? 0 : style[key]);
           curValue = Number(this.style[key] === undefined ? defaultValue[key] : this.style[key]);
-          if (key === "scaleX") {
-            console.log(curValue, targetValue);
-          }
           diffValue = targetValue - curValue;
         }
         startValue[key] = curValue;

@@ -435,7 +435,6 @@ class FastGameScene extends React.Component<FastGameSceneProps, {}>{
               }
               const sound = getSoundEffect(props.playerSkin || "basic").dock;
               if (sound) {
-                sound.setVolume(1);
                 sound.play();
               }
               this.hideExpressionWheel();

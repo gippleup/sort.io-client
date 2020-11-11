@@ -3,6 +3,11 @@ import { Text, View, ViewStyle, StyleSheet, LayoutChangeEvent, ViewProps } from 
 import * as easingFunc from './NativeRefBox/easings';
 import chroma, { Color, Scale } from 'chroma-js';
 
+type RefAnimation = {
+  start: (onComplete?: (() => any) | undefined) => void;
+  stop: () => void;
+}
+
 type AnimatibleKeys = Extract<keyof ViewStyle,
   "borderBottomEndRadius" |
   "borderBottomLeftRadius" |
@@ -135,37 +140,40 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
     easing?: easingFunc.Easings,
     duration: number,
     fps?: number,
-  }) {
-    this.stopAnimation();
-    const { style, easing, duration, fps } = option;
-    const framePerSec = (fps || 60);
-    let progress = 0;
-    const keysOnRequest = Object.keys(style) as AnimatibleKeys[];
-    const startValue: { [index in keyof ViewStyle]: number | string } = {};
-    const diffValue = keysOnRequest.reduce((
-      acc: { [index in keyof ViewStyle]: number | Scale<Color> },
-      key: AnimatibleKeys
-    ) => {
-      let targetValue, curValue, diffValue;
-      if (key.match(/color/i)) {
-        const targetColor = style[key] as string;
-        const curColor = (this.style[key] || defaultValue[key]) as string;
-        targetValue = chroma(targetColor).hex();
-        curValue = chroma(curColor).hex();
-        diffValue = chroma.scale([curValue, targetValue]);
-      } else {
-        targetValue = Number(style[key] === undefined ? 0 : style[key]);
-        curValue = Number(this.style[key] === undefined ? defaultValue[key] : this.style[key]);
-        diffValue = targetValue - curValue;
-      }
-      startValue[key] = curValue;
-      acc[key] = diffValue;
-      return acc;
-    }, {});
-
+  }): RefAnimation {
     const start = (onComplete?: () => any) => {
-      let callback: Function | undefined;
+      this.stopAnimation();
 
+      let progress = 0;
+      const { style, easing, duration, fps } = option;
+      const framePerSec = (fps || 60);
+      const keysOnRequest = Object.keys(style) as AnimatibleKeys[];
+      const startValue: { [index in keyof ViewStyle]: number | string } = {};
+      const diffValue = keysOnRequest.reduce((
+        acc: { [index in keyof ViewStyle]: number | Scale<Color> },
+        key: AnimatibleKeys
+      ) => {
+        let targetValue, curValue, diffValue;
+        if (key.match(/color/i)) {
+          const targetColor = style[key] as string;
+          const curColor = (this.style[key] || defaultValue[key]) as string;
+          targetValue = chroma(targetColor).hex();
+          curValue = chroma(curColor).hex();
+          diffValue = chroma.scale([curValue, targetValue]);
+        } else {
+          targetValue = Number(style[key] === undefined ? 0 : style[key]);
+          curValue = Number(this.style[key] === undefined ? defaultValue[key] : this.style[key]);
+          if (key === "scaleX") {
+            console.log(curValue, targetValue);
+          }
+          diffValue = targetValue - curValue;
+        }
+        startValue[key] = curValue;
+        acc[key] = diffValue;
+        return acc;
+      }, {});
+
+      let callback: Function | undefined;
       const animation = setInterval(() => {
         if (callback) {
           callback();
@@ -240,6 +248,34 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
       scaleX: scale,
       scaleY: scale,
     })
+  }
+
+  static connectAnim(anim1: RefAnimation, anim2: RefAnimation): RefAnimation {
+    const start = (callback?: () => any) => {
+      anim1.start(() => anim2.start(callback))
+    }
+    const stop = () => {
+      anim1.stop();
+      anim2.stop();
+    }
+    return {
+      start,
+      stop,
+    }
+  }
+
+  static sequence(animations: (RefAnimation | undefined)[]) {
+    const filteredSequence = animations.filter((animation) => animation !== undefined) as RefAnimation[];
+    let connectedAnim = filteredSequence[0];
+    for (let i = 1; i < animations.length; i += 1) {
+      connectedAnim = this.connectAnim(connectedAnim, filteredSequence[i]);
+    }
+    return connectedAnim;
+  }
+
+  static loop(animation: RefAnimation, iterations: number = 1) {
+    const sequence = Array(iterations).fill(animation);
+    return this.sequence(sequence);
   }
 
   componentWillUnmount() {

@@ -24,6 +24,8 @@ import TranslationPack from '../../Language/translation'
 import { modifyToTargetRoutes, slimNavigate } from '../../api/navigation'
 import useMultiGameSocket from '../../hooks/useMultiGameSocket'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { getIcon } from '../../api/icon'
+import RatingButton from '../../components/RatingButton'
 
 const {BUILD_ENV} = BuildConfig;
 
@@ -199,8 +201,11 @@ const Main = (props: MainProps) => {
           <GoogleSigninController/>
         </FlexHorizontal>
       </View>
-      <View style={{ position: 'absolute', right: 10, top: 10 }}>
+      <View style={{ position: 'absolute', right: 10, top: 10, alignItems: "flex-end" }}>
         <MoneyIndicator value={gold} />
+        <View style={{marginTop: 10}}>
+          <RatingButton/>
+        </View>
       </View>
       <View style={{alignItems: 'center', marginTop: 120, marginBottom: 40}}>
         <Logo lan={lan} fontSize={40} strokeWidth={2} color="white" strokeColor="rgba(0,0,0,0.2)" />

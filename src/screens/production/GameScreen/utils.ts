@@ -70,7 +70,7 @@ export const generateOptionByLevel = (level: number) => {
   const map = {
     blockStackCount: Math.floor(levelIndex * 1.5) + 3,
     colorCount: Math.min(levelIndex + 2, Constants.colorCount),
-    maxScore: levelIndex + 2,
+    maxScore: Math.floor(levelIndex * 1.5) + 2,
     stackLengthMax: 8,
     stackLengthMin: Math.min(levelIndex + 2, 5),
     shuffleCount: 100,

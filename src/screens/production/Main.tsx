@@ -26,6 +26,7 @@ import useMultiGameSocket from '../../hooks/useMultiGameSocket'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { getIcon } from '../../api/icon'
 import RatingButton from '../../components/RatingButton'
+import ShareButton from '../../components/ShareButton'
 
 const {BUILD_ENV} = BuildConfig;
 
@@ -203,7 +204,9 @@ const Main = (props: MainProps) => {
       </View>
       <View style={{ position: 'absolute', right: 10, top: 10, alignItems: "flex-end" }}>
         <MoneyIndicator value={gold} />
-        <View style={{marginTop: 10}}>
+        <View style={{marginTop: 10, flexDirection: "row", alignItems: "center"}}>
+          <ShareButton/>
+          <Space width={15} />
           <RatingButton/>
         </View>
       </View>

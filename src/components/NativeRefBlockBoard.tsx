@@ -11,7 +11,7 @@ import BlockFrame from './BlockStack/BlockFrame';
 import Block from './Block';
 import {SupportedSkin} from './Block/skinMap';
 import {BlockTypes} from './Block/Types';
-import NativeRefBox from './NativeRefBox';
+import NativeRefBox, { RefAnimation } from './NativeRefBox';
 import TouchAgent from './TouchAgent';
 import BlockBase from './Block/BlockBase';
 import { Easings } from './NativeRefBox/easings';
@@ -121,6 +121,7 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
   layoutMarginTop = 15;
   layoutMarginLeft = 15;
   leftOverAlertTimeout: NodeJS.Timeout | null = null;
+  blinkAnim: RefAnimation | null = null;
 
   get completedAllStack() {
     const detailedMap = this.getDetailedMap();
@@ -550,6 +551,13 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
       dockOrigin,
     } = this;
 
+    if (this.leftOverAlertTimeout !== null) {
+      clearTimeout(this.leftOverAlertTimeout);
+    }
+
+    const effectFrame = this.getEffectFrame(stackIndex);
+    effectFrame.current?.stopBlink();
+
     if (props.onDock) {
       props.onDock(stackIndex);
     }
@@ -566,9 +574,6 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
     const leftoverIndex = this.getLeftoverIndex();
 
     if (leftoverIndex !== -1) {
-      if (this.leftOverAlertTimeout !== null) {
-        clearTimeout(this.leftOverAlertTimeout);
-      }
       this.leftOverAlertTimeout = setTimeout(() => {
         if (props.onLeftOver) {
           props.onLeftOver(leftoverIndex);

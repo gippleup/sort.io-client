@@ -14,6 +14,10 @@ type BlockFrameProps = {
 
 class BlockFrame extends React.Component<BlockFrameProps> {
   frameRef = React.createRef<NativeRefBox>();
+  stopBlink() {
+    this.frameRef.current?.stopAnimation();
+    this.frameRef.current?.setOpacity(0);
+  }
   blink(color: string, iterations: number = 2) {
     this.frameRef.current?.setStyle({
       backgroundColor: color,
@@ -26,7 +30,7 @@ class BlockFrame extends React.Component<BlockFrameProps> {
     const off = this.frameRef.current?.animate({
       style: {opacity: 0},
       duration: 50,
-      easing: "easeOutSine",
+      easing: "easeInSine",
     })
     NativeRefBox.loop(NativeRefBox.sequence([on, off]), iterations).start();
   }

@@ -3,7 +3,7 @@ import { Text, View, ViewStyle, StyleSheet, LayoutChangeEvent, ViewProps } from 
 import * as easingFunc from './NativeRefBox/easings';
 import chroma, { Color, Scale } from 'chroma-js';
 
-type RefAnimation = {
+export type RefAnimation = {
   start: (onComplete?: (() => any) | undefined) => void;
   stop: () => void;
 }

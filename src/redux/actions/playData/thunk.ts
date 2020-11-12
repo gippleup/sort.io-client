@@ -277,8 +277,10 @@ export const purchaseItem: GeneralThunkAction<ItemDef> = (itemDef) => async (dis
     name,
   );
   const updatedUser = await SortIoAPI.getPlayDataByUserId(curUser.id);
-  dispatch(updateGold(updatedUser.user.gold));
-  dispatch(updateItemList(updatedItemList));
+  if (updatedUser) {
+    dispatch(updateGold(updatedUser.user.gold));
+    dispatch(updateItemList(updatedItemList));
+  }
 }
 
 

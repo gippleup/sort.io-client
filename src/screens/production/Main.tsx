@@ -190,7 +190,7 @@ const Main = (props: MainProps) => {
   })
 
   const isConnectionOk = netInfo.isConnected && serverStatus === "alive";
-  const gold = playData.loaded && playData.user ? playData.user.gold : 0;
+  const gold = (playData.loaded && playData.user) ? playData.user.gold : 0;
 
   return (
     <View style={{flex: 1, backgroundColor: 'grey'}}>

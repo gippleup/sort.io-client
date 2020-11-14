@@ -8,6 +8,7 @@ import { prettyPercent } from './EndGameInfo/utils'
 import { FlexHorizontal, Line, NotoSans, Space } from './Generic/StyledComponents'
 import { lazify } from './Generic/utils'
 import Profile from './Profile'
+import Fallback from './MultiGameResult/Fallback'
 
 const ResultContainer: typeof View = styled(View)`
   border-radius: 5px;
@@ -46,6 +47,7 @@ const MultiGameResult = (props: MultiGameResultProps) => {
     modifier,
     lan = SupportedLanguage.en,
   } = props;
+  
   const translation = TranslationPack[lan].screens.MultiPlay;
   const Result = lazify(new Promise(async (resolve) => {
     const rankData = await getMultiPlayRank(userId, 0);
@@ -105,7 +107,7 @@ const MultiGameResult = (props: MultiGameResultProps) => {
     )
   }))
   return (
-    <React.Suspense fallback={<></>}>
+    <React.Suspense fallback={<Fallback/>}>
       <Result/>
     </React.Suspense>
   )

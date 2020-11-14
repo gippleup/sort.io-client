@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, ViewProps } from 'react-native'
 import StrokedText from '../../../components/StrokedText'
 import { RoundPaddingCenter, NotoSans, FlexHorizontal, FullFlexCenter, Space } from '../../../components/Generic/StyledComponents'
 import usePlayData from '../../../hooks/usePlayData'
@@ -19,12 +19,13 @@ import { useSelector } from 'react-redux'
 import { AppState } from '../../../redux/store'
 import TranslationPack from '../../../Language/translation'
 import { modifyToTargetRoutes, remainTargetRoutes } from '../../../api/navigation'
+import DelayButton from '../../../components/DelayButton'
 
 type GameResultNavigationProps = StackNavigationProp<RootStackParamList, "Popup_GameResult">
 type GameResultRouteProps = RouteProp<RootStackParamList, "Popup_GameResult">
 
 const ButtonShape: typeof View = styled(View)`
-  background-color: rgba(255,255,255,0.9);
+  background-color: "rgba(255,255,255,0.9)";
   border-radius: 10px;
   min-width: 100px;
   justify-content: center;
@@ -147,6 +148,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     // 소켓 연결 끊겼을 안 나간 사람을 승자로 처리.
     goHome();
   };
+
   const onRematchPressed = () => {
     if (!playData.user.id) return;
     socket.send(requestRematch({
@@ -296,26 +298,26 @@ const GameResultPopup = (props: GameResultPopupProps) => {
         />
         <Space height={10}/>
         <FlexHorizontal>
-          <TouchableOpacity onPress={onHomePressed}>
+          <DelayButton enableAfter={2000} onPress={onHomePressed}>
             <ButtonShape>
               <NotoSans type="Bold" size={buttonFontSize}>{translation.home}</NotoSans>
             </ButtonShape>
-          </TouchableOpacity>
+          </DelayButton>
           <Space width={10}/>
           <View style={{flex:1}}>
-            <TouchableOpacity style={{width: "100%"}} onPress={onRematchPressed}>
+            <DelayButton enableAfter={2000} style={{width: "100%"}} onPress={onRematchPressed}>
               <ButtonShape>
                 <NotoSans type="Bold" size={buttonFontSize}>{translation.rematch}</NotoSans>
               </ButtonShape>
-            </TouchableOpacity>
+            </DelayButton>
           </View>
         </FlexHorizontal>
         <Space height={10} />
-        <TouchableOpacity onPress={onAnotherMatchPressed}>
+        <DelayButton enableAfter={2000} onPress={onAnotherMatchPressed}>
           <ButtonShape>
             <NotoSans type="Bold" size={buttonFontSize}>{translation.anotherMatch}</NotoSans>
           </ButtonShape>
-        </TouchableOpacity>
+        </DelayButton>
       </RoundPaddingCenter>
       {renderOpponentLeftMessage()}
     </FullFlexCenter>

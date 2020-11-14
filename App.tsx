@@ -34,7 +34,7 @@ const buildVariable: {[T in typeof BUILD_ENV]: {
     initialRouteName: "Developer",
   },
   RELEASE: {
-    initialRouteName: "Main",
+    initialRouteName: "Updater",
   }
 }
 
@@ -62,7 +62,7 @@ let App: () => React.ReactNode = () => {
     if (navigation && BUILD_ENV === "RELEASE") {
       modifyToTargetRoutes(navigation, [
         {name: "LoadingScreen"},
-        {name: "Main"},
+        {name: "Updater"},
       ])
     }
   })
@@ -97,8 +97,8 @@ let App: () => React.ReactNode = () => {
 };
 
 const codePushOptions: CodePushOptions = {
-  checkFrequency: BUILD_ENV === "RELEASE" ? codePush.CheckFrequency.ON_APP_START : codePush.CheckFrequency.MANUAL,
-  installMode: codePush.InstallMode.ON_NEXT_RESUME,
+  checkFrequency: codePush.CheckFrequency.MANUAL,
+  installMode: codePush.InstallMode.IMMEDIATE,
 }
 
 export default codePush(codePushOptions)(App);

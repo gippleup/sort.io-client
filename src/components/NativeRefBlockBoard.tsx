@@ -17,6 +17,8 @@ import BlockBase from './Block/BlockBase';
 import { Easings } from './NativeRefBox/easings';
 import { getStackLayout } from './FastBlockBoard/utils';
 import chroma from 'chroma-js';
+import { NotoSans } from './Generic/StyledComponents';
+import DynamicText from './DynamicText';
 
 const LayoutContainer: typeof View = styled(View)`
   position: absolute;
@@ -36,17 +38,18 @@ const Cell: typeof View | React.ComponentClass<{scale?: number}, any> = styled(V
   justify-content: flex-end;
 `;
 
-type pieceModel = {
+type PieceModel = {
   ref: RefObject<NativeRefBox>;
   type: BlockTypes;
 };
 
-type stackModel = {
+type StackModel = {
   capRef: RefObject<NativeRefBox>;
   capBlockRef: RefObject<Block>;
-  pieces: pieceModel[];
+  pieces: PieceModel[];
   bottomRef: RefObject<Block>;
   max: number;
+  sizeIndicator?: RefObject<DynamicText>;
 };
 
 type RefBlockBoardProps = {
@@ -70,6 +73,7 @@ type RefBlockBoardProps = {
   width?: number;
   height?: number;
   maxScore?: number;
+  showSize?: boolean;
 };
 
 const defaultDockEasing: Easings = "easeInOutSine";
@@ -99,10 +103,10 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
   }
 
   effectFrames: RefObject<BlockFrame>[];
-  stacks: stackModel[];
+  stacks: StackModel[];
   layoutRef = React.createRef<View>();
   readyToDock = false;
-  dockOrigin: stackModel | null = null;
+  dockOrigin: StackModel | null = null;
   isAnimating = false;
   dockCount = 0;
   forceFinishCallbacks: {[index: string]: {
@@ -137,7 +141,7 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
     return this.effectFrames[stackIndex];
   }
 
-  checkIfStackCompleted(targetStack: stackModel) {
+  checkIfStackCompleted(targetStack: StackModel) {
     // const targetStack = this.stacks[stackIndex];
     let stackCompleted = targetStack.pieces.length === targetStack.max;
     targetStack.pieces.forEach((piece) => {
@@ -583,6 +587,8 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
       }, 1000)
     }
 
+    dockOrigin?.sizeIndicator?.current?.setText(`${dockOrigin.pieces.length} / ${dockOrigin.max}`);
+    targetStack.sizeIndicator?.current?.setText(`${targetStack.pieces.length} / ${targetStack.max}`);
     this.dockCount += 1;
   }
 
@@ -682,16 +688,73 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
                 type,
               }));
               const bottomRef = React.createRef<Block>();
+              const sizeIndicator = React.createRef<DynamicText>();
               const stackModel = {
                 capBlockRef,
                 capRef,
                 pieces,
                 bottomRef,
                 max: curStack.length,
+                sizeIndicator,
               };
               this.stacks[stackIndex] = stackModel;
               return (
                 <Fragment key={'fragment' + i + j}>
+                  {/*This is for indicating stack length*/}
+                  {props.showSize
+                    ? (
+                      <View
+                        style={{
+                          position: "absolute",
+                          left:
+                            layoutMarginLeft +
+                            marginHorizontal +
+                            j * (stackWidth + marginHorizontal * 2),
+                          top:
+                            layoutMarginTop +
+                            marginVertical +
+                            i * (stackHeight + marginVertical * 2) +
+                            stackHeight -
+                            Constants.blockHeight.piece * (curStack.length + 1) * scale -
+                            Constants.blockHeight.top * scale -
+                            Constants.blockHeight.bottom * scale -
+                            10 * scale,
+                          // backgroundColor: "white",
+                          width: stackWidth,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: Constants.blockHeight.piece * scale,
+                        }}
+                      >
+                        <View
+                          style={{
+                            position: "absolute",
+                            borderRadius: 50,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            paddingHorizontal: 10 * scale,
+                            backgroundColor: "rgba(0,0,0,0.1)",
+                          }
+                        }>
+                          <DynamicText
+                            ref={sizeIndicator}
+                            initialValue={`${pieces.length} / ${curStack.length}`}
+                            renderer={(text) => (
+                              <NotoSans
+                                type="Black"
+                                size={Math.max(15 * scale, 12)}
+                                color="rgba(255,255,255,0.4)"
+                              >
+                                {text}
+                              </NotoSans>
+                            )}
+                          />
+                        </View>
+                      </View>
+                    ) : (
+                      <></>
+                    )
+                  }
                   {/* This is Block Bottom */}
                   <AbsoluteRefBox
                     // ref={bottomRef}

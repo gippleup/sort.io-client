@@ -483,6 +483,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
               dockEasing={props.playerDockEasing}
               dockEasingDuration={props.playerDockEasingDuraton}
               noGradient={props.noGradient}
+              showSize
             />
           </PlayerBoardContainer>
         </BlockBoardContainer>

@@ -14,7 +14,7 @@ const GameSceneTester = () => {
     blockStackCount: 21,
     colorCount: 18,
     maxScore: 20,
-    stackLengthMax: 8,
+    stackLengthMax: 7,
     stackLengthMin: 2,
     shuffleCount: 100,
   }

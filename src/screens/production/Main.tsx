@@ -27,6 +27,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { getIcon } from '../../api/icon'
 import RatingButton from '../../components/RatingButton'
 import ShareButton from '../../components/ShareButton'
+import codePush from 'react-native-code-push';
 
 const {BUILD_ENV} = BuildConfig;
 
@@ -62,7 +63,20 @@ const Main = (props: MainProps) => {
   const netInfo = useNetInfo();
   const [serverStatus, setServerStatus] = React.useState<"dead" | "alive">("dead");
   const [bannerAdSpace, setBannerAdSpace] = React.useState<{width: number; height: number;} | undefined>();
+  const checkedUpdate = React.useRef(false);
   let focusTimeout: NodeJS.Timeout;
+
+  if (!checkedUpdate.current) {
+    checkedUpdate.current = true;
+    codePush.checkForUpdate()
+    .then((avilableUpdate) => {
+      if (!avilableUpdate) return;
+      codePush.sync();
+    })
+    .catch((e) => {
+      console.log(e);
+    })
+  }
 
   if (!playData.loaded && !loadedPlayData.current) {
     loadedPlayData.current = true;

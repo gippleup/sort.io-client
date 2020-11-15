@@ -34,7 +34,7 @@ const buildVariable: {[T in typeof BUILD_ENV]: {
     initialRouteName: "Developer",
   },
   RELEASE: {
-    initialRouteName: "Updater",
+    initialRouteName: "Main",
   }
 }
 
@@ -62,7 +62,7 @@ let App: () => React.ReactNode = () => {
     if (navigation && BUILD_ENV === "RELEASE") {
       modifyToTargetRoutes(navigation, [
         {name: "LoadingScreen"},
-        {name: "Updater"},
+        {name: "Main"},
       ])
     }
   })

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, BackHandler, View } from 'react-native'
+import { Text, BackHandler, View, AppState, AppStateStatus } from 'react-native'
 import NativeRefBox from '../../../components/NativeRefBox'
 import { LoadingText } from './MultiWaitingPopup/_StyledComponent'
 import useMultiGameSocket, { OnSendRoomParam } from '../../../hooks/useMultiGameSocket'
@@ -48,6 +48,18 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
     socket.close();
     return null;
   };
+
+  const appStateChangeListener = (state: AppStateStatus) => {
+    if (state === "background" || state === "inactive") {
+      closeSocket();
+      modifyToTargetRoutes(navigation, [
+        {name: "LoadingScreen"},
+        {name: "Main"},
+      ])
+    }
+  }
+  
+  AppState.addEventListener("change", appStateChangeListener)
 
   const unsubscribeBeforeRemove = navigation.addListener("blur", (e) => {
     if (!foundMatch) {
@@ -108,6 +120,7 @@ const MultiWaitingPopup = (props: MultiWaitingPopupProps) => {
     return () => {
       if (interval !== null) { clearInterval(interval); }
       unsubscribeBeforeRemove();
+      AppState.removeEventListener("change", appStateChangeListener)
     }
   }, [])
 

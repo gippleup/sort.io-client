@@ -132,7 +132,11 @@ const multiGameSocketLogic = (param: MultiGameSocketLogicParams) => {
 
   const deleteRoomListener = socket.addListener("onDeleteRoom",
     () => {
-      remainTargetRoutes(navigation, ["Main"]);
+      modifyToTargetRoutes(navigation, [
+        {name: "LoadingScreen"},
+        {name: "Main"},
+        {name: "Popup_OpponentLeft"},
+      ])
     })
 
   const syncPrepareTimerListener = socket.addListener("onSyncPrepareTimer",

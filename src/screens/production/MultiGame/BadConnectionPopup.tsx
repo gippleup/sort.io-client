@@ -2,7 +2,7 @@ import { CommonActions, NavigationProp, useNavigation } from '@react-navigation/
 import React from 'react'
 import { View, Text, BackHandler } from 'react-native'
 import styled from 'styled-components'
-import { remainTargetRoutes } from '../../../api/navigation';
+import { modifyToTargetRoutes, remainTargetRoutes } from '../../../api/navigation';
 import Flickery from '../../../components/Flickery';
 import { NotoSans } from '../../../components/Generic/StyledComponents';
 import useGlobal from '../../../hooks/useGlobal';
@@ -30,17 +30,24 @@ const BadConnectionPopup = () => {
   const flickeryRef = React.useRef<Flickery>(null);
   const navigation: NavigationProp<RootStackParamList> = useNavigation();
 
-  const blockGoBack = () => true;
-
-  BackHandler.addEventListener("hardwareBackPress", blockGoBack);
+  const unsubscribeBeforeRemove = navigation.addListener("beforeRemove", (e) => {
+    if (e.data.action.type === "GO_BACK") {
+      e.preventDefault();
+    }
+  })
 
   React.useEffect(() => {
     flickeryRef.current?.flickerNTimes(3);
-    const timeout = setTimeout(() => remainTargetRoutes(navigation, ["Main"]), 1500);
+    const timeout = setTimeout(() => {
+      unsubscribeBeforeRemove();
+      modifyToTargetRoutes(navigation, [
+        {name: "LoadingScreen"},
+        {name: "Main"},
+      ])
+    }, 1500);
 
     return () => {
       clearTimeout(timeout);
-      BackHandler.removeEventListener("hardwareBackPress", blockGoBack);
     }
   })
 

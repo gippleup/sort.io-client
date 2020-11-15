@@ -139,6 +139,14 @@ export class RefBlockBoard extends Component<RefBlockBoardProps, {shouldReset: b
   }
 
   reset() {
+    const {props} = this;
+    this.isAnimating = false;
+    this.stacks = Array(props.initialMap.length);
+    this.effectFrames = Array(props.initialMap.length);
+    this.leftOverAlertTimeout = null;
+    this.blinkAnim = null;
+    this.readyToDock = false;
+    this.dockOrigin = null;
     this.setState({
       shouldReset: true,
     })

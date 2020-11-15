@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import { getLevelString } from '../GameScreen/utils';
 import BasicPopup from '../../../components/Generic/BasicPopup';
 import { AskPopupContentContainer } from './_StyledComponents';
-import { SubTitleText, NotoSans, Space } from '../../../components/Generic/StyledComponents';
+import { SubTitleText, NotoSans, Space, FlexHorizontal } from '../../../components/Generic/StyledComponents';
 import { useNavigation } from '@react-navigation/native';
 import usePlayData from '../../../hooks/usePlayData';
 import { useTicket } from '../../../redux/actions/playData/thunk';
@@ -11,6 +11,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../redux/store';
 import TranslationPack from '../../../Language/translation';
 import { modifyToTargetRoutes } from '../../../api/navigation';
+import AnimatedCheckbox from '../../../components/AnimatedCheckbox';
+import { getIcon } from '../../../api/icon';
+import MoneyIcon from '../../../components/Main/MoneyIcon';
 
 const StartChallengePopup = () => {
   const navigation = useNavigation();
@@ -53,11 +56,32 @@ const StartChallengePopup = () => {
           <Space height={10}/>
           <View>
             <NotoSans size={16} style={{color: 'orange'}} type="Bold">{translation.challengeReward}</NotoSans>
-            <NotoSans style={{color: 'tomato'}} type="Regular">{translation.challengeRewardDes}</NotoSans>
-            <NotoSans size={13} type="Light">{translation.challengeRewardEx1}</NotoSans>
-            <NotoSans size={13} type="Light">{translation.challengeRewardEx2}</NotoSans>
-            <NotoSans size={13} type="Light">{translation.challengeRewardEx3}</NotoSans>
-            <NotoSans size={15} type="Black">{'\n'}{translation.rewardTotal}</NotoSans>
+            <View style={{padding: 5, borderWidth: 1, borderRadius: 10, margin: 5, borderColor: "grey"}}>
+              <FlexHorizontal>
+                <AnimatedCheckbox size={30} animated={false} checked/>
+                <AnimatedCheckbox size={30} animated={false}/>
+                <AnimatedCheckbox size={30} animated={false}/>
+                <NotoSans size={16} type="Bold"> = </NotoSans>
+                <NotoSans size={16} color="goldenrod" type="Bold">30</NotoSans>
+                <MoneyIcon size={10} />
+              </FlexHorizontal>
+              <FlexHorizontal>
+                <AnimatedCheckbox size={30} animated={false} checked/>
+                <AnimatedCheckbox size={30} animated={false} checked/>
+                <AnimatedCheckbox size={30} animated={false}/>
+                <NotoSans size={16} type="Bold"> = </NotoSans>
+                <NotoSans size={16} color="goldenrod" type="Bold">100</NotoSans>
+                <MoneyIcon size={10} />
+              </FlexHorizontal>
+              <FlexHorizontal>
+                <AnimatedCheckbox size={30} animated={false} checked/>
+                <AnimatedCheckbox size={30} animated={false} checked/>
+                <AnimatedCheckbox size={30} animated={false} checked/>
+                <NotoSans size={16} type="Bold"> = </NotoSans>
+                <NotoSans size={16} color="goldenrod" type="Bold">230</NotoSans>
+                <MoneyIcon size={10} />
+              </FlexHorizontal>
+            </View>
           </View>
         </AskPopupContentContainer>
       )}

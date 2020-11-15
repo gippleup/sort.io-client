@@ -13,17 +13,20 @@ type AnimatedCheckboxProps = {
   animated?: boolean;
   onAnimationStart?: () => any;
   onAnimationFinished?: () => any;
+  size?: number;
 }
 
 const AnimatedCheckbox = (props: AnimatedCheckboxProps) => {
+  const {size = 160} = props;
   const boxAnim = new Animated.Value(0);
   const boxPathWidth = new Animated.Value(0);
+  const scale = size / 160;
   const rectPath = [
-    "M 0 0 l 0 0 l 0 0 l 0 0 l 0 0 l 0 0",
-    "M 0 0 l 60 0 l 0 0 l 0 0 l 0 0 l 0 0",
-    "M 0 0 l 60 0 l 0 60 l 0 0 l 0 0 l 0 0",
-    "M 0 0 l 60 0 l 0 60 l 0 0 l -60 0 l 0 0",
-    "M 0 0 l 60 0 l 0 60 l 0 0 l -60 0 l 0 -60",
+    `M 0 0 l 0 0 l 0 0 l 0 0 l 0 0 l 0 0`,
+    `M 0 0 l ${60 * scale} 0 l 0 0 l 0 0 l 0 0 l 0 0`,
+    `M 0 0 l ${60 * scale} 0 l 0 ${60 * scale} l 0 0 l 0 0 l 0 0`,
+    `M 0 0 l ${60 * scale} 0 l 0 ${60 * scale} l 0 0 l -${60 * scale} 0 l 0 0`,
+    `M 0 0 l ${60 * scale} 0 l 0 ${60 * scale} l 0 0 l -${60 * scale} 0 l 0 -${60 * scale}`,
   ];
   const boxPath = boxAnim.interpolate({
     inputRange: [0, 0.25, 0.5, 0.75, 1],
@@ -31,16 +34,16 @@ const AnimatedCheckbox = (props: AnimatedCheckboxProps) => {
   })
 
   const okPath = [
-    "M 10 25 l 0 0 l 0 0",
-    "M 10 25 l 15 20 l 0 0",
-    "M 10 25 l 15 20 l 25 -30",
+    `M ${10 * scale} ${25 * scale} l 0 0 l 0 0`,
+    `M ${10 * scale} ${25 * scale} l ${15 * scale} ${20 * scale} l 0 0`,
+    `M ${10 * scale} ${25 * scale} l ${15 * scale} ${20 * scale} l ${25 * scale} -${30 * scale}`,
   ];
 
   const failPath = [
-    "M 15 15 l 0 0 M 0 0 l 0 0",
-    "M 15 15 l 30 30 M 0 0 l 0 0",
-    "M 15 15 l 30 30 M 45 15 l 0 0",
-    "M 15 15 l 30 30 M 45 15 l -30 30",
+    `M ${15 * scale} ${15 * scale} l 0 0 M 0 0 l 0 0`,
+    `M ${15 * scale} ${15 * scale} l ${30 * scale} ${30 * scale} M 0 0 l 0 0`,
+    `M ${15 * scale} ${15 * scale} l ${30 * scale} ${30 * scale} M ${45 * scale} ${15 * scale} l 0 0`,
+    `M ${15 * scale} ${15 * scale} l ${30 * scale} ${30 * scale} M ${45 * scale} ${15 * scale} l -${30 * scale} ${30 * scale}`,
   ]
 
   const checkAnim = new Animated.Value(0);
@@ -114,12 +117,12 @@ const AnimatedCheckbox = (props: AnimatedCheckboxProps) => {
 
   return (
     <View>
-      <Svg style={{ height: 160, width: 160 }}>
+      <Svg style={{ height: size, width: size }}>
         <Use
           x="50%"
           y="50%"
-          translateX={-30}
-          translateY={-30}
+          translateX={-30 * (size / 160)}
+          translateY={-30 * (size / 160)}
           xlinkHref={props.blank ? "#blank-checkbox" : "#checkbox"}
         />
         <Defs>
@@ -128,9 +131,9 @@ const AnimatedCheckbox = (props: AnimatedCheckboxProps) => {
               fill={props.checked ? "lightgrey" : "black"}
               cx="50%"
               cy="50%"
-              translateX={-50}
-              translateY={-50}
-              r={props.animated ? bgCircleR : 60}
+              translateX={-50 * (size / 160)}
+              translateY={-50 * (size / 160)}
+              r={props.animated ? bgCircleR : 60 * (size / 160)}
             />
             <AnimatedCircle
               fill={props.checked 
@@ -138,28 +141,28 @@ const AnimatedCheckbox = (props: AnimatedCheckboxProps) => {
                 : chroma("crimson").set('hsl.l', 0.3).hex()}
               cx="50%"
               cy="50%"
-              translateX={-50}
-              translateY={-50}
-              r={props.animated ? bgCircleFillR : 60}
+              translateX={-50 * (size / 160)}
+              translateY={-50 * (size / 160)}
+              r={props.animated ? bgCircleFillR : 60 * (size / 160)}
             />
             <Rect
               fill={chroma("white").set('hsl.l', 0).alpha(0.6).hex()}
               stroke={chroma("black").set('hsl.l', 0.35).hex()}
-              strokeWidth={5}
-              width={60}
+              strokeWidth={5 * (size / 160)}
+              width={60 * (size / 160)}
               strokeLinejoin="round"
-              height={60}
+              height={60 * (size / 160)}
             />
             <AnimatedPath
               stroke={props.checked ? "yellow" : "red"}
-              strokeWidth={props.animated ? boxPathWidth : 5}
+              strokeWidth={props.animated ? boxPathWidth : 5 * (size / 160)}
               strokeLinecap="round"
               strokeLinejoin="round"
               d={props.animated ? boxPath : rectPath[4]}
             />
             <AnimatedPath
               stroke={props.checked ? "yellow" : "red"}
-              strokeWidth={props.animated ? checkPathWidth : 5}
+              strokeWidth={props.animated ? checkPathWidth : 5 * (size / 160)}
               strokeLinecap="round"
               strokeLinejoin="round"
               d={props.animated 
@@ -171,10 +174,10 @@ const AnimatedCheckbox = (props: AnimatedCheckboxProps) => {
             <Rect
               fill={chroma("white").set('hsl.l', 0).alpha(0.6).hex()}
               stroke={chroma("black").set('hsl.l', 0.35).hex()}
-              strokeWidth={5}
-              width={60}
+              strokeWidth={5 * (size / 160)}
+              width={60 * (size / 160)}
               strokeLinejoin="round"
-              height={60}
+              height={60 * (size / 160)}
             />
           </G>
         </Defs>

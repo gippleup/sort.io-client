@@ -43,6 +43,7 @@ type UpdaterState = {
 class Updater extends React.Component<UpdaterProps, UpdaterState> {
   unmounted = false;
   updatedStarted = false;
+  abortController = new AbortController();
 
   constructor(props: Readonly<UpdaterProps>) {
     super(props);
@@ -57,22 +58,6 @@ class Updater extends React.Component<UpdaterProps, UpdaterState> {
 
   componentDidMount() {
     const {onFinish} = this.props;
-    codePush.checkForUpdate()
-    .then((availableUpdate) => {
-      if (this.unmounted) return;
-      if (availableUpdate) {
-        availableUpdate.download()
-        .then((localPackage)=>{
-          localPackage.install(codePush.InstallMode.ON_NEXT_RESUME);
-        });
-      }
-    })
-    .catch((e) => {
-      if (onFinish) {
-        onFinish();
-      }
-    })
-
     codePush.sync(undefined, (status) => {
       const {SyncStatus} = codePush;
       this.setState({status})

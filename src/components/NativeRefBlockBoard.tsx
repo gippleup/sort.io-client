@@ -79,14 +79,15 @@ type RefBlockBoardProps = {
 const defaultDockEasing: Easings = "easeInOutSine";
 const defaultDockEasingDuration = 100;
 
-export class RefBlockBoard extends Component<RefBlockBoardProps> {
+export class RefBlockBoard extends Component<RefBlockBoardProps, {shouldReset: boolean}> {
   constructor(props: RefBlockBoardProps) {
     super(props);
+    this.state = {
+      shouldReset: false,
+    }
+
     this.stacks = Array(props.initialMap.length);
     this.effectFrames = Array(props.initialMap.length);
-    this.state = {
-      layout: null,
-    };
     this.getTopPiecePos = this.getTopPiecePos.bind(this);
 
     this.undock = this.undock.bind(this);
@@ -135,6 +136,12 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
   get score() {
     const detailedMap = this.getDetailedMap();
     return detailedMap.filter((status) => status === "completed").length;
+  }
+
+  reset() {
+    this.setState({
+      shouldReset: true,
+    })
   }
 
   getEffectFrame(stackIndex: number) {
@@ -592,10 +599,10 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
     this.dockCount += 1;
   }
 
-  clear() {
-    this.setState({
-      layout: null,
-    })
+  componentDidUpdate() {
+    if (this.state.shouldReset) {
+      this.setState({shouldReset: false})
+    }
   }
 
   render() {
@@ -615,6 +622,10 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
       stackMarginHorizontal: marginHorizontal,
       stackMarginVertical: marginVertical,
     } = getStackLayout({width, height}, props.initialMap.length);
+
+    if (this.state.shouldReset) {
+      return <></>;
+    }
 
     const stackWidth = Constants.blockWidth * scale;
     const stackHeight = Constants.blockHeight.full * scale;
@@ -742,7 +753,7 @@ export class RefBlockBoard extends Component<RefBlockBoardProps> {
                             renderer={(text) => (
                               <NotoSans
                                 type="Black"
-                                size={Math.max(15 * scale, 12)}
+                                size={Math.max(15 * scale, 8)}
                                 color="rgba(255,255,255,0.4)"
                               >
                                 {text}

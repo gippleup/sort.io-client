@@ -24,13 +24,15 @@ import {
   TimerContainer,
   UserName
 } from './GameScene/_StyledComponent'
-import { FlexHorizontal } from './Generic/StyledComponents';
+import { FlexHorizontal, NotoSans } from './Generic/StyledComponents';
 import { getSkinSoundEffect } from '../assets/sounds/skinSound';
 import { Easings } from './NativeRefBox/easings';
 import NativeRefBox from './NativeRefBox';
 import ExpressionEquipWheel from './ExpressionEquipWheel';
 import { ExpressionDirection } from '../redux/actions/global/creator';
 import { SupportedExpression } from './Profile/Expressions';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { getIcon } from '../api/icon';
 
 const backgroundImage = require('../assets/BackgroundPattern.png');
 
@@ -70,6 +72,7 @@ type GameSceneProps = {
   }
   onPressExpression?: (direction: ExpressionDirection) => any;
   noGradient?: boolean;
+  resetVisible?: boolean;
 };
 
 
@@ -82,6 +85,7 @@ class GameScene extends React.Component<GameSceneProps, {}>{
     player: false,
   };
   opponentBoardRef = React.createRef<NativeRefBlockBoard>();
+  playerBoardRef = React.createRef<NativeRefBlockBoard>();
   expressionWheelContainerRef = React.createRef<NativeRefBox>();
   playerProfileRef = React.createRef<View>();
   opponentProfileRef = React.createRef<View>();
@@ -148,6 +152,13 @@ class GameScene extends React.Component<GameSceneProps, {}>{
     this.checkIfBoardReady = this.checkIfBoardReady.bind(this);
     this.showExpressionWheel = this.showExpressionWheel.bind(this);
     this.hideExpressionWheel = this.hideExpressionWheel.bind(this);
+    this.resetPlayerBoard = this.resetPlayerBoard.bind(this);
+    this.renderResetButton = this.renderResetButton.bind(this);
+  }
+
+  resetPlayerBoard() {
+    this.playerBoardRef.current?.reset();
+    this.scoreCheckerRef.current?.setScore(this.initialScore);
   }
 
   checkIfBoardReady = () => {
@@ -316,6 +327,24 @@ class GameScene extends React.Component<GameSceneProps, {}>{
     })
   }
 
+  renderResetButton() {
+    const {resetPlayerBoard, props} = this;
+    if (!props.resetVisible) return <></>;
+    return (
+      <View style={{position: "absolute", right: 0, top: -40, flexDirection: "row", alignItems: "center"}}>
+        <NotoSans style={{marginRight: 5}} color="white" type="Black">RESET</NotoSans>
+        <TouchableOpacity onPress={resetPlayerBoard}>
+          <View style={{width: 30, height: 30, backgroundColor: "white", borderRadius: 15, justifyContent: "center", alignItems: "center"}}>
+            {getIcon("fontAwesome", "undo", {
+              color: "black",
+              size: 20,
+            })}
+          </View>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
   renderScoreChecker() {
     const { props } = this;
     const {
@@ -387,6 +416,9 @@ class GameScene extends React.Component<GameSceneProps, {}>{
       timerRef,
       expressionWheelSize,
       expressionWheelContainerRef,
+      playerBoardRef,
+      resetPlayerBoard,
+      renderResetButton
     } = this;
 
     return (
@@ -417,7 +449,9 @@ class GameScene extends React.Component<GameSceneProps, {}>{
         </GameInfoContainer>
         <BlockBoardContainer>
           <PlayerBoardContainer>
+            {renderResetButton()}
             <NativeRefBlockBoard
+              ref={playerBoardRef}
               width={Dimensions.get('window').width - 20}
               height={Dimensions.get('window').height * 0.65 - 20}
               maxScore={props.maxScore}

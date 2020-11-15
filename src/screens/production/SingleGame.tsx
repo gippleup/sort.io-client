@@ -139,6 +139,7 @@ const GameScreen = (props: GameScreenProps) => {
       playerDockEasingDuraton={300}
       playerDockEasing="easeOutBounce"
       noAnimation={!global.animationEnabled}
+      resetVisible
     />
   );
 }

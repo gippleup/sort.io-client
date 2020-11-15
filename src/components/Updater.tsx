@@ -67,6 +67,11 @@ class Updater extends React.Component<UpdaterProps, UpdaterState> {
         });
       }
     })
+    .catch((e) => {
+      if (onFinish) {
+        onFinish();
+      }
+    })
 
     codePush.sync(undefined, (status) => {
       const {SyncStatus} = codePush;

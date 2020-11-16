@@ -14,6 +14,7 @@ import { modifyToTargetRoutes } from '../../../api/navigation';
 import AnimatedCheckbox from '../../../components/AnimatedCheckbox';
 import { getIcon } from '../../../api/icon';
 import MoneyIcon from '../../../components/Main/MoneyIcon';
+import { trackUser } from '../../../api/analytics';
 
 const StartChallengePopup = () => {
   const navigation = useNavigation();
@@ -27,6 +28,7 @@ const StartChallengePopup = () => {
   const diffToChallengeStr = getLevelString(diffToChallenge);
 
   const startSingleGame = () => {
+    trackUser("User started single play challenge")
     if (playData.user.ticket < 1) {
       return navigation.navigate('Popup_NotEnoughTicket')
     } else {
@@ -96,7 +98,10 @@ const StartChallengePopup = () => {
         },
         {
           text: translation.cancel,
-          onPress: navigation.goBack,
+          onPress: () => {
+            trackUser("User closed challenge popup");
+            navigation.goBack();
+          },
           style: {
             backgroundColor: 'lightgrey',
             elevation: 5,

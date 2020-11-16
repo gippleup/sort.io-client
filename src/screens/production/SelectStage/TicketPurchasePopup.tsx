@@ -14,6 +14,7 @@ import * as thunkAction from '../../../redux/actions/playData/thunk'
 import { useNavigation } from '@react-navigation/native'
 import { AppState } from '../../../redux/store'
 import TranslationPack from '../../../Language/translation'
+import { trackUser } from '../../../api/analytics'
 
 const ItemIconContainer = styled(View)`
   border-radius: 10px;
@@ -67,9 +68,11 @@ const TicketPurchasePopup = () => {
   const purchaseTicket = () => {
     if (quantity === 0) return;
     if (playData.user.gold >= total) {
+      trackUser(`User purchased ${quantity} x ticket`)
       dispatch(thunkAction.purchaseTicket(quantity));
       navigation.goBack();
     } else {
+      trackUser(`User tried to purchased ${quantity} x ticket but failed`)
       setAlertVisible(true);
       setTimeout(() => {
         setAlertVisible(false);
@@ -84,7 +87,10 @@ const TicketPurchasePopup = () => {
     },
     {
       text: translation.cancel,
-      onPress: navigation.goBack,
+      onPress: () =>{
+        trackUser("Closed ticket purchase popup");
+        navigation.goBack();
+      },
     },
   ]
 

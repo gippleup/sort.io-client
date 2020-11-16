@@ -8,6 +8,8 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import {
+  AppState,
+  AppStateStatus,
   StatusBar,
 } from 'react-native';
 import routes, { RootStackParamList } from './src/router/routes';
@@ -21,6 +23,7 @@ import {enableScreens, useScreens} from 'react-native-screens';
 import BuildConfig from 'react-native-config';
 import codePush, {CodePushOptions} from 'react-native-code-push';
 import { ModifyOption, modifyToTargetRoutes } from './src/api/navigation';
+import { trackSys, trackUser } from './src/api/analytics';
 
 const { BUILD_ENV } = BuildConfig;
 
@@ -57,13 +60,27 @@ let App: () => React.ReactNode = () => {
     }
   })
 
+  const onAppStateChange = (state: AppStateStatus) => {
+    if (state === "inactive" || state === "background") {
+      trackUser("User left app");
+    } else {
+      trackUser("User came back");
+    }
+  }
+
+  AppState.addEventListener("change", onAppStateChange)
+
   React.useEffect(() => {
+    trackSys("App started");
     const navigation = navContainerRef.current;
     if (navigation && BUILD_ENV === "RELEASE") {
       modifyToTargetRoutes(navigation, [
         {name: "LoadingScreen"},
         {name: "Main"},
       ])
+    }
+    return () => {
+      AppState.removeEventListener("change", onAppStateChange);
     }
   })
 

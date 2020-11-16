@@ -13,6 +13,7 @@ import { prettyPercent } from '../../../components/EndGameInfo/utils';
 import Profile from '../../../components/Profile';
 import useGlobal from '../../../hooks/useGlobal';
 import TranslationPack from '../../../Language/translation';
+import { trackUser } from '../../../api/analytics';
 
 const RecordContainer: typeof View = styled(View)`
   width: ${Dimensions.get('window').width - 60}px;
@@ -69,6 +70,10 @@ const SinglePlayRankPopup = () => {
       }) : translation.noData;
 
       const percentage = Number(rate);
+
+      React.useEffect(() => {
+        trackUser("User closed rank report");
+      })
 
       return (
         <RecordContainer>

@@ -14,6 +14,7 @@ import { modifyToTargetRoutes, slimNavigate } from '../../../api/navigation';
 import { RootStackParamList } from '../../../router/routes';
 import AnimatedCheckbox from '../../../components/AnimatedCheckbox';
 import MoneyIcon from '../../../components/Main/MoneyIcon';
+import { trackUser } from '../../../api/analytics';
 
 type StartTrainingProps = {
   onPressStart: () => any;
@@ -31,6 +32,7 @@ const StartTrainingPopup = (props: StartTrainingProps) => {
   const diffToChallengeStr = getLevelString(diffToChallenge);
 
   const startSingleGame = () => {
+    trackUser("User started single play challenge")
     modifyToTargetRoutes(navigation, [
       {name: "LoadingScreen"},
       {name: "GameScene", params: {
@@ -94,7 +96,10 @@ const StartTrainingPopup = (props: StartTrainingProps) => {
         },
         {
           text: translation.cancel,
-          onPress: navigation.goBack,
+          onPress: () => {
+            trackUser("User closed practice popup");
+            navigation.goBack();
+          },
           style: {
             backgroundColor: 'lightgrey',
             elevation: 5,

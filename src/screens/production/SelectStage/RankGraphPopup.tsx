@@ -9,6 +9,7 @@ import { NotoSans } from '../../../components/Generic/StyledComponents'
 import { useNavigation } from '@react-navigation/native'
 import useGlobal from '../../../hooks/useGlobal'
 import TranslationPack from '../../../Language/translation'
+import { trackUser } from '../../../api/analytics'
 
 const GraphContainer = styled(View)`
   padding-bottom: 5px;
@@ -28,6 +29,10 @@ const RankGraphPopup = () => {
       }
     })
   }
+
+  React.useEffect(() => {
+    trackUser("User closed rank graph popup");
+  })
 
   const renderGraph = () => {
     if (!data) {

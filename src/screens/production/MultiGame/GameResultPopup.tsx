@@ -14,12 +14,12 @@ import {boardStyle, titleStyle} from './GameResultPopup/_styles'
 import { getSkinSoundEffect } from '../../../assets/sounds/skinSound'
 import MultiGameResult from '../../../components/MultiGameResult'
 import styled from 'styled-components'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../../redux/store'
 import TranslationPack from '../../../Language/translation'
-import { modifyToTargetRoutes, remainTargetRoutes } from '../../../api/navigation'
+import { modifyToTargetRoutes } from '../../../api/navigation'
 import DelayButton from '../../../components/DelayButton'
+import { trackUser, turnOnTracker } from '../../../api/analytics'
 
 type GameResultNavigationProps = StackNavigationProp<RootStackParamList, "Popup_GameResult">
 type GameResultRouteProps = RouteProp<RootStackParamList, "Popup_GameResult">
@@ -138,18 +138,22 @@ const GameResultPopup = (props: GameResultPopupProps) => {
     }
   }
 
-  const goHome = () => modifyToTargetRoutes(navigation, [
-    {name: "LoadingScreen"},
-    {name: "Main"},
-  ])
+  const goHome = () => {
+    modifyToTargetRoutes(navigation, [
+      {name: "LoadingScreen"},
+      {name: "Main"},
+    ])
+  }
 
   const onHomePressed = () => {
+    trackUser("User pressed home button on game result popup");
     socket.close();
     // 소켓 연결 끊겼을 안 나간 사람을 승자로 처리.
     goHome();
   };
 
   const onRematchPressed = () => {
+    trackUser("User pressed rematch button on game result popup");
     if (!playData.user.id) return;
     socket.send(requestRematch({
       roomId,
@@ -161,6 +165,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
   };
 
   const onAnotherMatchPressed = () => {
+    trackUser("User pressed another match button on game result popup");
     if (!playData.user.id) return;
     socket.send(requestOtherMatch({
       roomId,
@@ -178,6 +183,7 @@ const GameResultPopup = (props: GameResultPopupProps) => {
   };
   
   React.useEffect(() => {
+    turnOnTracker();
     if (result === "win") {
       getSkinSoundEffect().win.play();
     } else {

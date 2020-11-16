@@ -2,7 +2,9 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import chroma from 'chroma-js';
 import React from 'react'
 import { View } from 'react-native'
+import { trackUser } from '../../api/analytics';
 import { modifyToTargetRoutes, slimNavigate } from '../../api/navigation';
+import { stringifyValues } from '../../api/utils';
 import TranslationPack from '../../Language/translation';
 import { SupportedLanguage } from '../../redux/actions/global/types';
 import { RootStackParamList } from '../../router/routes';
@@ -114,6 +116,10 @@ class ItemBox extends React.PureComponent<ItemBoxProps> {
       }
   
       if (category === "skin" || category === "expression") {
+        trackUser("User pressed preview button", stringifyValues({
+          category,
+          name,
+        }));
         const { target, params } = navigationOption[category];
         modifyToTargetRoutes(navigation, [
           {name: "LoadingScreen"},
@@ -126,7 +132,7 @@ class ItemBox extends React.PureComponent<ItemBoxProps> {
     };
   
     const onPressPurchase = () => {
-      navigation.navigate("Popup_ItemPurchase", {
+      const purchaseDescription = {
         category: category,
         item: name,
         title,
@@ -134,7 +140,9 @@ class ItemBox extends React.PureComponent<ItemBoxProps> {
         hasOwned,
         price,
         isInUse,
-      })
+      }
+      trackUser("User pressed purchase button", stringifyValues(purchaseDescription));
+      navigation.navigate("Popup_ItemPurchase", purchaseDescription)
     }
   
     const buttonText = hasOwned

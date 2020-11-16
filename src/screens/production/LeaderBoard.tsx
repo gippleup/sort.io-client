@@ -4,6 +4,7 @@ import React, { RefObject } from 'react'
 import { View, Text, Dimensions, ViewStyle, Easing, Animated, PanResponder } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components';
+import { trackUser } from '../../api/analytics';
 import { SinglePlayData } from '../../api/local';
 import { removeTargetRoute } from '../../api/navigation';
 import { getSinglePlayRank, RankData, UserSingleRankData } from '../../api/sortio';
@@ -83,6 +84,7 @@ const LeaderBoard = () => {
   const gestureResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderGrant: (e) => {
+      trackUser("User panning rank table");
       if (touchStartX.current === null) {
         touchEndX.current = null;
         prevOffsetX.current = curOffsetX.current;

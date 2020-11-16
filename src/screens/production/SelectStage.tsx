@@ -25,6 +25,7 @@ import useGlobal from '../../hooks/useGlobal';
 import TranslationPack from '../../Language/translation';
 import styled from 'styled-components';
 import AdmobBanner from '../../components/AdmobBaner';
+import { trackUser } from '../../api/analytics';
 
 const BannerAdSpace: typeof View = styled(View)`
   width: 100%;
@@ -46,11 +47,26 @@ const SelectStage = () => {
   const lastPlayedDiffStr = getLevelString(lastPlayedDifficulty);
   const [bannerAdSpace, setBannerAdSpace] = React.useState<{width: number; height: number;} | undefined>();
 
-  const onPressChallenge = () => navigation.navigate('Popup_StartChallenge');
-  const onPressTraining = () => navigation.navigate('Popup_StartTraining');
-  const onPressCurrentRankGraphIcon = () => navigation.navigate('Popup_RankGraph');
-  const onPressSinglePlayRank = () => navigation.navigate('Popup_SinglePlayRank');
-  const onPressTicketPurchase = () => navigation.navigate('Popup_TicketPurchase');
+  const onPressChallenge = () => {
+    trackUser("User pressed challege button");
+    navigation.navigate('Popup_StartChallenge');
+  }
+  const onPressTraining = () => {
+    trackUser("User pressed practice button");
+    navigation.navigate('Popup_StartTraining');
+  }
+  const onPressCurrentRankGraphIcon = () => {
+    trackUser("User pressed rank button");
+    navigation.navigate('Popup_RankGraph');
+  }
+  const onPressSinglePlayRank = () => {
+    trackUser("User pressed rank report button");
+    navigation.navigate('Popup_SinglePlayRank');
+  }
+  const onPressTicketPurchase = () => {
+    trackUser("User pressed purchase ticket button");
+    navigation.navigate('Popup_TicketPurchase');
+  }
 
   return (
     <View style={{flex: 1}}>

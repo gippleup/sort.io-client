@@ -22,12 +22,10 @@ import BuildConfig from 'react-native-config'
 import { AppState } from '../../redux/store'
 import TranslationPack from '../../Language/translation'
 import { modifyToTargetRoutes, slimNavigate } from '../../api/navigation'
-import useMultiGameSocket from '../../hooks/useMultiGameSocket'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import { getIcon } from '../../api/icon'
 import RatingButton from '../../components/RatingButton'
 import ShareButton from '../../components/ShareButton'
 import codePush from 'react-native-code-push';
+import { trackSys, trackUser } from '../../api/analytics'
 
 const {BUILD_ENV} = BuildConfig;
 
@@ -67,10 +65,13 @@ const Main = (props: MainProps) => {
   let focusTimeout: NodeJS.Timeout;
 
   if (!checkedUpdate.current) {
+    trackUser("Came to Main");
     checkedUpdate.current = true;
     codePush.checkForUpdate()
     .then((avilableUpdate) => {
+      trackSys("Checked available update");
       if (!avilableUpdate) return;
+      trackSys("Codepush sync started");
       codePush.sync();
     })
     .catch((e) => {
@@ -130,6 +131,7 @@ const Main = (props: MainProps) => {
   }
 
   const onPressSingle = () => {
+    trackUser("User pressed single play button");
     removeBeforeRemove();
     modifyToTargetRoutes(navigation, [
       {name: "LoadingScreen"},
@@ -138,9 +140,11 @@ const Main = (props: MainProps) => {
     ])
   }
   const onPressMulti = () => {
+    trackUser("User pressed multi play button");
     navigation.navigate('Popup_MultiWaiting');
   }
   const onPressShop = () => {
+    trackUser("User pressed shop button");
     removeBeforeRemove();
     modifyToTargetRoutes(navigation, [
       {name: "LoadingScreen"},
@@ -149,12 +153,17 @@ const Main = (props: MainProps) => {
     ])
   }
   const onPressLeaderBoard = () => {
+    trackUser("User pressed leaderboard button");
     removeBeforeRemove();
     modifyToTargetRoutes(navigation, [
       {name: "LoadingScreen"},
       {name: "Main", onDemand: true},
       {name: "LeaderBoard"},
     ])
+  }
+
+  const onPressBannerAds = () => {
+    trackUser("User pressed banner ads");
   }
 
   const SubTitle = () => {
@@ -256,7 +265,12 @@ const Main = (props: MainProps) => {
           impossible={!isConnectionOk}
         />
       </View>
-      <BannerAdSpace style={{display: isConnectionOk ? "flex" : "none"}} onLayout={(e) => setBannerAdSpace(e.nativeEvent.layout)}>
+      <BannerAdSpace
+        onStartShouldSetResponder={() => true}
+        onResponderGrant={onPressBannerAds}
+        style={{display: isConnectionOk ? "flex" : "none"}}
+        onLayout={(e) => setBannerAdSpace(e.nativeEvent.layout)}
+      >
         <AdmobBanner availableSpace={bannerAdSpace} />
       </BannerAdSpace>
     </View>

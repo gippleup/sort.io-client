@@ -2,8 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View } from "react-native";
 import { useSelector } from "react-redux";
-import { getExpressionSoundEffect } from "../../../../assets/sounds/expressionSound";
-import { getSkinSoundEffect } from "../../../../assets/sounds/skinSound";
+import { turnOffTracker } from "../../../../api/analytics";
 import GameScene from "../../../../components/GameScene";
 import Profile from "../../../../components/Profile";
 import useMultiGameSocket from "../../../../hooks/useMultiGameSocket";
@@ -101,6 +100,7 @@ export const MultiGameLogic = (props: MultiGameProps) => {
   }
 
   const useEffectCallback = () => {
+    turnOffTracker();
     const $TimerBase = gameSceneRef.current?.timerRef.current?.timerBaseRef.current;
     $TimerBase?.setTimeTo(120);
 

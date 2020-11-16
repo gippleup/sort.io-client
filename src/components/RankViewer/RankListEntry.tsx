@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, Text, Image, ViewStyle, TextStyle, LayoutChangeEvent} from 'react-native';
+import { prettyPercent } from '../../api/utils';
 import TranslationPack from '../../Language/translation';
 import { SupportedLanguage } from '../../redux/actions/global/types';
-import {prettyPercent} from '../EndGameInfo/utils';
 import {FlexHorizontal} from '../Generic/StyledComponents';
 import {
   EntryContainer,

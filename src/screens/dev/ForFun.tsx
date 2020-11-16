@@ -4,13 +4,13 @@ import NativeRefBox from '../../components/NativeRefBox'
 import chroma, { random } from 'chroma-js'
 import { FlexHorizontal, NotoSans, RoundPaddingCenter } from '../../components/Generic/StyledComponents'
 import { TouchableOpacity, TextInput } from 'react-native-gesture-handler'
-import { RoundRectangleButton } from '../../components/EndGameInfo/_StyledComponents'
 import Slider from '@react-native-community/slider'
 import { Easings } from '../../components/NativeRefBox/easings'
+import DynamicText from '../../components/DynamicText'
 
 const ForFun = () => {
   const boxRefBag: RefObject<NativeRefBox>[] = [];
-  const fpsTextRef = React.createRef<TextInput>();
+  const fpsTextRef = React.createRef<DynamicText>();
   let fps = 60;
   let easing: Easings = "easeOutElastic";
 
@@ -44,9 +44,6 @@ const ForFun = () => {
 
   React.useEffect(() => {
     fps = 60;
-    fpsTextRef.current.setNativeProps({
-      text: '60'
-    })
   })
 
   const renderNativeRefBox = () => {
@@ -92,15 +89,14 @@ const ForFun = () => {
                 FPS
               </NotoSans>
             </RoundPaddingCenter>
-            <TextInput
+            <DynamicText
+              initialValue='60'
               ref={fpsTextRef}
-              style={{
-                fontFamily: 'NotoSansKR-Black',
-                fontSize: 20,
-                color: 'black',
-                marginLeft: 10,
-              }}
-              value="60"
+              renderer={(text) => (
+                <NotoSans type="Black">
+                  {text}
+                </NotoSans>
+              )}
             />
             <Slider
               style={{width: 200, height: 40}}
@@ -113,9 +109,7 @@ const ForFun = () => {
               onValueChange={(value) => {
                 fps = value;
                 if (fpsTextRef.current) {
-                  fpsTextRef.current.setNativeProps({
-                    text: String(value),
-                  })
+                  fpsTextRef.current.setText(String(value))
                 }
               }}
             />
@@ -126,11 +120,11 @@ const ForFun = () => {
             randomTransform();
           })
         }}>
-          <RoundRectangleButton>
+          <RoundPaddingCenter>
             <NotoSans size={40} type="Black">
               변해라 얍!!
             </NotoSans>
-          </RoundRectangleButton>
+          </RoundPaddingCenter>
         </TouchableOpacity>
       </View>
     </View>

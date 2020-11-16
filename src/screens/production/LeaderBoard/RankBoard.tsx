@@ -4,7 +4,7 @@ import { FullFlexCenter, NotoSans } from '../../../components/Generic/StyledComp
 import { lazify } from '../../../components/Generic/utils'
 import RankViewer, { RankViewerData, RankViewerDataEntry } from '../../../components/RankViewer'
 import usePlayData from '../../../hooks/usePlayData'
-import { getSinglePlayRankData, getMultiPlayRankData } from './RankBoard/utils'
+import { getSinglePlayRankByIdData, getMultiPlayRankByIdData } from './RankBoard/utils'
 
 type RankBoardProps = {
   mode?: "single" | "multi";
@@ -26,8 +26,8 @@ const RankBoard = (props: RankBoardProps) => {
     }
 
     const rankData = mode === "single" 
-      ? await getSinglePlayRankData(playData.user.id, 15)
-      : await getMultiPlayRankData(playData.user.id, 15);
+      ? await getSinglePlayRankByIdData(playData.user.id, 15)
+      : await getMultiPlayRankByIdData(playData.user.id, 15);
 
     if (!rankData) {
       return resolve(

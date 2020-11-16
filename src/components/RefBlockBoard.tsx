@@ -544,7 +544,7 @@ export class RefBlockBoard extends Component<
         <LayoutContainer marginLeft={layoutMarginLeft} marginTop={layoutMarginTop}>
           {layout.map((row, i) => (
             <Row key={'frameRow' + i} style={{marginVertical}}>
-              {row.map((cell, j: number) => {
+              {row.map((cell: number, j: number) => {
                 const stackIndex = layout[0].length * i + j;
                 if (props.initialMap[stackIndex] === undefined) {
                   return (
@@ -565,7 +565,7 @@ export class RefBlockBoard extends Component<
         </LayoutContainer>
         <LayoutContainer marginLeft={layoutMarginLeft} marginTop={layoutMarginTop} ref={this.layoutRef}>
           {layout.map((row, i) =>
-            row.map((cell, j: number) => {
+            row.map((cell: number, j: number) => {
               const stackIndex = layout[0].length * i + j;
               const curStack = props.initialMap[stackIndex];
               if (curStack === undefined) {
@@ -686,7 +686,7 @@ export class RefBlockBoard extends Component<
         <LayoutContainer marginLeft={layoutMarginLeft} marginTop={layoutMarginTop}>
           {layout.map((row, i) => (
             <Row key={'agentRow' + i} style={{marginVertical}}>
-              {row.map((cell, j: number) => {
+              {row.map((cell: number, j: number) => {
                 const stackIndex = layout[0].length * i + j;
                 if (props.initialMap[stackIndex] === undefined) {
                   return (

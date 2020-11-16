@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, Dimensions, ViewProps } from 'react-native'
 import styled from 'styled-components'
-import { prettyPercent } from './EndGameInfo/utils';
+import { prettyPercent } from '../api/utils';
 
 const Container: typeof View = styled(View)`
   align-items: center;

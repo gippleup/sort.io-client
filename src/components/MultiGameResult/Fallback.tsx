@@ -1,11 +1,6 @@
-import { name } from 'chroma-js'
-import { style } from 'd3'
 import React from 'react'
 import { View, Text } from 'react-native'
-import { color } from 'react-native-reanimated'
 import styled from 'styled-components'
-import translation from '../../Language/ko/screens/Main'
-import { prettyPercent } from '../EndGameInfo/utils'
 import { FlexHorizontal, Space, NotoSans, Line } from '../Generic/StyledComponents'
 import Profile from '../Profile'
 

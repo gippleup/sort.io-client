@@ -6,7 +6,7 @@ const ScoreCheckerTester = () => {
   return (
     <View>
       <ScoreChecker
-        curScore={3}
+        initialScore={3}
         maxScore={5}
         layout={[
           [1, 1, 1],

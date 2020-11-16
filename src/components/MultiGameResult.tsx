@@ -1,14 +1,14 @@
 import React from 'react'
 import { View, Text, ViewStyle } from 'react-native'
 import styled from 'styled-components'
-import { getMultiPlayRank } from '../api/sortio'
+import { getMultiPlayRankById } from '../api/sortio'
 import TranslationPack from '../Language/translation'
 import { SupportedLanguage } from '../redux/actions/global/types'
-import { prettyPercent } from './EndGameInfo/utils'
 import { FlexHorizontal, Line, NotoSans, Space } from './Generic/StyledComponents'
 import { lazify } from './Generic/utils'
 import Profile from './Profile'
 import Fallback from './MultiGameResult/Fallback'
+import { prettyPercent } from '../api/utils'
 
 const ResultContainer: typeof View = styled(View)`
   border-radius: 5px;
@@ -50,7 +50,7 @@ const MultiGameResult = (props: MultiGameResultProps) => {
   
   const translation = TranslationPack[lan].screens.MultiPlay;
   const Result = lazify(new Promise(async (resolve) => {
-    const rankData = await getMultiPlayRank(userId, 0);
+    const rankData = await getMultiPlayRankById(userId, 0);
     const {
       KBI,
       createdAt,

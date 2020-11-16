@@ -1,7 +1,7 @@
-import { getMultiPlayRank, getSinglePlayRank, UserMultiRankData, UserSingleRankData } from "../../../../api/sortio";
+import { getMultiPlayRankById, getSinglePlayRankById, RawMultiRankData, RawSingleRankData } from "../../../../api/sortio";
 import { RankViewerDataEntry, RankViewerData } from "../../../../components/RankViewer";
 
-const mapSinglePlayRankEntry = (entry: UserSingleRankData): RankViewerDataEntry => {
+const mapSinglePlayRankEntry = (entry: RawSingleRankData): RankViewerDataEntry => {
   return {
     rank: Number(entry.rank),
     rate: Number(entry.rate),
@@ -12,8 +12,8 @@ const mapSinglePlayRankEntry = (entry: UserSingleRankData): RankViewerDataEntry 
 };
 
 
-export const getSinglePlayRankData = async (userId: number, padding = 0): Promise<null | RankViewerData> => {
-  const rankData = await getSinglePlayRank(userId, padding);
+export const getSinglePlayRankByIdData = async (userId: number, padding = 0): Promise<null | RankViewerData> => {
+  const rankData = await getSinglePlayRankById(userId, padding);
 
   if (!rankData) return null;
 
@@ -28,7 +28,7 @@ export const getSinglePlayRankData = async (userId: number, padding = 0): Promis
   return mappedData;
 }
 
-const mapMultiPlayRankEntry = (entry: UserMultiRankData): RankViewerDataEntry => {
+const mapMultiPlayRankEntry = (entry: RawMultiRankData): RankViewerDataEntry => {
   return {
     rank: Number(entry.rank),
     rate: Number(entry.rate),
@@ -39,8 +39,8 @@ const mapMultiPlayRankEntry = (entry: UserMultiRankData): RankViewerDataEntry =>
 };
 
 
-export const getMultiPlayRankData = async (userId: number, padding = 0): Promise<null | RankViewerData> => {
-  const rankData = await getMultiPlayRank(userId, padding);
+export const getMultiPlayRankByIdData = async (userId: number, padding = 0): Promise<null | RankViewerData> => {
+  const rankData = await getMultiPlayRankById(userId, padding);
 
   if (!rankData) return null;
 

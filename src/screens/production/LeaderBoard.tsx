@@ -4,19 +4,11 @@ import React, { RefObject } from 'react'
 import { View, Text, Dimensions, ViewStyle, Easing, Animated, PanResponder } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components';
-import { trackUser } from '../../api/analytics';
-import { SinglePlayData } from '../../api/local';
 import { removeTargetRoute } from '../../api/navigation';
-import { getSinglePlayRank, RankData, UserSingleRankData } from '../../api/sortio';
 import PatternBackground from '../../components/GameScene/PatternBackground'
-import { FlexHorizontal, FullFlexCenter, NotoSans, Space, WindowSizeView } from '../../components/Generic/StyledComponents';
-import NativeRefBox from '../../components/NativeRefBox';
-import RankViewer, { RankViewerDataEntry, RankViewerData } from '../../components/RankViewer';
-import ReadyTimer from '../../components/ReadyTimer';
-import SlideSelector from '../../components/SlideSelector';
+import { NotoSans, Space, WindowSizeView } from '../../components/Generic/StyledComponents';
 import StrokedText from '../../components/StrokedText';
 import useGlobal from '../../hooks/useGlobal';
-import usePlayData from '../../hooks/usePlayData';
 import TranslationPack from '../../Language/translation';
 import { RootStackParamList } from '../../router/routes';
 import RankBoard from './LeaderBoard/RankBoard';
@@ -124,7 +116,7 @@ const LeaderBoard = () => {
       }
     },
   })
-  
+
   return (
     <WindowSizeView
       style={{

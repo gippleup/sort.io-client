@@ -247,29 +247,30 @@ export const isServerAlive = (): Promise<boolean> => {
   })
 }
 
-export type UserSingleRankData = {
+export type RawSingleRankData = {
   id: number;
   name: string;
-  difficulty: number;
+  photo: string;
   createdAt: string;
+  difficulty: string;
   rank: string;
   rate: string;
-  photo: string;
 }
 
-export type UserMultiRankData = {
-  id: number;
-  name: string;
-  createdAt: string;
-  win: string;
-  draw: string;
-  lose: string;
-  total: string;
-  winningRate: string;
-  KBI: number;
-  rank: string;
-  rate: string;
-  photo: string;
+export type RawMultiRankData = {
+  id: number,
+  name: string,
+  createdAt: string,
+  gameCreatedAt: string,
+  win: string,
+  draw: string,
+  lose: string,
+  total: number,
+  winningRate: number,
+  KBI: number,
+  rank: string,
+  rate: string,
+  photo: string,
 }
 
 export type RankData<T> = {
@@ -279,14 +280,14 @@ export type RankData<T> = {
   total: number;
 }
 
-export const getSinglePlayRank = (userId: number, padding: number = 2): Promise<RankData<UserSingleRankData>> => {
+export const getSinglePlayRankById = (userId: number, padding: number = 2): Promise<RankData<RawSingleRankData>> => {
   const url = `${API_BASE}/singlePlay/rank?userId=${userId}&padding=${padding}`;
   return fetch(url)
    .then((res) => res.json())
   .catch(() => null)
 }
 
-export const getMultiPlayRank = (userId: number, padding: number = 2): Promise<RankData<UserMultiRankData>> => {
+export const getMultiPlayRankById = (userId: number, padding: number = 2): Promise<RankData<RawMultiRankData>> => {
   const url = `${API_BASE}/multiPlay/rank?userId=${userId}&padding=${padding}`;
   return fetch(url)
     .then((res) => res.json())

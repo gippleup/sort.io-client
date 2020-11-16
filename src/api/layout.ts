@@ -1,5 +1,5 @@
 import { LayoutRectangle } from "react-native";
-import Constants from "../../assets/Constants";
+import Constants from "../assets/Constants";
 
 const stackHeight = Constants.blockHeight.full;
 const stackWidth = Constants.blockWidth;

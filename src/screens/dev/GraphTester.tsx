@@ -9,7 +9,7 @@ import { NotoSans } from '../../components/Generic/StyledComponents'
 const GraphTester = () => {
   const [data, setData] = React.useState<SinglePlayData[] | null>(null);
   if (!data) {
-    getLocalPlayData().then((data) => setData(data.single))
+    getLocalPlayData().then((data) => setData(data.singlePlay))
     return <></>;
   }
   

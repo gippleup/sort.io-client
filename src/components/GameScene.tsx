@@ -75,6 +75,28 @@ type GameSceneProps = {
   resetVisible?: boolean;
 };
 
+type Move = {
+  type: "dock";
+  targetIndex: number;
+  occuredAt: number;
+} | {
+  type: "undock";
+  targetIndex: number;
+  occuredAt: number;
+} | {
+  type: "reset";
+  occuredAt: number;
+}
+
+type GameRecord = {
+  gameType: "single" | "multi";
+  createdAt: number | null;
+  startedAt: number | null;
+  endedAt: number | null;
+  map: number[][];
+  moves: Move[];
+  result: "success" | "win" | "fail" | "defeat" | null;
+}
 
 class GameScene extends React.Component<GameSceneProps, {}>{
   timerRef = React.createRef<Timer>();
@@ -107,9 +129,19 @@ class GameScene extends React.Component<GameSceneProps, {}>{
   scoreCheckerLayout = [[]];
   onReadyDispatched = false;
   expressionWheelSize = 200;
+  record: GameRecord;
 
   constructor(props: Readonly<GameSceneProps>) {
     super(props);
+    this.record = {
+      endedAt: null,
+      startedAt: null,
+      createdAt: Date.now(),
+      gameType: props.mode,
+      map: props.map,
+      moves: [],
+      result: null,
+    }
     this.checkerMaxWidth = this.scoreCheckerMax[props.mode].width;
     this.checkerMaxHeight = this.scoreCheckerMax[props.mode].height;
     this.expressionWheelSize = props.expressionWheelSize || 200;

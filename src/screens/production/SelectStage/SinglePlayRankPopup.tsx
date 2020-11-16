@@ -2,18 +2,18 @@ import React from 'react'
 import { View, Text, ViewStyle, Dimensions } from 'react-native'
 import BasicPopup, { PopupButton } from '../../../components/Generic/BasicPopup'
 import RankViewer, { RankViewerDataEntry, RankViewerData } from '../../../components/RankViewer';
-import { getSinglePlayRank, RankData, UserSingleRankData } from '../../../api/sortio';
+import { getSinglePlayRankById, RankData, RawSingleRankData } from '../../../api/sortio';
 import usePlayData from '../../../hooks/usePlayData';
 import { FlexHorizontal, FullFlexCenter, Line, NotoSans, Space } from '../../../components/Generic/StyledComponents';
 import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components';
 import { prettyTime } from './utils';
 import { getLevelString } from '../GameScreen/utils';
-import { prettyPercent } from '../../../components/EndGameInfo/utils';
 import Profile from '../../../components/Profile';
 import useGlobal from '../../../hooks/useGlobal';
 import TranslationPack from '../../../Language/translation';
 import { trackUser } from '../../../api/analytics';
+import { prettyPercent } from '../../../api/utils';
 
 const RecordContainer: typeof View = styled(View)`
   width: ${Dimensions.get('window').width - 60}px;
@@ -35,7 +35,7 @@ const ProfileBox: typeof View = styled(View)`
 
 const SinglePlayRankPopup = () => {
   const playData = usePlayData();
-  const [data, setData] = React.useState<UserSingleRankData | null>(null);
+  const [data, setData] = React.useState<RawSingleRankData | null>(null);
   const navigation = useNavigation();
   const {language: lan} = useGlobal();
   const translation = TranslationPack[lan].screens.SelectStage;
@@ -103,7 +103,7 @@ const SinglePlayRankPopup = () => {
           <View>
             <NotoSans type="Bold">{translation.lastClearDifficulty}</NotoSans>
             <Line width="100%" height={1} color="black" />
-            <NotoSans size={30} type="Thin">{getLevelString(difficulty)}</NotoSans>
+            <NotoSans size={30} type="Thin">{getLevelString(Number(difficulty))}</NotoSans>
           </View>
           <Space height={10} />
           <View>
@@ -128,8 +128,8 @@ const SinglePlayRankPopup = () => {
 
   React.useEffect(() => {
     if (playData.user.id && !data) {
-      getSinglePlayRank(playData.user.id, 0)
-      .then((rankData: RankData<UserSingleRankData>) => {
+      getSinglePlayRankById(playData.user.id, 0)
+      .then((rankData: RankData<RawSingleRankData>) => {
         setData(rankData.targetUser);
       })
     }

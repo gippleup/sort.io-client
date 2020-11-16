@@ -17,10 +17,7 @@ import {
 } from './SelectStage/_StyledComponents'
 import usePlayData from '../../hooks/usePlayData';
 import { getLevelString } from './GameScreen/utils';
-import { getSinglePlayRank, UserSingleRankData } from '../../api/sortio';
-import { prettyPercent } from '../../components/EndGameInfo/utils';
 import { getIcon } from '../../api/icon';
-import RewardButton from '../../components/RewardButton';
 import useGlobal from '../../hooks/useGlobal';
 import TranslationPack from '../../Language/translation';
 import styled from 'styled-components';

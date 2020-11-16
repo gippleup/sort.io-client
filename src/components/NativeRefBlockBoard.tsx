@@ -15,10 +15,10 @@ import NativeRefBox, { RefAnimation } from './NativeRefBox';
 import TouchAgent from './TouchAgent';
 import BlockBase from './Block/BlockBase';
 import { Easings } from './NativeRefBox/easings';
-import { getStackLayout } from './FastBlockBoard/utils';
 import chroma from 'chroma-js';
 import { NotoSans } from './Generic/StyledComponents';
 import DynamicText from './DynamicText';
+import { getStackLayout } from '../api/layout';
 
 const LayoutContainer: typeof View = styled(View)`
   position: absolute;

@@ -12,6 +12,7 @@ import PatternBackground from '../../components/GameScene/PatternBackground'
 import { FlexHorizontal, FullFlexCenter, NotoSans, Space, WindowSizeView } from '../../components/Generic/StyledComponents';
 import NativeRefBox from '../../components/NativeRefBox';
 import RankViewer, { RankViewerDataEntry, RankViewerData } from '../../components/RankViewer';
+import ReadyTimer from '../../components/ReadyTimer';
 import SlideSelector from '../../components/SlideSelector';
 import StrokedText from '../../components/StrokedText';
 import useGlobal from '../../hooks/useGlobal';
@@ -84,7 +85,6 @@ const LeaderBoard = () => {
   const gestureResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderGrant: (e) => {
-      trackUser("User panning rank table");
       if (touchStartX.current === null) {
         touchEndX.current = null;
         prevOffsetX.current = curOffsetX.current;
@@ -124,7 +124,7 @@ const LeaderBoard = () => {
       }
     },
   })
-
+  
   return (
     <WindowSizeView
       style={{

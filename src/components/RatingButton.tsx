@@ -3,6 +3,8 @@ import { View, Text, Linking, Alert, Platform } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components'
 import { getIcon } from '../api/icon'
+import useGlobal from '../hooks/useGlobal';
+import TranslationPack from '../Language/translation';
 import { FlexHorizontal, NotoSans, Space } from './Generic/StyledComponents';
 
 const StarContainer: typeof View = styled(View)`
@@ -19,6 +21,8 @@ const StarContainer: typeof View = styled(View)`
 `;
 
 const RatingButton = () => {
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.Main;
   const onPress = ()=>{
     if (Platform.OS !== 'ios') {
       Linking.openURL(`market://details?id=com.sortio`).catch(err =>
@@ -41,7 +45,7 @@ const RatingButton = () => {
           })}
           <Space width={5}/>
           <NotoSans color="white" type="Black">
-            별점주기
+            {translation.rate}
           </NotoSans>
           <Space width={5}/>
         </StarContainer>

@@ -16,6 +16,7 @@ const translation = {
   checkingServer: "서버를 점검하고 있습니다",
   pleaseCheckConnection: "인터넷 연결상태를 확인해주세요",
   logoutDesc: "로그아웃 하시겠습니까?",
+  rate: "별점주기",
 }
 
 export default translation;

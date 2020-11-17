@@ -114,3 +114,35 @@ export const signUpWithGoogle = (googleId: string, userId: number, photo: string
     .then((res) => res.json())
     .catch((err) => null);
 }
+
+export type SinglePlay = {
+  id: number;
+  userId: number;
+  createdAt: string;
+  difficulty: number;
+}
+
+export type MultiPlay = {
+  id: number;
+  user1: number;
+  user2: number;
+  winner: number;
+  difficulty: number;
+  timeConsumed: number;
+  createdAt: string;
+}
+
+export const getSinglePlayDataByUserId = (userId: number): Promise<SinglePlay[]> => {
+  const url = `${API_BASE}/singlePlay?userId=${userId}`;
+  return fetch(url)
+    .then((res) => res.json())
+    .catch(() => null)
+}
+
+export const getMultiPlayDataByUserId = (userId: number): Promise<MultiPlay[]> => {
+  const url = `${API_BASE}/multiPlay?userId=${userId}`;
+  return fetch(url)
+    .then((res) => res.json())
+    .catch(() => null)
+}
+

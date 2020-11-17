@@ -2,14 +2,13 @@ import React from 'react'
 import { BackHandler } from 'react-native'
 import { RouteProp, EventArg, StackNavigationState, EventListenerCallback, EventMapCore } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import {generateMap as generateMap_Local} from '../../algo/generateMap';
-import {generateMap as generateMap_Server} from '../../api/sortio';
 import GameScene from '../../components/GameScene';
 import { RootStackParamList } from '../../router/routes';
 import {GameMode, GameSubType, generateOptionByLevel, BeforeRemoveEvent} from './GameScreen/utils'
 import { StackNavigationEventMap } from '@react-navigation/stack/lib/typescript/src/types';
 import useGlobal from '../../hooks/useGlobal';
 import TranslationPack from '../../Language/translation';
+import { generateMapFromLocal } from '../../api/blockMap';
 
 export type StateEventCallback = EventListenerCallback<StackNavigationEventMap & EventMapCore<StackNavigationState>, "state">
 
@@ -97,7 +96,7 @@ const GameScreen = (props: GameScreenProps) => {
   })
 
   if (!map) {
-    setMap(generateMap_Local(option.map).question);
+    setMap(generateMapFromLocal(option.map).question);
     // generateMap_Server(option.map).then((data) => {
     //   setMap(data.question)
     // })

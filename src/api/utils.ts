@@ -1,3 +1,11 @@
+export const POST_OPTION: Partial<RequestInit> = {
+  method: 'POST',
+  credentials: 'include',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+}
+
 export const stringifyValues = (obj: Object) => {
   const entries = Object.entries(obj).map(([key, value]) => {
     return [key, JSON.stringify(value)];

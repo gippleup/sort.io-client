@@ -1,18 +1,14 @@
-import { ThunkDispatch } from "redux-thunk";
-import { AppGetState, GeneralThunkDispatch } from "../../store";
-import { getLocalPlayData, PlayData, SortIoUser, SinglePlayData, setBackupPlayData, getBackupPlayData } from "../../../api/local";
+import { AppGetState } from "../../store";
+import { getLocalPlayData, PlayData, SortIoUser, setBackupPlayData, getBackupPlayData } from "../../../api/local";
 import { updatePlayData, updateUser, updateGold, updateTicket, updateSinglePlay, updateMultiPlay } from "./creator";
-import { Dispatch } from "redux";
-import * as SortIoAPI from "../../../api/sortio";
+import * as itemApi from "../../../api/item";
 import { googleSignIn, googleSignOut, getLoggedUser } from "../../../api/googleOAuth";
 import NetInfo from '@react-native-community/netinfo'
-import { Alert } from "react-native";
 import { GeneralThunkAction } from "../../generic";
-import category from "../../../Language/en/category";
 import { updateItemList } from "../items/cretor";
-import { fetchItemList } from "../items/thunk";
-import { checkUsageOfItems } from "../items/utils";
-import { dispatch } from "d3";
+import { saveGold, saveTicket } from "../../../api/item";
+import { getPlayDataByUserId, makeGuestId, getPlayDataByGoogleId, signUpWithGoogle, saveSinglePlayToServer, SaveMultiPlayOption, saveMultiPlayToServer } from "../../../api/playData";
+import { isServerAlive } from "../../../api/sortio";
 
 const price = {
   ticket: 150,
@@ -21,7 +17,7 @@ const price = {
 const checkConnection = () => {
   return new Promise(async (resolve, reject) => {
     const isConnected = await NetInfo.fetch().then((state) => state.isConnected);
-    const isServerOk = await SortIoAPI.isServerAlive();
+    const isServerOk = await isServerAlive();
   
     if (!isConnected) {
       reject(new Error("인터넷 연결 상태 불량"))
@@ -49,7 +45,7 @@ export const loadPlayData: GeneralThunkAction<void> = () => (dispatch, getState)
       const isObject = typeof data === "object";
       const hasValidData = isObject ? data.user : false;
       if (hasValidData) {
-        SortIoAPI.getPlayDataByUserId(data.user.id)
+        getPlayDataByUserId(data.user.id)
         .then((dataFromServer) => {
           if (dataFromServer) {
             dispatch(updatePlayData(dataFromServer || data));
@@ -89,7 +85,7 @@ export const fetchGoogleProfile: GeneralThunkAction<void> = () => (dispatch, get
 export const applyGuestId: GeneralThunkAction<void> = () => (dispatch, getState) => {
   const curUser = getState().playData.user;
   
-  SortIoAPI.makeGuestId().then((user) => {
+  makeGuestId().then((user) => {
     if (!curUser.googleId) {
       const mixedUser: SortIoUser = {
         ...curUser,
@@ -112,7 +108,7 @@ export const signInWithGoogle: GeneralThunkAction<void> = () => async (dispatch,
   let {curData, curUser} = _getCurDataCurUser(getState)
 
   if (typeof curUser.id !== "number") {
-    await SortIoAPI.makeGuestId().then((user) => {
+    await makeGuestId().then((user) => {
       const mixedUser: SortIoUser = {
         ...curUser,
         id: user.id,
@@ -132,7 +128,7 @@ export const signInWithGoogle: GeneralThunkAction<void> = () => async (dispatch,
 
   const googleId = googleUser.user.id;
   try {
-    const savedServerData = await SortIoAPI.getPlayDataByGoogleId(googleId)
+    const savedServerData = await getPlayDataByGoogleId(googleId)
       .then((data) => data)
       .catch(() => {
         return null;
@@ -151,7 +147,7 @@ export const signInWithGoogle: GeneralThunkAction<void> = () => async (dispatch,
         isTemp: false,
       }
       dispatch(updateUser(mixedUser));
-      const response = await SortIoAPI.signUpWithGoogle(googleId, curUser.id, googleUser.user.photo, googleUser.user.name)
+      const response = await signUpWithGoogle(googleId, curUser.id, googleUser.user.photo, googleUser.user.name)
     }
   } catch (e) {
     console.log(e);
@@ -185,7 +181,7 @@ export const useGold: GeneralThunkAction<number> = (amount) => async (dispatch, 
 
   const { curUser } = _getCurDataCurUser(getState);
   if (typeof curUser.id !== "number") return;
-  const updated = await SortIoAPI.useGold(curUser.id, amount);
+  const updated = await itemApi.useGold(curUser.id, amount);
   if (updated) {
     const newAmount = updated.gold;
     dispatch(updateGold(newAmount));
@@ -197,7 +193,7 @@ export const depositGold: GeneralThunkAction<number> = (amount) => async (dispat
   if (!isConnectionOk) return;
   const { curUser } = _getCurDataCurUser(getState);
   if (typeof curUser.id !== "number") return;
-  const updated = await SortIoAPI.saveGold(curUser.id, amount);
+  const updated = await saveGold(curUser.id, amount);
   if (updated) {
     const newAmount = updated.gold;
     dispatch(updateGold(newAmount));
@@ -210,7 +206,7 @@ export const useTicket: GeneralThunkAction<number> = (amount) => async (dispatch
 
   const { curUser } = _getCurDataCurUser(getState);
   if (typeof curUser.id !== "number") return;
-  const updated = await SortIoAPI.useTicket(curUser.id, amount);
+  const updated = await itemApi.useTicket(curUser.id, amount);
   if (updated) {
     const newAmount = updated.ticket;
     dispatch(updateTicket(newAmount));
@@ -223,7 +219,7 @@ export const depositTicket: GeneralThunkAction<number> = (amount) => async (disp
 
   const { curUser } = _getCurDataCurUser(getState);
   if (typeof curUser.id !== "number") return;
-  const updated = await SortIoAPI.saveTicket(curUser.id, amount);
+  const updated = await saveTicket(curUser.id, amount);
   if (updated) {
     const newAmount = updated.ticket;
     dispatch(updateTicket(newAmount));
@@ -244,17 +240,17 @@ export const saveSinglePlay: GeneralThunkAction<number> = (difficulty) => async 
 
   const {curData, curUser} = _getCurDataCurUser(getState);
   const createdAt = new Date(Date.now()).toISOString();
-  const savedData = await SortIoAPI.saveSinglePlayToServer({ userId: curUser.id, difficulty, createdAt });
+  const savedData = await saveSinglePlayToServer({ userId: curUser.id, difficulty, createdAt });
   const newData = curData.singlePlay.concat(savedData);
   dispatch(updateSinglePlay(newData));
 }
 
-export const saveMultiPlay: GeneralThunkAction<SortIoAPI.SaveMultiPlayOption> = (option) => async (dispatch, getState) => {
+export const saveMultiPlay: GeneralThunkAction<SaveMultiPlayOption> = (option) => async (dispatch, getState) => {
   const isConnectionOk = await checkConnection();
   if (!isConnectionOk) return;
 
   const { curData, curUser } = _getCurDataCurUser(getState);
-  const savedData = await SortIoAPI.saveMultiPlayToServer(option);
+  const savedData = await saveMultiPlayToServer(option);
   const newData = curData.multiPlay.concat(savedData);
   dispatch(updateMultiPlay(newData));
 }
@@ -271,12 +267,12 @@ export const purchaseItem: GeneralThunkAction<ItemDef> = (itemDef) => async (dis
   const {curData, curUser} = _getCurDataCurUser(getState);
   if (typeof curUser.id !== "number") return;
   const {category, name} = itemDef;
-  const updatedItemList = await SortIoAPI.purchaseItem(
+  const updatedItemList = await itemApi.purchaseItem(
     curUser.id,
     category,
     name,
   );
-  const updatedUser = await SortIoAPI.getPlayDataByUserId(curUser.id);
+  const updatedUser = await getPlayDataByUserId(curUser.id);
   if (updatedUser) {
     dispatch(updateGold(updatedUser.user.gold));
     dispatch(updateItemList(updatedItemList));
@@ -290,6 +286,6 @@ export const fetchPlayData: GeneralThunkAction<void> = () => async(dispatch, get
 
   const {curUser} = _getCurDataCurUser(getState);
   if (typeof curUser.id !== "number") return;
-  const updatedUser = await SortIoAPI.getPlayDataByUserId(curUser.id);
+  const updatedUser = await getPlayDataByUserId(curUser.id);
   dispatch(updatePlayData(updatedUser));
 }

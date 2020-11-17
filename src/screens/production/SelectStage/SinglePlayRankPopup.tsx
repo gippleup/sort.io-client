@@ -2,7 +2,6 @@ import React from 'react'
 import { View, Text, ViewStyle, Dimensions } from 'react-native'
 import BasicPopup, { PopupButton } from '../../../components/Generic/BasicPopup'
 import RankViewer, { RankViewerDataEntry, RankViewerData } from '../../../components/RankViewer';
-import { getSinglePlayRankById, RankData, RawSingleRankData } from '../../../api/sortio';
 import usePlayData from '../../../hooks/usePlayData';
 import { FlexHorizontal, FullFlexCenter, Line, NotoSans, Space } from '../../../components/Generic/StyledComponents';
 import { useNavigation } from '@react-navigation/native';
@@ -14,6 +13,7 @@ import useGlobal from '../../../hooks/useGlobal';
 import TranslationPack from '../../../Language/translation';
 import { trackUser } from '../../../api/analytics';
 import { prettyPercent } from '../../../api/utils';
+import { RawSingleRankData, getSinglePlayRankById } from '../../../api/rank';
 
 const RecordContainer: typeof View = styled(View)`
   width: ${Dimensions.get('window').width - 60}px;
@@ -128,9 +128,11 @@ const SinglePlayRankPopup = () => {
 
   React.useEffect(() => {
     if (playData.user.id && !data) {
-      getSinglePlayRankById(playData.user.id, 0)
-      .then((rankData: RankData<RawSingleRankData>) => {
-        setData(rankData.targetUser);
+      getSinglePlayRankById(playData.user.id)
+      .then((rankData) => {
+        if (rankData !== undefined && rankData !== null) {
+          setData(rankData);
+        }
       })
     }
   })

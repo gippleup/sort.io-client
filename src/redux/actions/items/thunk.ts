@@ -1,4 +1,4 @@
-import { getItemList } from "../../../api/sortio";
+import { getItemList } from "../../../api/item";
 import { GeneralThunkAction } from "../../generic";
 import { updateItemList } from "./cretor";
 import { checkUsageOfItems } from "./utils";

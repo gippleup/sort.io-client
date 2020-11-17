@@ -50,7 +50,8 @@ const MultiGameResult = (props: MultiGameResultProps) => {
   
   const translation = TranslationPack[lan].screens.MultiPlay;
   const Result = lazify(new Promise(async (resolve) => {
-    const rankData = await getMultiPlayRankById(userId, 0);
+    const rankData = await getMultiPlayRankById(userId);
+    if (!rankData) return resolve(<></>);
     const {
       KBI,
       createdAt,
@@ -64,7 +65,7 @@ const MultiGameResult = (props: MultiGameResultProps) => {
       rate,
       total = Number(lose) + Number(win) + Number(draw),
       winningRate
-    } = rankData.targetUser;
+    } = rankData;
 
     resolve(
       <ResultContainer style={style}>

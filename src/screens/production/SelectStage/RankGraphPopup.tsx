@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react'
 import { View, Text, Dimensions } from 'react-native'
-import Graph from '../../../components/Graph'
 import { SinglePlayData, getLocalPlayData } from '../../../api/local'
 import { getLevelString } from '../GameScreen/utils'
 import styled from 'styled-components'
@@ -10,6 +9,7 @@ import { useNavigation } from '@react-navigation/native'
 import useGlobal from '../../../hooks/useGlobal'
 import TranslationPack from '../../../Language/translation'
 import { trackUser } from '../../../api/analytics'
+import LineGraph from '../../../components/LineGraph'
 
 const GraphContainer = styled(View)`
   padding-bottom: 5px;
@@ -41,13 +41,12 @@ const RankGraphPopup = () => {
       );
     } else {
       return (
-        <Graph
+        <LineGraph
           data={data}
-          xExtractor={(_, i: number) => i}
-          yExtractor={(entry: SinglePlayData) => entry.difficulty}
-          xAxisMapper={(_, i) => i + 1}
-          yAxisMapper={(entry: SinglePlayData, i) => getLevelString(entry.difficulty).replace(/[aeiou]/g, '')}
-          width={Dimensions.get('window').width - 80}
+          xValueExtractor={(entry, i) => i}
+          yValueExtractor={(entry, i) => entry.difficulty}
+          xTagExtractor={(entry, i) => i}
+          yTagExtractor={(entry, i) => getLevelString(entry.difficulty).replace(/aeiou/g, "")}
         />
       )
     }

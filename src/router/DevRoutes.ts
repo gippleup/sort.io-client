@@ -7,9 +7,9 @@ import ColorTester from "../screens/dev/ColorTester";
 import CountryFlagIconTester from "../screens/dev/CountryFlagIconTester";
 import ForFun from "../screens/dev/ForFun";
 import GameSceneTester from "../screens/dev/GameSceneTester";
-import GraphTester from "../screens/dev/GraphTester";
 import ItemBoxTester from "../screens/dev/ItemBoxTester";
 import JamTester from "../screens/dev/JamTester";
+import LineGraphTester from "../screens/dev/LineGraphTester";
 import MultiGameResultTester from "../screens/dev/MultiGameResultTester";
 import NativeRefTester from "../screens/dev/NativeRefTester";
 import ParticleTester from "../screens/dev/ParticleTester";
@@ -27,6 +27,12 @@ import UpdaterTester from "../screens/dev/UpdaterTester";
 import { Routes } from "./types";
 
 export const devRoutes: Routes<Omit<devParams, "Developer">> = {
+  LineGraphTester: {
+    type: "dev",
+    devName: "선형 그래프 테스터",
+    component: LineGraphTester,
+    headerShown: false,
+  },
   ShapeChecker: {
     type: "dev",
     devName: "모양을 보자",
@@ -131,12 +137,6 @@ export const devRoutes: Routes<Omit<devParams, "Developer">> = {
     devName: '국가 아이콘',
     component: CountryFlagIconTester,
   },
-  GraphTester: {
-    type: "dev",
-    devName: '그래프',
-    component: GraphTester,
-    headerShown: false,
-  },
   ColorTester: {
     type: "dev",
     devName: '컬러 테스터',
@@ -170,6 +170,7 @@ export const devRoutes: Routes<Omit<devParams, "Developer">> = {
 }
 
 export type devParams = {
+  LineGraphTester: undefined;
   ShapeChecker: undefined;
   ReduxTester: undefined;
   AnimatedNumberTester: undefined;
@@ -190,7 +191,6 @@ export type devParams = {
   SettingsTester: undefined;
   FlagIconTester: undefined;
   Developer: undefined;
-  GraphTester: undefined;
   NativeRefTester: undefined;
   AdmobTester: undefined;
   MultiGameResultTester: undefined;

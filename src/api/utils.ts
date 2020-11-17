@@ -108,3 +108,21 @@ export const prettyPercent = (rate: number, roundOn: number = 2) => {
   const prettyRate = `${integer}.${decimal}`;
   return prettyRate;
 };
+
+export const getMaxFromArr = (arr: number[]) => arr.reduce((acc, ele) => acc < ele ? ele : acc)
+export const getMinFromArr = (arr: number[]) => arr.reduce((acc, ele) => acc > ele ? ele : acc)
+
+type InterpolateOption = {
+  input: [number, number];
+  output: [number, number];
+}
+export const interpolateNum = (x: number) => (option: InterpolateOption) => {
+  const {input, output} = option;
+  const [inputMin, inputMax] = input;
+  const [outputMin, outputMax] = output;
+
+  const xDiffInputMin = x - inputMin;
+
+  const scale = (outputMax - outputMin) / (inputMax - inputMin);
+  return outputMin + xDiffInputMin * scale;
+}

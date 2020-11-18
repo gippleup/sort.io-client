@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import { View, ViewProps, Dimensions } from 'react-native'
 import Svg, { Circle, Defs, G, LinearGradient, Path, Rect, Stop, Text } from 'react-native-svg'
 import { getMaxFromArr, getMinFromArr, interpolateNum } from '../api/utils';
+import { NotoSans } from './Generic/StyledComponents';
 import { drawSvgLine } from './LineGraph/utils';
 
 type LineGraphProps<T> = {
@@ -34,12 +35,16 @@ type LineGraphProps<T> = {
     graphBackgroundFill?: string;
     lineWidth?: number;
     lineColor?: string;
-    lineFill?: string;
+    graphFill?: string;
     xAxisColor?: string;
     yAxisColor?: string;
     pointFill?: string;
+    xTagColor?: string;
+    yTagColor?: string;
+    yTagStroke?: string;
   }
   defs?: JSX.Element;
+  fallback?: JSX.Element;
 }
 
 const dimension = Dimensions.get("window");
@@ -55,24 +60,12 @@ const LineGraph: <T>(props: LineGraphProps<T>) => JSX.Element = (props) => {
     xTagRenderer,
     yTagRenderer,
     style = {},
+    fallback = <></>,
     pointCount = 5,
-    defs = (
-      <Defs>
-        <LinearGradient id="grad1" x1="0" y1="0" x2="0" y2="1">
-          <Stop offset="0" stopColor="#FFD080" stopOpacity="1" />
-          <Stop offset="1" stopColor="red" stopOpacity="1" />
-        </LinearGradient>
-        <LinearGradient id="grad2" x1="0" y1="1" x2="0" y2="0">
-          <Stop offset="0" stopColor="#FFD080" stopOpacity="1" />
-          <Stop offset="1" stopColor="red" stopOpacity="1" />
-        </LinearGradient>
-        <LinearGradient id="backgroundGrad" x1="0" y1="0" x2="0" y2="1">
-          <Stop offset="0" stopColor="white" stopOpacity="1" />
-          <Stop offset="1" stopColor="pink" stopOpacity="1" />
-        </LinearGradient>
-      </Defs>
-    ),
+    defs,
   } = props;
+
+  if (!data.length) return fallback;
 
   const {
     width = dimension.width - 50,
@@ -83,24 +76,27 @@ const LineGraph: <T>(props: LineGraphProps<T>) => JSX.Element = (props) => {
     padding = 0,
     graphPadding = 0,
     lineWidth = 1,
-    lineColor = "url(#grad2)",
-    lineFill = "url(#grad1)",
+    lineColor = "url(#neverOverlapGrad2)",
+    graphFill = "url(#neverOverlapGrad1)",
     xAxisColor = "black",
     yAxisColor = "black",
-    pointFill = "black"
+    pointFill = "black",
+    xTagColor = "black",
+    yTagColor = "white",
+    yTagStroke = "black",
   } = style;
 
   const {
     paddingBottom = padding || 30,
     paddingLeft = padding || 20,
-    paddingRight = padding || 20,
+    paddingRight = padding || 40,
     paddingTop = padding || 20,
     graphPaddingTop = graphPadding || 30,
-    graphPaddingBottom = graphPadding || 10,
+    graphPaddingBottom = graphPadding || 0,
     graphPaddingLeft = graphPadding || 0,
-    graphPaddingRight = graphPadding || 30,
+    graphPaddingRight = graphPadding || 20,
     backgroundFill = "transparent",
-    graphBackgroundFill = "url(#backgroundGrad)",
+    graphBackgroundFill = "green",
   } = style;
 
   const coordArr = data.map((entry, i) => ({
@@ -137,9 +133,8 @@ const LineGraph: <T>(props: LineGraphProps<T>) => JSX.Element = (props) => {
 
   const points = interpolatedCoordArr
     .map((coord, i) => {
-      const reason1 = data.length > Math.ceil(pointCount * 1.5);
       const reason2 = targetPoint.indexOf(i) !== -1;
-      if (reason1 && reason2) {
+      if (reason2) {
         return {
           ...coord,
           tagX: xTagExtractor(data[i], i),
@@ -161,7 +156,7 @@ const LineGraph: <T>(props: LineGraphProps<T>) => JSX.Element = (props) => {
       <Rect
         x={paddingLeft}
         y={paddingTop}
-        width={width - paddingLeft - paddingRight}
+        width={width - paddingLeft - paddingRight - graphPaddingRight}
         height={height - paddingTop - paddingBottom}
         fill={graphBackgroundFill}
       />
@@ -174,7 +169,7 @@ const LineGraph: <T>(props: LineGraphProps<T>) => JSX.Element = (props) => {
           H ${paddingLeft + graphPaddingLeft}
           V ${height - paddingTop - graphPaddingTop - paddingBottom - graphPaddingBottom}
         `}
-        fill={lineFill}
+        fill={graphFill}
       />
       {/* line */}
       <Path
@@ -217,7 +212,7 @@ const LineGraph: <T>(props: LineGraphProps<T>) => JSX.Element = (props) => {
             <Text
               vectorEffect="none"
               fontSize="10"
-              fill="black"
+              fill={xTagColor}
               fontFamily="NotoSansKR-Black"
               textAnchor="middle"
             >{tagX}</Text>
@@ -230,16 +225,14 @@ const LineGraph: <T>(props: LineGraphProps<T>) => JSX.Element = (props) => {
               <Text
                 fontSize="12"
                 strokeWidth="3"
-                fill="black"
-                stroke="white"
+                stroke={yTagStroke}
                 fontFamily="NotoSansKR-Bold"
                 textAnchor="middle"
               >{tagY}</Text>
               <Text
                 fontSize="12"
                 strokeWidth="0"
-                fill="black"
-                stroke="white"
+                fill={yTagColor}
                 fontFamily="NotoSansKR-Bold"
                 textAnchor="middle"
               >{tagY}</Text>
@@ -254,7 +247,21 @@ const LineGraph: <T>(props: LineGraphProps<T>) => JSX.Element = (props) => {
           </Fragment>
         )
       })}
-      {defs}
+      <Defs>
+        <LinearGradient id="neverOverlapGrad1" x1="0" y1="0" x2="0" y2="1">
+          <Stop offset="0" stopColor="#FFD080" stopOpacity="1" />
+          <Stop offset="1" stopColor="red" stopOpacity="1" />
+        </LinearGradient>
+        <LinearGradient id="neverOverlapGrad2" x1="0" y1="1" x2="0" y2="0">
+          <Stop offset="0" stopColor="#FFD080" stopOpacity="1" />
+          <Stop offset="1" stopColor="red" stopOpacity="1" />
+        </LinearGradient>
+        <LinearGradient id="neverOverlapGrad3" x1="0" y1="0" x2="0" y2="1">
+          <Stop offset="0" stopColor="white" stopOpacity="1" />
+          <Stop offset="1" stopColor="pink" stopOpacity="1" />
+        </LinearGradient>
+        {defs}
+      </Defs>
     </Svg>
   )
 }

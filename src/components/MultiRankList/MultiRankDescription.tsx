@@ -20,7 +20,7 @@ type MultiRankDescriptionProps = {
 
 const MultiRankDescription = (props: MultiRankDescriptionProps) => {
   const {language: lan} = useGlobal();
-  const translation = TranslationPack[lan].screens.MultiPlay;
+  const translation = TranslationPack[lan].screens.LeaderBoard;
   const {data} = props;
   const {
     KBI,
@@ -53,36 +53,34 @@ const MultiRankDescription = (props: MultiRankDescriptionProps) => {
           />
           <View style={{marginLeft: 10}}>
             <View style={{alignItems: "center"}}>
-              <NotoSans type="Medium" color="tomato" size={20}>승률 </NotoSans>
+              <NotoSans type="Medium" color="tomato" size={20}>{translation.winningRate} </NotoSans>
               <Line color="tomato" height={1} width={80} />
               <NotoSans color="white" type="Bold">{prettyPercent(winningRate)}% </NotoSans>
             </View>
             <Space height={15} />
             <View style={{alignItems: "center"}}>
-              <NotoSans type="Medium" color="mediumseagreen" size={20}>백분율 </NotoSans>
+              <NotoSans type="Medium" color="mediumseagreen" size={20}>{translation.percentile} </NotoSans>
               <Line color="mediumseagreen" height={1} width={80} />
-              <NotoSans color="white" type="Bold">상위 {prettyPercent(Number(rate))}% </NotoSans>
+              <NotoSans color="white" type="Bold">{translation.top} {prettyPercent(Number(rate))}% </NotoSans>
             </View>
           </View>
         </FlexHorizontal>
         <View>
           <FlexHorizontal style={{marginTop: 20}}>
-            <NotoSans color="dodgerblue" size={20}>전적</NotoSans>
+            <NotoSans color="dodgerblue" size={20}>{translation.score}</NotoSans>
             <Line height={16} width={2} marginHorizontal={10} color="royalblue" />
-            <NotoSans color="white" size={16}>{total}전 </NotoSans>
-            <NotoSans color="white" size={16}>{win}승 </NotoSans>
-            <NotoSans color="white" size={16}>{lose}패 </NotoSans>
-            <NotoSans color="white" size={16}>{draw}무</NotoSans>
+            <NotoSans color="white" size={16}>{translation.scoreText(Number(win), Number(lose), Number(draw))}</NotoSans>
           </FlexHorizontal>
           <FlexHorizontal>
             <NotoSans color="dodgerblue" size={20}>KBI*</NotoSans>
             <Line height={16} width={2} marginHorizontal={10} color="royalblue" />
             <NotoSans color="white" size={16}>{KBI} {translation.point}</NotoSans>
           </FlexHorizontal>
-          <FlexHorizontal>
-            <NotoSans size={10} type="Thin" color="white">*KBI(King Block Index): </NotoSans>
-            <NotoSans size={10} type="Thin" color="white">log2(승부 수 + 1) X (승률) X 100</NotoSans>
-          </FlexHorizontal>
+          <View>
+            <NotoSans size={10} type="Thin" color="white">*KBI(King Block Index)</NotoSans>
+            <Line width={100} height={0.5} marginVertical={1} color="white" />
+            <NotoSans size={10} type="Thin" color="white">log2({translation.matchCount} + 1) X ({translation.winningRate}) X 100</NotoSans>
+          </View>
         </View>
       </View>
     </DescriptionContainer>

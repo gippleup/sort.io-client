@@ -5,20 +5,25 @@ import { SinglePlayData } from '../../api/local';
 import { getSinglePlayDataByUserId, SinglePlay } from '../../api/playData';
 import { getSinglePlayRankFromTo } from '../../api/rank';
 import usePlayData from '../../hooks/usePlayData';
+import translation from '../../Language/ko/screens/Main';
+import TranslationPack from '../../Language/translation';
+import { SupportedLanguage } from '../../redux/actions/global/types';
 import { getLevelString } from '../../screens/production/GameScreen/utils';
 import { NotoSans, FlexHorizontal } from '../Generic/StyledComponents';
 import LineGraph from '../LineGraph';
 
 type SingleRankGraphProps = {
   graphData?: SinglePlay[];
+  lan?: SupportedLanguage;
 }
 
 const SingleRankGraph = (props: SingleRankGraphProps) => {
-  const {graphData} = props;
+  const {graphData, lan = SupportedLanguage.en} = props;
+  const translation = TranslationPack[lan].screens.LeaderBoard;
   if (!graphData) return <></>;
   return (
     <View style={{marginTop: 10, justifyContent: "center", alignItems: "center"}}>
-      <NotoSans style={{marginBottom: 5, marginLeft: 10}} type="Bold">랭크 변화 추이</NotoSans>
+      <NotoSans style={{marginBottom: 5, marginLeft: 10}} type="Bold">{translation.rankTrend}</NotoSans>
       <FlexHorizontal>
         <View style={{borderRadius: 5, overflow: "hidden"}}>
           <LineGraph

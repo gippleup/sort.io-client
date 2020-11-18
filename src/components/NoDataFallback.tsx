@@ -1,10 +1,17 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { getIcon } from '../api/icon'
+import useGlobal from '../hooks/useGlobal'
+import TranslationPack from '../Language/translation'
 import Block from './Block'
 import { NotoSans } from './Generic/StyledComponents'
 
-const NoDataFallback = () => {
+type NoDataFallBackProps = {
+  text?: string;
+}
+
+const NoDataFallback = (props: NoDataFallBackProps) => {
+  const {text = "NO DATA"} = props;
   return (
     <View style={{
       opacity: 0.5,
@@ -35,7 +42,7 @@ const NoDataFallback = () => {
         skin="basic"
       />
       <NotoSans style={{marginTop: 10}} size={20}>
-        데이터가 없습니다
+        {text}
       </NotoSans>
     </View>
   )

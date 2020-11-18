@@ -7,6 +7,8 @@ import { LeaderBoardContainer } from './_Styled'
 import SingleRankListEntry from '../../../components/SingleRankList/SingleRankListEntry'
 import usePlayData from '../../../hooks/usePlayData'
 import { NotoSans } from '../../../components/Generic/StyledComponents'
+import useGlobal from '../../../hooks/useGlobal'
+import TranslationPack from '../../../Language/translation'
 
 type SingleRankBoardProps = {
   span?: number;
@@ -17,6 +19,8 @@ const SingleRankBoard = (props: SingleRankBoardProps) => {
   const {user} = usePlayData();
   const {span = 1, length = 20} = props;
   const [singleRankData, setSingleRankData] = React.useState<(RawSingleRankData | null)[] | null>(null);
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.LeaderBoard;
 
   React.useEffect(() => {
     getSinglePlayRankById(user.id, span).then((playerData) => {
@@ -40,7 +44,7 @@ const SingleRankBoard = (props: SingleRankBoardProps) => {
   return (
     <LeaderBoardContainer>
       <SingleRankList
-        fallback={<NoDataFallback/>}
+        fallback={<NoDataFallback text={translation.noRecord} />}
         data={singleRankData || undefined}
       />
     </LeaderBoardContainer>

@@ -5,6 +5,8 @@ import { getSinglePlayDataByUserId, SinglePlay } from '../../api/playData'
 import { RawSingleRankData } from '../../api/rank'
 import { prettyPercent } from '../../api/utils'
 import usePlayData from '../../hooks/usePlayData'
+import TranslationPack from '../../Language/translation'
+import { SupportedLanguage } from '../../redux/actions/global/types'
 import { FlexHorizontal, Line, NotoSans } from '../Generic/StyledComponents'
 import Spreader from '../Spreader'
 import SingleRankGraph from './SingleRankGraph'
@@ -22,10 +24,11 @@ const SpreaderContentContainer = styled(View)`
 type SingleRankSpreaderProps = {
   visible?: boolean;
   userData: RawSingleRankData;
+  lan?: SupportedLanguage;
 }
 
 const SingleRankSpreader = (props: SingleRankSpreaderProps) => {
-  const {visible, userData} = props;
+  const {visible, userData, lan = SupportedLanguage.en} = props;
   const spreaderRef = React.useRef<Spreader>(null);
   const [graphData, setGraphData] = React.useState<SinglePlay[]>();
   const {
@@ -37,6 +40,7 @@ const SingleRankSpreader = (props: SingleRankSpreaderProps) => {
     rank,
     rate,
   } = userData;
+  const translation = TranslationPack[lan].screens.LeaderBoard;
 
   React.useEffect(() => {
     if (visible && !graphData) {
@@ -61,17 +65,17 @@ const SingleRankSpreader = (props: SingleRankSpreaderProps) => {
       ref={spreaderRef}
     >
       <SpreaderContentContainer>
-        <SingleRankGraph graphData={graphData} />
+        <SingleRankGraph lan={lan} graphData={graphData} />
         <View style={{marginTop: 20}}>
           <FlexHorizontal>
-            <NotoSans color="dodgerblue" size={20}>싱글플레이 랭킹</NotoSans>
+            <NotoSans color="dodgerblue" size={20}>{translation.place}</NotoSans>
             <Line color="dodgerblue" width={3} height={18} marginHorizontal={10} />
-            <NotoSans size={18}>{rank}위</NotoSans>
+            <NotoSans size={18}>{translation.rankText(Number(rank))}</NotoSans>
           </FlexHorizontal>
           <FlexHorizontal>
-            <NotoSans color="crimson" size={20}>백분율</NotoSans>
+            <NotoSans color="crimson" size={20}>{translation.percentile}</NotoSans>
             <Line color="crimson" width={3} height={18} marginHorizontal={10} />
-            <NotoSans size={18}>상위 {prettyPercent(Number(rate))}%</NotoSans>
+            <NotoSans size={18}>{translation.top} {prettyPercent(Number(rate))}%</NotoSans>
           </FlexHorizontal>
         </View>
       </SpreaderContentContainer>

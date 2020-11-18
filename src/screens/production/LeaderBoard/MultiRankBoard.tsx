@@ -5,7 +5,9 @@ import Block from '../../../components/Block';
 import { NotoSans } from '../../../components/Generic/StyledComponents';
 import MultiRankList from '../../../components/MultiRankList';
 import NoDataFallback from '../../../components/NoDataFallback';
+import useGlobal from '../../../hooks/useGlobal';
 import usePlayData from '../../../hooks/usePlayData';
+import TranslationPack from '../../../Language/translation';
 import { LeaderBoardContainer } from './_Styled'
 
 type MultiRankBoardProps = {
@@ -17,7 +19,9 @@ const MultiRankBoard = (props: MultiRankBoardProps) => {
   const {user} = usePlayData();
   const {span = 1, length = 20} = props;
   const [multiRankData, setMultiRankData] = React.useState<(RawMultiRankData | null)[] | null>(null);
-  
+  const {language: lan} = useGlobal();
+  const translation = TranslationPack[lan].screens.LeaderBoard;
+
   React.useEffect(() => {
     getMultiPlayRankById(user.id, span).then((playerData) => {
       getMultiPlayRankFromTo(0, length, span).then((data) => {
@@ -39,7 +43,9 @@ const MultiRankBoard = (props: MultiRankBoardProps) => {
 
   return (
     <LeaderBoardContainer>
-      <MultiRankList fallback={<NoDataFallback />} data={multiRankData || undefined}/>
+      <MultiRankList
+        fallback={<NoDataFallback text={translation.noRecord} />}
+        data={multiRankData || undefined}/>
     </LeaderBoardContainer>
   )
 }

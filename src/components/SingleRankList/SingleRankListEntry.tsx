@@ -8,6 +8,8 @@ import { getIcon } from '../../api/icon'
 import { SinglePlayData } from '../../api/local'
 import { getSinglePlayDataByUserId, SinglePlay } from '../../api/playData'
 import { RawSingleRankData } from '../../api/rank'
+import TranslationPack from '../../Language/translation'
+import { SupportedLanguage } from '../../redux/actions/global/types'
 import { getLevelColor, getLevelString } from '../../screens/production/GameScreen/utils'
 import DynamicText from '../DynamicText'
 import { FlexHorizontal, NotoSans, Space } from '../Generic/StyledComponents'
@@ -46,10 +48,11 @@ type SingleRankListEntryProps = {
   spread?: boolean;
   onPressSpread?: () => any;
   isMine?: boolean;
+  lan?: SupportedLanguage;
 }
 
 const SingleRankListEntry = (props: SingleRankListEntryProps) => {
-  const {data, onPressSpread, spread, isMine = false} = props;
+  const {data, onPressSpread, spread, isMine = false, lan = SupportedLanguage.en} = props;
   const {
     createdAt,
     difficulty,
@@ -61,6 +64,7 @@ const SingleRankListEntry = (props: SingleRankListEntryProps) => {
   } = data;
   const chevronRef = React.useRef<DynamicText>(null);
   const spreaderRef = React.useRef<Spreader>(null);
+  const translation = TranslationPack[lan].screens.LeaderBoard;
 
   const entryBackground = isMine ? "springgreen" : "white";
   const levelColor = getLevelColor(Number(difficulty));
@@ -123,7 +127,7 @@ const SingleRankListEntry = (props: SingleRankListEntryProps) => {
               color={isTopPlayer ? "white" : "grey"}
               size={10 * scale}
               type="Bold">
-                {data.rank}위
+                {translation.rankText(Number(rank))}
             </NotoSans>
           </View>
           <View style={{marginLeft: 10}}>
@@ -163,7 +167,7 @@ const SingleRankListEntry = (props: SingleRankListEntryProps) => {
           </TouchableOpacity>
         </View>
       </FlexHorizontal>
-      <SingleRankSpreader userData={data} visible={spread} />
+      <SingleRankSpreader lan={lan} userData={data} visible={spread} />
     </SingleRankEntryContainer>
   )
 }

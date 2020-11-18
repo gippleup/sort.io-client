@@ -159,7 +159,7 @@ const LeaderBoard = () => {
           <View style={{alignItems: 'center'}}>
             <StrokedText
               dyMultiplier={0.34}
-              fillColor="mediumseagreen"
+              fillColor="springgreen"
               fontFamily="NotoSansKR-Black"
               fontSize={40}
               height={50}

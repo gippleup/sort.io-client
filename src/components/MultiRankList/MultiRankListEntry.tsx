@@ -73,7 +73,7 @@ const MultiRankListEntry = (props: MultiRankListEntryProps) => {
   const spreaderRef = React.useRef<Spreader>(null);
   const isTopPlayer = Number(rank) <= 5;
   const {language: lan} = useGlobal();
-  const translation = TranslationPack[lan].screens.MultiPlay;
+  const translation = TranslationPack[lan].screens.LeaderBoard;
   const numColor = isTopPlayer ? topPlayerColor[rank as "1" | "2" | "3" | "4" | "5"] : "transparent";
   const profileBg = isTopPlayer ? topPlayerColor[rank as "1" | "2" | "3" | "4" | "5"] : "grey";
   const scale = isTopPlayer ? 1.3 : 1;
@@ -127,7 +127,7 @@ const MultiRankListEntry = (props: MultiRankListEntryProps) => {
               color={isTopPlayer ? "white" : "grey"}
               size={10 * scale}
               type="Bold">
-                {data.rank}위
+                {translation.rankText(Number(rank))}
             </NotoSans>
           </View>
           <View style={{marginLeft: 10}}>

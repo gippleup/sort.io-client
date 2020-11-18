@@ -18,6 +18,18 @@ const translation: ScreenTranslation["LeaderBoard"] = {
   day: "Day",
   hour: "Hour",
   recent: "Recent",
+  place: "Place",
+  percentile: "Percentile",
+  rankTrend: "Rank Trend",
+  noRecord: "No Record, Yet!",
+  winningRate: "Win Rate",
+  score: "Score",
+  scoreText: (win: number, lose: number, draw: number) => {
+    const total = win + lose + draw;
+    return `${win}W ${lose}L ${draw}D`;
+  },
+  point: "Point",
+  matchCount: "Match Count",
 }
 
 export default translation;

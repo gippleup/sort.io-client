@@ -1,5 +1,10 @@
 import * as d3 from "d3";
 
+export type NumInterpolator = {
+  input: [number, number],
+  output: [number, number],
+}
+
 export const drawSvgLine = (data: {x: number, y: number}[]): string => {
   if (!data.length) {
     return '';

@@ -22,7 +22,7 @@ Space.defaultProps = {
 };
 
 type NotoSansProps = {
-  type: 'Black' | 'Bold' | 'Light' | 'Medium' | 'Regular' | 'Thin';
+  type?: 'Black' | 'Bold' | 'Light' | 'Medium' | 'Regular' | 'Thin';
   size?: number;
   color?: string;
 }
@@ -35,7 +35,7 @@ export const NotoSans: React.FC<NotoSansProps & TextProps> = styled(Text)<NotoSa
 `;
 
 NotoSans.defaultProps = {
-  type: 'Regular',
+  type: "Black",
   size: 14,
   color: 'black',
 }

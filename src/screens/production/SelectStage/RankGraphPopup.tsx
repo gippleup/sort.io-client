@@ -10,6 +10,7 @@ import useGlobal from '../../../hooks/useGlobal'
 import TranslationPack from '../../../Language/translation'
 import { trackUser } from '../../../api/analytics'
 import LineGraph from '../../../components/LineGraph'
+import NoDataFallback from '../../../components/NoDataFallback'
 
 const GraphContainer = styled(View)`
   padding-bottom: 5px;
@@ -47,6 +48,18 @@ const RankGraphPopup = () => {
           yValueExtractor={(entry, i) => entry.difficulty}
           xTagExtractor={(entry, i) => i}
           yTagExtractor={(entry, i) => getLevelString(entry.difficulty).replace(/aeiou/g, "")}
+          fallback={<NoDataFallback/>}
+          style={{
+            graphBackgroundFill: "black",
+            xAxisColor: "blue",
+            yAxisColor: "blue",
+            backgroundFill: "black",
+            lineWidth: 5,
+            lineColor: "blue",
+            pointFill: "white",
+            pointSize: 5,
+            xTagColor: "mediumseagreen",
+          }}
         />
       )
     }

@@ -1,10 +1,10 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import { getIcon } from '../../../api/icon'
-import Block from '../../../components/Block'
-import { NotoSans } from '../../../components/Generic/StyledComponents'
+import { getIcon } from '../api/icon'
+import Block from './Block'
+import { NotoSans } from './Generic/StyledComponents'
 
-const RankListFallback = () => {
+const NoDataFallback = () => {
   return (
     <View style={{
       opacity: 0.5,
@@ -41,4 +41,4 @@ const RankListFallback = () => {
   )
 }
 
-export default RankListFallback
+export default NoDataFallback

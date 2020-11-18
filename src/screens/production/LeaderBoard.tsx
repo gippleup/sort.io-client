@@ -144,11 +144,11 @@ const LeaderBoard = () => {
               dyMultiplier={0.34}
               fillColor="tomato"
               fontFamily="NotoSansKR-Black"
-              fontSize={40}
+              fontSize={30}
               height={50}
               strokeColor="black"
               strokeWidth={3}
-              text={translation.singlePlay}
+              text={translation.singlePlay + " - TOP 20"}
               width={Dimensions.get('window').width - 50}
             />
           </View>
@@ -161,11 +161,11 @@ const LeaderBoard = () => {
               dyMultiplier={0.34}
               fillColor="springgreen"
               fontFamily="NotoSansKR-Black"
-              fontSize={40}
+              fontSize={30}
               height={50}
               strokeColor="black"
               strokeWidth={3}
-              text={translation.multiPlay}
+              text={translation.multiPlay + " - Top 20"}
               width={Dimensions.get('window').width - 50}
             />
           </View>

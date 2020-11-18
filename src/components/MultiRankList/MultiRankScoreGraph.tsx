@@ -1,6 +1,6 @@
 import chroma from 'chroma-js'
 import React, { Fragment } from 'react'
-import { View, Text, ViewStyle } from 'react-native'
+import { View, Text, ViewStyle, Dimensions } from 'react-native'
 import { LinearGradient, Stop } from 'react-native-svg'
 import { RawMultiRankData } from '../../api/rank'
 import PieChart from '../PieChart'
@@ -48,10 +48,10 @@ const MultiRankScoreGraph = (props: MultiRankScoreGraphProps) => {
             </LinearGradient>
           </Fragment>
         )}
-        size={150}
+        size={Math.max(Dimensions.get("window").width - 280, 120)}
         style={{
           strokeColor: "grey",
-          tagSize: 15,
+          tagSize: 12,
           padding: 20,
           tagStrokeColor: "black",
           backgroundFill: "url(#background)"

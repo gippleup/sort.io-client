@@ -120,9 +120,12 @@ export const interpolateNum = (x: number) => (option: InterpolateOption) => {
   const {input, output} = option;
   const [inputMin, inputMax] = input;
   const [outputMin, outputMax] = output;
+  const inputDiff = inputMax - inputMin;
+  const outputDiff = outputMax - outputMin;
 
   const xDiffInputMin = x - inputMin;
 
-  const scale = (outputMax - outputMin) / (inputMax - inputMin);
-  return outputMin + xDiffInputMin * scale;
+  const scale = inputMax === inputMin ? 1 : outputDiff / inputDiff;
+  const startValue = inputMax === inputMin ? outputMax : outputMin;
+  return startValue + xDiffInputMin * scale;
 }

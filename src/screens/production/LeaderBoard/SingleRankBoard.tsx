@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import { getSinglePlayRankFromTo, RawSingleRankData } from '../../../api/rank'
 import SingleRankList from '../../../components/SingleRankList'
+import RankListFallback from './RankListFallback'
 import { LeaderBoardContainer } from './_Styled'
 
 type SingleRankBoardProps = {
@@ -19,7 +20,7 @@ const SingleRankBoard = (props: SingleRankBoardProps) => {
 
   return (
     <LeaderBoardContainer>
-      <SingleRankList data={singleRankData || undefined} />
+      <SingleRankList fallback={<RankListFallback/>} data={singleRankData || undefined} />
     </LeaderBoardContainer>
   )
 }

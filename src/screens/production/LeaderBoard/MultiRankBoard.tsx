@@ -1,6 +1,10 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { getMultiPlayRankFromTo, RawMultiRankData } from '../../../api/rank';
+import Block from '../../../components/Block';
+import { NotoSans } from '../../../components/Generic/StyledComponents';
+import MultiRankList from '../../../components/MultiRankList';
+import RankListFallback from './RankListFallback';
 import { LeaderBoardContainer } from './_Styled'
 
 type MultiRankBoardProps = {
@@ -18,6 +22,7 @@ const MultiRankBoard = (props: MultiRankBoardProps) => {
 
   return (
     <LeaderBoardContainer>
+      <MultiRankList fallback={<RankListFallback />} data={multiRankData || undefined}/>
     </LeaderBoardContainer>
   )
 }

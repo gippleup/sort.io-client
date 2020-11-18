@@ -5,12 +5,14 @@ import SingleRankListEntry from './SingleRankList/SingleRankListEntry'
 
 type SingleRankListProps = {
   data?: RawSingleRankData[];
+  fallback?: JSX.Element;
 }
 
 const SingleRankList = (props: SingleRankListProps) => {
   const [interestTarget, setInterestTarget] = React.useState<number | null>(null);
-  const {data} = props;
+  const {data, fallback = <></>} = props;
   if (!data) return <></>;
+  if (!data.length) return fallback;
   return (
     <FlatList
       data={data}

@@ -36,16 +36,16 @@ export type RankData<T> = {
   total: number;
 }
 
-export const getSinglePlayRankByIdWithPadding = (userId: number, padding: number = 2): Promise<RankData<RawSingleRankData> | null> => {
-  const url = `${API_BASE}/singlePlay/rank?userId=${userId}&padding=${padding}`;
+export const getSinglePlayRankByIdWithPadding = (userId: number, padding: number = 2, recent = 3650000): Promise<RankData<RawSingleRankData> | null> => {
+  const url = `${API_BASE}/singlePlay/rank?userId=${userId}&padding=${padding}&recent=${recent}`;
   return fetch(url)
     .then((res) => res.json())
     .catch(() => null)
 }
 
-export const getSinglePlayRankById = (userId: number): Promise<RawSingleRankData | null | undefined> => {
-  return getSinglePlayRankByIdWithPadding(userId, 0)
-    .then((json) => json?.targetUser)
+export const getSinglePlayRankById = (userId: number, recent?: number): Promise<RawSingleRankData | null> => {
+  return getSinglePlayRankByIdWithPadding(userId, 0, recent)
+    .then((json) => json ? json.targetUser : null)
     .catch(() => null)
 }
 
@@ -56,16 +56,16 @@ export const getSinglePlayRankFromTo = (from: number, to: number, recent = 36500
     .catch((e) => null);
 }
 
-export const getMultiPlayRankByIdWithPadding = (userId: number, padding: number = 2): Promise<RankData<RawMultiRankData> | null> => {
-  const url = `${API_BASE}/multiPlay/rank?userId=${userId}&padding=${padding}`;
+export const getMultiPlayRankByIdWithPadding = (userId: number, padding: number = 2, recent = 3650000): Promise<RankData<RawMultiRankData> | null> => {
+  const url = `${API_BASE}/multiPlay/rank?userId=${userId}&padding=${padding}&recent=${recent}`;
   return fetch(url)
     .then((res) => res.json())
     .catch(() => null);
 }
 
-export const getMultiPlayRankById = (userId: number): Promise<RawMultiRankData | null | undefined> => {
-  return getMultiPlayRankByIdWithPadding(userId, 0)
-    .then((json) => json?.targetUser)
+export const getMultiPlayRankById = (userId: number, recent?: number): Promise<RawMultiRankData | null> => {
+  return getMultiPlayRankByIdWithPadding(userId, 0, recent)
+    .then((json) => json ? json.targetUser : null)
     .catch(() => null);
 }
 

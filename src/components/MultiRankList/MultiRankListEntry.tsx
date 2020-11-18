@@ -19,7 +19,7 @@ import Spreader from '../Spreader'
 import MultiRankGraph from './MultiRankGraph'
 import MultiRankSpreader from './MultiRankSpreader'
 
-const MultiRankEntryContainer = styled(View)`
+const MultiRankEntryContainer: typeof View = styled(View)`
   padding: 10px;
   border-bottom-width: 1px;
   border-bottom-color: rgba(0,0,0,0.2);
@@ -45,13 +45,13 @@ const topPlayerColor = {
 
 type MultiRankListEntryProps = {
   data: RawMultiRankData;
-  index?: number;
   spread?: boolean;
   onPressSpread?: () => any;
+  isMine?: boolean;
 }
 
 const MultiRankListEntry = (props: MultiRankListEntryProps) => {
-  const {data, onPressSpread, spread} = props;
+  const {data, onPressSpread, spread, isMine = false} = props;
   const {
     KBI,
     createdAt,
@@ -67,6 +67,8 @@ const MultiRankListEntry = (props: MultiRankListEntryProps) => {
     win,
     winningRate,
   } = data;
+
+  const entryBackground = isMine ? "springgreen" : "white";
   const chevronRef = React.useRef<DynamicText>(null);
   const spreaderRef = React.useRef<Spreader>(null);
   const isTopPlayer = Number(rank) <= 5;
@@ -101,8 +103,16 @@ const MultiRankListEntry = (props: MultiRankListEntryProps) => {
     }
   }
 
+  React.useEffect(() => {
+    if (spread) {
+      chevronRef.current?.setText("up")
+    } else {
+      chevronRef.current?.setText("down")
+    }
+  })
+
   return (
-    <MultiRankEntryContainer>
+    <MultiRankEntryContainer style={{backgroundColor: entryBackground}}>
       <FlexHorizontal style={{justifyContent: "space-between", marginHorizontal: 5, flex: 1}}>
         <FlexHorizontal style={{flex: 1}}>
           <View>
@@ -124,6 +134,7 @@ const MultiRankListEntry = (props: MultiRankListEntryProps) => {
             <FlexHorizontal>
               <KingSymbol/>
               <NotoSans style={{marginBottom: 5}} size={15 * scale} type="Black">{slicedName}</NotoSans>
+              <NotoSans>{isMine ? " (YOU)" : ""}</NotoSans>
             </FlexHorizontal>
             <FlexHorizontal>
               <NotoSans
@@ -149,7 +160,7 @@ const MultiRankListEntry = (props: MultiRankListEntryProps) => {
         </FlexHorizontal>
         <View>
           <TouchableOpacity onPress={onPressChevron}>
-          <View style={{backgroundColor: "lightgrey", padding: 10, borderRadius: 10}}>
+          <View style={{backgroundColor: "lightgrey", padding: 10, borderRadius: 10, borderWidth: 0.5}}>
             <DynamicText
               ref={chevronRef}
               initialValue="down"

@@ -1,10 +1,20 @@
 import React from 'react'
 import { View, Text } from 'react-native'
+import styled from 'styled-components'
 import { getSinglePlayDataByUserId, SinglePlay } from '../../api/playData'
 import { RawSingleRankData } from '../../api/rank'
 import usePlayData from '../../hooks/usePlayData'
 import Spreader from '../Spreader'
 import SingleRankGraph from './SingleRankGraph'
+
+const SpreaderContentContainer = styled(View)`
+  background-color: lightgrey;
+  padding-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border-width: 0.5px;
+`;
 
 type SingleRankSpreaderProps = {
   visible?: boolean;
@@ -47,7 +57,9 @@ const SingleRankSpreader = (props: SingleRankSpreaderProps) => {
       foldDuration={300}
       ref={spreaderRef}
     >
-      <SingleRankGraph graphData={graphData} />
+      <SpreaderContentContainer>
+        <SingleRankGraph graphData={graphData} />
+      </SpreaderContentContainer>
     </Spreader>
   )
 }

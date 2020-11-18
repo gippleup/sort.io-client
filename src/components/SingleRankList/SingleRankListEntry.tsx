@@ -17,7 +17,7 @@ import Spreader from '../Spreader'
 import SingleRankGraph from './SingleRankGraph'
 import SingleRankSpreader from './SingleRankSpreader'
 
-const SingleRankEntryContainer = styled(View)`
+const SingleRankEntryContainer: typeof View = styled(View)`
   padding: 10px;
   border-bottom-width: 1px;
   border-bottom-color: rgba(0,0,0,0.2);
@@ -43,13 +43,13 @@ const topPlayerColor = {
 
 type SingleRankListEntryProps = {
   data: RawSingleRankData;
-  index?: number;
   spread?: boolean;
   onPressSpread?: () => any;
+  isMine?: boolean;
 }
 
 const SingleRankListEntry = (props: SingleRankListEntryProps) => {
-  const {data, onPressSpread, spread} = props;
+  const {data, onPressSpread, spread, isMine = false} = props;
   const {
     createdAt,
     difficulty,
@@ -62,11 +62,16 @@ const SingleRankListEntry = (props: SingleRankListEntryProps) => {
   const chevronRef = React.useRef<DynamicText>(null);
   const spreaderRef = React.useRef<Spreader>(null);
 
+  const entryBackground = isMine ? "springgreen" : "white";
   const levelColor = getLevelColor(Number(difficulty));
   const brightColorMatch = chroma(levelColor).luminance() <= 0.4;
   const isTopPlayer = Number(rank) <= 5;
   const numColor = isTopPlayer ? topPlayerColor[rank as "1" | "2" | "3" | "4" | "5"] : "transparent";
-  const profileBg = isTopPlayer ? topPlayerColor[rank as "1" | "2" | "3" | "4" | "5"] : "grey";
+  const profileBg = isTopPlayer
+    ? topPlayerColor[rank as "1" | "2" | "3" | "4" | "5"]
+    : isMine 
+      ? "dodgerblue"
+      : "grey";
   const scale = isTopPlayer ? 1.3 : 1;
   const nameLengthMax = 10;
   const slicedName = name.length >= nameLengthMax ? name.slice(0, nameLengthMax) + "..." : name;
@@ -94,8 +99,16 @@ const SingleRankListEntry = (props: SingleRankListEntryProps) => {
     }
   }
 
+  React.useEffect(() => {
+    if (spread) {
+      chevronRef.current?.setText("up")
+    } else {
+      chevronRef.current?.setText("down")
+    }
+  })
+
   return (
-    <SingleRankEntryContainer>
+    <SingleRankEntryContainer style={{backgroundColor: entryBackground}}>
       <FlexHorizontal style={{justifyContent: "space-between", marginHorizontal: 5, flex: 1}}>
         <FlexHorizontal style={{flex: 1}}>
           <View>
@@ -114,9 +127,10 @@ const SingleRankListEntry = (props: SingleRankListEntryProps) => {
             </NotoSans>
           </View>
           <View style={{marginLeft: 10}}>
-            <FlexHorizontal>
+            <FlexHorizontal style={{marginBottom: 5}}>
               <KingSymbol/>
-              <NotoSans style={{marginBottom: 5}} size={15 * scale} type="Black">{slicedName}</NotoSans>
+              <NotoSans size={15 * scale} type="Black">{slicedName}</NotoSans>
+              <NotoSans>{isMine ? " (YOU)" : ""}</NotoSans>
             </FlexHorizontal>
             <FlexHorizontal>
               <NotoSans
@@ -134,7 +148,7 @@ const SingleRankListEntry = (props: SingleRankListEntryProps) => {
         </FlexHorizontal>
         <View>
           <TouchableOpacity onPress={onPressChevron}>
-          <View style={{backgroundColor: "lightgrey", padding: 10, borderRadius: 10}}>
+          <View style={{backgroundColor: "lightgrey", padding: 10, borderRadius: 10, borderWidth: 0.5}}>
             <DynamicText
               ref={chevronRef}
               initialValue="down"

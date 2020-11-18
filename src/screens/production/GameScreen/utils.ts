@@ -31,7 +31,7 @@ const _getLeveEnumNumArr = () => {
     .map((str) => Number(str));
 }
 
-const _getLevelEnumNum = (level: number) => {
+const _getLevelEnumNum = (level: number): GameLevel => {
   return _getLeveEnumNumArr()
     .filter((num) => num <= level)
     .reduce((acc, ele) => {
@@ -54,6 +54,27 @@ export const getSubLevel = (level: number): number => {
   return Math.min(subLevel, 6);
 }
 
+const levelColor: {[T in GameLevel]: string} = {
+  [GameLevel.Atom]: "purple",
+  [GameLevel.Bronze]: "darkgoldenrod",
+  [GameLevel.Challenger]: "deepskyblue",
+  [GameLevel.Champion]: "firebrick",
+  [GameLevel.DemiGod]: "darkmagenta",
+  [GameLevel.Diamond]: "azure",
+  [GameLevel.Dust]: "grey",
+  [GameLevel.God]: "lightgreen",
+  [GameLevel.Gold]: "gold",
+  [GameLevel.GrandChallenger]: "indigo",
+  [GameLevel.GrandChampion]: "darkred",
+  [GameLevel.GrandMaster]: "darkviolet",
+  [GameLevel.Iron]: "darkgrey",
+  [GameLevel.Master]: "blueviolet",
+  [GameLevel.Nihil]: "black",
+  [GameLevel.Platinum]: "lightsteelblue",
+  [GameLevel.Silver]: "silver",
+  [GameLevel.Stone]: "lightslategrey",
+}
+
 export const getLevelString = (level: number) => {
   if (level < 0) return GameLevel[0]
   const levelEnumNum = _getLevelEnumNum(level);
@@ -61,6 +82,12 @@ export const getLevelString = (level: number) => {
   const subLevel = getSubLevel(level);
   const levelStr = `${levelEnumStr} ${subLevel}`;
   return levelStr;
+}
+
+export const getLevelColor = (level: number) => {
+  if (level < 0) return GameLevel[0]
+  const levelEnumNum = _getLevelEnumNum(level);
+  return levelColor[levelEnumNum];
 }
 
 export const generateOptionByLevel = (level: number) => {

@@ -14,6 +14,10 @@ const translation: ScreenTranslation["LeaderBoard"] = {
     return `${rank}${tail}`
   },
   top: "Top",
+  all: "All",
+  day: "Day",
+  hour: "Hour",
+  recent: "Recent",
 }
 
 export default translation;

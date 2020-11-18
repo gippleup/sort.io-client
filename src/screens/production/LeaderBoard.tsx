@@ -1,28 +1,24 @@
 import MaskedView from '@react-native-community/masked-view';
-import { CommonActions, NavigationProp, useNavigation } from '@react-navigation/native';
-import React, { RefObject } from 'react'
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import React from 'react'
 import { View, Text, Dimensions, ViewStyle, Easing, Animated, PanResponder } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components';
 import { removeTargetRoute } from '../../api/navigation';
+import { RawSingleRankData, RawMultiRankData, getSinglePlayRankFromTo, getMultiPlayRankFromTo } from '../../api/rank';
 import PatternBackground from '../../components/GameScene/PatternBackground'
 import { NotoSans, Space, WindowSizeView } from '../../components/Generic/StyledComponents';
+import SingleRankList from '../../components/SingleRankList';
 import StrokedText from '../../components/StrokedText';
 import useGlobal from '../../hooks/useGlobal';
 import TranslationPack from '../../Language/translation';
 import { RootStackParamList } from '../../router/routes';
-import RankBoard from './LeaderBoard/RankBoard';
+import MultiRankBoard from './LeaderBoard/MultiRankBoard';
+import SingleRankBoard from './LeaderBoard/SingleRankBoard';
+import SpanSelector, { SpanSelectorOnChange } from './LeaderBoard/SpanSelector';
 
 const backgroundImage = require('../../assets/BackgroundPattern.png');
 const boardWidth = Dimensions.get('window').width - 50;
-
-const LeaderBoardContainer: typeof View = styled(View)`
-  width: ${boardWidth}px;
-  height: ${Dimensions.get('window').height - 250}px;
-  background-color: white;
-  border-radius: 10px;
-  border-width: 1px;
-`;
 
 const GoBack: typeof NotoSans = styled(NotoSans)`
   padding: 10px;
@@ -42,6 +38,8 @@ const LeaderBoard = () => {
   const prevOffsetX = React.useRef(0);
   const curOffsetX = React.useRef(0);
   const swipeProgress = React.useRef(new Animated.Value(0)).current;
+  const [span, setSpan] = React.useState(1);
+  const boardLength = 20;
 
   swipeProgress.addListener((state) => {
     curOffsetX.current = - state.value * boardWidth;
@@ -71,6 +69,10 @@ const LeaderBoard = () => {
     inputRange: [0, 0.5, 1],
     outputRange: ['0deg', '-30deg', '0deg'],
   })
+
+  const onChangeSpan: SpanSelectorOnChange = (span) => {
+    setSpan(span);
+  }
 
   const goback = () => removeTargetRoute(navigation, "LeaderBoard");
 
@@ -134,44 +136,41 @@ const LeaderBoard = () => {
         onStartShouldSetResponderCapture={() => false}
         onMoveShouldSetResponderCapture={() => false}
       />
+      <SpanSelector onChange={onChangeSpan} />
       <Animated.View style={{width: boardWidth, flexDirection: 'row', left: boardContainerTranslateX}}>
         <Animated.View style={{transform: [{rotateY: leftBoardRoateY}, {scale: leftBoardScale}]}}>
           <View style={{alignItems: 'center'}}>
             <StrokedText
               dyMultiplier={0.34}
-              fillColor="black"
+              fillColor="tomato"
               fontFamily="NotoSansKR-Black"
               fontSize={40}
               height={50}
-              strokeColor="white"
+              strokeColor="black"
               strokeWidth={3}
               text={translation.singlePlay}
               width={Dimensions.get('window').width - 50}
             />
           </View>
           <Space height={10} />
-          <LeaderBoardContainer>
-            <RankBoard mode="single" />
-          </LeaderBoardContainer>
+          <SingleRankBoard length={boardLength} span={span} />
         </Animated.View>
         <Animated.View style={{transform:[{scale: rightBoardScale}, {rotateY: rightBoardRoateY}]}}>
           <View style={{alignItems: 'center'}}>
             <StrokedText
               dyMultiplier={0.34}
-              fillColor="black"
+              fillColor="mediumseagreen"
               fontFamily="NotoSansKR-Black"
               fontSize={40}
               height={50}
-              strokeColor="white"
+              strokeColor="black"
               strokeWidth={3}
               text={translation.multiPlay}
               width={Dimensions.get('window').width - 50}
             />
           </View>
           <Space height={10} />
-          <LeaderBoardContainer>
-            <RankBoard mode="multi" />
-          </LeaderBoardContainer>
+          <MultiRankBoard length={boardLength} span={span} />
         </Animated.View>
       </Animated.View>
       <Space height={20} />

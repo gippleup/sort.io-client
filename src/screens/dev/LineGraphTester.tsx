@@ -9,19 +9,21 @@ const LineGraphTester = () => {
 
   if (testData === null) {
     getSinglePlayDataByUserId(400)
-    .then((data) => setTestData(data));
+    .then((data) => setTestData(data.slice(0, 3)));
     return <></>;
   }
 
   return (
-    <View style={{padding: 20, backgroundColor: "transparent"}}>
-      <LineGraph
-        data={testData}
-        xValueExtractor={(entry, i) => i}
-        yValueExtractor={(entry, i) => entry.difficulty}
-        xTagExtractor={(entry, i) => i}
-        yTagExtractor={(entry, i) => getLevelString(entry.difficulty).replace(/[aiueo]/g, "")}
-      />
+    <View>
+      <View style={{padding: 20, backgroundColor: "transparent"}}>
+        <LineGraph
+          data={testData}
+          xValueExtractor={(entry, i) => i}
+          yValueExtractor={(entry, i) => entry.difficulty}
+          xTagExtractor={(entry, i) => i}
+          yTagExtractor={(entry, i) => getLevelString(entry.difficulty).replace(/[aiueo]/g, "")}
+        />
+      </View>
     </View>
   )
 }

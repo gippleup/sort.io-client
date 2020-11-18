@@ -22,11 +22,18 @@ import RefBoxTester from "../screens/dev/RefBoxTester";
 import ScoreCheckerTester from "../screens/dev/ScoreCheckerTester";
 import SettingsTester from "../screens/dev/SettingsTester";
 import ShapeChecker from "../screens/dev/ShapeChecker";
+import SpreaderTester from "../screens/dev/SpreaderTester";
 import TimerTester from "../screens/dev/TimerTester";
 import UpdaterTester from "../screens/dev/UpdaterTester";
 import { Routes } from "./types";
 
 export const devRoutes: Routes<Omit<devParams, "Developer">> = {
+  SpreaderTester: {
+    type: "dev",
+    devName: "스프레더 테스터",
+    component: SpreaderTester,
+    headerShown: false,
+  },
   LineGraphTester: {
     type: "dev",
     devName: "선형 그래프 테스터",
@@ -196,4 +203,5 @@ export type devParams = {
   MultiGameResultTester: undefined;
   JamTester: undefined;
   UpdaterTester: undefined;
+  SpreaderTester: undefined;
 }

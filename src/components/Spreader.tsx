@@ -49,6 +49,7 @@ class Spreader extends React.Component<SpreaderProps>{
     boxRef.current?.animate({
       style: {
         height: status === "unfold" ? layout?.height : 0,
+        opacity: status === "unfold" ? 1 : 0,
       },
       easing: status === "unfold" ? unfoldEasing : foldEasing,
       duration: status === "unfold" ? unfoldDuration : foldDuration,
@@ -79,7 +80,7 @@ class Spreader extends React.Component<SpreaderProps>{
       <NativeRefBox
         ref={boxRef}
         onLayout={captureLayout}
-        style={{overflow: "hidden"}}
+        style={{overflow: "hidden", opacity: 0}}
       >
         {props.children}
       </NativeRefBox>

@@ -1,7 +1,6 @@
 import React from 'react'
 import { View, Text, ViewStyle } from 'react-native'
 import styled from 'styled-components'
-import { getMultiPlayRankById } from '../api/sortio'
 import TranslationPack from '../Language/translation'
 import { SupportedLanguage } from '../redux/actions/global/types'
 import { FlexHorizontal, Line, NotoSans, Space } from './Generic/StyledComponents'
@@ -9,6 +8,7 @@ import { lazify } from './Generic/utils'
 import Profile from './Profile'
 import Fallback from './MultiGameResult/Fallback'
 import { prettyPercent } from '../api/utils'
+import { getMultiPlayRankById } from '../api/rank'
 
 const ResultContainer: typeof View = styled(View)`
   border-radius: 5px;

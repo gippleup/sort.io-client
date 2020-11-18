@@ -15,6 +15,7 @@ import { useNavigation } from '@react-navigation/native'
 import { AppState } from '../../../redux/store'
 import TranslationPack from '../../../Language/translation'
 import { trackUser } from '../../../api/analytics'
+import { stringifyValues } from '../../../api/utils'
 
 const ItemIconContainer = styled(View)`
   border-radius: 10px;
@@ -68,11 +69,11 @@ const TicketPurchasePopup = () => {
   const purchaseTicket = () => {
     if (quantity === 0) return;
     if (playData.user.gold >= total) {
-      trackUser(`User purchased ${quantity} x ticket`)
+      trackUser("User purchased ticket", stringifyValues({quantity}))
       dispatch(thunkAction.purchaseTicket(quantity));
       navigation.goBack();
     } else {
-      trackUser(`User tried to purchased ${quantity} x ticket but failed`)
+      trackUser("User tried to purchased ticket but failed", stringifyValues({quantity}))
       setAlertVisible(true);
       setTimeout(() => {
         setAlertVisible(false);

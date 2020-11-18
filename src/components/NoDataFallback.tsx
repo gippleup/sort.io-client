@@ -15,7 +15,6 @@ const NoDataFallback = (props: NoDataFallBackProps) => {
   return (
     <View style={{
       opacity: 0.5,
-      flex: 1,
       justifyContent: "center",
       alignItems: "center"
     }}>

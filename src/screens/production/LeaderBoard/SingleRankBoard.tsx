@@ -13,14 +13,21 @@ import TranslationPack from '../../../Language/translation'
 type SingleRankBoardProps = {
   span?: number;
   length?: number;
+  interestedOn?: boolean;
 }
 
 const SingleRankBoard = (props: SingleRankBoardProps) => {
   const {user} = usePlayData();
-  const {span = 1, length = 20} = props;
+  const {span = 1, length = 20, interestedOn = false} = props;
   const [singleRankData, setSingleRankData] = React.useState<(RawSingleRankData | null)[] | null>(null);
   const {language: lan} = useGlobal();
   const translation = TranslationPack[lan].screens.LeaderBoard;
+
+  const Fallback = () => (
+    <View style={{flex: 1}}>
+      <NoDataFallback text={translation.noRecord} />
+    </View>
+  )
 
   React.useEffect(() => {
     getSinglePlayRankById(user.id, span).then((playerData) => {
@@ -43,12 +50,14 @@ const SingleRankBoard = (props: SingleRankBoardProps) => {
   
   return (
     <LeaderBoardContainer>
-      <SingleRankList
-        fallback={<NoDataFallback text={translation.noRecord} />}
-        data={singleRankData || undefined}
-      />
+      <View style={{display: interestedOn ? "flex" : "none"}}>
+        <SingleRankList
+          fallback={<Fallback/>}
+          data={singleRankData || undefined}
+        />
+      </View>
     </LeaderBoardContainer>
   )
 }
 
-export default SingleRankBoard
+export default SingleRankBoard;

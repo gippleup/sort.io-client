@@ -172,13 +172,4 @@ const SingleRankListEntry = (props: SingleRankListEntryProps) => {
   )
 }
 
-export default React.memo(SingleRankListEntry, (prevProps, nextProps) => {
-  // const reasons = [
-  //   prevProps.index === nextProps.index,
-  //   prevProps.data.id === nextProps.data.id,
-  //   prevProps.data.rank === nextProps.data.rank,
-  //   prevProps.data.difficulty === nextProps.data.difficulty,
-  // ]
-  // if (reasons.filter((bool) => !bool).length) return true;
-  return false;
-});
+export default SingleRankListEntry;

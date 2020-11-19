@@ -13,14 +13,21 @@ import { LeaderBoardContainer } from './_Styled'
 type MultiRankBoardProps = {
   span?: number;
   length?: number;
+  interestedOn?: boolean;
 }
 
 const MultiRankBoard = (props: MultiRankBoardProps) => {
   const {user} = usePlayData();
-  const {span = 1, length = 20} = props;
+  const {span = 1, length = 20, interestedOn} = props;
   const [multiRankData, setMultiRankData] = React.useState<(RawMultiRankData | null)[] | null>(null);
   const {language: lan} = useGlobal();
   const translation = TranslationPack[lan].screens.LeaderBoard;
+
+  const Fallback = () => (
+    <View style={{flex: 1}}>
+      <NoDataFallback text={translation.noRecord} />
+    </View>
+  )
 
   React.useEffect(() => {
     getMultiPlayRankById(user.id, span).then((playerData) => {
@@ -43,11 +50,13 @@ const MultiRankBoard = (props: MultiRankBoardProps) => {
 
   return (
     <LeaderBoardContainer>
-      <MultiRankList
-        fallback={<NoDataFallback text={translation.noRecord} />}
-        data={multiRankData || undefined}/>
+      <View style={{display: interestedOn ? "flex" : "none"}}>
+        <MultiRankList
+          fallback={<Fallback />}
+          data={multiRankData || undefined}/>
+      </View>
     </LeaderBoardContainer>
   )
 }
 
-export default MultiRankBoard
+export default MultiRankBoard;

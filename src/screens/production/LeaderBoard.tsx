@@ -1,7 +1,7 @@
 import MaskedView from '@react-native-community/masked-view';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react'
-import { View, Text, Dimensions, ViewStyle, Easing, Animated, PanResponder } from 'react-native'
+import { View, Text, Dimensions, ViewStyle, Easing, Animated, PanResponder, InteractionManager } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components';
 import { removeTargetRoute } from '../../api/navigation';
@@ -29,6 +29,11 @@ const GoBack: typeof NotoSans = styled(NotoSans)`
   border-width: 1px;
 `;
 
+type LeaderBoardState = {
+  span: number;
+  interestedOn: "single" | "multi";
+}
+
 const LeaderBoard = () => {
   const navigation: NavigationProp<RootStackParamList> = useNavigation();
   const {language: lan} = useGlobal();
@@ -38,8 +43,16 @@ const LeaderBoard = () => {
   const prevOffsetX = React.useRef(0);
   const curOffsetX = React.useRef(0);
   const swipeProgress = React.useRef(new Animated.Value(0)).current;
-  const [span, setSpan] = React.useState(1);
+  const [state, setState] = React.useState<LeaderBoardState>({
+    span: 1,
+    interestedOn: "single",
+  });
+  const {span, interestedOn} = state;
   const boardLength = 20;
+
+  const updateState = (newState: Partial<LeaderBoardState>) => {
+    setState({...state, ...newState});
+  }
 
   swipeProgress.addListener((state) => {
     curOffsetX.current = - state.value * boardWidth;
@@ -71,7 +84,12 @@ const LeaderBoard = () => {
   })
 
   const onChangeSpan: SpanSelectorOnChange = (span) => {
-    setSpan(span);
+    InteractionManager.runAfterInteractions(() => {
+      updateState({
+        span,
+        interestedOn: JSON.stringify(swipeProgress) === "1" ? "multi" : "single"
+      });
+    })
   }
 
   const goback = () => removeTargetRoute(navigation, "LeaderBoard");
@@ -106,14 +124,22 @@ const LeaderBoard = () => {
             duration: 300,
             easing: Easing.out(Easing.back(3)),
             useNativeDriver: false,
-          }).start();
+          }).start(() => {
+            InteractionManager.runAfterInteractions(() => {
+              updateState({interestedOn: "single"})
+            })
+          });
         } else {
           Animated.timing(swipeProgress, {
             toValue: 1,
             duration: 300,
             easing: Easing.out(Easing.back(3)),
             useNativeDriver: false,
-          }).start();
+          }).start(() => {
+            InteractionManager.runAfterInteractions(() => {
+              updateState({interestedOn: "multi"})
+            })
+          });
         }
       }
     },
@@ -153,7 +179,7 @@ const LeaderBoard = () => {
             />
           </View>
           <Space height={10} />
-          <SingleRankBoard length={boardLength} span={span} />
+          <SingleRankBoard interestedOn={interestedOn === "single"} length={boardLength} span={span} />
         </Animated.View>
         <Animated.View style={{transform:[{scale: rightBoardScale}, {rotateY: rightBoardRoateY}]}}>
           <View style={{alignItems: 'center'}}>
@@ -170,7 +196,7 @@ const LeaderBoard = () => {
             />
           </View>
           <Space height={10} />
-          <MultiRankBoard length={boardLength} span={span} />
+          <MultiRankBoard interestedOn={interestedOn === "multi"} length={boardLength} span={span} />
         </Animated.View>
       </Animated.View>
       <Space height={20} />

@@ -10,6 +10,7 @@ import GameSceneTester from "../screens/dev/GameSceneTester";
 import ItemBoxTester from "../screens/dev/ItemBoxTester";
 import JamTester from "../screens/dev/JamTester";
 import LineGraphTester from "../screens/dev/LineGraphTester";
+import MultiFoldTimerBarTester from "../screens/dev/MultiFoldTimerBarTester";
 import MultiGameResultTester from "../screens/dev/MultiGameResultTester";
 import NativeRefTester from "../screens/dev/NativeRefTester";
 import ParticleTester from "../screens/dev/ParticleTester";
@@ -28,6 +29,12 @@ import UpdaterTester from "../screens/dev/UpdaterTester";
 import { Routes } from "./types";
 
 export const devRoutes: Routes<Omit<devParams, "Developer">> = {
+  MultiFoldTimerBarTester: {
+    type: "dev",
+    devName: "멀티 폴드 타이머바 테스터",
+    component: MultiFoldTimerBarTester,
+    headerShown: false,
+  },
   SpreaderTester: {
     type: "dev",
     devName: "스프레더 테스터",
@@ -177,6 +184,7 @@ export const devRoutes: Routes<Omit<devParams, "Developer">> = {
 }
 
 export type devParams = {
+  MultiFoldTimerBarTester: undefined;
   LineGraphTester: undefined;
   ShapeChecker: undefined;
   ReduxTester: undefined;

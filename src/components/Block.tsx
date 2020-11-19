@@ -29,6 +29,7 @@ type BlockProps = {
   scale?: number;
   visible?: boolean;
   noGradient?: boolean;
+  onReady?: () => any;
 };
 
 class Block extends React.Component<BlockProps, {type: BlockTypes}> {
@@ -51,7 +52,7 @@ class Block extends React.Component<BlockProps, {type: BlockTypes}> {
 
   renderShape(type: BlockTypes) {
     const {props} = this;
-    const {scale = 1, skin, part, noGradient} = props;
+    const {scale = 1, skin, part, noGradient, onReady} = props;
     const fill = colors[type][part];
     const shapeDefinition = blockSkeleton[skin][part];
     const {
@@ -68,7 +69,7 @@ class Block extends React.Component<BlockProps, {type: BlockTypes}> {
       marginTop,
     } = shapeDefinition;
     return (
-      <ShapeContainer>
+      <ShapeContainer onLayout={onReady}>
         <SvgContainer
           innerMarginTop={innerMarginTop}
           innerMarginBottom={innerMarginBottom}

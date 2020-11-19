@@ -19,6 +19,7 @@ import chroma from 'chroma-js';
 import { NotoSans } from './Generic/StyledComponents';
 import DynamicText from './DynamicText';
 import { getStackLayout } from '../api/layout';
+import { checkNotifications } from 'react-native-permissions';
 
 const LayoutContainer: typeof View = styled(View)`
   position: absolute;
@@ -64,7 +65,7 @@ type RefBlockBoardProps = {
   onAlertUnableToDock?: (stackIndex: number) => any;
   onLeftOver?: (leftoverIndex: number) => any;
   onScoreChange?: (score: number) => void;
-  onLayout?: (layout: LayoutChangeEvent) => void;
+  onLayout?: () => void;
   fps?: number;
   noAnimation?: boolean;
   dockEasing?: Easings;
@@ -80,29 +81,8 @@ const defaultDockEasing: Easings = "easeInOutSine";
 const defaultDockEasingDuration = 100;
 
 export class RefBlockBoard extends Component<RefBlockBoardProps, {shouldReset: boolean}> {
-  constructor(props: RefBlockBoardProps) {
-    super(props);
-    this.state = {
-      shouldReset: false,
-    }
-
-    this.stacks = Array(props.initialMap.length);
-    this.effectFrames = Array(props.initialMap.length);
-    this.getTopPiecePos = this.getTopPiecePos.bind(this);
-
-    this.undock = this.undock.bind(this);
-
-    this.alertUnableToDock = this.alertUnableToDock.bind(this);
-    this.dock = this.dock.bind(this);
-    this.dockToSelf = this.dockToSelf.bind(this);
-    this.dockToOther = this.dockToOther.bind(this);
-
-    this.checkIfStackCompleted = this.checkIfStackCompleted.bind(this);
-
-    this.getCurScore = this.getCurScore.bind(this);
-    this.getCompleteMap = this.getCompleteMap.bind(this);
-  }
-
+  renderedBlockCount = 0;
+  requiredBlockCount: number;
   effectFrames: RefObject<BlockFrame>[];
   stacks: StackModel[];
   layoutRef = React.createRef<View>();
@@ -128,6 +108,34 @@ export class RefBlockBoard extends Component<RefBlockBoardProps, {shouldReset: b
   leftOverAlertTimeout: NodeJS.Timeout | null = null;
   blinkAnim: RefAnimation | null = null;
 
+  constructor(props: RefBlockBoardProps) {
+    super(props);
+    this.state = {
+      shouldReset: false,
+    }
+
+    this.requiredBlockCount = props.initialMap.map((stack) => {
+      return stack.reduce((acc, ele) => ele !== -1 ? acc + 1 : acc, 0) + 2;
+    }).reduce((acc, ele) => acc + ele);
+
+    this.stacks = Array(props.initialMap.length);
+    this.effectFrames = Array(props.initialMap.length);
+    this.getTopPiecePos = this.getTopPiecePos.bind(this);
+
+    this.undock = this.undock.bind(this);
+
+    this.alertUnableToDock = this.alertUnableToDock.bind(this);
+    this.dock = this.dock.bind(this);
+    this.dockToSelf = this.dockToSelf.bind(this);
+    this.dockToOther = this.dockToOther.bind(this);
+
+    this.checkIfStackCompleted = this.checkIfStackCompleted.bind(this);
+
+    this.getCurScore = this.getCurScore.bind(this);
+    this.getCompleteMap = this.getCompleteMap.bind(this);
+    this.onBlockRendered = this.onBlockRendered.bind(this);
+  }
+
   get completedAllStack() {
     const detailedMap = this.getDetailedMap();
     return detailedMap.filter((status) => status === "incomplete").length === 0;
@@ -136,6 +144,15 @@ export class RefBlockBoard extends Component<RefBlockBoardProps, {shouldReset: b
   get score() {
     const detailedMap = this.getDetailedMap();
     return detailedMap.filter((status) => status === "completed").length;
+  }
+
+  onBlockRendered() {
+    const {props} = this;
+    const {onLayout} = props;
+    this.renderedBlockCount += 1;
+    if (this.requiredBlockCount === this.renderedBlockCount) {
+      if (onLayout) onLayout();
+    }
   }
 
   reset() {
@@ -607,6 +624,9 @@ export class RefBlockBoard extends Component<RefBlockBoardProps, {shouldReset: b
     this.dockCount += 1;
   }
 
+  componentDidMount() {
+  }
+
   componentDidUpdate() {
     if (this.state.shouldReset) {
       this.setState({shouldReset: false})
@@ -616,7 +636,7 @@ export class RefBlockBoard extends Component<RefBlockBoardProps, {shouldReset: b
   render() {
     const LazyBlock = React.lazy(() => import('./Block'))
 
-    const {props, state} = this;
+    const {props, onBlockRendered} = this;
     const {
       width = 300,
       height = 300,
@@ -657,7 +677,7 @@ export class RefBlockBoard extends Component<RefBlockBoardProps, {shouldReset: b
     const layout = Array(row).fill(Array(column).fill(1));
 
     return (
-      <View onLayout={props.onLayout} style={{width, height}}>
+      <View style={{width, height}}>
         <LayoutContainer style={{paddingLeft: layoutMarginLeft, paddingTop: layoutMarginTop}}>
           {layout.map((row, i) => (
             <Row key={'frameRow' + i} style={{marginVertical}}>
@@ -800,6 +820,7 @@ export class RefBlockBoard extends Component<RefBlockBoardProps, {shouldReset: b
                       />
                     )}>
                       <LazyBlock
+                        onReady={onBlockRendered}
                         ref={bottomRef}
                         visible={true}
                         type={filteredStack[0] !== undefined ? filteredStack[0] : 50}
@@ -839,6 +860,7 @@ export class RefBlockBoard extends Component<RefBlockBoardProps, {shouldReset: b
                           />
                         )}>
                           <LazyBlock
+                            onReady={onBlockRendered}
                             type={type}
                             skin={props.skin}
                             part="piece"
@@ -878,6 +900,7 @@ export class RefBlockBoard extends Component<RefBlockBoardProps, {shouldReset: b
                       />
                     )}>
                       <LazyBlock
+                        onReady={onBlockRendered}
                         ref={capBlockRef}
                         type={filteredStack[0] !== undefined ? filteredStack[0] : 50}
                         skin={props.skin}

@@ -51,7 +51,7 @@ export const getSubLevel = (level: number): number => {
   if (level < 0) return 0;
   const levelEnumNum = _getLevelEnumNum(level);
   const subLevel = level - levelEnumNum + 1;
-  return Math.min(subLevel, 6);
+  return Math.min(subLevel, 3);
 }
 
 const levelColor: {[T in GameLevel]: string} = {
@@ -94,18 +94,24 @@ export const generateOptionByLevel = (level: number) => {
   const levelIndex = Math.min(getLevelIndex(level), 18);
   const levelStr = getLevelString(level);
   const levelEnumNum = _getLevelEnumNum(level);
+  const blockStackCount = Math.ceil(levelIndex * 0.5) + 3;
   const map = {
-    blockStackCount: Math.floor(levelIndex * 1.5) + 3,
-    colorCount: Math.min(levelIndex + 2, Constants.colorCount),
-    maxScore: Math.floor(levelIndex * 1.5) + 2,
+    blockStackCount,
+    colorCount: Math.min(blockStackCount - 1, Constants.colorCount),
+    maxScore: blockStackCount - 1,
     stackLengthMax: 7,
     stackLengthMin: Math.min(levelIndex + 2, 5),
     shuffleCount: 100,
   }
   const subLevel = getSubLevel(level);
+  const mainLevelTimeDiff = 2;
+  const subLevelTimeDiff = mainLevelTimeDiff / 2;
+  const minTime = levelIndex * mainLevelTimeDiff - subLevelTimeDiff * (subLevel - 1);
+  const time = 50 - minTime;
+  console.log(time);
   return {
     map,
-    time: 120 - 10 * (subLevel - 1),
+    time: time,
     levelStr,
   };
 }

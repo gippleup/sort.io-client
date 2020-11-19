@@ -105,6 +105,7 @@ const GameScreen = (props: GameScreenProps) => {
 
   const navigateToStageClearPopup = (result: "suceess" | "fail") => {
     stageFinished = true;
+    gameSceneRef.current?.timerRef.current?.timerBaseRef.current?.stopTimer();
     const nextResults = results.concat(result === "suceess" ? true : false);
     navigation.navigate('Popup_StageClear', {
       results: nextResults,

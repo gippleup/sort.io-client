@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react'
 import { View, Text, Easing, Animated, BackHandler } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components'
 import { modifyToTargetRoutes } from '../../../api/navigation';
 import { NotoSans } from '../../../components/Generic/StyledComponents';
@@ -51,6 +52,14 @@ const WaitingOpponentPopup = () => {
         {name: "Popup_Prepare"},
       ])
     })
+
+  const goToMain = () => {
+    socket.close();
+    modifyToTargetRoutes(navigation, [
+      {name: "LoadingScreen"},
+      {name: "Main"},
+    ])
+  }
   
   React.useEffect(() => {
     const scaleAnimation = Animated.sequence([
@@ -85,6 +94,13 @@ const WaitingOpponentPopup = () => {
           {translation.waitingOpponent}
         </InfoText>
       </Animated.View>
+      <TouchableOpacity onPress={goToMain}>
+        <View style={{padding: 10, backgroundColor: "white", borderRadius: 20, marginTop: 70}}>
+          <NotoSans size={20}>
+            CANCEL
+          </NotoSans>
+        </View>
+      </TouchableOpacity>
     </Container>
   )
 }

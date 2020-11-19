@@ -107,6 +107,7 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
     this.setXY = this.setXY.bind(this);
     this.setScale = this.setScale.bind(this);
     this.setOpacity = this.setOpacity.bind(this);
+    this.stopAnimation = this.stopAnimation.bind(this);
     if (Array.isArray(this.props.style)) {
       this.style = StyleSheet.flatten(this.props.style);
     }
@@ -120,7 +121,7 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
     y: 0,
   }
   ref: RefObject<View> = React.createRef();
-  animations: NodeJS.Timeout[] = [];
+  animations: {interval: NodeJS.Timeout; onStop?: () => any}[] = [];
   setStyle(style: ViewStyle) {
     const $ = this.ref.current;
     if (!$) { return; }
@@ -129,8 +130,9 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
   }
 
   stopAnimation() {
-    this.animations.forEach((intervalId) => {
-      clearInterval(intervalId);
+    this.animations.forEach((anim) => {
+      clearInterval(anim.interval);
+      if (anim.onStop) anim.onStop();
     })
     this.animations = [];
   }
@@ -140,12 +142,15 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
     easing?: easingFunc.Easings,
     duration: number,
     fps?: number,
+    onStart?: (unixTimeStamp: number) => any,
+    onStop?: (unixTimeStmap: number) => any,
+    onFinish?: (unixTimeStamp: number) => any,
   }): RefAnimation {
+    const { style, easing, duration, fps, onStart, onStop, onFinish } = option;
     const start = (onComplete?: () => any) => {
+      if (onStart) onStart(Date.now());
       this.stopAnimation();
-
       let progress = 0;
-      const { style, easing, duration, fps } = option;
       const framePerSec = (fps || 60);
       const keysOnRequest = Object.keys(style) as AnimatibleKeys[];
       const startValue: { [index in keyof ViewStyle]: number | string } = {};
@@ -171,15 +176,29 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
       }, {});
 
       let callback: Function | undefined;
-      const animation = setInterval(() => {
-        if (callback) {
-          callback();
-        }
-      }, 1000 / framePerSec)
+      const startedAt = Date.now();
+      const endAt = startedAt + duration;
+      const getProgress = () => {
+        const now = Date.now();
+        const timeDiff = now - startedAt;
+        return now > endAt ? 1 : timeDiff / duration;
+      }
+      const animation = {
+        interval: setInterval(() => {
+          if (callback) {
+            callback();
+          }
+        }, 1000 / framePerSec),
+        onStop: () => {
+          if (onStop) onStop(Date.now());
+        },
+      }
 
       const updateFunc = () => {
+        // const progressInterval = (1 / framePerSec) / (duration / 1000);
+        progress = Math.min(Math.max(getProgress(), 0), 1);
         if (progress < 1) {
-          progress += (1 / framePerSec) / (duration / 1000);
+          // progress += progressInterval;
           const nextStyle = keysOnRequest.reduce((
             acc: { [index in keyof Pick<ViewStyle, AnimatibleKeys>]: ViewStyle[index] },
             key: AnimatibleKeys
@@ -199,8 +218,9 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
           }, {})
           this.setStyle(nextStyle);
         } else {
-          clearInterval(animation);
+          clearInterval(animation.interval);
           this.setStyle(style);
+          if (onFinish) onFinish(Date.now());
           if (onComplete) onComplete();
         }
       }
@@ -276,7 +296,10 @@ export class NativeRefBox extends Component<NativeRefBoxProps,{}> {
   }
 
   componentWillUnmount() {
-    this.animations.forEach((intervalId) => clearInterval(intervalId))
+    this.animations.forEach((anim) => {
+      clearInterval(anim.interval)
+      if (anim.onStop) anim.onStop();
+    })
   }
 
   render() {

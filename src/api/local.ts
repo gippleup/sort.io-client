@@ -50,7 +50,7 @@ const decrypt = (str: string) => {
   return bytes.toString(CryptoJS.enc.Utf8);
 }
 
-export const getLocalPlayData = (): Promise<PlayData> => {
+export const getLocalPlayData = (): Promise<PlayData | undefined> => {
   return new Promise ((resolve, reject) => {
     AsyncStorage.getItem('playData')
       .then((data) => {

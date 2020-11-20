@@ -41,10 +41,8 @@ const _getCurDataCurUser = (getState: AppGetState) => {
 
 export const loadPlayData: GeneralThunkAction<void> = () => (dispatch, getState) => {
   getLocalPlayData()
-    .then((data: PlayData) => {
-      const isObject = typeof data === "object";
-      const hasValidData = isObject ? data.user : false;
-      if (hasValidData) {
+    .then((data) => {
+      if (data && typeof data === "object" && data.user) {
         getPlayDataByUserId(data.user.id)
         .then((dataFromServer) => {
           if (dataFromServer) {
@@ -82,23 +80,26 @@ export const fetchGoogleProfile: GeneralThunkAction<void> = () => (dispatch, get
     })
 }
 
-export const applyGuestId: GeneralThunkAction<void> = () => (dispatch, getState) => {
+export const applyGuestId: GeneralThunkAction<void> = () => async(dispatch, getState) => {
   const curUser = getState().playData.user;
-  
-  makeGuestId().then((user) => {
-    if (!curUser.googleId) {
-      const mixedUser: SortIoUser = {
-        ...curUser,
-        id: user.id,
-        name: user.name,
+  const playDataSavedOnLocalStorage = await getLocalPlayData();
+  if (playDataSavedOnLocalStorage !== undefined) {
+    dispatch(updatePlayData(playDataSavedOnLocalStorage));
+  } else {
+    makeGuestId().then((user) => {
+      if (!curUser.googleId) {
+        const mixedUser: SortIoUser = {
+          ...curUser,
+          id: user.id,
+          name: user.name,
+        }
+        dispatch(updateUser(mixedUser))
+      } else {
       }
-      dispatch(updateUser(mixedUser))
-    } else {
-
-    }  
-  })
-  .catch(() => {
-  })
+    })
+    .catch(() => {
+    })
+  }
 }
 
 export const signInWithGoogle: GeneralThunkAction<void> = () => async (dispatch, getState) => {

@@ -6,7 +6,7 @@ export const prettyTime = (time: string, format?: string, dayDescriptor?: DayDes
   const date = new Date(time);
   const split = {
     year: String(date.getFullYear()),
-    month: String(date.getMonth()),
+    month: String(date.getMonth() + 1),
     day: date.getDay(),
     date: String(date.getDate()),
     hours: String(date.getHours()),

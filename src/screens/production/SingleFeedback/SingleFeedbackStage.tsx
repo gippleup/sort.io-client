@@ -26,7 +26,7 @@ const SingleFeedbackStage = () => {
   const stageFeedback = getStageFeedback(lastPlay.difficulty, lan);
 
   return (
-    <View style={{marginHorizontal: 50}}>
+    <View style={{marginHorizontal: 30}}>
       <NotoSans color="white" type="Black" size={40}>{getLevelString(lastPlay.difficulty)}</NotoSans>
       <NotoSans color="white" type="Light" size={15}>{translation.stageClearDeclaration(lastPlay.difficulty || 0)}</NotoSans>
       <NotoSans color="white" size={20}>{stageFeedback}</NotoSans>

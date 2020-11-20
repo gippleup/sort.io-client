@@ -141,7 +141,7 @@ const translation: ScreenTranslation["SingleFeedback"] = {
   forLast24Hour: "For last 24 hour",
   stageClearDeclaration: (diffiulty: number) => {
     const totalStage = getTotalLevel();
-    return `You've cleared stage ${diffiulty} of total ${totalStage}.`
+    return `You've cleared stage ${diffiulty} of total ${totalStage} stages.`
   }
 }
 

@@ -132,7 +132,7 @@ const translation = {
   forLast24Hour: "지난 24시간 기준",
   stageClearDeclaration: (diffiulty: number) => {
     const totalStage = getTotalLevel();
-    return `전체 스테이지 ${totalStage} 중 ${diffiulty}번째 스테이지를 클리어했습니다.`
+    return `전체 스테이지 ${totalStage}개 중 ${diffiulty}번째 스테이지를 클리어했습니다.`
   }
 }
 

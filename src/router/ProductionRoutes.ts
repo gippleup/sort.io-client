@@ -28,6 +28,7 @@ import WaitingOpponentPopup from "../screens/production/MultiGame/WaitingOpponen
 import UpdateScreen from "../screens/UpdateScreen";
 import BadConnectionPopup from "../screens/production/MultiGame/BadConnectionPopup";
 import LoadingScreen, { LoadingScreenParams } from "../screens/production/LoadingScreen";
+import SingleFeedback, { SingleFeedbackParams } from "../screens/production/SingleFeedback";
 
 export const pdRoutes: Routes<pdParams> = {
   Main: {
@@ -219,6 +220,12 @@ export const pdRoutes: Routes<pdParams> = {
     component: BadConnectionPopup,
     options: CommonPopupOption,
   },
+  SingleFeedback: {
+    type: "production",
+    devName: "싱글 피드백",
+    component: SingleFeedback,
+    headerShown: false,
+  }
 }
 
 export type pdParams = {
@@ -251,4 +258,5 @@ export type pdParams = {
   Popup_WaitingOpponent: undefined;
   Popup_BadConnection: undefined;
   LoadingScreen: LoadingScreenParams;
+  SingleFeedback: SingleFeedbackParams;
 }

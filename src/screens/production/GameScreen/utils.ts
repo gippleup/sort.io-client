@@ -31,7 +31,7 @@ const _getLeveEnumNumArr = () => {
     .map((str) => Number(str));
 }
 
-const _getLevelEnumNum = (level: number): GameLevel => {
+export const getLevelEnumNum = (level: number): GameLevel => {
   return _getLeveEnumNumArr()
     .filter((num) => num <= level)
     .reduce((acc, ele) => {
@@ -42,14 +42,14 @@ const _getLevelEnumNum = (level: number): GameLevel => {
 
 export const getLevelIndex = (level: number) => {
   const levelEnumNumArr = _getLeveEnumNumArr();
-  const levelEnumNum = _getLevelEnumNum(level);
+  const levelEnumNum = getLevelEnumNum(level);
   const levelIndex = levelEnumNumArr.indexOf(levelEnumNum);
   return levelIndex;
 }
 
 export const getSubLevel = (level: number): number => {
   if (level < 0) return 0;
-  const levelEnumNum = _getLevelEnumNum(level);
+  const levelEnumNum = getLevelEnumNum(level);
   const subLevel = level - levelEnumNum + 1;
   return Math.min(subLevel, 3);
 }
@@ -77,23 +77,27 @@ const levelColor: {[T in GameLevel]: string} = {
 
 export const getLevelString = (level: number) => {
   if (level < 0) return GameLevel[0]
-  const levelEnumNum = _getLevelEnumNum(level);
+  const levelEnumNum = getLevelEnumNum(level);
   const levelEnumStr = GameLevel[levelEnumNum];
   const subLevel = getSubLevel(level);
   const levelStr = `${levelEnumStr} ${subLevel}`;
   return levelStr;
 }
 
+export const getTotalLevel = () => {
+  return GameLevel["Nihil"] + 3;
+}
+
 export const getLevelColor = (level: number) => {
   if (level < 0) return GameLevel[0]
-  const levelEnumNum = _getLevelEnumNum(level);
+  const levelEnumNum = getLevelEnumNum(level);
   return levelColor[levelEnumNum];
 }
 
 export const generateOptionByLevel = (level: number) => {
   const levelIndex = Math.min(getLevelIndex(level), 18);
   const levelStr = getLevelString(level);
-  const levelEnumNum = _getLevelEnumNum(level);
+  const levelEnumNum = getLevelEnumNum(level);
   const blockStackCount = Math.ceil(levelIndex * 0.5) + 3;
   const map = {
     blockStackCount,
@@ -108,7 +112,6 @@ export const generateOptionByLevel = (level: number) => {
   const subLevelTimeDiff = mainLevelTimeDiff / 2;
   const minTime = levelIndex * mainLevelTimeDiff - subLevelTimeDiff * (subLevel - 1);
   const time = 50 - minTime;
-  console.log(time);
   return {
     map,
     time: time,

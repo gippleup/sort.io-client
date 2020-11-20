@@ -17,9 +17,9 @@ const translation: ScreenTranslation["SelectStage"] = {
   rank: "Rank",
   rankText: (rank: number) => {
     const tail = (() => {
-      if (rank === 1) return 'st';
-      if (rank === 2) return 'nd';
-      if (rank === 3) return 'rd';
+      if (rank % 10 === 1) return 'st';
+      if (rank % 10 === 2) return 'nd';
+      if (rank % 10 === 3) return 'rd';
       return 'th';
     })();
     return rank + tail;

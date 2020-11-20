@@ -70,12 +70,13 @@ const StageClearPopup = (props: StageClearPopupProps) => {
       ])
     } else {
       if (subType === 'challenge') {
-        dispatch(saveSinglePlay(level))
+        dispatch(saveSinglePlay(level));
       }
       modifyToTargetRoutes(navigation, [
         {name: "LoadingScreen"},
         {name: "Main", onDemand: true},
-        {name: "SelectStage"},
+        {name: "SelectStage", onDemand: true},
+        {name: "SingleFeedback"},
       ])
     }
   }

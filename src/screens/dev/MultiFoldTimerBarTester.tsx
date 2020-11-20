@@ -16,14 +16,14 @@ const MultiFoldTimerBarTester = () => {
   }
 
   React.useEffect(() => {
-    let leftTime = 10;
-    const interval = setInterval(() => {
-      leftTime --;
-      timerRef.current?.setTimeTo(leftTime);
-    }, 1000)
-    return () => {
-      clearInterval(interval);
-    }
+    // let leftTime = 10;
+    // const interval = setInterval(() => {
+    //   leftTime --;
+    //   timerRef.current?.setTimeTo(leftTime);
+    // }, 1000)
+    // return () => {
+    //   clearInterval(interval);
+    // }
   })
 
   return (

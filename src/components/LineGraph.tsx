@@ -145,7 +145,7 @@ const LineGraph: <T>(props: LineGraphProps<T>) => JSX.Element = (props) => {
     })
 
   return (
-    <Svg viewBox={`0 0 ${width} ${height}`} width={width} height={height} style={{backgroundColor: "white"}}>
+    <Svg viewBox={`0 0 ${width} ${height}`} width={width} height={height}>
       {/* background */}
       <Rect
         width={width}
@@ -156,7 +156,7 @@ const LineGraph: <T>(props: LineGraphProps<T>) => JSX.Element = (props) => {
       <Rect
         x={paddingLeft}
         y={paddingTop}
-        width={width - paddingLeft - paddingRight - graphPaddingRight}
+        width={width - paddingLeft - paddingRight}
         height={height - paddingTop - paddingBottom}
         fill={graphBackgroundFill}
       />

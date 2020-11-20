@@ -69,7 +69,7 @@ const SingleFeedbackGraph = () => {
           graphBackgroundFill: "transparent",
           xAxisColor: "dodgerblue",
           yAxisColor: "dodgerblue",
-          lineWidth: 2,
+          lineWidth: 1,
           lineColor: "url(#line)",
           graphFill: "url(#linefill)",
           pointFill: "white",

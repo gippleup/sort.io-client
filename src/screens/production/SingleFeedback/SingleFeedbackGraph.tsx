@@ -22,6 +22,8 @@ const GraphContainer = styled(View)`
   background-color: rgba(0,0,0,0.4);
   border-radius: 10px;
   border-width: 1px;
+  min-width: ${Dimensions.get("window").width - 100}px;
+  min-height: 150px;
 `;
 
 type SingleFeedbackGraphState = {
@@ -36,7 +38,7 @@ const SingleFeedbackGraph = () => {
   const renderGraph = () => {
     if (!singlePlay.length) {
       return (
-        <NotoSans type="Black">{translation.noData}</NotoSans>
+        <NotoSans color="white" type="Black">{translation.noData}</NotoSans>
       );
     }
     return (

@@ -1,4 +1,4 @@
-import { GameLevel } from "../../../screens/production/GameScreen/utils";
+import { GameLevel, getTotalLevel } from "../../../screens/production/GameScreen/utils";
 import { ScreenTranslation } from "../../translation";
 
 const translation: ScreenTranslation["SingleFeedback"] = {
@@ -139,6 +139,10 @@ const translation: ScreenTranslation["SingleFeedback"] = {
   },
   rankDeclaration: (rank: number, total: number) => `You placed at ${rank} among ${total} people.`,
   forLast24Hour: "For last 24 hour",
+  stageClearDeclaration: (diffiulty: number) => {
+    const totalStage = getTotalLevel();
+    return `You've cleared stage ${diffiulty} of total ${totalStage}.`
+  }
 }
 
 export default translation;

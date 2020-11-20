@@ -24,7 +24,7 @@ const MultiRankBoard = (props: MultiRankBoardProps) => {
   const translation = TranslationPack[lan].screens.LeaderBoard;
 
   const Fallback = () => (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
       <NoDataFallback text={translation.noRecord} />
     </View>
   )
@@ -50,7 +50,7 @@ const MultiRankBoard = (props: MultiRankBoardProps) => {
 
   return (
     <LeaderBoardContainer>
-      <View style={{display: interestedOn ? "flex" : "none"}}>
+      <View style={{display: interestedOn ? "flex" : "none", flex: 1}}>
         <MultiRankList
           fallback={<Fallback />}
           data={multiRankData || undefined}/>

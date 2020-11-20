@@ -19,7 +19,18 @@ const SingleFeedbackRank = () => {
     )
   } else if (data === null) {
     return (
-      <NotoSans color="white" size={20}>NOT ENOUGH DATA</NotoSans>
+      <View
+        style={{
+          width: Dimensions.get("window").width - 100,
+          height: 150,
+          backgroundColor: "rgba(0,0,0,0.5)",
+          borderRadius: 30,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <NotoSans color="white" size={20}>NOT ENOUGH DATA</NotoSans>
+      </View>
     )
   }
 

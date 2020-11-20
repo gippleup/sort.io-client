@@ -1,4 +1,4 @@
-import { GameLevel } from "../../../screens/production/GameScreen/utils";
+import { GameLevel, getTotalLevel } from "../../../screens/production/GameScreen/utils";
 
 const translation = {
   [GameLevel.Dust]: [
@@ -130,6 +130,10 @@ const translation = {
   rankText: (rank: number) => `${rank}위`,
   rankDeclaration: (rank: number, total: number) => `당신은 ${total}명 중 ${rank}위입니다.`,
   forLast24Hour: "지난 24시간 기준",
+  stageClearDeclaration: (diffiulty: number) => {
+    const totalStage = getTotalLevel();
+    return `전체 스테이지 ${totalStage} 중 ${diffiulty}번째 스테이지를 클리어했습니다.`
+  }
 }
 
 export default translation;

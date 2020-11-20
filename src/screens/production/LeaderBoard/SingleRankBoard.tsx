@@ -24,7 +24,7 @@ const SingleRankBoard = (props: SingleRankBoardProps) => {
   const translation = TranslationPack[lan].screens.LeaderBoard;
 
   const Fallback = () => (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
       <NoDataFallback text={translation.noRecord} />
     </View>
   )
@@ -50,7 +50,7 @@ const SingleRankBoard = (props: SingleRankBoardProps) => {
   
   return (
     <LeaderBoardContainer>
-      <View style={{display: interestedOn ? "flex" : "none"}}>
+      <View style={{display: interestedOn ? "flex" : "none", flex: 1}}>
         <SingleRankList
           fallback={<Fallback/>}
           data={singleRankData || undefined}

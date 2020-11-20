@@ -22,7 +22,7 @@ const SingleFeedbackRank = () => {
       <View
         style={{
           width: Dimensions.get("window").width - 100,
-          height: 150,
+          height: 100,
           backgroundColor: "rgba(0,0,0,0.5)",
           borderRadius: 30,
           justifyContent: "center",

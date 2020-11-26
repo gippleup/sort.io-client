@@ -12,7 +12,7 @@ const SingleFeedbackRank = () => {
   const {language: lan} = useGlobal();
   const translation = TranslationPack[lan].screens.SingleFeedback;
   if (data === undefined) {
-    getSinglePlayRankById(user.id, 1)
+    getSinglePlayRankById(user.id, 7)
     .then((data) => data ? setData(data) : setData(null))
     return (
       <NotoSans color="white" size={20}>LOADING</NotoSans>

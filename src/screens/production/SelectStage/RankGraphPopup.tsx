@@ -64,7 +64,7 @@ const RankGraphPopup = () => {
           )}
           style={{
             paddingLeft: 30,
-            paddingRight: 30,
+            paddingRight: 40,
             graphPaddingRight: 0,
             graphBackgroundFill: "black",
             xAxisColor: "dodgerblue",

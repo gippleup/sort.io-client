@@ -42,7 +42,7 @@ const StageClearPopup = (props: StageClearPopupProps) => {
   })
 
   const finishStageWith = (result: 'fail' | 'success') => {
-    const nextLevel = Math.min(Math.max(level + (result === 'success' ? 1 : -1), 0), 72);
+    const nextLevel = Math.min(Math.max(level + (result === 'success' ? 1 : -1), 0), 54);
     const nextSuccessiveWin = result === 'success' ? successiveWin + 1 : 0;
     const successiveWins = [];
     for (let i = 0; i < nextSuccessiveWin; i += 1) {
@@ -70,7 +70,7 @@ const StageClearPopup = (props: StageClearPopupProps) => {
       ])
     } else {
       if (subType === 'challenge') {
-        dispatch(saveSinglePlay(level));
+        dispatch(saveSinglePlay(nextLevel));
         modifyToTargetRoutes(navigation, [
           {name: "LoadingScreen"},
           {name: "Main", onDemand: true},

@@ -23,6 +23,7 @@ import TranslationPack from '../../Language/translation';
 import styled from 'styled-components';
 import AdmobBanner from '../../components/AdmobBaner';
 import { trackUser } from '../../api/analytics';
+import RewardButton from '../../components/RewardButton';
 
 const BannerAdSpace: typeof View = styled(View)`
   width: 100%;
@@ -111,9 +112,13 @@ const SelectStage = () => {
                 </NotoSans>
               </TouchableOpacity>
             </RecordEntryContainer>
-            <BannerAdSpace onLayout={(e) => setBannerAdSpace(e.nativeEvent.layout)}>
+            {/* <BannerAdSpace onLayout={(e) => setBannerAdSpace(e.nativeEvent.layout)}>
               <AdmobBanner availableSpace={bannerAdSpace} />
-            </BannerAdSpace>
+            </BannerAdSpace> */}
+            <View>
+              <Space height={10} />
+              <RewardButton chance={1} disappearOnFulfilled/>
+            </View>
           </Division>
           <Division>
             <View style={{width: Dimensions.get('window').width - 100}}>
@@ -129,10 +134,6 @@ const SelectStage = () => {
                   </CustomTextContainer>
                 </TouchableOpacity>
               </FlexHorizontal>
-              <Space height={10} />
-              {/* <View>
-                <RewardButton chance={0.1} disappearOnFulfilled/>
-              </View> */}
               <Space height={10} />
               <TouchableOpacity onPress={onPressChallenge}>
                 <CustomTextContainer border full>

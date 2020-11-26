@@ -36,6 +36,7 @@ const SelectStageHeader = () => {
   const navigation = useNavigation();
   const {playData, global} = useSelector((state: AppState) => state);
   const translation = TranslationPack[global.language].screens.SelectStage;
+  const gold = (playData.loaded && playData.user) ? playData.user.gold : 0;
   return (
     <HeaderContainer>
       <FlexHorizontal>
@@ -44,7 +45,7 @@ const SelectStageHeader = () => {
         </NavigationButton>
         <HeaderText>{translation.navTitle}</HeaderText>
       </FlexHorizontal>
-      <MoneyIndicator value={playData.loaded ? playData?.user.gold : 0} />
+      <MoneyIndicator value={gold} />
     </HeaderContainer>
   )
 }

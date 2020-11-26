@@ -121,7 +121,7 @@ const SinglePlayRankPopup = () => {
             <NotoSans size={30} type="Black">{prettyPercent(percentage)}%</NotoSans>
           </View>
           <Space height={10} />
-          <NotoSans type="Light" size={10}>*For Last 24 Hour</NotoSans>
+          <NotoSans type="Light" size={10}>*For Last 7 Days</NotoSans>
         </RecordContainer>
       )
     }
@@ -129,7 +129,7 @@ const SinglePlayRankPopup = () => {
 
   React.useEffect(() => {
     if (playData.user.id && !data) {
-      getSinglePlayRankById(playData.user.id, 1)
+      getSinglePlayRankById(playData.user.id, 7)
       .then((rankData) => {
         if (rankData !== undefined && rankData !== null) {
           setData(rankData);

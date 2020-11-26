@@ -41,7 +41,7 @@ const SingleFeedbackRank = () => {
       <NotoSans color="white" size={50}>{translation.rankText(Number(data.rank))}</NotoSans>
       <View style={{marginLeft: 5, width: dimension.width - 100 - 80}}>
         <NotoSans color="white" type="Light">{translation.rankDeclaration(Number(data.rank), estimatedTotal)}</NotoSans>
-        <NotoSans color="white" type="Thin">({translation.forLast24Hour})</NotoSans>
+        <NotoSans color="white" type="Thin">({translation.forLast7Days})</NotoSans>
       </View>
     </FlexHorizontal>
   )

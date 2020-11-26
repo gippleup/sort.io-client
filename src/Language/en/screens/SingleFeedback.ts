@@ -138,11 +138,12 @@ const translation: ScreenTranslation["SingleFeedback"] = {
     return rank + tail;
   },
   rankDeclaration: (rank: number, total: number) => `You placed at ${rank} among ${total} people.`,
-  forLast24Hour: "For last 24 hour",
   stageClearDeclaration: (diffiulty: number) => {
     const totalStage = getTotalLevel();
     return `You've cleared stage ${diffiulty} of total ${totalStage} stages.`
-  }
+  },
+  forLast24Hour: "For last 24 hour",
+  forLast7Days: "For last 7 days",
 }
 
 export default translation;

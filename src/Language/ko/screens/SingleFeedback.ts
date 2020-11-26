@@ -129,11 +129,12 @@ const translation = {
   ],
   rankText: (rank: number) => `${rank}위`,
   rankDeclaration: (rank: number, total: number) => `당신은 ${total}명 중 ${rank}위입니다.`,
-  forLast24Hour: "지난 24시간 기준",
   stageClearDeclaration: (diffiulty: number) => {
     const totalStage = getTotalLevel();
     return `전체 스테이지 ${totalStage}개 중 ${diffiulty}번째 스테이지를 클리어했습니다.`
-  }
+  },
+  forLast24Hour: "지난 24시간 기준",
+  forLast7Days: "지난 7일 기준",
 }
 
 export default translation;

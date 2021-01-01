@@ -5,7 +5,7 @@ import routes from './routes';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import BuildConfig from 'react-native-config';
-import { modifyToTargetRoutes } from '../api/navigation';
+import { modifyToTargetRoutes } from '@api/navigation';
 
 const {BUILD_ENV} = BuildConfig;
 

@@ -2,8 +2,7 @@ import chroma from 'chroma-js'
 import React, { Fragment } from 'react'
 import { View, Text, ViewStyle, Dimensions } from 'react-native'
 import { LinearGradient, Stop } from 'react-native-svg'
-import { RawMultiRankData } from '../../api/rank'
-import PieChart from '../PieChart'
+import PieChart from '@components/PieChart'
 
 type MultiRankScoreGraphProps = {
   data: Record<"win" | "lose" | "draw", number>;

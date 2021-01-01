@@ -1,9 +1,9 @@
 import React from 'react'
 import { View, Text, Dimensions, ViewStyle } from 'react-native'
-import { NotoSans } from '../../../components/Generic/StyledComponents'
-import SlideSelector from '../../../components/SlideSelector'
-import useGlobal from '../../../hooks/useGlobal'
-import translation from '../../../Language/translation'
+import { NotoSans } from '@components/Generic/StyledComponents'
+import SlideSelector from '@components/SlideSelector'
+import useGlobal from '@hooks/useGlobal'
+import translation from '@Language/translation'
 
 const categoryFilter = {
   all: 0,

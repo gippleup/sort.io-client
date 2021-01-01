@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, Image, ImageStyle, ViewStyle, StyleSheet } from 'react-native'
 import Animated from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { getExpressionSoundEffect } from '../assets/sounds/expressionSound';
+import { getExpressionSoundEffect } from '@assets/sounds/expressionSound';
 import ExpressionEquipWheel from './ExpressionEquipWheel';
 import NativeRefBox from './NativeRefBox';
 import Chat from './Profile/Chat';

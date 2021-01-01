@@ -2,13 +2,13 @@ import React from 'react'
 import { BackHandler } from 'react-native'
 import { RouteProp, EventArg, StackNavigationState, EventListenerCallback, EventMapCore } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import GameScene from '../../components/GameScene';
-import { RootStackParamList } from '../../router/routes';
-import {GameMode, GameSubType, generateOptionByLevel, BeforeRemoveEvent} from './GameScreen/utils'
+import GameScene from '@components/GameScene';
+import { RootStackParamList } from '@router/routes';
+import {GameMode, GameSubType, generateOptionByLevel, BeforeRemoveEvent} from '@screens/production/GameScreen/utils'
 import { StackNavigationEventMap } from '@react-navigation/stack/lib/typescript/src/types';
-import useGlobal from '../../hooks/useGlobal';
-import TranslationPack from '../../Language/translation';
-import { generateMapFromLocal } from '../../api/blockMap';
+import useGlobal from '@hooks/useGlobal';
+import TranslationPack from '@Language/translation';
+import { generateMapFromLocal } from '@api/blockMap';
 
 export type StateEventCallback = EventListenerCallback<StackNavigationEventMap & EventMapCore<StackNavigationState>, "state">
 

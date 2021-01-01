@@ -1,9 +1,8 @@
 import React, { Suspense } from 'react';
 import { ViewStyle } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { CategoryFilter } from '../../screens/production/Shop/CatogorySelector';
-import { FlexHorizontal, Space } from '../Generic/StyledComponents';
-import GradientBlindScrollView from '../GradientBlindScrollView';
+import { CategoryFilter } from '@screens/production/Shop/CatogorySelector';
+import { Space } from '@components/Generic/StyledComponents';
 import { Item } from './ItemBox';
 import ItemBoxFallback from './ItemBoxFallback';
 

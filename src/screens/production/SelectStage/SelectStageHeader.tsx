@@ -4,13 +4,13 @@ import { StackHeaderProps } from '@react-navigation/stack'
 import styled from 'styled-components'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import MoneyIndicator from '../../../components/Main/MoneyIndicator'
-import { FlexHorizontal } from '../../../components/Generic/StyledComponents'
+import MoneyIndicator from '@components/Main/MoneyIndicator'
+import { FlexHorizontal } from '@components/Generic/StyledComponents'
 import { useNavigation } from '@react-navigation/native'
-import usePlayData from '../../../hooks/usePlayData'
+import usePlayData from '@hooks/usePlayData'
 import { useSelector } from 'react-redux'
-import { AppState } from '../../../redux/store'
-import TranslationPack from '../../../Language/translation'
+import { AppState } from '@redux/store'
+import TranslationPack from '@Language/translation'
 
 const HeaderContainer = styled(View)`
   background-color: rgba(255,255,255,0.2);

@@ -2,14 +2,13 @@ import { scale } from 'chroma-js';
 import React, { Component, Fragment, RefObject } from 'react'
 import { Text, View } from 'react-native'
 import styled from 'styled-components';
-import Constants from '../../assets/Constants';
-import skin from '../../Language/en/skin';
-import Block from '../Block';
-import BlockBase from '../Block/BlockBase';
-import { SupportedSkin } from '../Block/skinMap';
-import { BlockTypes } from '../Block/Types';
-import NativeRefBox from '../NativeRefBox';
-import { Easings } from '../NativeRefBox/easings';
+import Constants from '@assets/Constants';
+import Block from '@components/Block';
+import BlockBase from '@components/Block/BlockBase';
+import { SupportedSkin } from '@components/Block/skinMap';
+import { BlockTypes } from '@components/Block/Types';
+import NativeRefBox from '@components/NativeRefBox';
+import { Easings } from '@components/NativeRefBox/easings';
 
 const AbsoluteRefBox: typeof NativeRefBox = styled(NativeRefBox)`
   position: absolute;
@@ -533,7 +532,7 @@ export class NativeRefBlockStack extends Component<NativeRefBlockStackProps>{
       stackWidth,
     } = metrics;
 
-    const LazyBlock = React.lazy(() => import('../Block'));
+    const LazyBlock = React.lazy(() => import('@components/Block'));
     const filteredStack = stack.filter((type) => type !== -1);
 
     const checker: {[index: number]: boolean} = {};

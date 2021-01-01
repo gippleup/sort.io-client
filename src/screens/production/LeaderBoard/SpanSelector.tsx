@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import PlainSelector from '../../../components/PlainSelector'
-import useGlobal from '../../../hooks/useGlobal'
-import TranslationPack from '../../../Language/translation'
+import PlainSelector from '@components/PlainSelector'
+import useGlobal from '@hooks/useGlobal'
+import TranslationPack from '@Language/translation'
 
 export type SpanSelectorOnChange = (spanInDay: number) => any;
 

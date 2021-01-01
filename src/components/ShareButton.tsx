@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, Share, Platform } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import styled from 'styled-components'
-import { getIcon } from '../api/icon'
+import { getIcon } from '@api/icon'
 
 const url: {[T in typeof Platform.OS]?: string} = {
   android: "https://play.google.com/store/apps/details?id=com.sortio",

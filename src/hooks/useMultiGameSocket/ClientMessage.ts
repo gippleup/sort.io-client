@@ -1,5 +1,5 @@
-import { SupportedSkin } from "../../components/Block/skinMap"
-import { SupportedExpression } from "../../components/Profile/Expressions"
+import { SupportedSkin } from "@components/Block/skinMap"
+import { SupportedExpression } from "@components/Profile/Expressions"
 
 export enum SocketClientMessageTypes {
   ENTER = 'ENTER',

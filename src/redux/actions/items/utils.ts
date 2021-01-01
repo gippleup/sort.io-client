@@ -1,6 +1,6 @@
-import { Item } from "../../../components/ItemList/ItemBox";
-import { SupportedExpression } from "../../../components/Profile/Expressions";
-import { AppState } from "../../store";
+import { Item } from "@components/ItemList/ItemBox";
+import { SupportedExpression } from "@components/Profile/Expressions";
+import { AppState } from "@redux/store";
 
 export const checkUsageOfItems = (itemList: Item[], global: AppState["global"]) => {
   const listCheckedUsage = itemList.map((item) => {

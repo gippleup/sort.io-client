@@ -1,10 +1,8 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import { getIcon } from '../api/icon'
-import useGlobal from '../hooks/useGlobal'
-import TranslationPack from '../Language/translation'
-import Block from './Block'
-import { NotoSans } from './Generic/StyledComponents'
+import { getIcon } from '@api/icon'
+import Block from '@components/Block'
+import { NotoSans } from '@components/Generic/StyledComponents'
 
 type NoDataFallBackProps = {
   text?: string;

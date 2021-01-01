@@ -1,5 +1,5 @@
 import chroma from 'chroma-js';
-import Constants from '../../assets/Constants';
+import Constants from '@assets/Constants';
 
 const mainColor = chroma('red').hex();
 

@@ -3,11 +3,11 @@ import React from 'react'
 import { View, Text, Easing, Animated, BackHandler } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components'
-import { modifyToTargetRoutes } from '../../../api/navigation';
-import { NotoSans } from '../../../components/Generic/StyledComponents';
-import useGlobal from '../../../hooks/useGlobal';
-import useMultiGameSocket from '../../../hooks/useMultiGameSocket';
-import TranslationPack from '../../../Language/translation';
+import { modifyToTargetRoutes } from '@api/navigation';
+import { NotoSans } from '@components/Generic/StyledComponents';
+import useGlobal from '@hooks/useGlobal';
+import useMultiGameSocket from '@hooks/useMultiGameSocket';
+import TranslationPack from '@Language/translation';
 
 const Container: typeof View = styled(View)`
   flex: 1;

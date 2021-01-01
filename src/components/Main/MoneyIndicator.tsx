@@ -1,9 +1,8 @@
 import React from 'react'
 import { View, Text, TextInput, ViewStyle } from 'react-native'
-import { FlexHorizontal } from '../Generic/StyledComponents'
 import MoneyIcon from './MoneyIcon'
 import styled from 'styled-components'
-import AnimatedNumber from '../AnimatedNumber'
+import AnimatedNumber from '@components/AnimatedNumber'
 
 const IndicatorShell: typeof View = styled(View)`
   align-items: center;

@@ -1,4 +1,4 @@
-import { ExpressionTranslation } from "../translation";
+import { ExpressionTranslation } from "@Language/translation";
 
 const expression: ExpressionTranslation = {
   dislike: {

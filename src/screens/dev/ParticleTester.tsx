@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import Particles from '../../components/Particles'
+import Particles from '@components/Particles'
 import styled from 'styled-components'
 
 const DummyParticle: typeof View = styled(View)`

@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { FlexHorizontal, NotoSans } from '../../../components/Generic/StyledComponents';
+import { FlexHorizontal, NotoSans } from '@components/Generic/StyledComponents';
 
 type ReduxActionButtonProps = {
   text: string;

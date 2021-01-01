@@ -1,7 +1,7 @@
 import chroma from 'chroma-js';
 import React from 'react'
 import { View, Text } from 'react-native'
-import { NoUndefinedField } from '../types/utilTypes';
+import { NoUndefinedField } from '@types/utilTypes';
 import NativeRefBox, { RefAnimation } from './NativeRefBox';
 import { Easings } from './NativeRefBox/easings';
 import TimerBar, { TimerBarProps } from './TimerBar';

@@ -1,4 +1,4 @@
-import { Translation } from "../translation";
+import { Translation } from "@Language/translation";
 import category from './category';
 import expression from './expression';
 import skin from './skin';

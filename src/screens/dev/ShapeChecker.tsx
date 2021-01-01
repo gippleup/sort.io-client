@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import skinMap, { SupportedSkin } from '../../components/Block/skinMap'
-import RefBlockBoard from '../../components/NativeRefBlockBoard'
+import skinMap, { SupportedSkin } from '@components/Block/skinMap'
+import RefBlockBoard from '@components/NativeRefBlockBoard'
 
 const ShapeChecker = () => {
   return (

@@ -1,9 +1,9 @@
 import React, { ForwardRefRenderFunction, RefObject } from 'react'
 import { View, Text, Dimensions } from 'react-native'
-import Logger from '../../../../components/Logger';
-import { NotoSans } from '../../../../components/Generic/StyledComponents';
-import usePlayData from '../../../../hooks/usePlayData';
-import GradientBlindScrollView from '../../../../components/GradientBlindScrollView';
+import Logger from '@components/Logger';
+import { NotoSans } from '@components/Generic/StyledComponents';
+import usePlayData from '@hooks/usePlayData';
+import GradientBlindScrollView from '@components/GradientBlindScrollView';
 import chroma from 'chroma-js';
 
 export type RematchMessage = {

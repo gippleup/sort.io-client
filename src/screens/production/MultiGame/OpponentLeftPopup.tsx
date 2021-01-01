@@ -1,13 +1,12 @@
 import React from 'react'
-import { View, Text } from 'react-native'
-import { FullFlexCenter, RoundPaddingCenter, NotoSans, FlexHorizontal } from '../../../components/Generic/StyledComponents'
-import { useNavigation, CommonActions, RouteProp, NavigationProp } from '@react-navigation/native'
-import { BeforeRemoveEvent } from '../GameScreen/utils'
+import { FullFlexCenter, RoundPaddingCenter, NotoSans } from '@components/Generic/StyledComponents'
+import { useNavigation, RouteProp, NavigationProp } from '@react-navigation/native'
+import { BeforeRemoveEvent } from '@screens/production/GameScreen/utils'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { RootStackParamList } from '../../../router/routes'
-import useGlobal from '../../../hooks/useGlobal'
-import TranslationPack from '../../../Language/translation'
-import { removeTargetRoute } from '../../../api/navigation'
+import { RootStackParamList } from '@router/routes'
+import useGlobal from '@hooks/useGlobal'
+import TranslationPack from '@Language/translation'
+import { removeTargetRoute } from '@api/navigation'
 
 type OpponentLeftPopupNavigationProps = StackNavigationProp<RootStackParamList, "Popup_OpponentLeft">;
 type OpponentLeftPopupRouteProps = RouteProp<RootStackParamList, "Popup_OpponentLeft">;

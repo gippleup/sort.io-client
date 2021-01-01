@@ -1,13 +1,9 @@
 import React, { Fragment } from 'react'
-import { View, Text, Dimensions } from 'react-native'
+import { View, Dimensions } from 'react-native'
 import { LinearGradient, Stop } from 'react-native-svg';
-import { MultiPlayData } from '../../api/local';
-import { getMultiPlayDataByUserId, MultiPlay } from '../../api/playData';
-import { getMultiPlayRankFromTo } from '../../api/rank';
-import usePlayData from '../../hooks/usePlayData';
-import { getLevelString } from '../../screens/production/GameScreen/utils';
-import { NotoSans, FlexHorizontal } from '../Generic/StyledComponents';
-import LineGraph from '../LineGraph';
+import { MultiPlay } from '@api/playData';
+import { NotoSans, FlexHorizontal } from '@components/Generic/StyledComponents';
+import LineGraph from '@components/LineGraph';
 
 type MultiRankGraphProps = {
   graphData?: MultiPlay[];

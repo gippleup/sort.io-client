@@ -1,4 +1,4 @@
-import {BlockTypes} from '../../Block/Types';
+import {BlockTypes} from '@components/Block/Types';
 
 export enum ActionTypes {
   MOVE_BLOCK = 'MOVE_BLOCK',

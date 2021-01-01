@@ -6,19 +6,19 @@ import {
   LayoutChangeEvent,
 } from 'react-native';
 import styled from 'styled-components';
-import Constants from '../assets/Constants';
-import BlockFrame from './BlockStack/BlockFrame';
-import Block from './Block';
-import {SupportedSkin} from './Block/skinMap';
-import {BlockTypes} from './Block/Types';
-import NativeRefBox, { RefAnimation } from './NativeRefBox';
-import TouchAgent from './TouchAgent';
-import BlockBase from './Block/BlockBase';
-import { Easings } from './NativeRefBox/easings';
+import Constants from '@assets/Constants';
+import BlockFrame from '@components/BlockStack/BlockFrame';
+import Block from '@components/Block';
+import {SupportedSkin} from '@components/Block/skinMap';
+import {BlockTypes} from '@components/Block/Types';
+import NativeRefBox, { RefAnimation } from '@components/NativeRefBox';
+import TouchAgent from '@components/TouchAgent';
+import BlockBase from '@components/Block/BlockBase';
+import { Easings } from '@components/NativeRefBox/easings';
 import chroma from 'chroma-js';
-import { NotoSans } from './Generic/StyledComponents';
-import DynamicText from './DynamicText';
-import { getStackLayout } from '../api/layout';
+import { NotoSans } from '@components/Generic/StyledComponents';
+import DynamicText from '@components/DynamicText';
+import { getStackLayout } from '@api/layout';
 import { checkNotifications } from 'react-native-permissions';
 
 const LayoutContainer: typeof View = styled(View)`
@@ -634,7 +634,7 @@ export class RefBlockBoard extends Component<RefBlockBoardProps, {shouldReset: b
   }
 
   render() {
-    const LazyBlock = React.lazy(() => import('./Block'))
+    const LazyBlock = React.lazy(() => import('@components/Block'))
 
     const {props, onBlockRendered} = this;
     const {

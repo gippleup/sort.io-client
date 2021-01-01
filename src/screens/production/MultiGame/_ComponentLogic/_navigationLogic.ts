@@ -1,9 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import { RefObject } from "react";
-import useGlobal from "../../../../hooks/useGlobal";
-import useMultiGameSocket from "../../../../hooks/useMultiGameSocket";
-import TranslationPack from "../../../../Language/translation";
-import { BeforeRemoveEvent } from "../../GameScreen/utils";
+import useGlobal from "@hooks/useGlobal";
+import useMultiGameSocket from "@hooks/useMultiGameSocket";
+import TranslationPack from "@Language/translation";
+import { BeforeRemoveEvent } from "@screens/production/GameScreen/utils";
 
 type MultiGameNavigationLogicParams = {
   gameStarted: RefObject<boolean>;

@@ -2,7 +2,7 @@ import {Text, View, Dimensions} from 'react-native';
 import styled, { css } from 'styled-components';
 import SLIcon from 'react-native-vector-icons/SimpleLineIcons';
 import FAIcon from 'react-native-vector-icons/FontAwesome'
-import { FlexHorizontal } from '../../../components/Generic/StyledComponents';
+import { FlexHorizontal } from '@components/Generic/StyledComponents';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import React from 'react';
 

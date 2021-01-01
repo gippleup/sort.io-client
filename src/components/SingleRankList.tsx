@@ -1,9 +1,8 @@
 import React from 'react'
 import { View, Text, FlatList, Dimensions } from 'react-native'
 import Svg, { G, Path } from 'react-native-svg'
-import { RawSingleRankData } from '../api/rank'
-import { Line, NotoSans } from './Generic/StyledComponents'
-import SingleRankListEntry from './SingleRankList/SingleRankListEntry'
+import { RawSingleRankData } from '@api/rank'
+import SingleRankListEntry from '@components/SingleRankList/SingleRankListEntry'
 
 type OwnerCheckedSingleRankData = RawSingleRankData & {
   isMine?: boolean;

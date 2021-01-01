@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { NotoSans } from '../../components/Generic/StyledComponents';
-import MultiFoldTimerBar from '../../components/MultiFoldTimerBar'
+import { NotoSans } from '@components/Generic/StyledComponents';
+import MultiFoldTimerBar from '@components/MultiFoldTimerBar'
 
 const MultiFoldTimerBarTester = () => {
   const timerRef = React.createRef<MultiFoldTimerBar>();

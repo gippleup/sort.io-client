@@ -1,14 +1,12 @@
 import React from 'react'
-import { View, Text } from 'react-native'
-import { getSinglePlayRankById, getSinglePlayRankFromTo, RawSingleRankData } from '../../../api/rank'
-import SingleRankList from '../../../components/SingleRankList'
-import NoDataFallback from '../../../components/NoDataFallback'
-import { LeaderBoardContainer } from './_Styled'
-import SingleRankListEntry from '../../../components/SingleRankList/SingleRankListEntry'
-import usePlayData from '../../../hooks/usePlayData'
-import { NotoSans } from '../../../components/Generic/StyledComponents'
-import useGlobal from '../../../hooks/useGlobal'
-import TranslationPack from '../../../Language/translation'
+import { View } from 'react-native'
+import { getSinglePlayRankById, getSinglePlayRankFromTo, RawSingleRankData } from '@api/rank'
+import SingleRankList from '@components/SingleRankList'
+import NoDataFallback from '@components/NoDataFallback'
+import { LeaderBoardContainer } from '@screens/production/LeaderBoard/_Styled'
+import usePlayData from '@hooks/usePlayData'
+import useGlobal from '@hooks/useGlobal'
+import TranslationPack from '@Language/translation'
 
 type SingleRankBoardProps = {
   span?: number;

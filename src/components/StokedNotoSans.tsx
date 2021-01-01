@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import useGlobal from '../hooks/useGlobal'
-import { SupportedLanguage } from '../redux/actions/global/types'
+import useGlobal from '@hooks/useGlobal'
+import { SupportedLanguage } from '@redux/actions/global/types'
 import { FlexHorizontal } from './Generic/StyledComponents'
 import StrokedText from './StrokedText'
 

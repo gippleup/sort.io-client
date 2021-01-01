@@ -1,5 +1,5 @@
-import { GameLevel, getTotalLevel } from "../../../screens/production/GameScreen/utils";
-import { ScreenTranslation } from "../../translation";
+import { GameLevel, getTotalLevel } from "@screens/production/GameScreen/utils";
+import { ScreenTranslation } from "@Language/translation";
 
 const translation: ScreenTranslation["SingleFeedback"] = {
   [GameLevel.Dust]: [

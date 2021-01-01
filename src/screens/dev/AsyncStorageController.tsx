@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import { RoundPaddingCenter, NotoSans, FlexHorizontal } from '../../components/Generic/StyledComponents'
+import { RoundPaddingCenter, NotoSans, FlexHorizontal } from '@components/Generic/StyledComponents'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-community/async-storage'
 

@@ -1,9 +1,9 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import styled from 'styled-components'
-import { FullFlexCenter, NotoSans } from '../../../components/Generic/StyledComponents';
-import useGlobal from '../../../hooks/useGlobal';
-import TranslationPack from '../../../Language/translation';
+import { FullFlexCenter, NotoSans } from '@components/Generic/StyledComponents';
+import useGlobal from '@hooks/useGlobal';
+import TranslationPack from '@Language/translation';
 
 const Container: typeof View = styled(View)`
   background-color: tomato;

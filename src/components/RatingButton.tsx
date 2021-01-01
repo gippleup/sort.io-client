@@ -2,9 +2,9 @@ import React, { Fragment } from 'react'
 import { View, Text, Linking, Alert, Platform } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components'
-import { getIcon } from '../api/icon'
-import useGlobal from '../hooks/useGlobal';
-import TranslationPack from '../Language/translation';
+import { getIcon } from '@api/icon'
+import useGlobal from '@hooks/useGlobal';
+import TranslationPack from '@Language/translation';
 import { FlexHorizontal, NotoSans, Space } from './Generic/StyledComponents';
 
 const StarContainer: typeof View = styled(View)`

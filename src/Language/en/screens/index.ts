@@ -5,7 +5,7 @@ import Shop from './Shop';
 import LeaderBoard from './LeaderBoard';
 import SinglePlay from './SinglePlay';
 import SingleFeedback from './SingleFeedback';
-import { ScreenTranslation } from '../../translation';
+import { ScreenTranslation } from '@Language/translation';
 
 
 const screenTranslation: ScreenTranslation = {

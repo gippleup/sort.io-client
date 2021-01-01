@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
-import StarIcon from '../../assets/star.svg'
-import { FlexHorizontal } from '../Generic/StyledComponents'
+import StarIcon from '@assets/star.svg'
+import { FlexHorizontal } from '@components/Generic/StyledComponents'
 
 type MoneyIconProps = {
   size: number;

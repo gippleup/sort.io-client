@@ -1,4 +1,4 @@
-import { SkinTranslation } from "../translation";
+import { SkinTranslation } from "@Language/translation";
 
 const skin: SkinTranslation = {
   baby: {

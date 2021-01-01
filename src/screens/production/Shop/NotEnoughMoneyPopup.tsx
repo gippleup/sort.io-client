@@ -1,11 +1,11 @@
 import React from 'react'
 import { View, Text, Modal } from 'react-native'
 import chroma from 'chroma-js'
-import Flickery from '../../../components/Flickery'
-import { RoundPaddingCenter, NotoSans } from '../../../components/Generic/StyledComponents'
+import Flickery from '@components/Flickery'
+import { RoundPaddingCenter, NotoSans } from '@components/Generic/StyledComponents'
 import { CommonActions, useNavigation } from '@react-navigation/native'
-import useGlobal from '../../../hooks/useGlobal'
-import TranslationPack from '../../../Language/translation'
+import useGlobal from '@hooks/useGlobal'
+import TranslationPack from '@Language/translation'
 
 const NotEnoughMoneyPopup = () => {
   const naviagtion = useNavigation();

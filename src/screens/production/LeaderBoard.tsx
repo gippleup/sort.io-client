@@ -1,23 +1,20 @@
-import MaskedView from '@react-native-community/masked-view';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react'
 import { View, Text, Dimensions, ViewStyle, Easing, Animated, PanResponder, InteractionManager } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components';
-import { removeTargetRoute } from '../../api/navigation';
-import { RawSingleRankData, RawMultiRankData, getSinglePlayRankFromTo, getMultiPlayRankFromTo } from '../../api/rank';
-import PatternBackground from '../../components/GameScene/PatternBackground'
-import { NotoSans, Space, WindowSizeView } from '../../components/Generic/StyledComponents';
-import SingleRankList from '../../components/SingleRankList';
-import StrokedText from '../../components/StrokedText';
-import useGlobal from '../../hooks/useGlobal';
-import TranslationPack from '../../Language/translation';
-import { RootStackParamList } from '../../router/routes';
-import MultiRankBoard from './LeaderBoard/MultiRankBoard';
-import SingleRankBoard from './LeaderBoard/SingleRankBoard';
-import SpanSelector, { SpanSelectorOnChange } from './LeaderBoard/SpanSelector';
+import { removeTargetRoute } from '@api/navigation';
+import PatternBackground from '@components/GameScene/PatternBackground'
+import { NotoSans, Space, WindowSizeView } from '@components/Generic/StyledComponents';
+import StrokedText from '@components/StrokedText';
+import useGlobal from '@hooks/useGlobal';
+import TranslationPack from '@Language/translation';
+import { RootStackParamList } from '@router/routes';
+import MultiRankBoard from '@screens/production/LeaderBoard/MultiRankBoard';
+import SingleRankBoard from '@screens/production/LeaderBoard/SingleRankBoard';
+import SpanSelector, { SpanSelectorOnChange } from '@screens/production/LeaderBoard/SpanSelector';
 
-const backgroundImage = require('../../assets/BackgroundPattern.png');
+const backgroundImage = require('@assets/BackgroundPattern.png');
 const boardWidth = Dimensions.get('window').width - 50;
 
 const GoBack: typeof NotoSans = styled(NotoSans)`

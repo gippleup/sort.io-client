@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import RankViewer, { RankViewerData } from '../../components/RankViewer';
+import RankViewer, { RankViewerData } from '@components/RankViewer';
 
 
 const fakeRankList: RankViewerData = [

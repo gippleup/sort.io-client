@@ -1,8 +1,7 @@
 import React from 'react';
-import { configureSocket } from '../api/sortio';
-import { SocketServerMessages, SocketServerMessageTypes as MessageType, AlertDockConstructor, SendRoomMessage } from './useMultiGameSocket/ServerMessages';
-import { MapDesc } from '../screens/production/MutiGame';
-import socketClientActions from "../hooks/useMultiGameSocket/action/creator";
+import { configureSocket } from '@api/sortio';
+import { SocketServerMessages, SocketServerMessageTypes as MessageType, AlertDockConstructor, SendRoomMessage } from '@hooks/useMultiGameSocket/ServerMessages';
+import { MapDesc } from '@screens/production/MutiGame';
 
 export type OnSendRoomParam = SendRoomMessage["payload"];
 

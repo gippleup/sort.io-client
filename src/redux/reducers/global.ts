@@ -1,11 +1,11 @@
-import { getSystemLocale, getSystemLocaleCode, LanguageCode } from '../../api/locale';
-import { SupportedSkin } from '../../components/Block/skinMap';
-import { SupportedExpression } from '../../components/Profile/Expressions';
-import { ExpressionDirection, GlobalReducerActions } from '../actions/global/creator';
+import { getSystemLocaleCode } from '@api/locale';
+import { SupportedSkin } from '@components/Block/skinMap';
+import { SupportedExpression } from '@components/Profile/Expressions';
+import { ExpressionDirection, GlobalReducerActions } from '@redux/actions/global/creator';
 import {
   SupportedLanguage,
   GlobalReducerActionTypes,
-} from '../actions/global/types';
+} from '@redux/actions/global/types';
 
 export type GlobalReducerState = {
   language: SupportedLanguage;

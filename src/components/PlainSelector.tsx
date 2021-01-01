@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native'
 import styled from 'styled-components'
-import { ArrayElement } from '../types/utilTypes'
+import { ArrayElement } from '@types/utilTypes'
 import { NotoSans } from './Generic/StyledComponents'
 
 type PlainSelectorProps = {

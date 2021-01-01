@@ -12,7 +12,7 @@ import {
   SinglePlayData,
   MultiPlayData,
   SortIoUser
-} from "../../../api/local";
+} from "@api/local";
 
 export const updateUser = (user: SortIoUser) => ({
   type: UPDATE_USER,

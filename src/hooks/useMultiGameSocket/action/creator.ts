@@ -1,6 +1,6 @@
-import { SupportedSkin } from "../../../components/Block/skinMap";
-import { SupportedExpression } from "../../../components/Profile/Expressions";
-import { SocketClientMessageTypes } from "../ClientMessage";
+import { SupportedSkin } from "@components/Block/skinMap";
+import { SupportedExpression } from "@components/Profile/Expressions";
+import { SocketClientMessageTypes } from "@hooks/useMultiGameSocket/ClientMessage";
 
 type BasicParam = {
   userId: number;

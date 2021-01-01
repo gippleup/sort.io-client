@@ -1,7 +1,6 @@
 import React from 'react';
 import {View, Text, Dimensions} from 'react-native';
-import BlockBoard from '../../components/BlockBoard';
-import Timer from '../../components/Timer';
+import BlockBoard from '@components/BlockBoard';
 import styled from 'styled-components';
 
 const smallMap = [

@@ -1,14 +1,14 @@
 import React, { RefObject } from 'react';
 import {View, Text, Image, Dimensions, GestureResponderEvent} from 'react-native';
-import PatternBackground from './GameScene/PatternBackground';
-import Timer from './Timer';
-import ScoreChecker from './ScoreChecker';
-// import RefBlockBoard from './RefBlockBoard';
-import NativeRefBlockBoard from './NativeRefBlockBoard';
-import {BlockTypes} from './Block/Types';
-import { SupportedSkin } from './Block/skinMap';
-import Constants from '../assets/Constants';
-import { decideMapScale } from './GameScene/utils';
+import PatternBackground from '@components/GameScene/PatternBackground';
+import Timer from '@components/Timer';
+import ScoreChecker from '@components/ScoreChecker';
+// import RefBlockBoard from '@components/RefBlockBoard';
+import NativeRefBlockBoard from '@components/NativeRefBlockBoard';
+import {BlockTypes} from '@components/Block/Types';
+import { SupportedSkin } from '@components/Block/skinMap';
+import Constants from '@assets/Constants';
+import { decideMapScale } from '@components/GameScene/utils';
 import {
   BlockBoardContainer,
   GameInfoContainer,
@@ -23,18 +23,18 @@ import {
   ScoreCheckerContainer,
   TimerContainer,
   UserName
-} from './GameScene/_StyledComponent'
-import { FlexHorizontal, NotoSans } from './Generic/StyledComponents';
-import { getSkinSoundEffect } from '../assets/sounds/skinSound';
-import { Easings } from './NativeRefBox/easings';
-import NativeRefBox from './NativeRefBox';
-import ExpressionEquipWheel from './ExpressionEquipWheel';
-import { ExpressionDirection } from '../redux/actions/global/creator';
-import { SupportedExpression } from './Profile/Expressions';
+} from '@components/GameScene/_StyledComponent'
+import { FlexHorizontal, NotoSans } from '@components/Generic/StyledComponents';
+import { getSkinSoundEffect } from '@assets/sounds/skinSound';
+import { Easings } from '@components/NativeRefBox/easings';
+import NativeRefBox from '@components/NativeRefBox';
+import ExpressionEquipWheel from '@components/ExpressionEquipWheel';
+import { ExpressionDirection } from '@redux/actions/global/creator';
+import { SupportedExpression } from '@components/Profile/Expressions';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { getIcon } from '../api/icon';
+import { getIcon } from '@api/icon';
 
-const backgroundImage = require('../assets/BackgroundPattern.png');
+const backgroundImage = require('@assets/BackgroundPattern.png');
 
 const expectedWheelSize = (size: number) => (216.76190185546875 / 200) * size;
 

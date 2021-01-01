@@ -1,5 +1,5 @@
-import { SupportedSkin } from '../../../components/Block/skinMap';
-import { SupportedExpression } from '../../../components/Profile/Expressions';
+import { SupportedSkin } from '@components/Block/skinMap';
+import { SupportedExpression } from '@components/Profile/Expressions';
 import {SupportedLanguage, GlobalReducerActionTypes} from './types';
 
 export const setLanguage = (language: SupportedLanguage) => ({

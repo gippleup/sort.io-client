@@ -1,9 +1,9 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import styled from 'styled-components'
-import useGlobal from '../../hooks/useGlobal';
-import TranslationPack from '../../Language/translation';
-import { NotoSans } from '../Generic/StyledComponents'
+import useGlobal from '@hooks/useGlobal';
+import TranslationPack from '@Language/translation';
+import { NotoSans } from '@components/Generic/StyledComponents'
 
 const TextContainer: typeof View = styled(View)`
   background-color: darkgoldenrod;

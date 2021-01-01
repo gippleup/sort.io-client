@@ -2,28 +2,28 @@ import { CommonActions, NavigationProp, RouteProp, useNavigation } from '@react-
 import React from 'react'
 import { View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { getIcon } from '../../api/icon';
-import PatternBackground from '../../components/GameScene/PatternBackground';
-import { FlexHorizontal, NotoSans } from '../../components/Generic/StyledComponents';
-import ItemList from '../../components/ItemList';
-import MoneyIndicator from '../../components/Main/MoneyIndicator';
-import translation from '../../Language/translation';
-import CatogorySelector, { CategoryFilter } from './Shop/CatogorySelector';
+import { getIcon } from '@api/icon';
+import PatternBackground from '@components/GameScene/PatternBackground';
+import { FlexHorizontal, NotoSans } from '@components/Generic/StyledComponents';
+import ItemList from '@components/ItemList';
+import MoneyIndicator from '@components/Main/MoneyIndicator';
+import translation from '@Language/translation';
+import CatogorySelector, { CategoryFilter } from '@screens/production/Shop/CatogorySelector';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppState } from '../../redux/store';
-import { fetchItemList } from '../../redux/actions/items/thunk';
-import { checkUsageOfItems } from '../../redux/actions/items/utils';
-import { RootStackParamList } from '../../router/routes';
-import TranslationPack from '../../Language/translation';
+import { AppState } from '@redux/store';
+import { fetchItemList } from '@redux/actions/items/thunk';
+import { checkUsageOfItems } from '@redux/actions/items/utils';
+import { RootStackParamList } from '@router/routes';
+import TranslationPack from '@Language/translation';
 import {
   CategorySelectorContainer,
   Flex,
   Header,
   IconContainer,
   StyledMoneyIndicator,
-} from './Shop/_StyledComponents';
-import PreparingItem from './Shop/PreparingItem';
-import { removeTargetRoute } from '../../api/navigation';
+} from '@screens/production/Shop/_StyledComponents';
+import PreparingItem from '@screens/production/Shop/PreparingItem';
+import { removeTargetRoute } from '@api/navigation';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 type ShopProps = {
@@ -70,7 +70,7 @@ const Shop = (props: ShopProps) => {
   return (
     <Flex>
       <Flex>
-        <PatternBackground source={require('../../assets/BackgroundPattern.png')} />
+        <PatternBackground source={require('@assets/BackgroundPattern.png')} />
 
         <Header>
           <FlexHorizontal>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, Easing} from 'react-native';
-import RefBox from '../../components/RefBox';
+import RefBox from '@components/RefBox';
 import styled from 'styled-components';
 
 const StyleRefBox: typeof RefBox = styled(RefBox)`

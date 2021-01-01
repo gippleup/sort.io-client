@@ -1,4 +1,4 @@
-import { CategoryTranslation } from "../translation";
+import { CategoryTranslation } from "@Language/translation";
 
 const category: CategoryTranslation = {
   all: 'ALL',

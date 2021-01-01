@@ -1,16 +1,7 @@
-import { useNavigation } from '@react-navigation/native';
-import chroma from 'chroma-js';
 import React from 'react'
 import { View, Text, Dimensions } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import useGlobal from '../../hooks/useGlobal';
-import TranslationPack from '../../Language/translation';
-import { SupportedSkin } from '../Block/skinMap';
-import { FlexHorizontal, NotoSans, RoundPaddingCenter, Space } from '../Generic/StyledComponents';
-import MoneyIcon from '../Main/MoneyIcon';
-import expressions, { SupportedExpression } from '../Profile/Expressions';
-import ScoreIcon from '../ScoreChecker/ScoreIcon';
-import { ItemBoxContainer, ItemDescriptionBubble, ItemDescriptionConatiner, ItemProfileContainer, PreviewButton, PriceTagContainer, PurchaseButton } from './ItemBox/_StyledComponent';
+import { FlexHorizontal, NotoSans, RoundPaddingCenter, Space } from '@components/Generic/StyledComponents';
+import { ItemBoxContainer, ItemDescriptionBubble, ItemDescriptionConatiner, ItemProfileContainer, PreviewButton, PurchaseButton } from './ItemBox/_StyledComponent';
 
 const ItemBox: React.FC<{}> = () => {
   const renderProductProfile = () => (

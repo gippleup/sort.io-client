@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { getIcon } from "../../api/icon";
+import { getIcon } from "@api/icon";
 
 type ArrowProps = {
   isHorizontal: boolean;

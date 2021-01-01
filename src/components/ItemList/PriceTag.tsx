@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import { Space, NotoSans } from '../Generic/StyledComponents'
-import MoneyIcon from '../Main/MoneyIcon'
+import { Space, NotoSans } from '@components/Generic/StyledComponents'
+import MoneyIcon from '@components/Main/MoneyIcon'
 import { PriceTagContainer } from './ItemBox/_StyledComponent'
 
 type PriceTagProps = {

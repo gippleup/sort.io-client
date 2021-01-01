@@ -1,20 +1,18 @@
 import React from 'react'
 import { View } from 'react-native'
-import { getLevelString } from '../GameScreen/utils';
-import BasicPopup from '../../../components/Generic/BasicPopup';
+import { getLevelString } from '@screens/production/GameScreen/utils';
+import BasicPopup from '@components/Generic/BasicPopup';
 import { AskPopupContentContainer } from './_StyledComponents';
-import { SubTitleText, NotoSans, Space, FlexHorizontal } from '../../../components/Generic/StyledComponents';
-import usePlayData from '../../../hooks/usePlayData';
+import { SubTitleText, NotoSans, Space, FlexHorizontal } from '@components/Generic/StyledComponents';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { useTicket } from '../../../redux/actions/playData/thunk';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppState } from '../../../redux/store';
-import TranslationPack from '../../../Language/translation';
-import { modifyToTargetRoutes, slimNavigate } from '../../../api/navigation';
-import { RootStackParamList } from '../../../router/routes';
-import AnimatedCheckbox from '../../../components/AnimatedCheckbox';
-import MoneyIcon from '../../../components/Main/MoneyIcon';
-import { trackUser } from '../../../api/analytics';
+import { AppState } from '@redux/store';
+import TranslationPack from '@Language/translation';
+import { modifyToTargetRoutes, slimNavigate } from '@api/navigation';
+import { RootStackParamList } from '@router/routes';
+import AnimatedCheckbox from '@components/AnimatedCheckbox';
+import MoneyIcon from '@components/Main/MoneyIcon';
+import { trackUser } from '@api/analytics';
 
 type StartTrainingProps = {
   onPressStart: () => any;

@@ -63,13 +63,7 @@ const generateSeed = (blockStackMap: number[][], maxScore: number, colorCount: n
     stackShell[randomShellIndex].fill(randomColor);
   }
 
-  const mappedToBlockStack = stackShell.map((stackShape) => {
-    const filteredShape = stackShape.filter((el) => el !== -1);
-    return new BlockStack({
-      initialBlockState: filteredShape,
-      limit: stackShape.length,
-    })
-  });
+  const mappedToBlockStack = stackShell.map((stackShape) => new BlockStack(stackShape));
 
   return mappedToBlockStack
 };
@@ -79,8 +73,8 @@ const moveBlockFromTo = (stackMap: BlockStack[], fromIndex: number, toIndex: num
   const toStack = stackMap[toIndex];
 
   if (!fromStack.isEmpty && !toStack.isFull) {
-    const lastEleInFromStack = fromStack.undock() as number;
-    toStack.dock(lastEleInFromStack);
+    const lastEleInFromStack = fromStack.remove() as number;
+    toStack.add(lastEleInFromStack);
   }
 
   return stackMap;
@@ -94,8 +88,8 @@ const shuffleStacks = (stackMap: BlockStack[], shuffleCount: number) => {
         .filter((stack) => !stack.isFull && stack !== spreadTarget);
       const fillTarget: BlockStack = pickRandomFromArray(randomStacksToFill);
       if (!fillTarget) return;
-      const lastEle = spreadTarget.undock() as number;
-      fillTarget.dock(lastEle);
+      const lastEle = spreadTarget.remove() as number;
+      fillTarget.add(lastEle);
     }
   }
 
@@ -105,8 +99,8 @@ const shuffleStacks = (stackMap: BlockStack[], shuffleCount: number) => {
         .filter((stack) => !stack.isEmpty && stack !== fillTarget);
       const pickTarget: BlockStack = pickRandomFromArray(randomStacksToPick);
       if (!pickTarget) return;
-      const lastEle = pickTarget.undock() as number;
-      fillTarget.dock(lastEle);
+      const lastEle = pickTarget.remove() as number;
+      fillTarget.add(lastEle);
     }
   }
 
@@ -184,7 +178,6 @@ export const generateMap = (mapOption: MapOption) => {
   });
 
   let shuffled = shuffleStacks(seed, shuffleCount || 100);
-  shuffled = answer.map((stackData) => new BlockStack({initialBlockState: stackData, limit: stackData.length}));
   let mistakenlyFinished = checkIfFinished(shuffled);
   while (mistakenlyFinished) {
     shuffled = shuffleStacks(seed, shuffleCount || 100);

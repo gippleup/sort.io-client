@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { InterstitialAd, RewardedAd, BannerAd, TestIds } from '@react-native-firebase/admob';
-import { adUnitId } from '../api/admob';
+import { adUnitId } from '@api/admob';
 
 type AdmobBannerProps = {
   availableSpace?: {

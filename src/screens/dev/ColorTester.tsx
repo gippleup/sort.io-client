@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import Block from '../../components/Block'
-import { blockTypeCount } from '../../components/Block/Colors'
-import { SupportedSkin } from '../../components/Block/skinMap'
+import Block from '@components/Block'
+import { blockTypeCount } from '@components/Block/Colors'
+import { SupportedSkin } from '@components/Block/skinMap'
 
 const ColorTester = () => {
   const skin: SupportedSkin = "basic"

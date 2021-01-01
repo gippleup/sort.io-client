@@ -3,11 +3,11 @@ import React from 'react'
 import { View, Text, Dimensions, BackHandler } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components'
-import { modifyToTargetRoutes, removeTargetRoute } from '../../../api/navigation';
-import { FlexHorizontal, NotoSans, Space, WindowSizeView } from '../../../components/Generic/StyledComponents'
-import StrokedText from '../../../components/StrokedText';
-import useGlobal from '../../../hooks/useGlobal';
-import { RootStackParamList } from '../../../router/routes';
+import { modifyToTargetRoutes, removeTargetRoute } from '@api/navigation';
+import { FlexHorizontal, NotoSans, Space, WindowSizeView } from '@components/Generic/StyledComponents'
+import StrokedText from '@components/StrokedText';
+import useGlobal from '@hooks/useGlobal';
+import { RootStackParamList } from '@router/routes';
 import { getRandomQuestionSet } from './ExitPopup/utils';
 import BuildConfig from 'react-native-config';
 

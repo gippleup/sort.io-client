@@ -9,7 +9,7 @@ import {
   Animated,
 } from 'react-native';
 import styled from 'styled-components';
-import Constants from '../assets/Constants';
+import Constants from '@assets/Constants';
 import BlockFrame from './BlockStack/BlockFrame';
 import Block from './Block';
 import {SupportedSkin} from './Block/skinMap';

@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, Text, Dimensions} from 'react-native';
-import NativeRefBlockBoard from '../../components/NativeRefBlockBoard';
+import NativeRefBlockBoard from '@components/NativeRefBlockBoard';
 import styled from 'styled-components';
-import {BlockTypes} from '../../components/Block/Types';
+import {BlockTypes} from '@components/Block/Types';
 
 const exStackMap: BlockTypes[][] = [
   [0, 0, 0],

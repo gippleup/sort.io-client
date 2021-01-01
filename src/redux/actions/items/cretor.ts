@@ -1,6 +1,4 @@
-import { SupportedSkin } from "../../../components/Block/skinMap";
-import { Item, ItemCategory } from "../../../components/ItemList/ItemBox";
-import { SupportedExpression } from "../../../components/Profile/Expressions";
+import { Item } from "@components/ItemList/ItemBox";
 import { UPDATE_ITEMLIST } from "./types";
 
 export const updateItemList = (itemList: (Item)[]) => ({

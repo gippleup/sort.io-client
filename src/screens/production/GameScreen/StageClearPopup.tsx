@@ -1,18 +1,18 @@
 import React, { RefObject } from 'react'
 import { View, Animated, Easing, TextInput, BackHandler } from 'react-native'
-import StrokedText from '../../../components/StrokedText'
-import { FlexHorizontal, NotoSans } from '../../../components/Generic/StyledComponents';
-import AnimatedCheckbox from '../../../components/AnimatedCheckbox';
+import StrokedText from '@components/StrokedText'
+import { FlexHorizontal, NotoSans } from '@components/Generic/StyledComponents';
+import AnimatedCheckbox from '@components/AnimatedCheckbox';
 import { useNavigation, RouteProp } from '@react-navigation/native';
 import chroma from 'chroma-js';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../../router/routes';
+import { RootStackParamList } from '@router/routes';
 import { useDispatch } from 'react-redux';
-import { depositGold, saveSinglePlay } from '../../../redux/actions/playData/thunk';
-import { GameSubType, GameMode, findLastBoolean, getLevelString } from './utils';
+import { depositGold, saveSinglePlay } from '@redux/actions/playData/thunk';
+import { GameSubType, GameMode, findLastBoolean, getLevelString } from '@screens/production/GameScreen/utils';
 import Svg, { Text } from 'react-native-svg';
-import { getSkinSoundEffect } from '../../../assets/sounds/skinSound';
-import { modifyToTargetRoutes } from '../../../api/navigation';
+import { getSkinSoundEffect } from '@assets/sounds/skinSound';
+import { modifyToTargetRoutes } from '@api/navigation';
 
 type StageClearPopupNavigationProp = StackNavigationProp<RootStackParamList, 'Popup_StageClear'>
 type StageClearPopupRouteProp = RouteProp<RootStackParamList, 'Popup_StageClear'>

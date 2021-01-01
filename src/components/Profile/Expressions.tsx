@@ -1,7 +1,7 @@
 import chroma from 'chroma-js';
 import React from 'react';
 import { View } from 'react-native';
-import { IconContainer, getIcon } from '../../api/icon';
+import { IconContainer, getIcon } from '@api/icon';
 
 const getGrayscale = (color: string) => chroma(color).set('hsl.s', 0).hex();
 

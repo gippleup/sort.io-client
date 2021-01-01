@@ -1,14 +1,14 @@
-import { AppGetState } from "../../store";
-import { getLocalPlayData, PlayData, SortIoUser, setBackupPlayData, getBackupPlayData } from "../../../api/local";
+import { AppGetState } from "@redux/store";
+import { getLocalPlayData, PlayData, SortIoUser, setBackupPlayData, getBackupPlayData } from "@api/local";
 import { updatePlayData, updateUser, updateGold, updateTicket, updateSinglePlay, updateMultiPlay } from "./creator";
-import * as itemApi from "../../../api/item";
-import { googleSignIn, googleSignOut, getLoggedUser } from "../../../api/googleOAuth";
+import * as itemApi from "@api/item";
+import { googleSignIn, googleSignOut, getLoggedUser } from "@api/googleOAuth";
 import NetInfo from '@react-native-community/netinfo'
-import { GeneralThunkAction } from "../../generic";
-import { updateItemList } from "../items/cretor";
-import { saveGold, saveTicket } from "../../../api/item";
-import { getPlayDataByUserId, makeGuestId, getPlayDataByGoogleId, signUpWithGoogle, saveSinglePlayToServer, SaveMultiPlayOption, saveMultiPlayToServer } from "../../../api/playData";
-import { isServerAlive } from "../../../api/sortio";
+import { GeneralThunkAction } from "@redux/generic";
+import { updateItemList } from "@redux/actions/items/cretor";
+import { saveGold, saveTicket } from "@api/item";
+import { getPlayDataByUserId, makeGuestId, getPlayDataByGoogleId, signUpWithGoogle, saveSinglePlayToServer, SaveMultiPlayOption, saveMultiPlayToServer } from "@api/playData";
+import { isServerAlive } from "@api/sortio";
 
 const price = {
   ticket: 150,

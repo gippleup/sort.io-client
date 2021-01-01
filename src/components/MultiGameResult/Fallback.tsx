@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import styled from 'styled-components'
-import { FlexHorizontal, Space, NotoSans, Line } from '../Generic/StyledComponents'
-import Profile from '../Profile'
+import { FlexHorizontal, Space, NotoSans, Line } from '@components/Generic/StyledComponents'
+import Profile from '@components/Profile'
 
 const ResultContainer: typeof View = styled(View)`
   border-radius: 5px;

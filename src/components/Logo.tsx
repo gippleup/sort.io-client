@@ -1,9 +1,9 @@
 import React from 'react'
 import { Dimensions, View } from 'react-native'
 import { Svg, Text } from 'react-native-svg'
-import useGlobal from '../hooks/useGlobal'
-import TranslationPack from '../Language/translation'
-import { SupportedLanguage } from '../redux/actions/global/types'
+import useGlobal from '@hooks/useGlobal'
+import TranslationPack from '@Language/translation'
+import { SupportedLanguage } from '@redux/actions/global/types'
 import StrokedNotoSans from './StokedNotoSans'
 
 type LogoProps = {

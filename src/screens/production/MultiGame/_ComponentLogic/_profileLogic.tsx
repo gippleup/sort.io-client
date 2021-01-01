@@ -1,8 +1,8 @@
 import React, { RefObject } from "react"
-import Profile from "../../../../components/Profile"
-import expressions, { SupportedExpression } from "../../../../components/Profile/Expressions"
-import useMultiGameSocket, { OnSendRoomParam } from "../../../../hooks/useMultiGameSocket"
-import usePlayData from "../../../../hooks/usePlayData"
+import Profile from "@components/Profile"
+import expressions, { SupportedExpression } from "@components/Profile/Expressions"
+import useMultiGameSocket, { OnSendRoomParam } from "@hooks/useMultiGameSocket"
+import usePlayData from "@hooks/usePlayData"
 
 type MultiGameProfileLogicParams = {
   playerProfileRef: RefObject<Profile>;

@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Dimensions } from 'react-native'
-import PatternBackground from '../../components/GameScene/PatternBackground'
+import PatternBackground from '@components/GameScene/PatternBackground'
 import SelectStageHeader from './SelectStage/SelectStageHeader';
-import { FlexHorizontal, NotoSans, Space } from '../../components/Generic/StyledComponents';
+import { FlexHorizontal, NotoSans, Space } from '@components/Generic/StyledComponents';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -15,15 +15,14 @@ import {
   RecordTitle,
   TicketIcon,
 } from './SelectStage/_StyledComponents'
-import usePlayData from '../../hooks/usePlayData';
+import usePlayData from '@hooks/usePlayData';
 import { getLevelString } from './GameScreen/utils';
-import { getIcon } from '../../api/icon';
-import useGlobal from '../../hooks/useGlobal';
-import TranslationPack from '../../Language/translation';
+import { getIcon } from '@api/icon';
+import useGlobal from '@hooks/useGlobal';
+import TranslationPack from '@Language/translation';
 import styled from 'styled-components';
-import AdmobBanner from '../../components/AdmobBaner';
-import { trackUser } from '../../api/analytics';
-import RewardButton from '../../components/RewardButton';
+import { trackUser } from '@api/analytics';
+import RewardButton from '@components/RewardButton';
 
 const BannerAdSpace: typeof View = styled(View)`
   width: 100%;
@@ -32,7 +31,7 @@ const BannerAdSpace: typeof View = styled(View)`
   transform: scale(0.8);
 `;
 
-const backgroundImage = require('../../assets/BackgroundPattern.png');
+const backgroundImage = require('@assets/BackgroundPattern.png');
 
 const SelectStage = () => {
   const navigation = useNavigation();

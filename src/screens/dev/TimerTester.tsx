@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TextInput} from 'react-native';
-import Timer from '../../components/Timer';
+import Timer from '@components/Timer';
 
 const TimerTester = () => {
   const textRef = React.createRef<TextInput>();

@@ -1,25 +1,20 @@
-import { NavigationProp, RouteProp, useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react'
-import { View, Text, Dimensions, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { getIcon } from '../../api/icon';
-import { modifyToTargetRoutes } from '../../api/navigation';
-import { prettyPercent } from '../../api/utils';
-import PatternBackground from '../../components/GameScene/PatternBackground'
-import { FlexHorizontal, Line, NotoSans, Space } from '../../components/Generic/StyledComponents';
-import TimerBar from '../../components/TimerBar';
-import useGlobal from '../../hooks/useGlobal';
-import TranslationPack from '../../Language/translation';
-import { AppState } from '../../redux/store';
-import { RootStackParamList } from '../../router/routes';
-import { getTotalLevel } from './GameScreen/utils';
-import SingleFeedbackGraph from './SingleFeedback/SingleFeedbackGraph';
-import SingleFeedbackRank from './SingleFeedback/SingleFeedbackRank';
-import SingleFeedbackStage from './SingleFeedback/SingleFeedbackStage';
+import { getIcon } from '@api/icon';
+import { modifyToTargetRoutes } from '@api/navigation';
+import PatternBackground from '@components/GameScene/PatternBackground'
+import TranslationPack from '@Language/translation';
+import { AppState } from '@redux/store';
+import { RootStackParamList } from '@router/routes';
+import SingleFeedbackGraph from '@screens/production/SingleFeedback/SingleFeedbackGraph';
+import SingleFeedbackRank from '@screens/production/SingleFeedback/SingleFeedbackRank';
+import SingleFeedbackStage from '@screens/production/SingleFeedback/SingleFeedbackStage';
 
-const backgroundImage = require('../../assets/BackgroundPattern.png');
+const backgroundImage = require('@assets/BackgroundPattern.png');
 
 const BackButtonContainer = styled(View)`
   width: 100px;

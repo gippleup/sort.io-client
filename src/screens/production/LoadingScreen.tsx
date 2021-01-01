@@ -2,8 +2,8 @@ import { RouteProp, useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react'
 import { View, Text } from 'react-native'
-import { NotoSans } from '../../components/Generic/StyledComponents';
-import { RootStackParamList } from '../../router/routes';
+import { NotoSans } from '@components/Generic/StyledComponents';
+import { RootStackParamList } from '@router/routes';
 
 type LoadingScreenProps = {
   navigation: StackNavigationProp<RootStackParamList, "LoadingScreen">;

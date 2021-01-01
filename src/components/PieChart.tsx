@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 import React, { Fragment } from 'react'
 import Svg, { Defs, G, LinearGradient, Path, Rect, Stop, Text } from 'react-native-svg'
-import { prettyPercent } from '../api/utils';
+import { prettyPercent } from '@api/utils';
 
 type PieChartData = {[index: string]: number};
 

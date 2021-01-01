@@ -4,12 +4,12 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import styled from 'styled-components'
-import { removeTargetRoute } from '../../../api/navigation'
-import { getExpressionSoundEffect } from '../../../assets/sounds/expressionSound'
-import { NotoSans, RoundPaddingCenter, Space } from '../../../components/Generic/StyledComponents'
-import Profile from '../../../components/Profile'
-import expressions, { SupportedExpression } from '../../../components/Profile/Expressions'
-import { RootStackParamList } from '../../../router/routes'
+import { removeTargetRoute } from '@api/navigation'
+import { getExpressionSoundEffect } from '@assets/sounds/expressionSound'
+import { NotoSans, RoundPaddingCenter, Space } from '@components/Generic/StyledComponents'
+import Profile from '@components/Profile'
+import expressions, { SupportedExpression } from '@components/Profile/Expressions'
+import { RootStackParamList } from '@router/routes'
 
 export type ExpressionPreviewPopupParams = {
   expression: SupportedExpression;

@@ -1,9 +1,9 @@
 import React from 'react'
 import { View, Text, Modal, Dimensions, TouchableOpacity } from 'react-native'
 import styled, { css } from 'styled-components';
-import useGlobal from '../../hooks/useGlobal'
-import TranslationPack from '../../Language/translation';
-import { FlexHorizontal, NotoSans, Space } from '../Generic/StyledComponents';
+import useGlobal from '@hooks/useGlobal'
+import TranslationPack from '@Language/translation';
+import { FlexHorizontal, NotoSans, Space } from '@components/Generic/StyledComponents';
 
 const Container: typeof View = styled(View)`
   flex: 1;

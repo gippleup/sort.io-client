@@ -2,16 +2,16 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import chroma from 'chroma-js';
 import React from 'react'
 import { View } from 'react-native'
-import { trackUser } from '../../api/analytics';
-import { modifyToTargetRoutes, slimNavigate } from '../../api/navigation';
-import { stringifyValues } from '../../api/utils';
-import TranslationPack from '../../Language/translation';
-import { SupportedLanguage } from '../../redux/actions/global/types';
-import { RootStackParamList } from '../../router/routes';
-import { SupportedSkin } from '../Block/skinMap';
-import { FlexHorizontal, NotoSans, Space } from '../Generic/StyledComponents';
-import expressions, { SupportedExpression } from '../Profile/Expressions';
-import ScoreIcon from '../ScoreChecker/ScoreIcon';
+import { trackUser } from '@api/analytics';
+import { modifyToTargetRoutes, slimNavigate } from '@api/navigation';
+import { stringifyValues } from '@api/utils';
+import TranslationPack from '@Language/translation';
+import { SupportedLanguage } from '@redux/actions/global/types';
+import { RootStackParamList } from '@router/routes';
+import { SupportedSkin } from '@components/Block/skinMap';
+import { FlexHorizontal, NotoSans, Space } from '@components/Generic/StyledComponents';
+import expressions, { SupportedExpression } from '@components/Profile/Expressions';
+import ScoreIcon from '@components/ScoreChecker/ScoreIcon';
 import { ItemBoxContainer, ItemDescriptionBubble, ItemDescriptionConatiner, ItemProfileContainer, PreviewButton, PriceTagContainer, PurchaseButton } from './ItemBox/_StyledComponent';
 import PriceTag from './PriceTag';
 

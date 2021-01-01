@@ -1,15 +1,15 @@
 import { CommonActions, NavigationProp } from "@react-navigation/native";
 import { MutableRefObject, RefObject } from "react";
 import { View } from "react-native";
-import { modifyToTargetRoutes, remainTargetRoutes } from "../../../../api/navigation";
-import GameScene from "../../../../components/GameScene";
-import { SupportedExpression } from "../../../../components/Profile/Expressions";
-import useMultiGameSocket from "../../../../hooks/useMultiGameSocket";
-import socketClientActions from "../../../../hooks/useMultiGameSocket/action/creator";
-import { AlertDockConstructor } from "../../../../hooks/useMultiGameSocket/ServerMessages";
-import usePlayData from "../../../../hooks/usePlayData";
-import { RootStackParamList } from "../../../../router/routes";
-import { MultiGameProps } from "../../MutiGame";
+import { modifyToTargetRoutes, remainTargetRoutes } from "@api/navigation";
+import GameScene from "@components/GameScene";
+import { SupportedExpression } from "@components/Profile/Expressions";
+import useMultiGameSocket from "@hooks/useMultiGameSocket";
+import socketClientActions from "@hooks/useMultiGameSocket/action/creator";
+import { AlertDockConstructor } from "@hooks/useMultiGameSocket/ServerMessages";
+import usePlayData from "@hooks/usePlayData";
+import { RootStackParamList } from "@router/routes";
+import { MultiGameProps } from "@screens/production/MutiGame";
 
 type MultiGameSocketLogicParams = {
   playData: ReturnType<typeof usePlayData>,

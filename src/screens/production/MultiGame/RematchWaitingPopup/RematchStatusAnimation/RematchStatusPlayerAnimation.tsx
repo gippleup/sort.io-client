@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 import CommentBox from '../CommentBox';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import NativeRefBox from '../../../../../components/NativeRefBox';
-import { FlexHorizontal } from '../../../../../components/Generic/StyledComponents';
-import LoadingWave from '../../../../../components/LoadingWave';
+import NativeRefBox from '@components/NativeRefBox';
+import { FlexHorizontal } from '@components/Generic/StyledComponents';
+import LoadingWave from '@components/LoadingWave';
 
 type RematchStatusPlayerAnimationProps = {
   type: 'opponent' | 'player';

@@ -2,7 +2,7 @@ import chroma from "chroma-js";
 import { View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import styled from "styled-components";
-import { FlexHorizontal } from "../../Generic/StyledComponents";
+import { FlexHorizontal } from "@components/Generic/StyledComponents";
 
 export const ItemBoxContainer: typeof View = styled(View)`
   align-items: center;

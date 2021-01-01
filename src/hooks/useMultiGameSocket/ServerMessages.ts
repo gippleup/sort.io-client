@@ -1,4 +1,4 @@
-import { MapDesc } from "../../screens/production/MutiGame"
+import { MapDesc } from "@screens/production/MutiGame"
 
 export enum SocketServerMessageTypes {
   SYNC_TIMER = 'SYNC_TIMER',

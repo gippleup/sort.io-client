@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import styled from "styled-components";
-import MoneyIndicator from "../../../components/Main/MoneyIndicator";
+import MoneyIndicator from "@components/Main/MoneyIndicator";
 
 export const Flex: typeof View = styled(View)`
   flex: 1;

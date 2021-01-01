@@ -1,6 +1,6 @@
-import { extractRandomFromArray } from "../../../components/Block/utils";
-import TranslationPack from "../../../Language/translation";
-import { SupportedLanguage } from "../../../redux/actions/global/types";
+import { extractRandomFromArray } from "@components/Block/utils";
+import TranslationPack from "@Language/translation";
+import { SupportedLanguage } from "@redux/actions/global/types";
 import { getLevelEnumNum, getLevelIndex } from "../GameScreen/utils";
 
 export const getStageFeedback = (stage: number, lan = SupportedLanguage.en) => {

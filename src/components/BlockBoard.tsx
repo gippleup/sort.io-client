@@ -3,7 +3,7 @@ import {View, ViewStyle} from 'react-native';
 import model, {TBlockStack, BlockBoardReducerAction, BlockBoardReducerState} from './BlockBoard/Model/model';
 import BlockStack from './BlockStack';
 import styled from 'styled-components';
-import Constants from '../assets/Constants';
+import Constants from '@assets/Constants';
 import {SupportedSkin} from './Block/skinMap';
 
 const Board: typeof View = styled(View)`

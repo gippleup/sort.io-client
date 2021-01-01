@@ -2,9 +2,9 @@ import { NavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react'
 import { ViewStyle, FlatList } from 'react-native'
-import { SupportedLanguage } from '../redux/actions/global/types';
-import { RootStackParamList } from '../router/routes';
-import { CategoryFilter } from '../screens/production/Shop/CatogorySelector';
+import { SupportedLanguage } from '@redux/actions/global/types';
+import { RootStackParamList } from '@router/routes';
+import { CategoryFilter } from '@screens/production/Shop/CatogorySelector';
 import ItemBox, { Item } from './ItemList/ItemBox';
 
 type ItemListProps = {

@@ -1,4 +1,4 @@
-import { GameLevel, getTotalLevel } from "../../../screens/production/GameScreen/utils";
+import { GameLevel, getTotalLevel } from "@screens/production/GameScreen/utils";
 
 const translation = {
   [GameLevel.Dust]: [

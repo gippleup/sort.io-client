@@ -7,20 +7,20 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import Svg, { Circle, G, Path } from 'react-native-svg'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { removeTargetRoute } from '../../../api/navigation'
-import ExpressionEquipWheel from '../../../components/ExpressionEquipWheel'
-import PatternBackground from '../../../components/GameScene/PatternBackground'
-import { NotoSans, Space } from '../../../components/Generic/StyledComponents'
-import GradientBlindScrollView from '../../../components/GradientBlindScrollView'
-import NativeRefBox from '../../../components/NativeRefBox'
-import Profile from '../../../components/Profile'
-import expressions, { SupportedExpression } from '../../../components/Profile/Expressions'
-import usePlayData from '../../../hooks/usePlayData'
-import { ExpressionDirection, setExpression } from '../../../redux/actions/global/creator'
-import { AppState } from '../../../redux/store'
-import { RootStackParamList } from '../../../router/routes'
+import { removeTargetRoute } from '@api/navigation'
+import ExpressionEquipWheel from '@components/ExpressionEquipWheel'
+import PatternBackground from '@components/GameScene/PatternBackground'
+import { NotoSans, Space } from '@components/Generic/StyledComponents'
+import GradientBlindScrollView from '@components/GradientBlindScrollView'
+import NativeRefBox from '@components/NativeRefBox'
+import Profile from '@components/Profile'
+import expressions, { SupportedExpression } from '@components/Profile/Expressions'
+import usePlayData from '@hooks/usePlayData'
+import { ExpressionDirection, setExpression } from '@redux/actions/global/creator'
+import { AppState } from '@redux/store'
+import { RootStackParamList } from '@router/routes'
 
-const backgroundImage = require('../../../assets/BackgroundPattern.png');
+const backgroundImage = require('@assets/BackgroundPattern.png');
 
 export type ExpressionEquipParams = {
 }

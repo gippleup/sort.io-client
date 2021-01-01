@@ -1,7 +1,6 @@
-import { getItemList } from "../../../api/item";
-import { GeneralThunkAction } from "../../generic";
+import { getItemList } from "@api/item";
+import { GeneralThunkAction } from "@redux/generic";
 import { updateItemList } from "./cretor";
-import { checkUsageOfItems } from "./utils";
 
 export const fetchItemList: GeneralThunkAction<void> = () => (dispatch, getState) => {
   const {playData, global} = getState();

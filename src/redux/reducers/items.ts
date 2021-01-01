@@ -1,8 +1,6 @@
-import { SupportedSkin } from "../../components/Block/skinMap";
-import { Item, ItemCategory } from "../../components/ItemList/ItemBox";
-import { SupportedExpression } from "../../components/Profile/Expressions";
-import { ReduxItemPureActions } from "../actions/items/cretor";
-import { UPDATE_ITEMLIST } from "../actions/items/types";
+import { Item } from "@components/ItemList/ItemBox";
+import { ReduxItemPureActions } from "@redux/actions/items/cretor";
+import { UPDATE_ITEMLIST } from "@redux/actions/items/types";
 
 const initialState: Item[] = [];
 

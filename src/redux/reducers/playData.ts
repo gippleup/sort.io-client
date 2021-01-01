@@ -1,10 +1,8 @@
 import {
   PlayData,
   setLocalPlayData,
-} from "../../api/local";
-import { SupportedSkin } from "../../components/Block/skinMap";
-import { SupportedExpression } from "../../components/Profile/Expressions";
-import { PlayDataActions } from "../actions/playData/creator";
+} from "@api/local";
+import { PlayDataActions } from "@redux/actions/playData/creator";
 import {
   UPDATE_PLAYDATA,
   UPDATE_USER,
@@ -12,7 +10,7 @@ import {
   UPDATE_MULTIPLAY,
   UPDATE_SINGLEPLAY,
   UPDATE_TICKET
-} from "../actions/playData/types";
+} from "@redux/actions/playData/types";
 
 const initialState: PlayData & {loaded: boolean} = {
   multiPlay: [],

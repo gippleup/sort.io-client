@@ -17,7 +17,20 @@
     "inlineSourceMap": true,
     "rootDir": "src",
     "outDir": "dist",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@algo/*": ["./src/algo/*"],
+      "@api/*": ["./src/api/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@components/*": ["./src/components/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@Language/*": ["./src/Language/*"],
+      "@redux/*": ["./src/redux/*"],
+      "@router/*": ["./src/router/*"],
+      "@screens/*": ["./src/screens/*"],
+      "@types/*": ["./src/types/*"],
+    }
   },
   "compileOnSave": true,
   "exclude": [

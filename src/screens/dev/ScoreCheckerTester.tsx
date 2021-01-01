@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import ScoreChecker from '../../components/ScoreChecker';
+import ScoreChecker from '@components/ScoreChecker';
 
 const ScoreCheckerTester = () => {
   return (

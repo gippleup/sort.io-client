@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import { Space } from '../../components/Generic/StyledComponents'
-import MultiGameResult from '../../components/MultiGameResult'
+import { Space } from '@components/Generic/StyledComponents'
+import MultiGameResult from '@components/MultiGameResult'
 
 const MultiGameResultTester = () => {
   return (

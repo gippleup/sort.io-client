@@ -1,12 +1,12 @@
 import React from 'react';
-import GameScene from '../../components/GameScene';
-import {BlockTypes} from '../../components/Block/Types';
-import generateMap from '../../algo/generateMap';
+import GameScene from '@components/GameScene';
+import {BlockTypes} from '@components/Block/Types';
+import generateMap from '@algo/generateMap';
 import { findNodeHandle, GestureResponderEvent, View } from 'react-native';
-import Profile from '../../components/Profile';
+import Profile from '@components/Profile';
 import { useNavigation } from '@react-navigation/native';
-import useGlobal from '../../hooks/useGlobal';
-import expressions from '../../components/Profile/Expressions';
+import useGlobal from '@hooks/useGlobal';
+import expressions from '@components/Profile/Expressions';
 
 
 const GameSceneTester = () => {

@@ -1,5 +1,4 @@
 import BuildConfig from 'react-native-config';
-import { Item } from '../components/ItemList/ItemBox';
 import { SortIoUser, PlayData, SinglePlayData, MultiPlayData } from './local';
 import { POST_OPTION } from './utils';
 

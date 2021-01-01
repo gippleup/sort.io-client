@@ -2,17 +2,17 @@ import React, { Fragment } from 'react'
 import { View, Text, Dimensions } from 'react-native'
 import { LinearGradient, Stop } from 'react-native-svg';
 import styled from 'styled-components'
-import { getLocalPlayData } from '../../../api/local';
-import { getSinglePlayDataByUserId, SinglePlay } from '../../../api/playData';
-import useGlobal from '../../../hooks/useGlobal';
-import usePlayData from '../../../hooks/usePlayData';
-import translation from '../../../Language/ko/screens/Main';
-import TranslationPack from '../../../Language/translation';
+import { getLocalPlayData } from '@api/local';
+import { getSinglePlayDataByUserId, SinglePlay } from '@api/playData';
+import useGlobal from '@hooks/useGlobal';
+import usePlayData from '@hooks/usePlayData';
+import translation from '@Language/ko/screens/Main';
+import TranslationPack from '@Language/translation';
 import { getLevelString } from '../GameScreen/utils';
-import { NotoSans, Space } from '../../../components/Generic/StyledComponents';
-import LineGraph from '../../../components/LineGraph';
-import NoDataFallback from '../../../components/NoDataFallback';
-import TimerBar from '../../../components/TimerBar';
+import { NotoSans, Space } from '@components/Generic/StyledComponents';
+import LineGraph from '@components/LineGraph';
+import NoDataFallback from '@components/NoDataFallback';
+import TimerBar from '@components/TimerBar';
 
 const dimension = Dimensions.get("window");
 

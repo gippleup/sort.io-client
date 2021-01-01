@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import { getSinglePlayDataByUserId, SinglePlay } from '../../api/playData'
-import LineGraph from '../../components/LineGraph'
-import { getLevelString } from '../production/GameScreen/utils'
+import { getSinglePlayDataByUserId, SinglePlay } from '@api/playData'
+import LineGraph from '@components/LineGraph'
+import { getLevelString } from '@screens/production/GameScreen/utils'
 
 const LineGraphTester = () => {
   const [testData, setTestData] = React.useState<SinglePlay[] | null>(null);

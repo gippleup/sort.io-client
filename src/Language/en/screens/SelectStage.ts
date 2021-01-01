@@ -1,4 +1,4 @@
-import { ScreenTranslation } from "../../translation";
+import { ScreenTranslation } from "@Language/translation";
 
 const translation: ScreenTranslation["SelectStage"] = {
   navTitle: "Single Play",

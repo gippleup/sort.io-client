@@ -1,4 +1,4 @@
-import { QuestionSet } from "../translation";
+import { QuestionSet } from "@Language/translation";
 
 const translation: QuestionSet = [
   {

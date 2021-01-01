@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import styled from 'styled-components';
-import { NotoSans } from '../../../components/Generic/StyledComponents';
+import { NotoSans } from '@components/Generic/StyledComponents';
 
 const ContentContainer: typeof View = styled(View)`
   padding: 15px;

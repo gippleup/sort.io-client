@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import Profile from '../../components/Profile'
-import expressions from '../../components/Profile/Expressions';
+import Profile from '@components/Profile'
+import expressions from '@components/Profile/Expressions';
 
 const ProfileTester = () => {
   const profileRef = React.createRef<Profile>();

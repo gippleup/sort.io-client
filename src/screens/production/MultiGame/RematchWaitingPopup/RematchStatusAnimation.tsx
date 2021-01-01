@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, Animated, Easing } from 'react-native'
-import { FlexHorizontal } from '../../../../components/Generic/StyledComponents';
-import LoadingWave, { LoadingWaveProps } from '../../../../components/LoadingWave';
+import { FlexHorizontal } from '@components/Generic/StyledComponents';
+import LoadingWave, { LoadingWaveProps } from '@components/LoadingWave';
 import chroma from 'chroma-js';
 import RematchStatusPlayerAnimation from './RematchStatusAnimation/RematchStatusPlayerAnimation';
 

@@ -1,9 +1,7 @@
-import { BlockTypes } from "../components/Block/Types"
 import {SortIoUser, PlayData, SinglePlayData, MultiPlayData} from './local'
 import BuildConfig from 'react-native-config';
-import { Item } from "../components/ItemList/ItemBox";
+import { Item } from "@components/ItemList/ItemBox";
 import { POST_OPTION } from "./utils";
-import { SlideFromRightIOS } from "@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionPresets";
 
 const {BUILD_ENV, API_BASE_LOCAL, API_BASE_ONLINE } = BuildConfig;
 const API_BASE = BUILD_ENV === "DEV" ? API_BASE_LOCAL : API_BASE_ONLINE;

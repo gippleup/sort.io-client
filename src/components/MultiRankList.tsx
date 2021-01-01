@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Text, FlatList, Dimensions } from 'react-native'
 import Svg, { Path } from 'react-native-svg'
-import { RawMultiRankData } from '../api/rank'
-import MultiRankListEntry from './MultiRankList/MultiRankListEntry'
+import { RawMultiRankData } from '@api/rank'
+import MultiRankListEntry from '@components/MultiRankList/MultiRankListEntry'
 
 type OwnerCheckedMultiRankData = RawMultiRankData & {
   isMine?: boolean;

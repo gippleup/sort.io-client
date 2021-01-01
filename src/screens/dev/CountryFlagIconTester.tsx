@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import CountryFlagIcon from '../../components/CountryFlagIcon'
+import CountryFlagIcon from '@components/CountryFlagIcon'
 
 const CountryFlagIconTester = () => {
   return (

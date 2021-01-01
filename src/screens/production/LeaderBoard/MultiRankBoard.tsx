@@ -1,14 +1,12 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import { getMultiPlayRankById, getMultiPlayRankFromTo, RawMultiRankData } from '../../../api/rank';
-import Block from '../../../components/Block';
-import { NotoSans } from '../../../components/Generic/StyledComponents';
-import MultiRankList from '../../../components/MultiRankList';
-import NoDataFallback from '../../../components/NoDataFallback';
-import useGlobal from '../../../hooks/useGlobal';
-import usePlayData from '../../../hooks/usePlayData';
-import TranslationPack from '../../../Language/translation';
-import { LeaderBoardContainer } from './_Styled'
+import { getMultiPlayRankById, getMultiPlayRankFromTo, RawMultiRankData } from '@api/rank';
+import MultiRankList from '@components/MultiRankList';
+import NoDataFallback from '@components/NoDataFallback';
+import useGlobal from '@hooks/useGlobal';
+import usePlayData from '@hooks/usePlayData';
+import TranslationPack from '@Language/translation';
+import { LeaderBoardContainer } from '@screens/production/LeaderBoard/_Styled'
 
 type MultiRankBoardProps = {
   span?: number;

@@ -3,10 +3,10 @@ import { axisRight } from 'd3';
 import React, { Fragment, RefObject } from 'react'
 import { View, Text, ViewStyle, findNodeHandle, LayoutRectangle } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { getIcon, IconContainer } from '../api/icon';
-import { FlexHorizontal, Space } from './Generic/StyledComponents';
-import Arrow from './SliderSelector/Arrow';
-import { ArrowSelectorContainer, DirectionAligner } from './SliderSelector/_StyledComponents';
+import { getIcon, IconContainer } from '@api/icon';
+import { FlexHorizontal, Space } from '@components/Generic/StyledComponents';
+import Arrow from '@components/SliderSelector/Arrow';
+import { ArrowSelectorContainer, DirectionAligner } from '@components/SliderSelector/_StyledComponents';
 
 type SlideSelectorProps<T> = {
   data: T[];

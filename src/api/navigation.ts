@@ -1,5 +1,5 @@
 import { CommonActions, NavigationContainerRef, NavigationProp, RouteProp } from "@react-navigation/native";
-import { RootStackParamList } from "../router/routes";
+import { RootStackParamList } from "@router/routes";
 
 type RouteName = keyof RootStackParamList;
 type SortIoNavigation = NavigationProp<RootStackParamList, RouteName> | NavigationProp<any>;

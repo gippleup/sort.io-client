@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler';
-import Block from '../../components/Block';
+import Block from '@components/Block';
 
 const SettingsTester = () => {
   const blockCount = 18;

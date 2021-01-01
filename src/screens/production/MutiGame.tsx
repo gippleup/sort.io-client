@@ -1,12 +1,12 @@
 import React from 'react';
-import GameScene from '../../components/GameScene';
-import {MapOption} from '../../api/sortio';
+import GameScene from '@components/GameScene';
+import {MapOption} from '@api/sortio';
 import {RouteProp, NavigationProp} from '@react-navigation/native';
-import {RootStackParamList} from '../../router/routes';
+import {RootStackParamList} from '@router/routes';
 import {View} from 'react-native';
 import {MultiGameLogic} from './MultiGame/_ComponentLogic';
-import {OnSendRoomParam} from '../../hooks/useMultiGameSocket';
-import {SupportedSkin} from '../../components/Block/skinMap';
+import {OnSendRoomParam} from '@hooks/useMultiGameSocket';
+import {SupportedSkin} from '@components/Block/skinMap';
 
 type MultiGameRouteProps = RouteProp<RootStackParamList, 'MultiGame'>;
 type MultiGameNavigationProps = NavigationProp<

@@ -1,10 +1,10 @@
 import React from 'react'
 import { View, Text, Dimensions } from 'react-native'
-import { getSinglePlayRankById, RawSingleRankData } from '../../../api/rank';
-import { FlexHorizontal, NotoSans } from '../../../components/Generic/StyledComponents'
-import useGlobal from '../../../hooks/useGlobal';
-import usePlayData from '../../../hooks/usePlayData';
-import TranslationPack from '../../../Language/translation';
+import { getSinglePlayRankById, RawSingleRankData } from '@api/rank';
+import { FlexHorizontal, NotoSans } from '@components/Generic/StyledComponents'
+import useGlobal from '@hooks/useGlobal';
+import usePlayData from '@hooks/usePlayData';
+import TranslationPack from '@Language/translation';
 const dimension = Dimensions.get("window");
 const SingleFeedbackRank = () => {
   const {user} = usePlayData();

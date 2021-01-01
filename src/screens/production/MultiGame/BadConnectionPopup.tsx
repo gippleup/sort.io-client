@@ -2,12 +2,12 @@ import { CommonActions, NavigationProp, useNavigation } from '@react-navigation/
 import React from 'react'
 import { View, Text, BackHandler } from 'react-native'
 import styled from 'styled-components'
-import { modifyToTargetRoutes, remainTargetRoutes } from '../../../api/navigation';
-import Flickery from '../../../components/Flickery';
-import { NotoSans } from '../../../components/Generic/StyledComponents';
-import useGlobal from '../../../hooks/useGlobal';
-import TranslationPack from '../../../Language/translation';
-import routes, { RootStackParamList } from '../../../router/routes';
+import { modifyToTargetRoutes, remainTargetRoutes } from '@api/navigation';
+import Flickery from '@components/Flickery';
+import { NotoSans } from '@components/Generic/StyledComponents';
+import useGlobal from '@hooks/useGlobal';
+import TranslationPack from '@Language/translation';
+import routes, { RootStackParamList } from '@router/routes';
 
 const Container: typeof View = styled(View)`
   flex: 1;

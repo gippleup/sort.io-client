@@ -1,7 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import CryptoJS from 'react-native-crypto-js'
-import { SupportedSkin } from '../components/Block/skinMap';
-import { SupportedExpression } from '../components/Profile/Expressions';
 
 const publicKey = "GOTCHA";
 

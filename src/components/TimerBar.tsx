@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, InteractionManager } from 'react-native'
-import { NoUndefinedField } from '../types/utilTypes';
+import { NoUndefinedField } from '@types/utilTypes';
 import NativeRefBox from './NativeRefBox';
 import { Easings } from './NativeRefBox/easings';
 

@@ -1,17 +1,13 @@
 import React from 'react'
-import { View, Text } from 'react-native'
-import useMultiGameSocket from '../../../hooks/useMultiGameSocket'
-import socketClientActions from '../../../hooks/useMultiGameSocket/action/creator';
-import { CommonActions, NavigationProp, RouteProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../../router/routes';
+import useMultiGameSocket from '@hooks/useMultiGameSocket'
+import socketClientActions from '@hooks/useMultiGameSocket/action/creator';
+import { NavigationProp, RouteProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '@router/routes';
 import { StackNavigationProp } from '@react-navigation/stack';
-import usePlayData from '../../../hooks/usePlayData';
-import StrokedText from '../../../components/StrokedText';
-import ReadyTimer from '../../../components/ReadyTimer';
-import { BeforeRemoveEvent } from '../GameScreen/utils';
-import { FullFlexCenter } from '../../../components/Generic/StyledComponents';
+import usePlayData from '@hooks/usePlayData';
+import ReadyTimer from '@components/ReadyTimer';
+import { FullFlexCenter } from '@components/Generic/StyledComponents';
 import chroma from 'chroma-js';
-import { modifyToTargetRoutes, remainTargetRoutes } from '../../../api/navigation';
 
 type PreparePopupRouteProps = RouteProp<RootStackParamList, "Popup_Prepare">;
 type PreparePopupNavigationProps = StackNavigationProp<RootStackParamList, "Popup_Prepare">;

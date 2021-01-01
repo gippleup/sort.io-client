@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import BlockBase from '../Block/BlockBase';
-import {SupportedSkin} from '../Block/skinMap';
-import {BlockTypes} from '../Block/Types';
+import BlockBase from '@components/Block/BlockBase';
+import {SupportedSkin} from '@components/Block/skinMap';
+import {BlockTypes} from '@components/Block/Types';
 
 type ScoreIconProps = {
   skin: SupportedSkin;
@@ -11,7 +11,7 @@ type ScoreIconProps = {
 };
 
 const ScoreIcon: React.FC<ScoreIconProps> = (props) => {
-  const Block = React.lazy(() => import('../Block'));
+  const Block = React.lazy(() => import('@components/Block'));
   const TopFallback = (
     <BlockBase
       width={66}

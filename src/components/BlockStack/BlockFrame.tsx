@@ -1,8 +1,8 @@
 import chroma from 'chroma-js';
 import React from 'react';
 import {View, Text, ViewStyle, Animated} from 'react-native';
-import Constants from '../../assets/Constants';
-import NativeRefBox from '../NativeRefBox';
+import Constants from '@assets/Constants';
+import NativeRefBox from '@components/NativeRefBox';
 
 type BlockFrameProps = {
   pieceCount: number;

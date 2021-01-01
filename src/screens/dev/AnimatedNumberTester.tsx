@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import AnimatedNumber from '../../components/AnimatedNumber'
+import AnimatedNumber from '@components/AnimatedNumber'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
-import { FlexHorizontal, RoundPaddingCenter, NotoSans } from '../../components/Generic/StyledComponents'
+import { FlexHorizontal, RoundPaddingCenter, NotoSans } from '@components/Generic/StyledComponents'
 
 const AnimatedNumberTester = () => {
   const [number, setNumber] = React.useState(100);

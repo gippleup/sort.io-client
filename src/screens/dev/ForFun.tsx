@@ -1,12 +1,12 @@
 import React, { RefObject } from 'react'
 import { View, Text, Dimensions } from 'react-native'
-import NativeRefBox from '../../components/NativeRefBox'
+import NativeRefBox from '@components/NativeRefBox'
 import chroma, { random } from 'chroma-js'
-import { FlexHorizontal, NotoSans, RoundPaddingCenter } from '../../components/Generic/StyledComponents'
+import { FlexHorizontal, NotoSans, RoundPaddingCenter } from '@components/Generic/StyledComponents'
 import { TouchableOpacity, TextInput } from 'react-native-gesture-handler'
 import Slider from '@react-native-community/slider'
-import { Easings } from '../../components/NativeRefBox/easings'
-import DynamicText from '../../components/DynamicText'
+import { Easings } from '@components/NativeRefBox/easings'
+import DynamicText from '@components/DynamicText'
 
 const ForFun = () => {
   const boxRefBag: RefObject<NativeRefBox>[] = [];

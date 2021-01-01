@@ -1,19 +1,18 @@
 import React from 'react'
-import { View, Text, ViewStyle, Dimensions } from 'react-native'
-import BasicPopup, { PopupButton } from '../../../components/Generic/BasicPopup'
-import RankViewer, { RankViewerDataEntry, RankViewerData } from '../../../components/RankViewer';
-import usePlayData from '../../../hooks/usePlayData';
-import { FlexHorizontal, FullFlexCenter, Line, NotoSans, Space } from '../../../components/Generic/StyledComponents';
+import { View, Dimensions } from 'react-native'
+import BasicPopup, { PopupButton } from '@components/Generic/BasicPopup'
+import usePlayData from '@hooks/usePlayData';
+import { FlexHorizontal, Line, NotoSans, Space } from '@components/Generic/StyledComponents';
 import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components';
 import { prettyTime } from './utils';
-import { getLevelString } from '../GameScreen/utils';
-import Profile from '../../../components/Profile';
-import useGlobal from '../../../hooks/useGlobal';
-import TranslationPack from '../../../Language/translation';
-import { trackUser } from '../../../api/analytics';
-import { prettyPercent } from '../../../api/utils';
-import { RawSingleRankData, getSinglePlayRankById } from '../../../api/rank';
+import { getLevelString } from '@screens/production/GameScreen/utils';
+import Profile from '@components/Profile';
+import useGlobal from '@hooks/useGlobal';
+import TranslationPack from '@Language/translation';
+import { trackUser } from '@api/analytics';
+import { prettyPercent } from '@api/utils';
+import { RawSingleRankData, getSinglePlayRankById } from '@api/rank';
 
 const RecordContainer: typeof View = styled(View)`
   width: ${Dimensions.get('window').width - 60}px;

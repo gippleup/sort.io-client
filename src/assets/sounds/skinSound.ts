@@ -1,7 +1,7 @@
 import Sound from "react-native-sound";
-import { getSound, setVolumes } from "../../api/sound";
-import { SupportedSkin } from "../../components/Block/skinMap";
-import { pickRandomFromArray } from "../../components/Block/utils";
+import { getSound, setVolumes } from "@api/sound";
+import { SupportedSkin } from "@components/Block/skinMap";
+import { pickRandomFromArray } from "@components/Block/utils";
 
 const defaultSound = {
   dock: [

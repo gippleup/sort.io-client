@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, Text, Image, ViewStyle, TextStyle, LayoutChangeEvent} from 'react-native';
-import { prettyPercent } from '../../api/utils';
-import TranslationPack from '../../Language/translation';
-import { SupportedLanguage } from '../../redux/actions/global/types';
-import {FlexHorizontal} from '../Generic/StyledComponents';
+import { prettyPercent } from '@api/utils';
+import TranslationPack from '@Language/translation';
+import { SupportedLanguage } from '@redux/actions/global/types';
+import {FlexHorizontal} from '@components/Generic/StyledComponents';
 import {
   EntryContainer,
   ProfilePic,
@@ -30,7 +30,7 @@ type RankListEntryProps = {
   lan?: SupportedLanguage;
 };
 
-const defaultProfile = require('../../assets/default-profile.png');
+const defaultProfile = require('@assets/default-profile.png');
 
 const RankListEntry = (props: RankListEntryProps) => {
   const {data, style, lan = SupportedLanguage.en} = props;

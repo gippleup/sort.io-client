@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import styled from 'styled-components'
-import { RawMultiRankData } from '../../api/rank'
-import Spreader from '../Spreader'
+import { RawMultiRankData } from '@api/rank'
+import Spreader from '@components/Spreader'
 import MultiRankDescription from './MultiRankDescription'
 
 const SpreaderContentContainer = styled(View)`

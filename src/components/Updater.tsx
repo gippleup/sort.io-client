@@ -4,7 +4,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import codePush, { DownloadProgress, RemotePackage } from 'react-native-code-push';
 import styled from 'styled-components';
-import { RootStackParamList } from '../router/routes';
+import { RootStackParamList } from '@router/routes';
 import { FlexHorizontal, Space, WindowSizeView } from './Generic/StyledComponents';
 import LoadingWave, { LoadingWaveProps } from './LoadingWave';
 import ProgressBar from './ProgressBar';

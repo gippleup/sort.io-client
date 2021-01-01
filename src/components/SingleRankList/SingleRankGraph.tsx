@@ -1,16 +1,13 @@
 import React, { Fragment } from 'react'
-import { View, Text, Dimensions } from 'react-native'
+import { View, Dimensions } from 'react-native'
 import { LinearGradient, Stop } from 'react-native-svg';
-import { SinglePlayData } from '../../api/local';
-import { getSinglePlayDataByUserId, SinglePlay } from '../../api/playData';
-import { getSinglePlayRankFromTo } from '../../api/rank';
-import usePlayData from '../../hooks/usePlayData';
-import translation from '../../Language/ko/screens/Main';
-import TranslationPack from '../../Language/translation';
-import { SupportedLanguage } from '../../redux/actions/global/types';
-import { getLevelString } from '../../screens/production/GameScreen/utils';
-import { NotoSans, FlexHorizontal } from '../Generic/StyledComponents';
-import LineGraph from '../LineGraph';
+import { SinglePlayData } from '@api/local';
+import { SinglePlay } from '@api/playData';
+import TranslationPack from '@Language/translation';
+import { SupportedLanguage } from '@redux/actions/global/types';
+import { getLevelString } from '@screens/production/GameScreen/utils';
+import { NotoSans, FlexHorizontal } from '@components/Generic/StyledComponents';
+import LineGraph from '@components/LineGraph';
 
 type SingleRankGraphProps = {
   graphData?: SinglePlay[];

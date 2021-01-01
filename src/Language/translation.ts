@@ -1,6 +1,6 @@
-import { SupportedSkin } from "../components/Block/skinMap";
-import expressions from "../components/Profile/Expressions";
-import { SupportedLanguage } from "../redux/actions/global/types";
+import { SupportedSkin } from "@components/Block/skinMap";
+import expressions from "@components/Profile/Expressions";
+import { SupportedLanguage } from "@redux/actions/global/types";
 import screenTranslation_ko from "./ko/screens";
 
 export type CategoryTranslation = {

@@ -4,7 +4,7 @@ import {SupportedSkin} from './Block/skinMap';
 import styled from 'styled-components';
 import BlockFrame from './BlockStack/BlockFrame';
 import ScoreIcon from './ScoreChecker/ScoreIcon';
-import Constants from '../assets/Constants';
+import Constants from '@assets/Constants';
 import RefBox from './RefBox';
 
 const ScoreCheckerContainer: typeof View = styled(View)``;

@@ -1,5 +1,5 @@
 import { EventArg } from "@react-navigation/native";
-import Constants from "../../../assets/Constants";
+import Constants from "@assets/Constants";
 
 export type GameMode = 'single' | 'multi';
 export type GameSubType = 'challenge' | 'training';

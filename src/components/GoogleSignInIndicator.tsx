@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, Modal, TouchableOpacity } from 'react-native'
 import styled from 'styled-components'
-import translation from '../Language/ko/screens/Main'
+import translation from '@Language/ko/screens/Main'
 import { NotoSans, Space, FlexHorizontal } from './Generic/StyledComponents'
 import GoogleIcon from './GoogleSignInIndicator/GoogleIcon'
 

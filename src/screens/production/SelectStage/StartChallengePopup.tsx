@@ -1,20 +1,18 @@
 import React from 'react'
 import { View } from 'react-native'
-import { getLevelString } from '../GameScreen/utils';
-import BasicPopup from '../../../components/Generic/BasicPopup';
+import { getLevelString } from '@screens/production/GameScreen/utils';
+import BasicPopup from '@components/Generic/BasicPopup';
 import { AskPopupContentContainer } from './_StyledComponents';
-import { SubTitleText, NotoSans, Space, FlexHorizontal } from '../../../components/Generic/StyledComponents';
+import { SubTitleText, NotoSans, Space, FlexHorizontal } from '@components/Generic/StyledComponents';
 import { useNavigation } from '@react-navigation/native';
-import usePlayData from '../../../hooks/usePlayData';
-import { useTicket } from '../../../redux/actions/playData/thunk';
+import { useTicket } from '@redux/actions/playData/thunk';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppState } from '../../../redux/store';
-import TranslationPack from '../../../Language/translation';
-import { modifyToTargetRoutes } from '../../../api/navigation';
-import AnimatedCheckbox from '../../../components/AnimatedCheckbox';
-import { getIcon } from '../../../api/icon';
-import MoneyIcon from '../../../components/Main/MoneyIcon';
-import { trackUser } from '../../../api/analytics';
+import { AppState } from '@redux/store';
+import TranslationPack from '@Language/translation';
+import { modifyToTargetRoutes } from '@api/navigation';
+import AnimatedCheckbox from '@components/AnimatedCheckbox';
+import MoneyIcon from '@components/Main/MoneyIcon';
+import { trackUser } from '@api/analytics';
 
 const StartChallengePopup = () => {
   const navigation = useNavigation();

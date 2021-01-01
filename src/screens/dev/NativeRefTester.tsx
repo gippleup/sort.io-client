@@ -1,9 +1,9 @@
 import React, { RefObject } from 'react'
 import { View, Text } from 'react-native'
-import NativeRefBox from '../../components/NativeRefBox';
+import NativeRefBox from '@components/NativeRefBox';
 import chroma from 'chroma-js';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { NotoSans } from '../../components/Generic/StyledComponents';
+import { NotoSans } from '@components/Generic/StyledComponents';
 
 type NativeRefTesterTargets = "particle" | "sequence" | "loop";
 

@@ -1,10 +1,10 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import DynamicText from '../../components/DynamicText'
-import { NotoSans } from '../../components/Generic/StyledComponents'
-import Spreader from '../../components/Spreader'
-import SingleRankBoard from '../production/LeaderBoard/SingleRankBoard'
+import DynamicText from '@components/DynamicText'
+import { NotoSans } from '@components/Generic/StyledComponents'
+import Spreader from '@components/Spreader'
+import SingleRankBoard from '@screens/production/LeaderBoard/SingleRankBoard'
 
 const SpreaderTester = () => {
   const spreaderRef = React.useRef<Spreader>(null);

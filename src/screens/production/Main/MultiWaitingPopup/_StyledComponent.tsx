@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { View } from "react-native";
-import NativeRefBox from "../../../../components/NativeRefBox";
+import NativeRefBox from "@components/NativeRefBox";
 import { TextInput } from "react-native-gesture-handler";
 import chroma from "chroma-js";
 

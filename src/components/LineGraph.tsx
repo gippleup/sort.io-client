@@ -1,9 +1,8 @@
 import React, { Fragment } from 'react'
-import { View, ViewProps, Dimensions } from 'react-native'
+import { Dimensions } from 'react-native'
 import Svg, { Circle, Defs, G, LinearGradient, Path, Rect, Stop, Text } from 'react-native-svg'
-import { getMaxFromArr, getMinFromArr, interpolateNum } from '../api/utils';
-import { NotoSans } from './Generic/StyledComponents';
-import { drawSvgLine } from './LineGraph/utils';
+import { getMaxFromArr, getMinFromArr, interpolateNum } from '@api/utils';
+import { drawSvgLine } from '@components/LineGraph/utils';
 
 type LineGraphProps<T> = {
   data: T[];

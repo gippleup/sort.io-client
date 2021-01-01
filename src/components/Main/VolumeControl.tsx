@@ -3,7 +3,7 @@ import { View, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components';
-import { FlexHorizontal } from '../Generic/StyledComponents';
+import { FlexHorizontal } from '@components/Generic/StyledComponents';
 
 const IconContainer = styled(View)`
   padding: 15px;

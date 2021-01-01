@@ -1,34 +1,40 @@
-import MultiGameResult from "../components/MultiGameResult";
-import AdmobTester from "../screens/dev/AdmobTester";
-import AnimatedNumberTester from "../screens/dev/AnimatedNumberTester";
-import AsyncStorageController from "../screens/dev/AsyncStorageController";
-import BlockBoardTester from "../screens/dev/BlockBoardTester";
-import ColorTester from "../screens/dev/ColorTester";
-import CountryFlagIconTester from "../screens/dev/CountryFlagIconTester";
-import ForFun from "../screens/dev/ForFun";
-import GameSceneTester from "../screens/dev/GameSceneTester";
-import ItemBoxTester from "../screens/dev/ItemBoxTester";
-import JamTester from "../screens/dev/JamTester";
-import LineGraphTester from "../screens/dev/LineGraphTester";
-import MultiFoldTimerBarTester from "../screens/dev/MultiFoldTimerBarTester";
-import MultiGameResultTester from "../screens/dev/MultiGameResultTester";
-import NativeRefTester from "../screens/dev/NativeRefTester";
-import ParticleTester from "../screens/dev/ParticleTester";
-import ProfileTester from "../screens/dev/ProfileTester";
-import PurchaseBoxTester from "../screens/dev/PurchaseBoxTester";
-import RankViewerTester from "../screens/dev/RankViewerTester";
-import ReduxTester from "../screens/dev/ReduxTester";
-import RefBlockBoardTester from "../screens/dev/RefBlockBoardTester";
-import RefBoxTester from "../screens/dev/RefBoxTester";
-import ScoreCheckerTester from "../screens/dev/ScoreCheckerTester";
-import SettingsTester from "../screens/dev/SettingsTester";
-import ShapeChecker from "../screens/dev/ShapeChecker";
-import SpreaderTester from "../screens/dev/SpreaderTester";
-import TimerTester from "../screens/dev/TimerTester";
-import UpdaterTester from "../screens/dev/UpdaterTester";
+import AdmobTester from "@screens/dev/AdmobTester";
+import AnimatedNumberTester from "@screens/dev/AnimatedNumberTester";
+import AsyncStorageController from "@screens/dev/AsyncStorageController";
+import BlockBoardTester from "@screens/dev/BlockBoardTester";
+import ColorTester from "@screens/dev/ColorTester";
+import CountryFlagIconTester from "@screens/dev/CountryFlagIconTester";
+import EternalBlockBoardTester from "@screens/dev/EternalBlockBoardTester";
+import ForFun from "@screens/dev/ForFun";
+import GameSceneTester from "@screens/dev/GameSceneTester";
+import ItemBoxTester from "@screens/dev/ItemBoxTester";
+import JamTester from "@screens/dev/JamTester";
+import LineGraphTester from "@screens/dev/LineGraphTester";
+import MultiFoldTimerBarTester from "@screens/dev/MultiFoldTimerBarTester";
+import MultiGameResultTester from "@screens/dev/MultiGameResultTester";
+import NativeRefTester from "@screens/dev/NativeRefTester";
+import ParticleTester from "@screens/dev/ParticleTester";
+import ProfileTester from "@screens/dev/ProfileTester";
+import PurchaseBoxTester from "@screens/dev/PurchaseBoxTester";
+import RankViewerTester from "@screens/dev/RankViewerTester";
+import ReduxTester from "@screens/dev/ReduxTester";
+import RefBlockBoardTester from "@screens/dev/RefBlockBoardTester";
+import RefBoxTester from "@screens/dev/RefBoxTester";
+import ScoreCheckerTester from "@screens/dev/ScoreCheckerTester";
+import SettingsTester from "@screens/dev/SettingsTester";
+import ShapeChecker from "@screens/dev/ShapeChecker";
+import SpreaderTester from "@screens/dev/SpreaderTester";
+import TimerTester from "@screens/dev/TimerTester";
+import UpdaterTester from "@screens/dev/UpdaterTester";
 import { Routes } from "./types";
 
 export const devRoutes: Routes<Omit<devParams, "Developer">> = {
+  EternalBlockBoardTester: {
+    type: "dev",
+    devName: "이터널 보드 테스터",
+    component: EternalBlockBoardTester,
+    headerShown: false,
+  },
   MultiFoldTimerBarTester: {
     type: "dev",
     devName: "멀티 폴드 타이머바 테스터",
@@ -184,6 +190,7 @@ export const devRoutes: Routes<Omit<devParams, "Developer">> = {
 }
 
 export type devParams = {
+  EternalBlockBoardTester: undefined;
   MultiFoldTimerBarTester: undefined;
   LineGraphTester: undefined;
   ShapeChecker: undefined;

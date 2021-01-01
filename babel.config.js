@@ -15,6 +15,7 @@ module.exports = {
         "@router": "./src/router",
         "@screens": "./src/screens",
         "@types": "./src/types",
+        "@utils": "./src/utils",
       }
     }]
   ]

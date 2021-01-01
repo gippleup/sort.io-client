@@ -26,6 +26,7 @@ import ShapeChecker from "@screens/dev/ShapeChecker";
 import SpreaderTester from "@screens/dev/SpreaderTester";
 import TimerTester from "@screens/dev/TimerTester";
 import UpdaterTester from "@screens/dev/UpdaterTester";
+import BlockStackTester from '@screens/dev/BlockStack2021Tester';
 import { Routes } from "./types";
 
 export const devRoutes: Routes<Omit<devParams, "Developer">> = {
@@ -33,6 +34,12 @@ export const devRoutes: Routes<Omit<devParams, "Developer">> = {
     type: "dev",
     devName: "이터널 보드 테스터",
     component: EternalBlockBoardTester,
+    headerShown: false,
+  },
+  BlockStackTester: {
+    type: "dev",
+    devName: "블록스택 테스터",
+    component: BlockStackTester,
     headerShown: false,
   },
   MultiFoldTimerBarTester: {
@@ -219,4 +226,5 @@ export type devParams = {
   JamTester: undefined;
   UpdaterTester: undefined;
   SpreaderTester: undefined;
+  BlockStackTester: undefined;
 }

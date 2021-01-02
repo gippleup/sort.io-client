@@ -1,5 +1,4 @@
 import Constants from "@assets/Constants";
-import { BlockStack2021Props } from "@components/BlockStack2021";
 import { Transform } from "@utils/Animated";
 import { Easing } from "react-native";
 import { Animated } from "react-native";
@@ -148,7 +147,7 @@ const squashy: {[T in StackStatus]: BlockAnimation} = {
 }
 
 
-const stiff: {[T in NonNullable<BlockStack2021Props["status"]>]: BlockAnimation} = {
+const stiff: {[T in StackStatus]: BlockAnimation} = {
   dock: (transform, scale) => {
     stopTransformAnimation(transform);
     transform.y.setValue(-undockHeight * scale);
@@ -182,7 +181,7 @@ const stiff: {[T in NonNullable<BlockStack2021Props["status"]>]: BlockAnimation}
 }
 
 
-const none: {[T in NonNullable<BlockStack2021Props["status"]>]: BlockAnimation} = {
+const none: {[T in StackStatus]: BlockAnimation} = {
   dock: (transform, scale) => {
     stopTransformAnimation(transform);
     transform.y.setValue(0);

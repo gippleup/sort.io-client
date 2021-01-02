@@ -1,4 +1,4 @@
-import BlockStack2021 from '@components/BlockStack2021'
+import BlockStack2021 from '@components/PropBlockStack2021'
 import { FlexHorizontal, FullFlexCenter, NotoSans, Space } from '@components/Generic/StyledComponents'
 import React, { Fragment } from 'react'
 import { View, Text, Button, Switch, Dimensions } from 'react-native'
@@ -6,10 +6,11 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import {Picker} from '@react-native-picker/picker'
 import skinMap, { SupportedSkin } from '@components/Block/skinMap'
 import Slider from '@react-native-community/slider';
+import { StackStatus } from 'src/model/BlockStackModel'
 
 const BlockStackTester = () => {
   const [stack, setStack] = React.useState<number[]>([]);
-  const [status, setStatus] = React.useState<"dock" | "undock" | "still">("dock");
+  const [status, setStatus] = React.useState<StackStatus>("docked");
   const [skin, setSkin] = React.useState<SupportedSkin>("baby");
   const [scale, setScale] = React.useState(1);
   const [animationType, setAnimationType] = React.useState<"squashy" | "stiff" | "none">("squashy");
@@ -66,9 +67,15 @@ const BlockStackTester = () => {
               </View>
             </TouchableOpacity>
             <Space width={5} />
-            <TouchableOpacity onPress={() => setStatus("still")}>
+            <TouchableOpacity onPress={() => setStatus("docked")}>
               <View style={{alignItems: "center", backgroundColor: "green", padding: 5, borderRadius: 10}}>
-                <NotoSans size={10} type="Bold" color="white">Still</NotoSans>
+                <NotoSans size={10} type="Bold" color="white">Docked</NotoSans>
+              </View>
+            </TouchableOpacity>
+            <Space width={5} />
+            <TouchableOpacity onPress={() => setStatus("undocked")}>
+              <View style={{alignItems: "center", backgroundColor: "green", padding: 5, borderRadius: 10}}>
+                <NotoSans size={10} type="Bold" color="white">Undocked</NotoSans>
               </View>
             </TouchableOpacity>
           </FlexHorizontal>

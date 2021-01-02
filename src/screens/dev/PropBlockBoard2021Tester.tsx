@@ -1,4 +1,4 @@
-import BlockBoard2021, { BlockBoardStackData } from '@components/BlockBoard2021'
+import BlockBoard2021 from '@components/PropBlockBoard2021'
 import useBlockBoard from '@hooks/useBlockBoard'
 import React from 'react'
 import { View } from 'react-native'

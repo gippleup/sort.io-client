@@ -1,7 +1,8 @@
 import { BlockTypes } from "@components/Block/Types";
-import { BlockBoardStackData } from "@components/BlockBoard2021";
 import { extractRandomFromArray, pickRandomFromArray } from "@utils/array";
-import BlockStackModel from "./BlockStackModel";
+import BlockStackModel, { StackStatus } from "./BlockStackModel";
+
+export type BlockBoardStackData = {stack: BlockTypes[], status: StackStatus};
 
 export type BlockBoardOption = {
   blockStackCount: number;

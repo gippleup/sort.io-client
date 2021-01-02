@@ -1,13 +1,11 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import BlockBoardModel from 'src/model/BlockBoardModel';
+import { BlockBoardStackData } from 'src/model/BlockBoardModel';
 import { StackStatus } from 'src/model/BlockStackModel';
 import { SupportedSkin } from './Block/skinMap';
 import { BlockTypes } from './Block/Types';
-import BlockStack2021 from './BlockStack2021';
+import BlockStack2021 from './PropBlockStack2021';
 import { FlexHorizontal } from './Generic/StyledComponents';
-
-export type BlockBoardStackData = {stack: BlockTypes[], status: StackStatus};
 
 type BlockBoard2021Props = {
   data: BlockBoardStackData[];

@@ -1,166 +1,28 @@
-import Constants from '@assets/Constants'
 import { usePrevious } from '@hooks/usePrevious'
+import useTransform from '@hooks/useTransform'
 import React from 'react'
-import { View, Text, StyleSheet, Animated, Easing } from 'react-native'
-import { Transform } from 'src/utils/Animated'
+import { View, StyleSheet, Animated } from 'react-native'
 import { SupportedSkin } from './Block/skinMap'
 import { BlockTypes } from './Block/Types'
-import Block2021, {Block2021Props} from './Block2021'
+import Block2021 from './Block2021'
 import BlockFrame from './BlockStack/BlockFrame'
+import animations from './BlockStack2021/animations'
 
-type BlockStack2021Props = {
+export type BlockStack2021Props = {
   stack: BlockTypes[];
   skin?: SupportedSkin;
   status?: "dock" | "undock" | "still";
   scale?: number;
   max?: number;
   completed?: boolean;
-}
-
-const undockHeight = 20;
-
-type BlockTransform = {
-  [K in keyof Transform]: Animated.Value;
-};
-
-const stopTransformAnimation = (transform: BlockTransform) => Object.values(transform).forEach((animated) => animated.stopAnimation());
-const resetTransform = (transform: BlockTransform) => {
-  transform.rotate.setValue(0);
-  transform.opacity.setValue(1);
-  transform.scaleY.setValue(1);
-  transform.scaleX.setValue(1);
-  transform.y.setValue(0);
-  transform.x.setValue(0);
-}
-
-const animate: {[T in NonNullable<BlockStack2021Props["status"]>]: (transform: BlockTransform, scale: number) => void} = {
-  dock: (transform, scale) => {
-    stopTransformAnimation(transform);
-    transform.y.setValue(-undockHeight * scale);
-    Animated.sequence([
-      Animated.parallel([
-        Animated.sequence([          
-          Animated.parallel([
-            Animated.timing(transform.scaleX, {
-              toValue: 0.8,
-              useNativeDriver: true,
-              duration: 100,
-            }),
-            Animated.timing(transform.scaleY, {
-              toValue: 1.2,
-              useNativeDriver: true,
-              duration: 100,
-            }),
-          ]),
-          Animated.parallel([
-            Animated.timing(transform.scaleY, {
-              toValue: 0.8,
-              useNativeDriver: true,
-              duration: 100,
-            }),
-            Animated.timing(transform.scaleX, {
-              toValue: 1.2,
-              useNativeDriver: true,
-              duration: 100,
-            }),
-          ])
-        ]),
-        Animated.timing(transform.y, {
-          toValue: Constants.blockHeight.piece * scale / 2,
-          useNativeDriver: true,
-          duration: 200,
-        }),
-      ]),
-      Animated.parallel([
-        Animated.timing(transform.scaleX, {
-          toValue: 1,
-          easing: Easing.bounce,
-          useNativeDriver: true,
-          duration: 500,
-        }),
-        Animated.timing(transform.scaleY, {
-          toValue: 1,
-          useNativeDriver: true,
-          easing: Easing.bounce,
-          duration: 500,
-        }),
-        Animated.timing(transform.y, {
-          toValue: 0,
-          useNativeDriver: true,
-          easing: Easing.bounce,
-          duration: 500,
-        })
-      ])
-    ]).start();
-  },
-  still: (transform) => {
-    stopTransformAnimation(transform);
-    resetTransform(transform);
-  },
-  undock: (transform, scale) => {
-    stopTransformAnimation(transform);
-    transform.y.setValue(0);
-    Animated.parallel([
-      Animated.sequence([
-        Animated.parallel([
-          Animated.timing(transform.scaleX, {
-            toValue: 0.8,
-            useNativeDriver: true,
-            duration: 150,
-          }),
-          Animated.timing(transform.scaleY, {
-            toValue: 1.2,
-            useNativeDriver: true,
-            duration: 150,
-          }),
-        ]),
-        Animated.parallel([
-          Animated.timing(transform.scaleX, {
-            toValue: 1.2,
-            useNativeDriver: true,
-            duration: 150,
-          }),
-          Animated.timing(transform.scaleY, {
-            toValue: 0.8,
-            useNativeDriver: true,
-            duration: 150,
-          }),
-        ]),
-        Animated.parallel([
-          Animated.timing(transform.scaleX, {
-            toValue: 1,
-            useNativeDriver: true,
-            easing: Easing.bounce,
-            duration: 300
-          }),
-          Animated.timing(transform.scaleY, {
-            toValue: 1,
-            useNativeDriver: true,
-            easing: Easing.bounce,
-            duration: 300
-          })
-        ])
-      ]),
-      Animated.timing(transform.y, {
-        toValue: -undockHeight * scale,
-        useNativeDriver: true,
-        duration: 300,
-      }),        
-    ]).start();
-  },
+  animationType?: "stiff" | "squashy" | "none";
 }
 
 const BlockStack2021: React.FC<BlockStack2021Props> = (props) => {
-  const {stack, skin = "basic", status = "still", scale = 1, max, completed} = props;
-  // const prevProps = usePrevious(props);
-  const transform = React.useRef({
-    x: new Animated.Value(0),
-    y: new Animated.Value(0),
-    scaleX: new Animated.Value(1),
-    scaleY: new Animated.Value(1),
-    opacity: new Animated.Value(1),
-    rotate: new Animated.Value(0),
-  }).current;
+  const {stack, skin = "basic", status = "still", scale = 1, max, completed, animationType = "squashy"} = props;
+  const prevProps = usePrevious(props);
+  const capTransform = useTransform();
+  const topPieceTransform = useTransform();
 
   const renderBlock = (block: number, i: number) => {
     return (
@@ -170,14 +32,30 @@ const BlockStack2021: React.FC<BlockStack2021Props> = (props) => {
         part="piece"
         scale={scale}
         type={block}
-        transform={i === stack.length - 1 ? transform : undefined}
+        transform={i === stack.length - 1 ? topPieceTransform : undefined}
       />
     )
   }
 
   React.useEffect(() => {
-    animate[status](transform, scale);
-  })
+    const pieceAnimation = animations[animationType][status](topPieceTransform, scale);
+    const capAnimation = animations[animationType][status](capTransform, scale);
+    capTransform.opacity.setValue(status === "dock" ? 0 : 1);
+    Animated.parallel([
+      status === "dock" ? pieceAnimation : capAnimation,
+      Animated.sequence([
+        Animated.delay(100),
+        Animated.parallel([
+          Animated.timing(capTransform.opacity, {
+            toValue: status === "dock" ? 1 : 0,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          status === "dock" ? capAnimation : pieceAnimation,
+        ])
+      ])
+    ]).start();
+  }, [stack, completed, status])
 
   return (
     <View style={{justifyContent: "flex-end"}}>
@@ -186,7 +64,7 @@ const BlockStack2021: React.FC<BlockStack2021Props> = (props) => {
         pieceCount={max || 0} scale={scale}
       />
       <View style={{opacity: completed ? 1 : 0, zIndex: 10}}>
-        <Block2021 skin={skin} part="top" scale={scale} type={stack[0]} />
+        <Block2021 skin={skin} part="top" scale={scale} type={stack[0]} transform={capTransform} />
       </View>
       <View style={{flexDirection: "column-reverse"}}>
         {stack.map((block, i) => renderBlock(block, i))}

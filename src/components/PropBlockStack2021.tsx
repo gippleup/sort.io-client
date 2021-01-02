@@ -5,7 +5,7 @@ import { View, StyleSheet, Animated } from 'react-native'
 import { StackStatus } from 'src/model/BlockStackModel'
 import { SupportedSkin } from './Block/skinMap'
 import { BlockTypes } from './Block/Types'
-import Block2021 from './Block2021'
+import Block2021 from './PropBlock2021'
 import BlockFrame from './BlockStack/BlockFrame'
 import animations from './BlockStack2021/animations'
 

@@ -1,25 +1,5 @@
+import { extractRandomFromArray, pickRandomFromArray } from '@utils/array';
 import {BlockStack} from './BlockStack';
-
-const randomIndexFromArray = (array: any[]): number => {
-  const randomValidIndex = Math.floor(Math.random() * array.length);
-  return randomValidIndex;
-}
-
-const pickRandomFromArray = <T>(array: T[]) => {
-  return array[randomIndexFromArray(array)];
-}
-
-const extractRandomFromArray = (array: any[]) => {
-  const randomIndex = randomIndexFromArray(array);
-  const pickedEle = array[randomIndex];
-  const front = array.slice(0, randomIndex);
-  const latter = array.slice(randomIndex + 1, array.length);
-  const extractedArray = front.concat(latter)
-  return {
-    pickedEle,
-    extractedArray,
-  };
-}
 
 const generateBlockStackShell = (stackCount: number, max: number, min: number) => {
   if (max > 8) {

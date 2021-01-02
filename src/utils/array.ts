@@ -1,13 +1,13 @@
-export function randomIndexFromArray<T>(array: T[]): number {
+export const randomIndexFromArray = (array: any[]): number => {
   const randomValidIndex = Math.floor(Math.random() * array.length);
   return randomValidIndex;
 }
 
-export function pickRandomFromArray<T>(array: T[]) {
+export const pickRandomFromArray = <T>(array: T[]) => {
   return array[randomIndexFromArray(array)];
 }
 
-export function extractRandomFromArray<T> (array: T[]) {
+export const extractRandomFromArray = (array: any[]) => {
   const randomIndex = randomIndexFromArray(array);
   const pickedEle = array[randomIndex];
   const front = array.slice(0, randomIndex);

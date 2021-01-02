@@ -1,4 +1,4 @@
-import { extractRandomFromArray } from "@components/Block/utils";
+import { extractRandomFromArray } from "@utils/array";
 import TranslationPack from "@Language/translation";
 import { SupportedLanguage } from "@redux/actions/global/types";
 import { getLevelEnumNum, getLevelIndex } from "../GameScreen/utils";

@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { BlockParts } from './Block/Types';
-import { pickRandomFromArray } from './Block/utils';
+import { pickRandomFromArray } from '@utils/array';
 import BlockGenerator from './EternalBlockBoard/BlockGenerator';
 
 type EternalBlockBoardProps = {

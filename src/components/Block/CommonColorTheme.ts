@@ -1,5 +1,5 @@
 import chroma from 'chroma-js';
-import { extractRandomFromArray } from './utils';
+import { extractRandomFromArray } from '@utils/array';
 import colorArr from './Colors';
 
 type ColorTheme = {

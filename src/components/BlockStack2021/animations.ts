@@ -3,6 +3,7 @@ import { BlockStack2021Props } from "@components/BlockStack2021";
 import { Transform } from "@utils/Animated";
 import { Easing } from "react-native";
 import { Animated } from "react-native";
+import { StackStatus } from "src/model/BlockStackModel";
 
 const undockHeight = 20;
 
@@ -22,7 +23,7 @@ const resetTransform = (transform: BlockTransform) => {
   transform.x.setValue(0);
 }
 
-const squashy: {[T in NonNullable<BlockStack2021Props["status"]>]: BlockAnimation} = {
+const squashy: {[T in StackStatus]: BlockAnimation} = {
   dock: (transform, scale) => {
     stopTransformAnimation(transform);
     transform.y.setValue(-undockHeight * scale);
@@ -82,14 +83,14 @@ const squashy: {[T in NonNullable<BlockStack2021Props["status"]>]: BlockAnimatio
       ])
     ])
   },
-  still: (transform) => {
+  docked: (transform) => {
     stopTransformAnimation(transform);
     resetTransform(transform);
     return Animated.timing(transform.y, {toValue: 0, useNativeDriver: true, duration: 0})
   },
   undock: (transform, scale) => {
     stopTransformAnimation(transform);
-    transform.y.setValue(0);
+    // transform.y.setValue(0);
     return Animated.parallel([
       Animated.sequence([
         Animated.parallel([
@@ -138,6 +139,12 @@ const squashy: {[T in NonNullable<BlockStack2021Props["status"]>]: BlockAnimatio
       }),        
     ])
   },
+  undocked: (transform, scale) => {
+    stopTransformAnimation(transform);
+    resetTransform(transform);
+    transform.y.setValue(-undockHeight * scale);
+    return Animated.timing(transform.y, {toValue: -undockHeight * scale, useNativeDriver: true, duration: 0});
+  }
 }
 
 
@@ -152,7 +159,7 @@ const stiff: {[T in NonNullable<BlockStack2021Props["status"]>]: BlockAnimation}
       duration: 500,
     })
   },
-  still: (transform) => {
+  docked: (transform) => {
     stopTransformAnimation(transform);
     resetTransform(transform);
     return Animated.timing(transform.y, {toValue: 0, useNativeDriver: true, duration: 0})
@@ -163,9 +170,15 @@ const stiff: {[T in NonNullable<BlockStack2021Props["status"]>]: BlockAnimation}
     return Animated.timing(transform.y, {
       toValue: -undockHeight * scale,
       useNativeDriver: true,
-      duration: 300,
+      duration: 100,
     })
   },
+  undocked: (transform, scale) => {
+    stopTransformAnimation(transform);
+    resetTransform(transform);
+    transform.y.setValue(-undockHeight * scale);
+    return Animated.timing(transform.y, {toValue: -undockHeight * scale, useNativeDriver: true, duration: 0});
+  }
 }
 
 
@@ -175,7 +188,7 @@ const none: {[T in NonNullable<BlockStack2021Props["status"]>]: BlockAnimation} 
     transform.y.setValue(0);
     return Animated.timing(transform.y, {toValue: 0, useNativeDriver: true, duration: 0})
   },
-  still: (transform) => {
+  docked: (transform) => {
     stopTransformAnimation(transform);
     resetTransform(transform);
     return Animated.timing(transform.y, {toValue: 0, useNativeDriver: true, duration: 0})
@@ -185,6 +198,12 @@ const none: {[T in NonNullable<BlockStack2021Props["status"]>]: BlockAnimation} 
     transform.y.setValue(-undockHeight * scale);
     return Animated.timing(transform.y, {toValue: 0, useNativeDriver: true, duration: 0})
   },
+  undocked: (transform, scale) => {
+    stopTransformAnimation(transform);
+    resetTransform(transform);
+    transform.y.setValue(-undockHeight * scale);
+    return Animated.timing(transform.y, {toValue: -undockHeight * scale, useNativeDriver: true, duration: 0});
+  }
 }
 
 

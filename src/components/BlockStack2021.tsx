@@ -2,6 +2,7 @@ import { usePrevious } from '@hooks/usePrevious'
 import useTransform from '@hooks/useTransform'
 import React from 'react'
 import { View, StyleSheet, Animated } from 'react-native'
+import { StackStatus } from 'src/model/BlockStackModel'
 import { SupportedSkin } from './Block/skinMap'
 import { BlockTypes } from './Block/Types'
 import Block2021 from './Block2021'
@@ -11,7 +12,7 @@ import animations from './BlockStack2021/animations'
 export type BlockStack2021Props = {
   stack: BlockTypes[];
   skin?: SupportedSkin;
-  status?: "dock" | "undock" | "still";
+  status?: StackStatus;
   scale?: number;
   max?: number;
   completed?: boolean;
@@ -19,10 +20,19 @@ export type BlockStack2021Props = {
 }
 
 const BlockStack2021: React.FC<BlockStack2021Props> = (props) => {
-  const {stack, skin = "basic", status = "still", scale = 1, max, completed, animationType = "squashy"} = props;
+  const {
+    stack,
+    skin = "basic",
+    status = "docked",
+    scale = 1,
+    max,
+    completed,
+    animationType = "squashy"
+  } = props;
   const prevProps = usePrevious(props);
   const capTransform = useTransform();
   const topPieceTransform = useTransform();
+  const existingBlocks = stack.filter((block) => block !== -1);
 
   const renderBlock = (block: number, i: number) => {
     return (
@@ -32,7 +42,7 @@ const BlockStack2021: React.FC<BlockStack2021Props> = (props) => {
         part="piece"
         scale={scale}
         type={block}
-        transform={i === stack.length - 1 ? topPieceTransform : undefined}
+        transform={i === existingBlocks.length - 1 ? topPieceTransform : undefined}
       />
     )
   }
@@ -63,21 +73,23 @@ const BlockStack2021: React.FC<BlockStack2021Props> = (props) => {
         style={{...styles.frame, opacity: max === undefined ? 0 : 1}}
         pieceCount={max || 0} scale={scale}
       />
-      <View style={{opacity: completed ? 1 : 0, zIndex: 10}}>
-        <Block2021 skin={skin} part="top" scale={scale} type={stack[0]} transform={capTransform} />
-      </View>
-      <View style={{flexDirection: "column-reverse"}}>
-        {stack.map((block, i) => renderBlock(block, i))}
-      </View>
-      <View style={{zIndex: -1}}>
-        <Block2021 skin={skin} part="bottom" scale={scale} type={stack[0]} />
+      <View style={{position: "absolute"}}>
+        <View style={{opacity: completed ? 1 : 0, zIndex: 10}}>
+          <Block2021 skin={skin} part="top" scale={scale} type={existingBlocks[0]} transform={capTransform} />
+        </View>
+        <View style={{flexDirection: "column-reverse"}}>
+          {existingBlocks.map(renderBlock)}
+        </View>
+        <View style={{zIndex: -1}}>
+          <Block2021 skin={skin} part="bottom" scale={scale} type={existingBlocks[0]} />
+        </View>
       </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  frame: {backgroundColor: "rgba(0,0,0,0.5)", position: "absolute"},
+  frame: {backgroundColor: "rgba(0,0,0,0.5)", zIndex: -1},
 })
 
-export default BlockStack2021
+export default React.memo(BlockStack2021);

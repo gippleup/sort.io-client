@@ -28,8 +28,15 @@ import TimerTester from "@screens/dev/TimerTester";
 import UpdaterTester from "@screens/dev/UpdaterTester";
 import BlockStackTester from '@screens/dev/BlockStack2021Tester';
 import { Routes } from "./types";
+import BlockBoard2021Tester from "@screens/dev/BlockBoard2021Tester";
 
 export const devRoutes: Routes<Omit<devParams, "Developer">> = {
+  BlockBoard2021Tester: {
+    type: "dev",
+    devName: "블록보드2021 테스터",
+    component: BlockBoard2021Tester,
+    headerShown: false,
+  },
   EternalBlockBoardTester: {
     type: "dev",
     devName: "이터널 보드 테스터",
@@ -227,4 +234,5 @@ export type devParams = {
   UpdaterTester: undefined;
   SpreaderTester: undefined;
   BlockStackTester: undefined;
+  BlockBoard2021Tester: undefined;
 }

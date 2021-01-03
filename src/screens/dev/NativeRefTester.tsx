@@ -6,6 +6,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { NotoSans } from '@components/Generic/StyledComponents';
 
 type NativeRefTesterTargets = "particle" | "sequence" | "loop";
+const PARTICLE_COUNT = 100;
+const PARTICLE_SPREAD = 100;
 
 const NativeRefTester = () => {
   const targets: NativeRefTesterTargets[] = ["particle", "sequence", "loop"]
@@ -40,8 +42,8 @@ const NativeRefTester = () => {
         const $ = box.current;
         $?.animate({
           style: {
-            left: x + -25 + Math.random() * 50,
-            top: y + -25 + Math.random() * 50,
+            left: x + -PARTICLE_SPREAD / 2 + Math.random() * PARTICLE_SPREAD,
+            top: y + -PARTICLE_SPREAD / 2 + Math.random() * PARTICLE_SPREAD,
             scaleX: scale,
             scaleY: scale,
             backgroundColor: chroma
@@ -142,7 +144,7 @@ const NativeRefTester = () => {
   }
 
   const renderTarget: {[T in NativeRefTesterTargets]: JSX.Element[] | JSX.Element} = {
-    particle: Array(20).fill(1).map((_, i) => {
+    particle: Array(PARTICLE_COUNT).fill(1).map((_, i) => {
       const boxRef = React.createRef<NativeRefBox>();
       particleBaseRefs.push(boxRef);
       return (

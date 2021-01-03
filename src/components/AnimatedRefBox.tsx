@@ -9,6 +9,7 @@ type AnimatedRefBoxProps = {
 export class AnimatedRefBox extends Component<AnimatedRefBoxProps> {
   x = new Animated.Value(0);
   y = new Animated.Value(0);
+  scale = new Animated.Value(1);
   scaleX = new Animated.Value(1);
   scaleY = new Animated.Value(1);
   opacity = new Animated.Value(1);
@@ -20,7 +21,7 @@ export class AnimatedRefBox extends Component<AnimatedRefBoxProps> {
 
   render() {
     const {props} = this;
-    const {x, y, scaleX, scaleY, opacity, rotate} = this;
+    const {x, y, scaleX, scaleY, opacity, rotate, scale} = this;
     return (
       <Animated.View style={[
         props.style, {
@@ -30,6 +31,7 @@ export class AnimatedRefBox extends Component<AnimatedRefBoxProps> {
             {translateY: y},
             {scaleX},
             {scaleY},
+            {scale},
             {rotate: rotate.interpolate({
               inputRange: [-1000000, 1000000],
               outputRange: ['-1000000deg', '1000000deg']

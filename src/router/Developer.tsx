@@ -48,6 +48,7 @@ const DevNavButton = (props: DevNavButtonProps) => {
     <NavButtonContainer
       important={props.type === 'production'}
       onPress={() => {
+        console.log(`clicked ${props.routeName} at ${Date.now()}`);
         if (BUILD_ENV === "DEV" && props.routeName === "Main") {
           modifyToTargetRoutes(navigation, [
             {name: "Developer"},

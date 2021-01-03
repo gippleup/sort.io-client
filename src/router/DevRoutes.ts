@@ -29,8 +29,29 @@ import UpdaterTester from "@screens/dev/UpdaterTester";
 import BlockStackTester from '@screens/dev/PropBlockStack2021Tester';
 import { Routes } from "./types";
 import BlockBoard2021Tester from "@screens/dev/PropBlockBoard2021Tester";
+import RefBlockStackTester from "@screens/dev/RefBlockStackTester";
+import AnimatedRefBoxTester from "@screens/dev/AnimatedRefBoxTester";
+import ReanimatedRefBoxTester from "@screens/dev/ReanimatedRefBoxTester";
 
 export const devRoutes: Routes<Omit<devParams, "Developer">> = {
+  ReanimatedRefBoxTester: {
+    type: "dev",
+    devName: "Reanimated 레프 박스 테스터",
+    component: ReanimatedRefBoxTester,
+    headerShown: false,
+  },
+  AnimatedRefBoxTester: {
+    type: "dev",
+    devName: "Animated 레프 박스 테스터",
+    component: AnimatedRefBoxTester,
+    headerShown: false,
+  },
+  RefBlockStack2021Tester: {
+    type: "dev",
+    devName: "Ref 블록스택2021 테스터",
+    component: RefBlockStackTester,
+    headerShown: false,
+  },
   PropBlockBoard2021Tester: {
     type: "dev",
     devName: "Prop 블록보드2021 테스터",
@@ -235,4 +256,7 @@ export type devParams = {
   SpreaderTester: undefined;
   PropBlockStackTester: undefined;
   PropBlockBoard2021Tester: undefined;
+  RefBlockStack2021Tester: undefined;
+  AnimatedRefBoxTester: undefined;
+  ReanimatedRefBoxTester: undefined;
 }

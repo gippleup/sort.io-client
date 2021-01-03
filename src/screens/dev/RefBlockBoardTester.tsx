@@ -21,8 +21,8 @@ const RefBlockBoardTester = () => {
           onComplete={undefined}
           skin="baby"
           initialMap={exStackMap}
-          width={278}
-          height={215}
+          width={Dimensions.get("screen").width}
+          height={Dimensions.get("window").height}
         />
       </View>
     </View>
